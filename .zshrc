@@ -128,9 +128,10 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 # conda aliases
-alias env='conda activate'
-alias deact='conda deactivate'
-alias nenv='conda create -n'
+alias e='conda activate'
+alias de='conda deactivate'
+alias ne='conda create -n'
+alias le='conda env list'
 
 # mount server sshfs
 # alias mount_asr_minh='sshfs -o reconnect -o volname=asr_minh asr:/home/congminhbui ~/sshfs/asr_minh'
