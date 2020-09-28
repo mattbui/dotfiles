@@ -78,9 +78,6 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias ll='ls -alFh'
-alias venv='conda activate'
-alias deact='conda deactivate'
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -96,6 +93,11 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+# conda aliases
+alias env='conda activate'
+alias deact='conda deactivate'
+alias nenv='conda create -n'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
