@@ -1,3 +1,5 @@
+export GPG_TTY=$(tty)
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -133,8 +135,6 @@ alias lu='du -h -d 1'
 
 # mount server sshfs
 # alias mount_asr_minh='sshfs -o reconnect -o volname=asr_minh asr:/home/congminhbui ~/sshfs/asr_minh'
-
-export GPG_TTY=$(tty)
 
 # selenium driver
 export PATH=$PATH:/Users/minhbui/.selenium
