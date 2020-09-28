@@ -22,8 +22,7 @@ else
     start_agent;
 fi
 
-ssh-add ~/.ssh/cinnamon_git.key
-
+# GPG_TTY variable for gpg signing commit
 export GPG_TTY=$(tty)
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -96,6 +95,17 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+# Add ssh github key
+GITKEY="$HOME/.ssh/cinnamon_git.key"
+GITKEY_FPRINT=$(ssh-keygen -lf $GITKEY)
+LIST_KEYS=$(ssh-add -l)
+
+# Add git key if not available
+
+if [[ $LIST_KEYS != *$GITKEY_FPRINT* ]]; then
+    ssh-add -q $GITKEY
+fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
