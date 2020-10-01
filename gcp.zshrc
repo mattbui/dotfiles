@@ -100,6 +100,9 @@ alias de='conda deactivate'
 alias ne='conda create -n'
 alias le='conda env list'
 
+# alias-finder
+alias af='alias-finder'
+
 # Add ssh github key
 GITKEY="$HOME/.ssh/cinnamon_git.key"
 GITKEY_FPRINT=$(ssh-keygen -lf $GITKEY)
