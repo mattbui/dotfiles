@@ -82,7 +82,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(cp tmux brew git zsh-autosuggestions python pip)
+plugins=(alias-finder extract git tmux zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -132,6 +132,9 @@ alias e='conda activate'
 alias de='conda deactivate'
 alias ne='conda create -n'
 alias le='conda env list'
+
+# alias-finder
+alias af='alias-finder'
 
 # mount server sshfs
 # alias mount_asr_minh='sshfs -o reconnect -o volname=asr_minh asr:/home/congminhbui ~/sshfs/asr_minh'

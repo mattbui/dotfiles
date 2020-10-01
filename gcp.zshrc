@@ -47,8 +47,9 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 DEFAULT_USER='matthew'
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
+
 # plugins
-plugins=(cp tmux brew git zsh-autosuggestions python pip)
+plugins=(alias-finder extract git tmux zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 
