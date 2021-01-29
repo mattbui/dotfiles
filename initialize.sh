@@ -15,13 +15,13 @@ cp .p10k.zsh ~/
 # add git key if needed
 # cp git.key ~/.ssh
 # gpg --import gpg_secret_keys
-git config --global user.email matthew@cinnamon.is
+git config --global user.email <email>
 git config --global user.name "Bui Cong Minh"
 git config --global user.username mattbui
-git config --global branch.autosetuprebase always
+# git config --global branch.autosetuprebase always
 
 cp .gitignore_global ~/
 git config --global core.excludesfile ~/.gitignore_global
 
-# git config --global user.signingkey 24AE1F8C294EE08C
+# git config --global user.signingkey <key_id>
 git config --global commit.gpgsign true
