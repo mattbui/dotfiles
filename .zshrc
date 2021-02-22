@@ -1,3 +1,8 @@
+if [[ $(uname -s) == Linux* && -f "${HOME}/.start_ssh_agent.zsh" ]]; then
+    source "${HOME}/.start_ssh_agent.zsh"
+fi
+
+# GPG_TTY variable for gpg signing commit
 export GPG_TTY=$(tty)
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
@@ -79,6 +84,8 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
+
+# plugins
 plugins=(alias-finder extract git tmux zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
@@ -111,5 +118,16 @@ source $ZSH/oh-my-zsh.sh
 
 source ~/.aliases.zsh
 
+# Add ssh github key
+GITKEY="$HOME/.ssh/github.key"
+if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
+    GITKEY_FPRINT=$(ssh-keygen -lf $GITKEY)
+    LIST_KEYS=$(ssh-add -l)
+
+    # Add git key if not available
+    if [[ $LIST_KEYS != *$GITKEY_FPRINT* ]]; then
+        ssh-add -q $GITKEY
+    fi
+fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
