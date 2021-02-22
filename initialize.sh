@@ -1,20 +1,5 @@
-# Initialize commands for new computer
-positional=()
-while [[ $# -gt 0 ]]
-do
-key="$1"
-
-case ${key} in
-	--conda_path)
-    conda_path="$2"
-    shift # past argument
-    shift # past value
-    ;;
-esac
-done
-set -- "${positional[@]}" # restore positional parameter
-
-echo "Conda path: ${conda_path}"
+platform="$(uname -s)"
+echo "Platform: ${platform}"
 
 # Get dotfiles
 dotfiles=$HOME/dotfiles
@@ -25,8 +10,6 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-platform="$(uname -s)"
-echo "Platform: ${platform}"
 case "${platform}" in
     Linux*) cp $dotfiles/linux.zshrc $HOME/.zshrc;;
     Darwin*) cp $dotfiles/mac.zshrc $HOME/.zshrc;;
@@ -44,10 +27,6 @@ ln -s $dotfiles/.p10k.zsh $HOME/.p10k.zsh
 ln -s $dotfiles/.tmux.conf $HOME/.tmux.conf
 
 # Git
-# mkdir $HOME/.ssh
-# add git key if needed
-# cp git.key $HOME/.ssh
-# gpg --import gpg_secret_keys
 git config --global user.email matthew@cinnamon.is
 git config --global user.username mattbui
 # git config --global branch.autosetuprebase always
@@ -58,8 +37,21 @@ git config --global core.excludesfile $HOME/.gitignore_global
 # git config --global user.signingkey <key_id>
 git config --global commit.gpgsign true
 
-# Initialize conda
+# Setup conda
+case "${platform}" in
+    Linux*) conda_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    Darwin*) conda_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
+    *) echo "UNKNOWN:${platform}"
+esac
+done
+
+if [[ -z $conda_url ]]; then
+    wget -O $HOME/miniconda_installer.sh $conda_url
+    bash $HOME/miniconda_installer.sh -b
+    conda_path=$HOME/miniconda3
+fi
+
 if [[ -z $conda_path]]; then
-    source "$conda_path/bin/activate"
-    conda init
+    eval "$(${conda_path}/bin/conda shell.zsh hook)"
+    conda init zsh
 fi
