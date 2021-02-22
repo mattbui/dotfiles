@@ -126,7 +126,7 @@ if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
 
     # Add git key if not available
     if [[ $LIST_KEYS != *$GITKEY_FPRINT* ]]; then
-        ssh-add -q $GITKEY
+        ssh-add $GITKEY 2> /dev/null
     fi
 fi
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
