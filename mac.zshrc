@@ -11,16 +11,13 @@ fi
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/minhbui/.oh-my-zsh"
+export ZSH="${HOME}/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-# POWERLEVEL9K_MODE='awesome-fontconfig'
+# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="powerlevel10k/powerlevel10k"
-
-DEFAULT_USER='minhbui'
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
 
@@ -112,41 +109,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/Users/minhbui/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/minhbui/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/minhbui/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/minhbui/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-# conda aliases
-alias e='conda activate'
-alias de='conda deactivate'
-alias ne='conda create -n'
-alias le='conda env list'
-
-# alias-finder
-alias af='alias-finder'
-
-# mount server sshfs
-# alias mount_asr_minh='sshfs -o reconnect -o volname=asr_minh asr:/home/congminhbui ~/sshfs/asr_minh'
-
-# selenium driver
-export PATH=$PATH:/Users/minhbui/.selenium
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/minhbui/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/minhbui/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/minhbui/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/minhbui/google-cloud-sdk/completion.zsh.inc'; fi
+source ~/.aliases.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
