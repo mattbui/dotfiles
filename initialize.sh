@@ -49,9 +49,6 @@ if [[ -z $conda_url ]]; then
     wget -O $HOME/miniconda_installer.sh $conda_url
     bash $HOME/miniconda_installer.sh -b
     conda_path=$HOME/miniconda3
-fi
-
-if [[ -z $conda_path]]; then
     eval "$(${conda_path}/bin/conda shell.zsh hook)"
     conda init zsh
 fi
