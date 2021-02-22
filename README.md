@@ -2,7 +2,16 @@
 
 My dotfiles
 
-Intialization on a new machine
+## Intialization on a new machine
+
+### Pre-requirements
+
+- curl
+- wget
+- zsh
+- git
+
+### Magic command
 
 ```bash
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
