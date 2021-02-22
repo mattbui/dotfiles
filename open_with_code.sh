@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # my fun script to quickly open projects/files with vscode
 
 WORK_DIR="/media/matthew/Data/gdrive/works"
