@@ -31,3 +31,7 @@ git config --global core.excludesfile $HOME/.gitignore_global
 git config --global commit.gpgsign true
 
 bash $DOTFILES/conda_setup.sh
+
+# use this if cannot change default shell to zsh
+printf "Done intialization"
+printf "To use zsh as default shell use:\n\tchsh -s \$(which zsh)\nor\n\techo \"exec zsh\" >> $HOME/.bashrc\n"
