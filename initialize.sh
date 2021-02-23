@@ -9,12 +9,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/t
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-cp $DOTFILES/.zshrc $HOME/.zshrc
-ln -s $DOTFILES/.aliases.zsh $HOME/.aliases.zsh
-ln -s $DOTFILES/.p10k.zsh $HOME/.p10k.zsh
-
-# use this if cannot change default shell to zsh
-# echo "exec zsh" >> $HOME/.bashrc
+cp $DOTFILES/dotzsh/.zshrc $HOME/.zshrc
+ln -s $DOTFILES/dotzsh/.aliases.zsh $HOME/.aliases.zsh
+ln -s $DOTFILES/dotzsh/.p10k.zsh $HOME/.p10k.zsh
+ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
 
 # Tmux configs
 ln -s $DOTFILES/.tmux.conf $HOME/.tmux.conf
@@ -24,7 +22,7 @@ git config --global user.email matthew@cinnamon.is
 git config --global user.username mattbui
 # git config --global branch.autosetuprebase always
 
-ln -s $DOTFILES/.gitignore_global $HOME/.gitignore_global
+ln -s $DOTFILES/dotignore/.gitignore_global $HOME/.gitignore_global
 git config --global core.excludesfile $HOME/.gitignore_global
 
 # git config --global user.signingkey <key_id>
