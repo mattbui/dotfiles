@@ -14,6 +14,10 @@ ln -s $DOTFILES/dotzsh/.aliases.zsh $HOME/.aliases.zsh
 ln -s $DOTFILES/dotzsh/.p10k.zsh $HOME/.p10k.zsh
 ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
 
+# NeoVim configs
+if [[ ! -d $HOME/.config ]] && mkdir -p $HOME/.config
+ln -s $DOTFILES/nvim $HOME/.config/nvim
+
 # Tmux configs
 ln -s $DOTFILES/.tmux.conf $HOME/.tmux.conf
 
