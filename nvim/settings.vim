@@ -1,3 +1,4 @@
+let g:mapleader = ","
 syntax enable
 set hidden
 " set nowrap
