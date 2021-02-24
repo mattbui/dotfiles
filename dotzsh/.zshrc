@@ -98,11 +98,8 @@ source $ZSH/oh-my-zsh.sh
 # export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
+export VISUAL='nvim'
+export EDITOR='$VISUAL'
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -116,7 +113,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-source ~/.aliases.zsh
+[[ ! -f ~/.aliases.zsh ]] || source ~/.aliases.zsh
 
 # Add ssh github key
 GITKEY="$HOME/.ssh/github.key"
