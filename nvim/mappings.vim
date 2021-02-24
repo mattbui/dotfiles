@@ -25,7 +25,8 @@ nnoremap <M-l>    :vertical resize +2<CR>
 " Alternate way to save
 nnoremap <C-s> :w<CR>
 " Alternate way to quit
-nnoremap <C-Q> :wq!<CR>
+nnoremap <M-q> :q!<CR>
+nnoremap <C-q> :wq!<CR>
 " <TAB>: completion.
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " Clear search highlight by pressing ESC
