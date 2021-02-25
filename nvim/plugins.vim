@@ -10,8 +10,6 @@ call plug#begin('~/.config/nvim/autoload/plugged')
 
     " Better Syntax Support
     Plug 'sheerun/vim-polyglot'
-    " File Explorer
-    Plug 'scrooloose/NERDTree'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
     " Theme
@@ -20,6 +18,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'Yggdroot/indentLine'
     " Light line
     Plug 'itchyny/lightline.vim'
+    "Buffer line
+    Plug 'mengelbrecht/lightline-bufferline'
 
 call plug#end()
 
