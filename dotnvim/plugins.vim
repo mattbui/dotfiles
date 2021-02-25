@@ -22,5 +22,7 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'mengelbrecht/lightline-bufferline'
     " Tmux integration
     Plug 'edkolev/tmuxline.vim'
+    Plug 'christoomey/vim-tmux-navigator'
+
 call plug#end()
 

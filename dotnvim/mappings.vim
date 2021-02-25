@@ -10,13 +10,17 @@ nnoremap <S-TAB> :bprevious<CR>
 nnoremap <C-w> :bw<CR>
 
 " Better window navigation
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" nnoremap <C-h> <C-w>h
+" nnoremap <C-j> <C-w>j
+" nnoremap <C-k> <C-w>k
+" nnoremap <C-l> <C-w>l
 
 nnoremap <Leader>o o<Esc>^D
 nnoremap <Leader>O O<Esc>^D
+
+" Better window splitting
+nnoremap <Leader>\ :vsplit<CR>
+nnoremap <Leader>- :split<CR>
 
 " Use alt + hjkl to resize windows
 nnoremap <M-j>    :resize -2<CR>
