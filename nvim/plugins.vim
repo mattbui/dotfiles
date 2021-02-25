@@ -14,6 +14,10 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'scrooloose/NERDTree'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
+    " Theme
+    Plug 'ayu-theme/ayu-vim'
+    " Intent line
+    Plug 'Yggdroot/indentLine'
 
 call plug#end()
 
