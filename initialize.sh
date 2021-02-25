@@ -10,29 +10,20 @@ git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
 cp $DOTFILES/dotzsh/.zshrc $HOME/.zshrc
-ln -s $DOTFILES/dotzsh/.aliases.zsh $HOME/.aliases.zsh
-ln -s $DOTFILES/dotzsh/.p10k.zsh $HOME/.p10k.zsh
-ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
 
-# NeoVim configs
-if [[ ! -d $HOME/.config ]] && mkdir -p $HOME/.config
-ln -s $DOTFILES/nvim $HOME/.config/nvim
-
-# Tmux configs
-ln -s $DOTFILES/.tmux.conf $HOME/.tmux.conf
+bash $DOTFILES/dotsh/dotlink.sh
 
 # Git
 git config --global user.email matthew@cinnamon.is
 git config --global user.username mattbui
 # git config --global branch.autosetuprebase always
 
-ln -s $DOTFILES/dotignore/.gitignore_global $HOME/.gitignore_global
 git config --global core.excludesfile $HOME/.gitignore_global
 
 # git config --global user.signingkey <key_id>
 git config --global commit.gpgsign true
 
-bash $DOTFILES/conda_setup.sh
+bash $DOTFILES/dotsh/conda_setup.sh
 
 # use this if cannot change default shell to zsh
 printf "Done intialization"

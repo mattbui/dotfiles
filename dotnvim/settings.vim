@@ -6,6 +6,7 @@ set encoding=utf-8
 set fileencoding=utf-8
 set pumheight=10
 set ruler
+set cursorline
 if !has('gui_running')
   set t_Co=256
 endif

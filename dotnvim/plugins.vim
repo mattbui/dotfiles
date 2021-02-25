@@ -18,8 +18,9 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'Yggdroot/indentLine'
     " Light line
     Plug 'itchyny/lightline.vim'
-    "Buffer line
+    " Buffer line
     Plug 'mengelbrecht/lightline-bufferline'
-
+    " Tmux integration
+    Plug 'edkolev/tmuxline.vim'
 call plug#end()
 
