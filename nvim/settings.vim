@@ -6,6 +6,9 @@ set encoding=utf-8
 set fileencoding=utf-8
 set pumheight=10
 set ruler
+if !has('gui_running')
+  set t_Co=256
+endif
 set iskeyword+=-
 set mouse=a
 set splitbelow
@@ -17,16 +20,18 @@ set smarttab
 set expandtab
 set smartindent
 set autoindent
-" set laststatus=0
+set laststatus=2
 set number
-" set showtabline=2
+set showtabline=2
 set ignorecase
 set smartcase
 set noshowmode
 set nobackup
 set nowritebackup
 set updatetime=300
-set formatoptions-=cro
 set clipboard+=unnamedplus
+
+filetype plugin indent on
+autocmd FileType * setlocal formatoptions-=cro
 cmap w!! w !sudo tee %
 
