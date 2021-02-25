@@ -18,6 +18,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'ayu-theme/ayu-vim'
     " Intent line
     Plug 'Yggdroot/indentLine'
+    " Light line
+    Plug 'itchyny/lightline.vim'
 
 call plug#end()
 
