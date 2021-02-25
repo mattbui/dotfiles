@@ -2,10 +2,12 @@
 inoremap <expr> <C-j> ("\<C-n>")
 inoremap <expr> <C-k> ("\<C-p>")
 
-" TAB in general mode will move to text buffer
+" tab in general mode will move to next buffer
 nnoremap <TAB> :bnext<CR>
-" SHIFT-TAB will go back
+" shift-tab will go back to prev buffer
 nnoremap <S-TAB> :bprevious<CR>
+" ctrl-w will close buffer
+nnoremap <C-w> :bw<CR>
 
 " Better window navigation
 nnoremap <C-h> <C-w>h
@@ -25,8 +27,8 @@ nnoremap <M-l>    :vertical resize +2<CR>
 " Alternate way to save
 nnoremap <C-s> :w<CR>
 " Alternate way to quit
-nnoremap <M-q> :q!<CR>
 nnoremap <C-q> :wq!<CR>
+nnoremap <M-q> :q!<CR>
 " <TAB>: completion.
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 " Clear search highlight by pressing ESC
