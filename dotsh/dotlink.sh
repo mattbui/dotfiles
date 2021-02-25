@@ -3,13 +3,13 @@
 DOTFILES=$HOME/dotfiles
 
 # Zsh configs
-[[ -f $HOME/.aliases.sh ]] && rm $HOME/.aliases.zsh
+[[ -f $HOME/.aliases.zsh ]] && rm $HOME/.aliases.zsh
 ln -s $DOTFILES/dotzsh/.aliases.zsh $HOME/.aliases.zsh
 
-[[ -f $HOME/.p10k.sh ]] && rm $HOME/.p10k.zsh
+[[ -f $HOME/.p10k.zsh ]] && rm $HOME/.p10k.zsh
 ln -s $DOTFILES/dotzsh/.p10k.zsh $HOME/.p10k.zsh
 
-[[ -f $HOME/.start_ssh_agent.sh ]] && rm $HOME/.start_ssh_agent.zsh
+[[ -f $HOME/.start_ssh_agent.zsh ]] && rm $HOME/.start_ssh_agent.zsh
 ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
 
 # Tmux configs
