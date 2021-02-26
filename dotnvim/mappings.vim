@@ -9,12 +9,6 @@ nnoremap <S-TAB> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <C-w> :bw<CR>
 
-" Better window navigation
-" nnoremap <C-h> <C-w>h
-" nnoremap <C-j> <C-w>j
-" nnoremap <C-k> <C-w>k
-" nnoremap <C-l> <C-w>l
-
 nnoremap <Leader>o o<Esc>^D
 nnoremap <Leader>O O<Esc>^D
 
@@ -30,6 +24,7 @@ nnoremap <M-l>    :vertical resize +2<CR>
 
 " Alternate way to save
 nnoremap <C-s> :w<CR>
+inoremap <C-s> <ESC>:w<CR>a
 " Alternate way to quit
 nnoremap <C-q> :wq!<CR>
 nnoremap <M-q> :q!<CR>
