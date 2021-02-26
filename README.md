@@ -24,10 +24,10 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [x] init: nvim
 - [x] init: tmux
 - [x] init: conda
-- [x] zsh: omz
+- [x] zsh: antigen plugins manager
 - [x] zsh: auto-complete
 - [x] zsh: syntax highlight
-- [ ] zsh: change from omz to antigen?
+- [ ] zsh: vim mode
 - [x] nvim: basic settings
 - [x] nvim: basic key-maps
 - [x] nvim: plugins manager
