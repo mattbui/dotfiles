@@ -24,6 +24,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/
 - [x] init: nvim
 - [x] init: tmux
 - [x] init: conda
+- [x] zsh: omz
+- [ ] zsh: auto-complete
+- [ ] zsh: syntax highlight
 - [x] nvim: basic settings
 - [x] nvim: basic key-maps
 - [x] nvim: plugins manager
@@ -41,4 +44,6 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/
 - [x] tmux: vim-like copy-mode
 - [x] tmux: tmux-line
 - [ ] fzf
-- [x] fzf: nvim
+- [ ] fzf: open directory/file (fo)
+- [ ] fzf: open file in vim (fe)
+- [ ] fzf: nvim
