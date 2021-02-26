@@ -15,6 +15,8 @@ ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
 # Tmux configs
 [[ -f $HOME/.tmux.conf || -h $HOME/.tmux.conf ]] && rm $HOME/.tmux.conf
 ln -s $DOTFILES/dottmux/.tmux.conf $HOME/.tmux.conf
+[[ -f $HOME/.tmux-mappings.conf || -h $HOME/.tmux-mappings.conf ]] && rm $HOME/.tmux-mappings.conf
+ln -s $DOTFILES/dottmux/.tmux-mappings.conf $HOME/.tmux-mappings.conf
 [[ -f $HOME/.tmux-line.conf || -h $HOME/.tmux-line.conf ]] && rm $HOME/.tmux-line.conf
 ln -s $DOTFILES/dottmux/.tmux-line.conf $HOME/.tmux-line.conf
 [[ -f $HOME/.tmux-vim-nav.conf || -h $HOME/.tmux-vim-nav.conf ]] && rm $HOME/.tmux-vim-nav.conf
