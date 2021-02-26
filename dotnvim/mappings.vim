@@ -24,11 +24,14 @@ nnoremap <M-l>    :vertical resize +2<CR>
 
 " Alternate way to save
 nnoremap <C-s> :w<CR>
-inoremap <C-s> <ESC>:w<CR>a
+inoremap <C-s> <ESC>:w<CR>
 " Alternate way to quit
 nnoremap <C-q> :wq!<CR>
 inoremap <C-q> <ESC>:wq!<CR>
 nnoremap <M-q> :q!<CR>
 inoremap <M-q> <ESC>:q!<CR>
-" Clear search highlight by pressing ESC
+
+" Clear search highlight by pressing ESC or ctrl+c
 nnoremap <ESC> :noh<CR><ESC>
+nnoremap <C-c> :noh<CR><ESC>
+
