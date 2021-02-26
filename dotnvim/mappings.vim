@@ -27,8 +27,8 @@ nnoremap <C-s> :w<CR>
 inoremap <C-s> <ESC>:w<CR>a
 " Alternate way to quit
 nnoremap <C-q> :wq!<CR>
+inoremap <C-q> <ESC>:wq!<CR>
 nnoremap <M-q> :q!<CR>
-" <TAB>: completion.
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <M-q> <ESC>:q!<CR>
 " Clear search highlight by pressing ESC
 nnoremap <ESC> :noh<CR><ESC>
