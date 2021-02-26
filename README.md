@@ -19,10 +19,26 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/
 
 ## TODO
 
-- [ ] initialize github signing key if available.
-- [x] neovim configs
-- [x] vim plugins
-- [ ] add code completion
-- [ ] add tmux-vim integration
-- [ ] more tmux configs
+- [x] init: zsh
+- [x] init: git
+- [x] init: nvim
+- [x] init: tmux
+- [x] init: conda
+- [x] nvim: basic settings
+- [x] nvim: basic key-maps
+- [x] nvim: plugins manager
+- [x] nvim: colorscheme
+- [ ] nvim: coc, code completion
+- [ ] nvim: file explorer
+- [ ] nvim: quickscope
+- [ ] nvim: git
+- [ ] nvim: floatterm
+- [ ] nvim: codi interactive code
+- [ ] nvim: surround.vim
+- [x] tmux: basic settings
+- [x] tmux: basic key-maps
+- [x] tmux: vim-like navigation
+- [x] tmux: vim-like copy-mode
+- [x] tmux: tmux-line
 - [ ] fzf
+- [x] fzf: nvim
