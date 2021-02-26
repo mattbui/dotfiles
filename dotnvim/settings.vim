@@ -1,15 +1,18 @@
 let g:mapleader = ","
 syntax enable
+if !has('gui_running')
+  set t_Co=256
+endif
+
 set hidden
-" set nowrap
+set nowrap
 set encoding=utf-8
 set fileencoding=utf-8
 set pumheight=10
 set ruler
 set cursorline
-if !has('gui_running')
-  set t_Co=256
-endif
+set scrolloff=2
+set sidescrolloff=5
 set iskeyword+=-
 set mouse=a
 set splitbelow
