@@ -25,8 +25,9 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [x] init: tmux
 - [x] init: conda
 - [x] zsh: omz
-- [ ] zsh: auto-complete
-- [ ] zsh: syntax highlight
+- [x] zsh: auto-complete
+- [x] zsh: syntax highlight
+- [ ] zsh: change from omz to antigen?
 - [x] nvim: basic settings
 - [x] nvim: basic key-maps
 - [x] nvim: plugins manager
