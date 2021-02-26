@@ -86,7 +86,9 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
 # Add wisely, as too many plugins slow down shell startup.
 
 # plugins
-plugins=(alias-finder extract git tmux zsh-autosuggestions)
+plugins=(alias-finder extract git tmux zsh-syntax-highlighting zsh-completions zsh-autosuggestions)
+autoload -U compinit && compinit
+_comp_options+=(globdots)  # include hidden files
 
 source $ZSH/oh-my-zsh.sh
 
