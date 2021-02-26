@@ -14,7 +14,7 @@ My dotfiles
 ### Magic command
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
+zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
 ```
 
 ## TODO
