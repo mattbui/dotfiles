@@ -5,28 +5,15 @@ DOTFILES=$HOME/dotfiles
 git clone https://github.com/mattbui/dotfiles.git $DOTFILES
 
 # Zshell
-zsh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-git clone https://github.com/zsh-users/zsh-autosuggestions.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:=$HOME/.oh-my-zsh/custom}/plugins/zsh-completions
+echo "source $HOME/.config/zsh/init.zsh" >> $HOME/.zshrc
+curl -L git.io/antigen > $HOME/.antigen.zsh  # antigen as zsh plugins manager
+zsh $DOTFILES/dotsh/dotlink.sh  # link configs from dotfiles
 
-cp $DOTFILES/dotzsh/.zshrc $HOME/.zshrc
 
-zsh $DOTFILES/dotsh/dotlink.sh
-
-# Git
-git config --global user.email matthew@cinnamon.is
-git config --global user.username mattbui
-# git config --global branch.autosetuprebase always
-
-git config --global core.excludesfile $HOME/.gitignore_global
-
-# git config --global user.signingkey <key_id>
-git config --global commit.gpgsign true
-
-zsh $DOTFILES/dotsh/conda_setup.sh
+zsh $DOTFILES/dotsh/git.sh  # git configs
+zsh $DOTFILES/dotsh/conda_setup.sh  # setup miniconda
 
 # use this if cannot change default shell to zsh
 printf "Done intialization"
 printf "To use zsh as default shell use:\n\tchsh -s \$(which zsh)\nor\n\techo \"exec zsh\" >> $HOME/.bashrc\n"
+

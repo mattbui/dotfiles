@@ -1,16 +1,13 @@
 #!/bin/bash
 
 DOTFILES=$HOME/dotfiles
+CONFIGS=$HOME/.config
+
+[[ ! -d $CONFIGS ]] && mkdir -p $CONFIGS
 
 # Zsh configs
-[[ -f $HOME/.aliases.zsh || -h $HOME/.aliases.zsh ]] && rm $HOME/.aliases.zsh
-ln -s $DOTFILES/dotzsh/.aliases.zsh $HOME/.aliases.zsh
-
-[[ -f $HOME/.p10k.zsh || -h $HOME/.p10k.zsh ]] && rm $HOME/.p10k.zsh
-ln -s $DOTFILES/dotzsh/.p10k.zsh $HOME/.p10k.zsh
-
-[[ -f $HOME/.start_ssh_agent.zsh || -h $HOME/.start_ssh_agent.zsh ]] && rm $HOME/.start_ssh_agent.zsh
-ln -s $DOTFILES/dotzsh/.start_ssh_agent.zsh $HOME/.start_ssh_agent.zsh
+[[ -d $CONFIGS/zsh || -h $CONFIGS/zsh ]] && rm -rf $CONFIGS/zsh
+ln -s $DOTFILES/dotzsh $CONFIGS/zsh
 
 # Tmux configs
 [[ -f $HOME/.tmux.conf || -h $HOME/.tmux.conf ]] && rm $HOME/.tmux.conf
@@ -28,7 +25,6 @@ ln -s $DOTFILES/dottmux/.tmux-pane.conf $HOME/.tmux-pane.conf
 ln -s $DOTFILES/dotignore/.gitignore_global $HOME/.gitignore_global
 
 # Neovim configs
-[[ ! -d $HOME/.config ]] && mkdir -p $HOME/.config
-[[ -d $HOME/.config/nvim || -h $HOME/.config/nvim ]] && rm -rf $HOME/.config/nvim
-ln -s $DOTFILES/dotnvim $HOME/.config/nvim
+[[ -d $CONFIGS/nvim || -h $CONFIGS/nvim ]] && rm -rf $CONFIGS/nvim
+ln -s $DOTFILES/dotnvim $CONFIGS/nvim
 
