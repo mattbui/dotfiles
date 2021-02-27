@@ -10,8 +10,7 @@ antigen bundle alias-finder
 antigen bundle extract
 antigen bundle tmux
 
-
-# Syntax highlighting bundle.
+antigen bundle jeffreytse/zsh-vi-mode
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
