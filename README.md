@@ -24,6 +24,7 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [x] init: nvim
 - [x] init: tmux
 - [x] init: conda
+- [ ] init: fzf
 - [x] zsh: antigen plugins manager
 - [x] zsh: auto-complete
 - [x] zsh: syntax highlight
@@ -39,12 +40,12 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [ ] nvim: floatterm
 - [ ] nvim: codi interactive code
 - [x] nvim: surround.vim
+- [ ] nvim: fzf integration
 - [x] tmux: basic settings
 - [x] tmux: basic key-maps
 - [x] tmux: vim-like navigation
 - [x] tmux: vim-like copy-mode
 - [x] tmux: tmux-line
-- [ ] fzf
+- [x] fzf: basic configs
 - [ ] fzf: open directory/file (fo)
 - [ ] fzf: open file in vim (fe)
-- [ ] fzf: nvim
