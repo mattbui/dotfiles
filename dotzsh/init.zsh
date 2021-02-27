@@ -26,14 +26,32 @@ export VISUAL='nvim'
 export EDITOR=$VISUAL
 
 # Plugins flags
-# zsh auto complete configs
+# zsh auto complete
 autoload -U compinit && compinit
 
 # zsh auto suggestion color
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 
+# fzf flags
 export FZF_DEFAULT_OPTS='--color=light'
 export FZF_COMPLETION_TRIGGER='~~'
+
+# Bind interup signal to ctrl+e in cmd mode
+# and change back to ctrl+c before command executed
+# this enable to bind ctrl+c to esc in zsh vim mode
+_bind_intr_ce() {
+    [[ -t 0 ]] && stty intr ^E
+}
+_bind_intr_cc() {
+    [[ -t 0 ]] && stty intr ^C
+}
+autoload add-zsh-hook
+add-zsh-hook precmd _bind_intr_ce
+add-zsh-hook preexec _bind_intr_cc
+
+# zsh vim mode flags
+ZVM_KEYTIMEOUT=0.1
+ZVM_VI_ESCAPE_BINDKEY='^C'
 
 # Add this so zsh-vim-mode don't override key biddings
 function zvm_after_init() {
