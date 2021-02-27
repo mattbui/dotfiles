@@ -5,6 +5,7 @@ DOTFILES=$HOME/dotfiles
 git clone https://github.com/mattbui/dotfiles.git $DOTFILES
 
 # Zshell
+# TODO: source init.zsh need to be added at the begining of .zshrc file
 echo "source $HOME/.config/zsh/init.zsh" >> $HOME/.zshrc
 curl -L git.io/antigen > $HOME/.antigen.zsh  # antigen as zsh plugins manager
 zsh $DOTFILES/init/link.sh  # link configs from dotfiles
