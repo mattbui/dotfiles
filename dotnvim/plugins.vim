@@ -12,6 +12,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'sheerun/vim-polyglot'
     " Auto pairs for '(' '[' '{'
     Plug 'jiangmiao/auto-pairs'
+    " Manage surrond objects
+    Plug 'tpope/vim-surround'
     " Theme
     Plug 'ayu-theme/ayu-vim'
     " Intent line
@@ -20,6 +22,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'itchyny/lightline.vim'
     " Buffer line
     Plug 'mengelbrecht/lightline-bufferline'
+    " Faster moving across line
+    Plug 'unblevable/quick-scope'
     " Tmux integration
     Plug 'edkolev/tmuxline.vim'
     Plug 'christoomey/vim-tmux-navigator'
