@@ -9,8 +9,12 @@ nnoremap <S-TAB> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <C-w> :bw<CR>
 
+nnoremap <BS> x
+
 nnoremap <Leader>o o<Esc>^D
 nnoremap <Leader>O O<Esc>^D
+nnoremap <Leader>/ :Commentary<CR>
+vnoremap <Leader>/ :Commentary<CR>
 
 " Better window splitting
 nnoremap <Leader>\ :vsplit<CR>

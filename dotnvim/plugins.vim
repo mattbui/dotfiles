@@ -14,6 +14,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'jiangmiao/auto-pairs'
     " Manage surrond objects
     Plug 'tpope/vim-surround'
+    " Commentary
+    Plug 'tpope/vim-commentary'
     " Theme
     Plug 'ayu-theme/ayu-vim'
     " Intent line
@@ -27,6 +29,5 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     " Tmux integration
     Plug 'edkolev/tmuxline.vim'
     Plug 'christoomey/vim-tmux-navigator'
-
 call plug#end()
 
