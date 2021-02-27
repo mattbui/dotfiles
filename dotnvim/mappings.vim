@@ -10,6 +10,7 @@ nnoremap <S-TAB> :bprevious<CR>
 nnoremap <C-w> :bw<CR>
 
 nnoremap <BS> x
+noremap! jj <Esc>
 
 nnoremap <Leader>o o<Esc>^D
 nnoremap <Leader>O O<Esc>^D

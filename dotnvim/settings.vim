@@ -4,6 +4,14 @@ if !has('gui_running')
   set t_Co=256
 endif
 
+" use hybrid number in everymode except insert
+set number relativenumber
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
 set hidden
 set nowrap
 set encoding=utf-8
@@ -25,7 +33,6 @@ set expandtab
 set smartindent
 set autoindent
 set laststatus=2
-set number
 set showtabline=2
 set ignorecase
 set smartcase
@@ -33,6 +40,7 @@ set noshowmode
 set nobackup
 set nowritebackup
 set updatetime=300
+set timeoutlen=300
 set clipboard+=unnamedplus
 
 filetype plugin indent on
