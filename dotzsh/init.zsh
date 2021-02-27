@@ -15,25 +15,31 @@ fi
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
-# zsh auto suggestion color
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
-
-# zsh auto complete configs
-autoload -U compinit && compinit
-_comp_options+=(globdots)  # include hidden files
-
 # export MANPATH="/usr/local/man:$MANPATH"
 
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 
-export FZF_DEFAULT_OPTS='--color=light'
+# Plugins flags
+# zsh auto complete configs
+autoload -U compinit && compinit
 
-# Compilation flags
-# export ARCHFLAGS="-arch x86_64"
+# zsh auto suggestion color
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=246,underline"
+
+export FZF_DEFAULT_OPTS='--color=light'
+export FZF_COMPLETION_TRIGGER='~~'
+
+# Add this so zsh-vim-mode don't override key biddings
+function zvm_after_init() {
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+}
+
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh
 
