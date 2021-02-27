@@ -33,7 +33,7 @@ autoload -U compinit && compinit
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 
 # fzf flags
-export FZF_DEFAULT_OPTS='--color=light'
+export FZF_DEFAULT_OPTS="--color=light --height 40% --preview 'bat --color=always --theme=gruvbox-white --style=numbers --line-range :500 {}'"
 export FZF_COMPLETION_TRIGGER='~~'
 
 # Bind interup signal to ctrl+e in cmd mode
