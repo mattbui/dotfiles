@@ -16,6 +16,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'tpope/vim-surround'
     " Commentary
     Plug 'tpope/vim-commentary'
+    " Coc for intellisense
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Theme
     Plug 'ayu-theme/ayu-vim'
     " Intent line

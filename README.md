@@ -34,7 +34,7 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [x] nvim: basic key-maps
 - [x] nvim: plugins manager
 - [x] nvim: colorscheme
-- [ ] nvim: coc, code completion
+- [x] nvim: coc, code completion
 - [ ] nvim: file explorer
 - [x] nvim: quickscope
 - [ ] nvim: git
