@@ -7,29 +7,34 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.config/nvim/autoload/plugged')
-
-    " Better Syntax Support
-    Plug 'sheerun/vim-polyglot'
-    " Auto pairs for '(' '[' '{'
-    Plug 'jiangmiao/auto-pairs'
-    " Manage surrond objects
+    
+    " Usefull utilities
+    Plug 'sheerun/vim-polyglot'     " Better Syntax Support 
+    Plug 'jiangmiao/auto-pairs'     " Auto pairs for '(' '[' '{'
     Plug 'tpope/vim-surround'
-    " Commentary
     Plug 'tpope/vim-commentary'
-    " Coc for intellisense
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    " Theme
-    Plug 'ayu-theme/ayu-vim'
-    " Intent line
     Plug 'Yggdroot/indentLine'
-    " Light line
-    Plug 'itchyny/lightline.vim'
-    " Buffer line
-    Plug 'mengelbrecht/lightline-bufferline'
-    " Faster moving across line
-    Plug 'unblevable/quick-scope'
+    Plug 'unblevable/quick-scope'   " Faster moving accross line
+    Plug 'airblade/vim-rooter'      " Smartly change project directory when open file
+    
+    " fzf
+    Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+    Plug 'junegunn/fzf.vim'
     " Tmux integration
     Plug 'edkolev/tmuxline.vim'
     Plug 'christoomey/vim-tmux-navigator'
+
+    " Coc plugin for intellisense
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+    " Theme
+    Plug 'ayu-theme/ayu-vim'
+    Plug 'sonph/onehalf', {'rtp': 'vim/'}
+    Plug 'lifepillar/vim-wwdc17-theme'
+
+    " Light line
+    Plug 'itchyny/lightline.vim'
+    Plug 'mengelbrecht/lightline-bufferline'
+
 call plug#end()
 
