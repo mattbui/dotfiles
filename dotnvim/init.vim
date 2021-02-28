@@ -9,6 +9,7 @@ source $HOME/.config/nvim/indent-line.vim
 source $HOME/.config/nvim/light-line.vim
 source $HOME/.config/nvim/tmux-line.vim
 source $HOME/.config/nvim/fzf.vim
+source $HOME/.config/nvim/rooter.vim
 
 source $HOME/.config/nvim/plugins.vim
 
