@@ -29,6 +29,7 @@ zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/i
 - [x] zsh: auto-complete
 - [x] zsh: syntax highlight
 - [x] zsh: vim mode
+- [ ] zsh: manpage
 - [x] nvim: basic settings
 - [x] nvim: basic key-maps
 - [x] nvim: plugins manager
