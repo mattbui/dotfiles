@@ -1,4 +1,7 @@
-let g:mapleader = ","
+let g:mapleader = " "
+
+set background=light
+
 syntax enable
 if !has('gui_running')
   set t_Co=256
@@ -12,6 +15,7 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
 augroup END
 
+set fillchars+=vert:\ 
 set hidden
 set nowrap
 set encoding=utf-8
