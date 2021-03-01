@@ -13,8 +13,8 @@ My dotfiles
 
 ### Magic command
 
-```bash
-zsh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
 ```
 
 ## TODO

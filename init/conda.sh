@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 case "$(uname -s)" in
     Linux*)
@@ -14,7 +14,7 @@ esac
 
 echo "Conda installer URL: $conda_url"
 
-if [[ ! -z $conda_url ]]; then
+if [ ! -z $conda_url ]; then
     wget -O $HOME/miniconda_installer.sh $conda_url
     zsh $HOME/miniconda_installer.sh -b
     conda_path=$HOME/miniconda3

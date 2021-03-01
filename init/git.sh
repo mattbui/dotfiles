@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 git config --global user.email matthew@cinnamon.is
 git config --global user.username mattbui
