@@ -22,3 +22,6 @@ ln -s $DOTFILES/dotignore/.gitignore_global $HOME/.gitignore_global
 [ -d $CONFIGS/nvim ] || [ -h $CONFIGS/nvim ] && rm -rf $CONFIGS/nvim
 ln -s $DOTFILES/dotnvim $CONFIGS/nvim
 
+# lf configs
+[ -d $CONFIGS/lf ] || [ -h $CONFIGS/lf ] && rm -rf $CONFIGS/lf
+ln -s $DOTFILES/dotlf $CONFIGS/lf

@@ -32,6 +32,9 @@ autoload -U compinit && compinit
 # zsh auto suggestion color
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 
+# bat flags
+export BAT_THEME='ansi-light'
+
 # fzf flags
 export FZF_DEFAULT_OPTS="--color=light --height 40%"  # --preview 'bat --color=always --theme=gruvbox-white --style=numbers --line-range :500 {}'"
 export FZF_COMPLETION_TRIGGER='~~'
@@ -60,6 +63,7 @@ function zvm_after_init() {
 
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh
+[[ ! -f $HOME/.config/zsh/lf_icons.zsh ]] || source $HOME/.config/zsh/lf_icons.zsh
 
 # Add ssh github key
 GITKEY="$HOME/.ssh/github.key"
@@ -75,3 +79,5 @@ fi
 
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
 [[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
+
+

@@ -1,0 +1,9 @@
+set shell zsh
+set icons
+set period 1
+set scrolloff 5
+set info size:time
+
+map D delete
+# toggle selection
+map <tab> toggle
