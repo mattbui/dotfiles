@@ -38,10 +38,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 - [ ] nvim: file explorer
 - [x] nvim: quickscope
 - [ ] nvim: git
-- [ ] nvim: floatterm
+- [x] nvim: floatterm
 - [ ] nvim: codi interactive code
 - [x] nvim: surround.vim
-- [ ] nvim: fzf integration
+- [x] nvim: fzf integration
 - [x] tmux: basic settings
 - [x] tmux: basic key-maps
 - [x] tmux: vim-like navigation

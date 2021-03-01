@@ -16,10 +16,12 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'Yggdroot/indentLine'
     Plug 'unblevable/quick-scope'   " Faster moving accross line
     Plug 'airblade/vim-rooter'      " Smartly change project directory when open file
-    
+    Plug 'voldikss/vim-floaterm'   
+
     " fzf
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
+
     " Tmux integration
     Plug 'edkolev/tmuxline.vim'
     Plug 'christoomey/vim-tmux-navigator'
