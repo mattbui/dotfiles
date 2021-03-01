@@ -50,7 +50,7 @@ export FZF_COMPLETION_TRIGGER='~~'
 # add-zsh-hook preexec _bind_intr_cc
 
 # zsh vim mode flags
-ZVM_KEYTIMEOUT=0.3
+ZVM_KEYTIMEOUT=0.2
 ZVM_VI_ESCAPE_BINDKEY='jj'
 
 # Add this so zsh-vim-mode don't override key biddings
