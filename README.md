@@ -35,13 +35,12 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 - [x] nvim: plugins manager
 - [x] nvim: colorscheme
 - [x] nvim: coc, code completion
-- [ ] nvim: file explorer
-- [x] nvim: quickscope
+- [x] nvim: file explorer - lf
 - [ ] nvim: git
 - [x] nvim: floatterm
 - [ ] nvim: codi interactive code
-- [x] nvim: surround.vim
 - [x] nvim: fzf integration
+- [ ] nvim: ctags
 - [x] tmux: basic settings
 - [x] tmux: basic key-maps
 - [x] tmux: vim-like navigation
@@ -50,3 +49,5 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 - [x] fzf: basic configs
 - [ ] fzf: open directory/file (fo)
 - [ ] fzf: open file in vim (fe)
+- [x] lf: basic configs
+- [x] lf: icons
