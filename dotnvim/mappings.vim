@@ -6,7 +6,7 @@ inoremap <expr> <C-k> ("\<C-p>")
 nnoremap <TAB> :bnext<CR>
 " shift-tab will go back to prev buffer
 nnoremap <S-TAB> :bprevious<CR>
-" ctrl-w will close buffer
+" alt-w will close buffer
 nnoremap <M-w> :bw<CR>
 
 nnoremap <BS> x
