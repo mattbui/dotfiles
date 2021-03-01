@@ -1,8 +1,7 @@
 let g:coc_global_extensions = ['coc-pyright', 'coc-json', 'coc-prettier']
 
-" make <cr> select the first completion item and confirm the completion when no item has been selected
+" use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
 " use <tab> for trigger completion and navigate to the next complete item
 function! s:check_back_space() abort
