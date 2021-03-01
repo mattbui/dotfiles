@@ -1,7 +1,7 @@
 map <C-p> :Files<CR>
 map <C-f> :Lines<CR>
+map <Leader>r :Rg<CR>
 
-command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
   \ 'bg':      ['bg', 'Normal'],
