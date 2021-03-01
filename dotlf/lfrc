@@ -4,6 +4,7 @@ set period 1
 set scrolloff 5
 set info size:time
 
+map <enter> open
 map D delete
 # toggle selection
 map <tab> toggle
