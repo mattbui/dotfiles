@@ -7,7 +7,7 @@ nnoremap <TAB> :bnext<CR>
 " shift-tab will go back to prev buffer
 nnoremap <S-TAB> :bprevious<CR>
 " ctrl-w will close buffer
-nnoremap <C-w> :bw<CR>
+nnoremap <M-w> :bw<CR>
 
 nnoremap <BS> x
 noremap! jj <Esc>
