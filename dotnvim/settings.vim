@@ -45,6 +45,7 @@ set nobackup
 set nowritebackup
 set updatetime=300
 set timeoutlen=300
+set shortmess+=c
 set clipboard+=unnamedplus
 
 filetype plugin indent on
