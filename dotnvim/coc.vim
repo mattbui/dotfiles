@@ -1,4 +1,4 @@
-let g:coc_global_extensions = ['coc-pyright', 'coc-json', 'coc-prettier', 'coc-yaml', 'coc-highlight']
+let g:coc_global_extensions = ['coc-marketplace', 'coc-pyright', 'coc-json', 'coc-prettier', 'coc-yaml', 'coc-highlight']
 
 " use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
