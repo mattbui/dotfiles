@@ -21,3 +21,5 @@ if [ ! -z $conda_url ]; then
     eval "$(${conda_path}/bin/conda shell.zsh hook)"
     conda init zsh
 fi
+
+conda config --set env_prompt '({name})'
