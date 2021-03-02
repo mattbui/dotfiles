@@ -6,7 +6,7 @@ if empty(glob('~/.config/nvim/autoload/plug.vim'))
   "autocmd VimEnter * PlugInstall | source $MYVIMRC
 endif
 
-call plug#begin('~/.config/nvim/autoload/plugged')
+call plug#begin('~/.local/share/nvim/autoload/plugged')
     
     " Usefull utilities
     Plug 'sheerun/vim-polyglot'     " Better Syntax Support 
