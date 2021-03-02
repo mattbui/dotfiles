@@ -2,13 +2,10 @@
 alias ca='conda activate'
 alias cde='conda deactivate'
 alias ci='conda install'
-alias ccn='conda create -n'
-alias ccp='conda create -p'
+alias cc='conda create -n'
 alias cl='conda env list'
 alias cr='conda remove'
-alias cra='conda remove --all'
-alias cran='conda remove --all -n'
-alias crap='conda remove --all -p'
+alias cra='conda remove --all -n'
 
 alias e=$VISUAL
 
