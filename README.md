@@ -19,12 +19,21 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 
 ## TODO
 
-- [x] init: zsh
-- [x] init: git
-- [x] init: nvim
-- [x] init: tmux
-- [x] init: conda
-- [ ] init: fzf
+- [x] init: configs:
+  - zsh
+  - git
+  - nvim
+  - tmux
+  - fzf
+  - lf
+- [ ] init: setup scripts (support for homebrew, apt, apk):
+  - zsh
+  - git
+  - nvim
+  - tmux
+  - fzf
+  - lf
+  - conda
 - [x] zsh: antigen plugins manager
 - [x] zsh: auto-complete
 - [x] zsh: syntax highlight
