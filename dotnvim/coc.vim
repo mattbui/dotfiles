@@ -40,5 +40,5 @@ nmap <silent> gr <Plug>(coc-references)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" xmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
