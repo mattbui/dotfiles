@@ -58,12 +58,13 @@ ZVM_VI_ESCAPE_BINDKEY='jj'
 
 # Add this so zsh-vim-mode don't override key biddings
 function zvm_after_init() {
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    [[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
 }
 
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh
-[[ ! -f $HOME/.config/zsh/lf_icons.zsh ]] || source $HOME/.config/zsh/lf_icons.zsh
+[[ ! -f $HOME/.config/lf/lf_icons.sh ]] || source $HOME/.config/lf/lf_icons.sh
 
 # Add ssh github key
 GITKEY="$HOME/.ssh/github.key"
@@ -79,5 +80,4 @@ fi
 
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
 [[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
-
 
