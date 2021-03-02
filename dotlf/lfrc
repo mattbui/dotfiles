@@ -6,5 +6,13 @@ set info size:time
 
 map <enter> open
 map D delete
-# toggle selection
-map <tab> toggle
+
+cmd trash ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	printf "move to trash?[y/N]"
+	read ans
+	[ $ans = "y" ] && trash-put $(echo $fx | tr '\n' ' ')
+}}
+map T trash
