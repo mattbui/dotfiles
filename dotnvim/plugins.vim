@@ -14,10 +14,11 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
     Plug 'Yggdroot/indentLine'
-    Plug 'unblevable/quick-scope'   " Faster moving accross line
+    " Plug 'unblevable/quick-scope'   " Faster moving accross line
     Plug 'airblade/vim-rooter'      " Smartly change project directory when open file
     Plug 'ptzz/lf.vim'
     Plug 'voldikss/vim-floaterm'   
+    Plug 'easymotion/vim-easymotion'
 
     " fzf
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -31,8 +32,8 @@ call plug#begin('~/.config/nvim/autoload/plugged')
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
     " Theme
-    Plug 'ayu-theme/ayu-vim'
-    Plug 'sonph/onehalf', {'rtp': 'vim/'}
+    " Plug 'ayu-theme/ayu-vim'
+    " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     Plug 'lifepillar/vim-wwdc17-theme'
 
     " Light line
