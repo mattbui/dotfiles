@@ -1,6 +1,6 @@
 map <C-p> :Files<CR>
 map <C-f> :Lines<CR>
-map <Leader>r :Rg<CR>
+map <C-r> :Rg<CR>
 
 let g:fzf_colors =
 \ { 'fg':      ['fg', 'Normal'],
