@@ -13,8 +13,11 @@ source $HOME/.config/nvim/rooter.vim
 source $HOME/.config/nvim/lf.vim
 source $HOME/.config/nvim/floaterm.vim
 source $HOME/.config/nvim/commentary.vim
+source $HOME/.config/nvim/easy-align.vim
+source $HOME/.config/nvim/signify.vim
 
 source $HOME/.config/nvim/plugins.vim
+source $HOME/.config/nvim/which-key.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

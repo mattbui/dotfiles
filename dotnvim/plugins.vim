@@ -1,16 +1,24 @@
 call plug#begin(stdpath('data') . '/plugged')
     
     " Usefull utilities
-    Plug 'sheerun/vim-polyglot'     " Better Syntax Support 
-    Plug 'jiangmiao/auto-pairs'     " Auto pairs for '(' '[' '{'
+    Plug 'sheerun/vim-polyglot' " Better Syntax Support
+    Plug 'jiangmiao/auto-pairs' " Auto pairs for '(' '[' '{'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-commentary'
     Plug 'Yggdroot/indentLine'
-    " Plug 'unblevable/quick-scope'   " Faster moving accross line
-    Plug 'airblade/vim-rooter'      " Smartly change project directory when open file
+    Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
     Plug 'ptzz/lf.vim'
     Plug 'voldikss/vim-floaterm'   
     Plug 'easymotion/vim-easymotion'
+    " Plug 'mhinz/vim-startify'
+    Plug 'liuchengxu/vim-which-key'
+    Plug 'junegunn/vim-easy-align'
+
+    " Git integration
+    Plug 'mhinz/vim-signify'    " Show git diff in file
+    Plug 'itchyny/vim-gitbranch'
+    " Plug 'tpope/vim-fugitive'
+    
 
     " fzf
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
