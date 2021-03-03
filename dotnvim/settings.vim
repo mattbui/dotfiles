@@ -15,6 +15,7 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
 augroup END
 
+set signcolumn=yes
 set fillchars+=vert:\ 
 set hidden
 set nowrap
