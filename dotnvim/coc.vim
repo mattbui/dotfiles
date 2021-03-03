@@ -1,4 +1,12 @@
-let g:coc_global_extensions = ['coc-marketplace', 'coc-pyright', 'coc-json', 'coc-prettier', 'coc-yaml', 'coc-highlight']
+let g:coc_global_extensions = [
+      \'coc-marketplace',
+      \'coc-pyright',
+      \'coc-json',
+      \'coc-prettier',
+      \'coc-yaml',
+      \'coc-highlight',
+      \'coc-explorer'
+      \]
 
 " use <cr> to confirm completion
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
@@ -39,6 +47,5 @@ nmap <silent> gr <Plug>(coc-references)
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" Formatting selected code.
-" xmap <leader>f  <Plug>(coc-format-selected)
-" nmap <leader>f  <Plug>(coc-format-selected)
+" When close all buffers, close coc-explorer
+autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
