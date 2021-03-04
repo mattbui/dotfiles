@@ -2,6 +2,10 @@
 
 My dotfiles
 
+<p align="center">
+  <img src="screen_shot.png">
+</p>
+
 ## Intialization on a new machine
 
 ### Pre-requirements
