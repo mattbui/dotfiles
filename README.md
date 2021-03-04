@@ -19,44 +19,52 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 
 ## TODO
 
-- [x] init: configs:
-  - zsh
-  - git
-  - nvim
-  - tmux
-  - fzf
-  - lf
-- [ ] init: setup scripts (support for homebrew, apt, apk):
-  - zsh
-  - git
-  - nvim
-  - tmux
-  - fzf
-  - lf
-  - conda
-- [x] zsh: antigen plugins manager
-- [x] zsh: auto-complete
-- [x] zsh: syntax highlight
-- [x] zsh: vim mode
-- [ ] zsh: manpage
-- [x] nvim: basic settings
-- [x] nvim: basic key-maps
-- [x] nvim: plugins manager
-- [x] nvim: colorscheme
-- [x] nvim: coc, code completion
-- [x] nvim: file explorer - lf
-- [ ] nvim: git
-- [x] nvim: floatterm
-- [ ] nvim: codi interactive code
-- [x] nvim: fzf integration
-- [ ] nvim: ctags
-- [x] tmux: basic settings
-- [x] tmux: basic key-maps
-- [x] tmux: vim-like navigation
-- [x] tmux: vim-like copy-mode
-- [x] tmux: tmux-line
+- [x] init:
+  - [x] configs:
+    - [x] zsh
+    - [x] git
+    - [x] nvim
+    - [x] tmux
+    - [x] fzf
+    - [x] lf
+  - [ ] setup scripts (support for homebrew, apt, apk):
+    - [ ] zsh
+    - [ ] git
+    - [ ] nvim
+    - [ ] tmux
+    - [ ] fzf
+    - [ ] lf
+    - [x] conda
+- [x] zsh:
+  - [x] antigen plugins manager
+  - [x] auto-complete
+  - [x] syntax highlight
+  - [x] vim mode
+  - [x] manpage
+- [x] nvim:
+  - [x] basic settings
+  - [x] basic key-maps
+  - [x] plugins manager
+  - [x] colorscheme
+  - [x] coc, code completion
+  - [x] file explorer
+    - [x] lf
+    - [x] coc-explorer
+  - [x] git
+    - [x] signify
+    - [x] git light-line
+  - [x] startify
+  - [x] floatterm
+  - [ ] codi interactive code
+  - [x] fzf integration
+- [x] tmux:
+  - [x] vim-like navigation
+  - [x] vim-like copy-mode
+  - [x] tmux-line
 - [x] fzf: basic configs
-- [ ] fzf: open directory/file (fo)
-- [ ] fzf: open file in vim (fe)
+  - [ ]open directory/file (fo)
+  - [ ]open file in vim (fe)
 - [x] lf: basic configs
-- [x] lf: icons
+  - [x] icons: nerd fonts
+  - [x] trash
+  - [x] addDir, addFile
