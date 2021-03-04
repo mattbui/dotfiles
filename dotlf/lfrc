@@ -10,9 +10,33 @@ map D delete
 cmd trash ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
+	space=$' '
+	tok_space=$'<SPACE>'
+
 	printf "%s\n\t" "$fx"
-	printf "move to trash?[y/N]"
+	printf "Move to trash?[y/N] "
 	read ans
-	[ $ans = "y" ] && trash-put $(echo $fx | tr '\n' ' ')
+	[ $ans = "y" ] && for file in $(echo -e "${fx//$space/$tok_space}" | tr '\n' ' ')
+	do
+		trash "$(echo -e "${file//$tok_space/$space}")"
+	done
 }}
 map T trash
+
+cmd addDir ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "Directory name or path? "
+	read ans
+	mkdir -p $ans
+}}
+map A addDir
+
+cmd addFile ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "Filename? "
+	read ans
+	touch $ans
+}}
+map a addFile
