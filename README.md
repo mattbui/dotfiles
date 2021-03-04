@@ -66,5 +66,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [ ] open file in vim (fe)
 - [x] lf: basic configs
   - [x] icons: nerd fonts
+  - [x] lfcd: map to ctr+o
   - [x] trash
   - [x] addDir, addFile
