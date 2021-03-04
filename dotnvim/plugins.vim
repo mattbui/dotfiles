@@ -10,7 +10,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'ptzz/lf.vim'
     Plug 'voldikss/vim-floaterm'   
     Plug 'easymotion/vim-easymotion'
-    " Plug 'mhinz/vim-startify'
+    Plug 'mhinz/vim-startify'
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
 

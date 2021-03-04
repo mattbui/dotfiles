@@ -1,3 +1,4 @@
 *.zwc
 .netrwhist
 autoload/
+startify_bookmarks.vim
