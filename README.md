@@ -62,8 +62,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [x] vim-like copy-mode
   - [x] tmux-line
 - [x] fzf: basic configs
-  - [ ]open directory/file (fo)
-  - [ ]open file in vim (fe)
+  - [ ] open directory/file (fo)
+  - [ ] open file in vim (fe)
 - [x] lf: basic configs
   - [x] icons: nerd fonts
   - [x] trash
