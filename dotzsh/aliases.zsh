@@ -13,6 +13,3 @@ alias e=$VISUAL
 
 alias af='alias-finder'
 alias cheat='cht.sh'
-
-# trash
-alias rm='echo "This is not the command you are looking for.\nUse \`trash\` instead or \`\\\rm\` if neccessary."; false'
