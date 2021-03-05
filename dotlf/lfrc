@@ -40,3 +40,13 @@ cmd addFile ${{
 	touch $ans
 }}
 map a addFile
+
+# TODO: I cannot make this work inside nvim yet, it will open a new nvim inside the floaterm
+# idea for this to work inside nvim:
+# * https://github.com/mhinz/neovim-remote
+# * floatern#util#open
+cmd openWithNVim ${{
+	nvim $f
+}}
+
+map e openWithNVim
