@@ -1,5 +1,3 @@
-let g:startify_session_dir = '~/.config/nvim/session'
-
 let g:startify_lists = [
           \ { 'type': 'files',     'header': ['   Files']            },
           \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
@@ -16,8 +14,10 @@ if !empty(glob('~/.config/nvim/startify_bookmarks.vim'))
         source ~/.config/nvim/startify_bookmarks.vim
 endif
 
+let g:startify_session_autoload = 1
 let g:startify_session_delete_buffers = 1
 let g:startify_change_to_vcs_root = 1
+let g:startify_session_persistence = 1
 let g:startify_enable_special = 0
 
 let g:startify_custom_header = [
