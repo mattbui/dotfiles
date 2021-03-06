@@ -17,6 +17,23 @@ autocmd! FileType which_key
 autocmd  FileType which_key set laststatus=0 noshowmode noruler
   \| autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
 
+let g:which_key_map.s = {
+      \ 'name' : '+startify',
+      \ 'h' : [':Startify',              'home'],
+      \ 's' : [':SSave',                 'save session'],
+      \ 'i' : [':mksession Session.vim', 'save session here'],
+      \ 'l' : [':SLoad',                 'load sessison'],
+      \ 'd' : [':SDelete',               'load sessison'],
+      \ 'x' : [':SClose',                'close sessison'],
+      \ }
+
+let g:which_key_map.g = {
+      \ 'name' : '+signify',
+      \ 'd' : [':SignifyDiff',     'diff'],
+      \ 'h' : [':SignifyHunkDiff', 'hunk diff'],
+      \ 'u' : [':SignifyHunkUndo', 'hunk undo'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
