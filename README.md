@@ -31,13 +31,14 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
     - [x] tmux
     - [x] fzf
     - [x] lf
-  - [ ] setup scripts (support for homebrew, apt, apk):
+  - [ ] setup scripts (support for homebrew, apt, apk, without package manager):
     - [ ] zsh
     - [ ] git
     - [ ] nvim
     - [ ] tmux
     - [ ] fzf
     - [ ] lf
+    - [ ] fd
     - [x] conda
 - [x] zsh:
   - [x] antigen plugins manager
@@ -68,6 +69,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
 - [x] fzf: basic configs
   - [ ] open directory/file (fo)
   - [ ] open file in vim (fe)
+  - [x] use fd as default command
+  - [x] alias finder with fzf
 - [x] lf: basic configs
   - [x] icons: nerd fonts
   - [x] lfcd: map to ctr+o
