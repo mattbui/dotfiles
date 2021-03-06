@@ -1,6 +1,7 @@
 let g:mapleader = " "
 
 set background=light
+filetype plugin indent on
 
 syntax enable
 if !has('gui_running')
@@ -49,7 +50,6 @@ set timeoutlen=300
 set shortmess+=c
 set clipboard+=unnamedplus
 
-filetype plugin indent on
 autocmd FileType * setlocal formatoptions-=cro
 cmap w!! w !sudo tee %
 
