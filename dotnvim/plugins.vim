@@ -7,7 +7,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'tpope/vim-commentary'
     Plug 'Yggdroot/indentLine'
     Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
-    Plug 'ptzz/lf.vim'
+    Plug 'ptzz/lf.vim'          " Need to be loaded before floaterm
     Plug 'voldikss/vim-floaterm'   
     Plug 'easymotion/vim-easymotion'
     Plug 'mhinz/vim-startify'
@@ -18,8 +18,6 @@ call plug#begin(stdpath('data') . '/plugged')
     " Git integration
     Plug 'mhinz/vim-signify'    " Show git diff in file
     Plug 'itchyny/vim-gitbranch'
-    " Plug 'tpope/vim-fugitive'
-    
 
     " fzf
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
