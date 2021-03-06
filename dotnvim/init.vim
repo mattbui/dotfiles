@@ -3,6 +3,8 @@ source $HOME/.config/nvim/settings.vim
 source $HOME/.config/nvim/mappings.vim
 
 " Plugins configs
+source $HOME/.config/nvim/plugins.vim
+
 source $HOME/.config/nvim/coc.vim
 source $HOME/.config/nvim/polygot.vim
 source $HOME/.config/nvim/indent-line.vim
@@ -15,8 +17,6 @@ source $HOME/.config/nvim/floaterm.vim
 source $HOME/.config/nvim/commentary.vim
 source $HOME/.config/nvim/signify.vim
 source $HOME/.config/nvim/start-screen.vim
-
-source $HOME/.config/nvim/plugins.vim
 source $HOME/.config/nvim/which-key.vim
 
 " Theme configs
