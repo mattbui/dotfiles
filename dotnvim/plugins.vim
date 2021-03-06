@@ -14,6 +14,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
     Plug 'ryanoasis/vim-devicons'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
     " Git integration
     Plug 'mhinz/vim-signify'    " Show git diff in file
