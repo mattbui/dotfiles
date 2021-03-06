@@ -36,6 +36,7 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 export BAT_THEME='ansi-light'
 
 # fzf flags
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_DEFAULT_OPTS="--color=light --height 40%"  # --preview 'bat --color=always --theme=gruvbox-white --style=numbers --line-range :500 {}'"
 export FZF_COMPLETION_TRIGGER='~~'
 
