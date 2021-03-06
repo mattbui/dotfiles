@@ -11,5 +11,5 @@ alias cra='conda remove --all -n'
 
 alias e=$VISUAL
 
-alias af='alias-finder'
+alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
