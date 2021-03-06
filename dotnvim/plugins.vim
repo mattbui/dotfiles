@@ -13,6 +13,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'mhinz/vim-startify'
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
+    Plug 'ryanoasis/vim-devicons'
 
     " Git integration
     Plug 'mhinz/vim-signify'    " Show git diff in file
@@ -39,6 +40,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Light line
     Plug 'itchyny/lightline.vim'
     Plug 'mengelbrecht/lightline-bufferline'
+    Plug 'josa42/vim-lightline-coc'
 
 call plug#end()
 
