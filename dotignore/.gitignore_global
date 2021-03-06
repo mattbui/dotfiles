@@ -49,6 +49,9 @@ Temporary Items
 # Ignore all local history of files
 .history
 
+### Vim ###
+Session.vim
+
 ### Personal define ####
 draft*
 
