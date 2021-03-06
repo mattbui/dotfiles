@@ -16,25 +16,21 @@ cmd trash ${{
 	printf "%s\n\t" "$fx"
 	printf "Move to trash?[y/N] "
 	read ans
-	[ $ans = "y" ] && for file in $(echo -e "${fx//$space/$tok_space}" | tr '\n' ' ')
+	[ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
 	do
-		trash "$(echo -e "${file//$tok_space/$space}")"
+		trash "$(echo $file | sed s/$tok_space/$space/g )"
 	done
 }}
 map T trash
 
-cmd addDir ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
+cmd addDir %{{
 	printf "Directory name or path? "
 	read ans
 	mkdir -p $ans
 }}
 map A addDir
 
-cmd addFile ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
+cmd addFile %{{
 	printf "Filename? "
 	read ans
 	touch $ans
