@@ -10,7 +10,7 @@ inoremap <expr> <C-k> ("\<C-p>")
 nnoremap <silent> <S-j> :bnext<CR>
 nnoremap <silent> <S-k> :bprevious<CR>
 " alt-w will close buffer
-nnoremap <silent> <M-w> :bw<CR>
+nnoremap <silent> <M-w> :bw!<CR>
 
 nnoremap <BS> x
 noremap! jj <Esc>
