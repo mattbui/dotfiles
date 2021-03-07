@@ -37,12 +37,9 @@ cmd addFile %{{
 }}
 map a addFile
 
-# TODO: I cannot make this work inside nvim yet, it will open a new nvim inside the floaterm
-# idea for this to work inside nvim:
-# * https://github.com/mhinz/neovim-remote
-# * floatern#util#open
-cmd openWithNVim ${{
-	nvim $f
+# if currently in nvim (open via floaterm) -> use floaterm to open
+cmd openWithEditor ${{
+	[ -z $VIMRUNTIME ] && $EDITOR $f || floaterm $f
 }}
 
-map e openWithNVim
+map e openWithEditor
