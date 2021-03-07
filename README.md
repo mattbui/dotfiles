@@ -55,9 +55,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [x] file explorer
     - [x] lf
     - [x] coc-explorer
-  - [x] git
-    - [x] signify
-    - [x] git light-line
+  - [x] git: coc-git
   - [x] startify
   - [x] floatterm
   - [ ] codi interactive code
