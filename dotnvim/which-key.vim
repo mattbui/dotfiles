@@ -33,6 +33,7 @@ let g:which_key_map.g = {
       \ 'c':    [':Git commit',                  'commit'],
       \ 'b':    [':Git blame',                   'blame'],
       \ 'a':    [':Git add .',                   'add all'],
+      \ 'r':    [':CocCommand git.refresh',      'refresh'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
       \ 'd':    ['<Plug>(coc-git-chunkinfo)',    'chunk diff'],
