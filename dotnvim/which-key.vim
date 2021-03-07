@@ -18,39 +18,39 @@ autocmd  FileType which_key set laststatus=0 noshowmode noruler
   \| autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
 
 let g:which_key_map.s = {
-      \ 'name' : '+startify',
-      \ 'h' : [':Startify',              'home'],
-      \ 's' : [':SSave',                 'save session'],
-      \ 'i' : [':mksession Session.vim', 'save session here'],
-      \ 'l' : [':SLoad',                 'load sessison'],
-      \ 'd' : [':SDelete',               'load sessison'],
-      \ 'x' : [':SClose',                'close sessison'],
+      \ 'name': '+startify',
+      \ 'h':    [':Startify',              'home'],
+      \ 's':    [':SSave',                 'save session'],
+      \ 'i':    [':mksession Session.vim', 'save session here'],
+      \ 'l':    [':SLoad',                 'load sessison'],
+      \ 'd':    [':SDelete',               'load sessison'],
+      \ 'x':    [':SClose',                'close sessison'],
       \ }
 
 let g:which_key_map.g = {
-      \ 'name' : '+git',
-      \ 'D':  [':Git diff',                     'file diff'],
-      \ 'c':  [':Git commit',                   'commit'],
-      \ 'b':  [':Git blame',                    'blame'],
-      \ 'a':  [':Git add',                      'add'],
-      \ 'j':  ['<Plug>(coc-git-nextchunk)',     'next chunk'],
-      \ 'k':  ['<Plug>(coc-git-prevchunk)',     'previous chunk'],
-      \ 'd':  ['<Plug>(coc-git-chunkinfo)',     'chunk diff'],
-      \ 'u':  [':CocCommand git.chunkUndo',     'undo chunk'],
-      \ 's':  [':CocCommand git.chunkStage',    'stage chunk'],
-      \ 'n':  ['<Plug>(coc-git-nextconflict)',  'next conflict'],
-      \ 'p':  ['<Plug>(coc-git-prevconflict)',  'prev conflict'],
-      \ 'kb': [':CocCommand git.keepBoth',     'keep both'],
-      \ 'ki': [':CocCommand git.keepIncoming', 'keep incoming'],
-      \ 'kc': [':CocCommand git.keepCurrent',  'keep current'],
+      \ 'name': '+git',
+      \ 'D':    [':Git diff',                    'global diff'],
+      \ 'c':    [':Git commit',                  'commit'],
+      \ 'b':    [':Git blame',                   'blame'],
+      \ 'a':    [':Git add .',                   'add all'],
+      \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
+      \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
+      \ 'd':    ['<Plug>(coc-git-chunkinfo)',    'chunk diff'],
+      \ 'u':    [':CocCommand git.chunkUndo',    'undo chunk'],
+      \ 's':    [':CocCommand git.chunkStage',   'stage chunk'],
+      \ 'n':    ['<Plug>(coc-git-nextconflict)', 'next conflict'],
+      \ 'p':    ['<Plug>(coc-git-prevconflict)', 'prev conflict'],
+      \ 'kb':   [':CocCommand git.keepBoth',     'keep both'],
+      \ 'ki':   [':CocCommand git.keepIncoming', 'keep incoming'],
+      \ 'kc':   [':CocCommand git.keepCurrent',  'keep current'],
       \ }
 
 let g:which_key_map.t = {
-      \ 'name' : '+terminal',
-      \ 'n' : [':FloatermNew',     'new terminal'],
-      \ '\' : [':FloatermNew --wintype=vsplit', 'new terminal right'],
-      \ '-' : [':FloatermNew --wintype=split', 'new terminal below'],
-      \ 't' : [':FloatermToggle', 'toggle terminal'],
+      \ 'name': '+terminal',
+      \ 'n':    [':FloatermNew',                  'new terminal'],
+      \ '\':    [':FloatermNew --wintype=vsplit', 'new terminal right'],
+      \ '-':    [':FloatermNew --wintype=split',  'new terminal below'],
+      \ 't':    [':FloatermToggle',               'toggle terminal'],
       \ }
 
 let g:which_key_map['/'] = 'comment'
