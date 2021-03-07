@@ -4,7 +4,7 @@ function! GitStatus() abort
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'one',
+      \ 'colorscheme': 'edge',
       \ 'active': {
       \   'left': [ [ 'mode',      'paste' ],
       \             [ 'gitstatus', 'readonly', 'filename', 'modified' ],
