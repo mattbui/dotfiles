@@ -29,16 +29,20 @@ let g:which_key_map.s = {
 
 let g:which_key_map.g = {
       \ 'name' : '+git',
-      \ 'j' : ['<Plug>(coc-git-nextchunk)',     'next chunk'],
-      \ 'k' : ['<Plug>(coc-git-prevchunk)', 'previous chunk'],
-      \ 'd' : ['<Plug>(coc-git-chunkinfo)', 'chunk diff'],
-      \ 'u' : [':CocCommand git.chunkUndo', 'undo chunk'],
-      \ 's' : [':CocCommand git.chunkStage', 'stage chunk'],
-      \ 'n' : ['<Plug>(coc-git-nextconflict)',     'next conflict'],
-      \ 'p' : ['<Plug>(coc-git-prevconflict)',     'prev conflict'],
-      \ 'b' : [':CocCommand git.keepBoth', 'keep both'],
-      \ 'i' : [':CocCommand git.keepIncoming', 'keep incoming'],
-      \ 'c' : [':CocCommand git.keepCurrent', 'keep current'],
+      \ 'D':  [':Git diff',                     'file diff'],
+      \ 'c':  [':Git commit',                   'commit'],
+      \ 'b':  [':Git blame',                    'blame'],
+      \ 'a':  [':Git add',                      'add'],
+      \ 'j':  ['<Plug>(coc-git-nextchunk)',     'next chunk'],
+      \ 'k':  ['<Plug>(coc-git-prevchunk)',     'previous chunk'],
+      \ 'd':  ['<Plug>(coc-git-chunkinfo)',     'chunk diff'],
+      \ 'u':  [':CocCommand git.chunkUndo',     'undo chunk'],
+      \ 's':  [':CocCommand git.chunkStage',    'stage chunk'],
+      \ 'n':  ['<Plug>(coc-git-nextconflict)',  'next conflict'],
+      \ 'p':  ['<Plug>(coc-git-prevconflict)',  'prev conflict'],
+      \ 'kb': [':CocCommand git.keepBoth',     'keep both'],
+      \ 'ki': [':CocCommand git.keepIncoming', 'keep incoming'],
+      \ 'kc': [':CocCommand git.keepCurrent',  'keep current'],
       \ }
 
 let g:which_key_map.t = {
