@@ -34,6 +34,14 @@ let g:which_key_map.g = {
       \ 'u' : [':SignifyHunkUndo', 'hunk undo'],
       \ }
 
+let g:which_key_map.t = {
+      \ 'name' : '+terminal',
+      \ 'n' : [':FloatermNew',     'new terminal'],
+      \ '\' : [':FloatermNew --wintype=vsplit', 'new terminal right'],
+      \ '-' : [':FloatermNew --wintype=split', 'new terminal below'],
+      \ 't' : [':FloatermToggle', 'toggle terminal'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
@@ -43,7 +51,6 @@ let g:which_key_map['O'] = 'insert line above'
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['r'] = [ ':Rg',                             'ripgrep' ]
-let g:which_key_map['t'] = [ ':FloatermToggle',                 'toggle terminal']
 let g:which_key_map['f'] = [ '<Plug>(easymotion-w)',            'jump word forward']
 let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',            'jump word backward']
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
