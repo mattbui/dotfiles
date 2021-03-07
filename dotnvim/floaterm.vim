@@ -15,6 +15,17 @@ tnoremap   <silent>   <M-k>    <C-\><C-n>:FloatermPrev<CR>
 
 " Navigate with ctrl+hjkl (required tmux-vim-nav)
 autocmd  FileType floaterm tnoremap <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
+  \| autocmd BufLeave <buffer> tunmap <silent> <C-h>
+  \| autocmd BufEnter <buffer> tnoremap <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
+
 autocmd  FileType floaterm tnoremap <silent> <C-j> <C-\><C-n>:TmuxNavigateDown<CR>
+  \| autocmd BufLeave <buffer> tunmap <silent> <C-j>
+  \| autocmd BufEnter <buffer> tnoremap <silent> <C-j> <C-\><C-n>:TmuxNavigateDown<CR>
+
 autocmd  FileType floaterm tnoremap <silent> <C-k> <C-\><C-n>:TmuxNavigateUp<CR>
+  \| autocmd BufLeave <buffer> tunmap <silent> <C-k>
+  \| autocmd BufEnter <buffer> tnoremap <silent> <C-k> <C-\><C-n>:TmuxNavigateUp<CR>
+
 autocmd  FileType floaterm tnoremap <silent> <C-l> <C-\><C-n>:TmuxNavigateRight<CR>
+  \| autocmd BufLeave <buffer> tunmap <silent> <C-l>
+  \| autocmd BufEnter <buffer> tnoremap <silent> <C-l> <C-\><C-n>:TmuxNavigateRight<CR>
