@@ -16,10 +16,6 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'ryanoasis/vim-devicons'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
-    " Git integration
-    Plug 'mhinz/vim-signify'    " Show git diff in file
-    Plug 'itchyny/vim-gitbranch'
-
     " fzf
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'

@@ -1,14 +1,19 @@
+function! GitStatus() abort
+  let status = get(g:, 'coc_git_status', '')
+  return status
+endfunction
+
 let g:lightline = {
       \ 'colorscheme': 'one',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ],
-      \             [ 'coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
+      \   'left': [ [ 'mode',      'paste' ],
+      \             [ 'gitstatus', 'readonly', 'filename', 'modified' ],
+      \             [ 'coc_info',  'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
       \             [ 'coc_status' ]
       \           ],
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'gitbranch#name'
+      \   'gitstatus': 'GitStatus'
       \ },
       \ 'tabline': {
       \   'left': [ ['buffers'] ],

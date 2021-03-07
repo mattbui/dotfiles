@@ -5,7 +5,8 @@ let g:coc_global_extensions = [
       \'coc-prettier',
       \'coc-yaml',
       \'coc-highlight',
-      \'coc-explorer'
+      \'coc-explorer',
+      \'coc-git'
       \]
 
 " use <cr> to confirm completion
