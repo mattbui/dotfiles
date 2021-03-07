@@ -9,7 +9,8 @@ alias cl='conda env list'
 alias cr='conda remove'
 alias cra='conda remove --all -n'
 
-alias e=$VISUAL
+alias e=$EDITOR
+alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
