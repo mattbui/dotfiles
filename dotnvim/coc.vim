@@ -23,7 +23,7 @@ inoremap <silent><expr> <Tab>
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
 
-" Use K to show documentation in preview window.
+" Use gk to show documentation in preview window.
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
@@ -33,7 +33,7 @@ function! s:show_documentation()
     execute '!' . &keywordprg . " " . expand('<cword>')
   endif
 endfunction
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> gk :call <SID>show_documentation()<CR>
 
 " use <Tab> and <S-Tab> to navigate the completion list
 inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
