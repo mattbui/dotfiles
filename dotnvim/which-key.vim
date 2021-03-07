@@ -5,6 +5,7 @@ let g:which_key_sep = '→'
 " set timeoutlen=100
 
 let g:which_key_use_floating_win = 0
+let g:which_key_hspace = 10
 
 " Change the colors if you want
 highlight default link WhichKey          Operator
