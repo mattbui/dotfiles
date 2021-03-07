@@ -7,10 +7,10 @@ inoremap <expr> <C-k> ("\<C-p>")
 " shift-tab will go back to prev buffer
 " nnoremap <S-TAB> :bprevious<CR>
 " shift+jk to move to next/prev buffer
-nnoremap <S-j> :bnext<CR>
-nnoremap <S-k> :bprevious<CR>
+nnoremap <silent> <S-j> :bnext<CR>
+nnoremap <silent> <S-k> :bprevious<CR>
 " alt-w will close buffer
-nnoremap <M-w> :bw<CR>
+nnoremap <silent> <M-w> :bw<CR>
 
 nnoremap <BS> x
 noremap! jj <Esc>
@@ -19,25 +19,25 @@ nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 
 " Better window splitting
-nnoremap <Leader>\ :vsplit<CR>
-nnoremap <Leader>- :split<CR>
+nnoremap <silent> <Leader>\ :vsplit<CR>
+nnoremap <silent> <Leader>- :split<CR>
 
 " Use alt + hjkl to resize windows
-nnoremap <M-j>    :resize -2<CR>
-nnoremap <M-k>    :resize +2<CR>
-nnoremap <M-h>    :vertical resize -2<CR>
-nnoremap <M-l>    :vertical resize +2<CR>
+nnoremap <silent> <M-j>    :resize -2<CR>
+nnoremap <silent> <M-k>    :resize +2<CR>
+nnoremap <silent> <M-h>    :vertical resize -2<CR>
+nnoremap <silent> <M-l>    :vertical resize +2<CR>
 
 " Alternate way to save
-nnoremap <C-s> :w<CR>
-inoremap <C-s> <ESC>:w<CR>
+nnoremap <silent> <C-s> :w<CR>
+inoremap <silent> <C-s> <ESC>:w<CR>
 " Alternate way to quit
-nnoremap <C-q> :wq!<CR>
-inoremap <C-q> <ESC>:wq!<CR>
-nnoremap <M-q> :q!<CR>
-inoremap <M-q> <ESC>:q!<CR>
+nnoremap <silent> <C-q> :wq!<CR>
+inoremap <silent> <C-q> <ESC>:wq!<CR>
+nnoremap <silent> <M-q> :q!<CR>
+inoremap <silent> <M-q> <ESC>:q!<CR>
 
 " Clear search highlight by pressing ESC or ctrl+c
-nnoremap <ESC> :noh<CR><ESC>
-nnoremap <C-c> :noh<CR><ESC>
+nnoremap <silent> <ESC> :noh<CR><ESC>
+nnoremap <silent> <C-c> :noh<CR><ESC>
 

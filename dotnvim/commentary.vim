@@ -1,3 +1,3 @@
 " Key mappings for vim-commenary
-nnoremap <Leader>/ :Commentary<CR>
-vnoremap <Leader>/ :Commentary<CR>
+nnoremap <silent> <Leader>/ :Commentary<CR>
+vnoremap <silent> <Leader>/ :Commentary<CR>
