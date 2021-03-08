@@ -25,6 +25,8 @@ export LANG=en_US.UTF-8
 export VISUAL='nvim'
 export EDITOR=$VISUAL
 
+export MANPAGER="$EDITOR -c 'set ft=man ts=8 nomod noma nolist nonumber'"
+
 # Plugins flags
 # zsh auto complete
 autoload -U compinit && compinit
