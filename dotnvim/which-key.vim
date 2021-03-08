@@ -34,12 +34,16 @@ let g:which_key_map.s = {
 " - open git commit -m <user_input_message> with floaterm
 " reference: https://vim.fandom.com/wiki/User_input_from_a_script
 " example: https://gist.github.com/itaine/3962039
+nnoremap <leader>gc :FloatermNew! git commit -m 
+
 let g:which_key_map.g = {
       \ 'name': '+git',
+      \ 'c':    'commit',
+      \ 'a':    [':Gwrite',                      'add current file'],
+      \ 'R':    [':Git reset %',                 'reset current file'],
+      \ 'A':    [':Git add .',                   'add all'],
       \ 'D':    [':Git diff',                    'global diff'],
-      \ 'c':    [':Git commit',                  'commit'],
       \ 'b':    [':Git blame',                   'blame'],
-      \ 'a':    [':Git add .',                   'add all'],
       \ 'r':    [':CocCommand git.refresh',      'refresh'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
