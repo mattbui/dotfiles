@@ -58,19 +58,23 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [x] git: coc-git
   - [x] startify
   - [x] floatterm
-  - [ ] codi interactive code
+  - [ ] jupyter integration
+    - [ ] codi interactive code (alternative scratchpad)
+    - [ ] [jupyter-vim](https://github.com/jupyter-vim/jupyter-vim) (send code to jupyter kernal)
+    - [ ] [vim-ipynb](https://github.com/anosillus/vim-ipynb) (edit code in ipynb files)
   - [x] fzf integration
 - [x] tmux:
   - [x] vim-like navigation
   - [x] vim-like copy-mode
   - [x] tmux-line
 - [x] fzf: basic configs
+  - [x] use fd as default command
   - [ ] open directory/file (fo)
   - [ ] open file in vim (fe)
-  - [x] use fd as default command
-  - [x] alias finder with fzf
+  - [x] alias finder with fzf (fa)
 - [x] lf: basic configs
   - [x] icons: nerd fonts
   - [x] lfcd: map to ctr+o
   - [x] trash
   - [x] addDir, addFile
+  - [x] openWithEditor
