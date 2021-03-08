@@ -65,6 +65,12 @@ let g:which_key_map.t = {
       \ 't':    [':FloatermToggle',               'toggle terminal'],
       \ }
 
+let g:which_key_map.m = {
+      \ 'name': '+markdown',
+      \ 'p':    ['<Plug>MarkdownPreview',     'preview'],
+      \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
