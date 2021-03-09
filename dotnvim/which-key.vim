@@ -60,6 +60,7 @@ let g:which_key_map.g = {
 let g:which_key_map.t = {
       \ 'name': '+terminal',
       \ 'n':    [':FloatermNew',                  'new terminal'],
+      \ 'c':    [':FloatermConda',                'new terminal with conda'],
       \ '\':    [':FloatermNew --wintype=vsplit', 'new terminal right'],
       \ '-':    [':FloatermNew --wintype=split',  'new terminal below'],
       \ 't':    [':FloatermToggle',               'toggle terminal'],

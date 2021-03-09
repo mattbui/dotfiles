@@ -18,3 +18,6 @@ autocmd  FileType floaterm tnoremap <buffer> <silent> <C-h> <C-\><C-n>:TmuxNavig
 autocmd  FileType floaterm tnoremap <buffer> <silent> <C-j> <C-\><C-n>:TmuxNavigateDown<CR>
 autocmd  FileType floaterm tnoremap <buffer> <silent> <C-k> <C-\><C-n>:TmuxNavigateUp<CR>
 autocmd  FileType floaterm tnoremap <buffer> <silent> <C-l> <C-\><C-n>:TmuxNavigateRight<CR>
+ 
+" new terminal with current conda enviroment activated
+command! FloatermConda exec 'FloatermNew! conda activate ' . $CONDA_PREFIX 
