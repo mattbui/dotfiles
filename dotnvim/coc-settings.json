@@ -9,6 +9,7 @@
   "python.formatting.provider": "black",
   "python.linting.flake8Enabled": true,
   "explorer.width": 25,
+  "explorer.file.showHiddenFiles": true,
   "explorer.icon.enableNerdfont": true,
   "explorer.icon.enableVimDevicons": true,
   "explorer.keyMappings.global": {

@@ -3,6 +3,7 @@ set icons
 set period 1
 set scrolloff 5
 set info size:time
+set hidden!
 
 map <enter> open
 map D delete
