@@ -24,7 +24,7 @@ let g:which_key_map.s = {
       \ 's':    [':SSave',                 'save session'],
       \ 'i':    [':mksession Session.vim', 'save session here'],
       \ 'l':    [':SLoad',                 'load sessison'],
-      \ 'd':    [':SDelete',               'load sessison'],
+      \ 'd':    [':SDelete',               'delete sessison'],
       \ 'x':    [':SClose',                'close sessison'],
       \ }
 
