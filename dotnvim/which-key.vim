@@ -72,6 +72,12 @@ let g:which_key_map.m = {
       \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
       \ }
 
+let g:which_key_map.c = {
+      \ 'name': '+codi',
+      \ 'a':    [':Codi',  'activate'],
+      \ 'd':    [':Codi!', 'deactivate'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
