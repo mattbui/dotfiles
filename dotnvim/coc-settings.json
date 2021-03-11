@@ -15,6 +15,9 @@
   "explorer.keyMappings.global": {
     "<cr>": ["expandable?", "expand", "open"],
     "-": "open:split",
-    "\\": "open:vsplit"
+    "\\": "open:vsplit",
+    "T": "delete",
+    "D": "deleteForever",
+    "d": "cutFile:toggle"
   }
 }
