@@ -3,7 +3,9 @@ set icons
 set period 1
 set scrolloff 5
 set info size:time
-set hidden!
+set hidden true
+set previewer ~/.config/lf/preview.sh
+set preview true
 
 map <enter> open
 map D delete
