@@ -39,7 +39,7 @@ export BAT_THEME='ansi-light'
 
 # fzf flags
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude .git'
-export FZF_DEFAULT_OPTS="--color=light --height 40%"  # --preview 'bat --color=always --theme=gruvbox-white --style=numbers --line-range :500 {}'"
+export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
 export FZF_COMPLETION_TRIGGER='~~'
 
 # sainnhe/edge color scheme
