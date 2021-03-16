@@ -1,7 +1,3 @@
-if [[ $(uname -s) == Linux* && -f "${HOME}/.config/zsh/start_ssh_agent.zsh" ]]; then
-    source "${HOME}/.config/zsh/start_ssh_agent.zsh"
-fi
-
 # GPG_TTY variable for gpg signing commit
 export GPG_TTY=$(tty)
 
@@ -77,6 +73,10 @@ function zvm_after_init() {
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh  # my custom aliases
 [[ ! -f $HOME/.config/lf/lf_icons.sh ]] || source $HOME/.config/lf/lf_icons.sh  # specify icons of lf
 
+if [[ $(uname -s) == Linux* && -f "${HOME}/.config/zsh/start_ssh_agent.zsh" ]]; then
+    source "${HOME}/.config/zsh/start_ssh_agent.zsh"
+fi
+
 # Add ssh github key
 GITKEY="$HOME/.ssh/github.key"
 if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
@@ -93,4 +93,3 @@ eval "$(direnv hook zsh)"
 
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
 [[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
-
