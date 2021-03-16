@@ -6,14 +6,20 @@ endfunction
 let g:lightline = {
       \ 'colorscheme': 'edge',
       \ 'active': {
-      \   'left': [ [ 'mode',      'paste' ],
-      \             [ 'gitstatus', 'readonly', 'filename', 'modified' ],
-      \             [ 'coc_info',  'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
-      \             [ 'coc_status' ]
+      \   'left': [
+      \           ['mode',      'paste' ],
+      \           ['gitstatus', 'readonly', 'filename', 'modified' ],
+      \           ['coc_info',  'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
+      \           ['coc_status' ]
       \           ],
+      \   'right':[
+      \           ['lineinfo' ],
+      \           ['percent' ],
+      \           ['fileformat', 'fileencoding', 'filetype', 'charvaluehex' ],
+      \           ]
       \ },
       \ 'component_function': {
-      \   'gitstatus': 'GitStatus'
+      \   'gitstatus': 'GitStatus',
       \ },
       \ 'tabline': {
       \   'left': [ ['buffers'] ],
