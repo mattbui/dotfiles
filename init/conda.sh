@@ -22,4 +22,4 @@ if [ ! -z $conda_url ]; then
     conda init zsh
 fi
 
-conda config --set env_prompt '({name})'
+conda config --set auto_activate_base false
