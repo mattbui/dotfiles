@@ -25,3 +25,7 @@ ln -s $DOTFILES/dotnvim $CONFIGS/nvim
 # lf configs
 [ -d $CONFIGS/lf ] || [ -h $CONFIGS/lf ] && rm -rf $CONFIGS/lf
 ln -s $DOTFILES/dotlf $CONFIGS/lf
+
+# direnv configs
+[ -d $CONFIGS/direnv ] || [ -h $CONFIGS/direnv ] && rm -rf $CONFIGS/direnv
+ln -s $DOTFILES/dotdirenv $CONFIGS/direnv

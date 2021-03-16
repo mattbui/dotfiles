@@ -89,6 +89,8 @@ if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
     fi
 fi
 
+eval "$(direnv hook zsh)"
+
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
 [[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
 

@@ -55,6 +55,9 @@ Session.vim
 ### Personal define ####
 draft*
 
+### Direnv ###
+.envrc
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/

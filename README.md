@@ -31,6 +31,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
     - [x] tmux
     - [x] fzf
     - [x] lf
+    - [x] direnv
   - [ ] setup scripts (support for homebrew, apt, apk, without package manager):
     - [ ] zsh
     - [ ] git
@@ -40,6 +41,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
     - [ ] lf
     - [ ] fd
     - [x] conda
+    - [ ] direnv
 - [x] zsh:
   - [x] antigen plugins manager
   - [x] auto-complete
