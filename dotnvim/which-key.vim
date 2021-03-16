@@ -44,6 +44,7 @@ let g:which_key_map.g = {
       \ 'A':    [':Git add .',                   'add all'],
       \ 'D':    [':Git diff',                    'global diff'],
       \ 'b':    [':Git blame',                   'blame'],
+      \ 'S':    [':Gstatus',                     'status'],
       \ 'r':    [':CocCommand git.refresh',      'refresh'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
