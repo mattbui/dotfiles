@@ -55,3 +55,6 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " When close all buffers, close coc-explorer
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+
+nmap <silent> <ESC> <Plug>(coc-float-hide)
+nmap <silent> <C-c> <Plug>(coc-float-hide)
