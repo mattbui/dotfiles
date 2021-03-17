@@ -80,9 +80,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [x] trash
   - [x] addDir, addFile
   - [x] openWithEditor
-- [ ] monochrome colorscheme???
-  - [ ] [typewriter-vim](https://github.com/logico/typewriter-vim)
-  - [ ] [typewriter-tmux](https://github.com/logico/typewriter-tmux)
-  - [ ] [iterm2-apex](https://github.com/heidar/iterm2-apex)
+- [ ] things to try??
   - [ ] [goyo.vim](https://github.com/junegunn/goyo.vim) (zen mode)
   - [ ] [limelight.vim](https://github.com/junegunn/limelight.vim) (code block highlight in zen mode)
