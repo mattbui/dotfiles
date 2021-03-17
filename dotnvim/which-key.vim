@@ -87,6 +87,7 @@ let g:which_key_map['O'] = 'insert line above'
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['r'] = [ ':Rg',                             'ripgrep' ]
+let g:which_key_map['f'] = [ ":call CocAction('format')",       'format file' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)', 'line backward']
 let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',            'line downward']
