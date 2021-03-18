@@ -3,7 +3,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Usefull utilities
     Plug 'sheerun/vim-polyglot' " Better Syntax Support
     Plug 'jiangmiao/auto-pairs' " Auto pairs for '(' '[' '{'
-    Plug 'tpope/vim-surround'
+    Plug 'machakann/vim-sandwich'
     Plug 'tpope/vim-commentary'
     Plug 'Yggdroot/indentLine'
     Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
@@ -26,7 +26,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " Tmux integration
     " Plug 'edkolev/tmuxline.vim'
-    Plug 'sainnhe/tmuxline.vim'
+    Plug 'sainnhe/tmuxline.vim'  " enable true color for tmux line
     Plug 'christoomey/vim-tmux-navigator'
 
     " Coc plugin for intellisense
