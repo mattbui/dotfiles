@@ -15,6 +15,10 @@ nnoremap <silent> <M-w> :bw!<CR>
 nnoremap <BS> x
 noremap! jj <Esc>
 
+" Better tabbing
+vnoremap < <gv
+vnoremap > >gv
+
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 
