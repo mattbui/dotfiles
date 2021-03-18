@@ -44,4 +44,3 @@ inoremap <silent> <M-q> <ESC>:q!<CR>
 " Clear search highlight by pressing ESC or ctrl+c
 nnoremap <silent> <ESC> :noh<CR><ESC>
 nnoremap <silent> <C-c> :noh<CR><ESC>
-

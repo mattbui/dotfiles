@@ -16,37 +16,26 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu                  | set nornu | endif
 augroup END
 
-set signcolumn=yes
-set fillchars+=vert:\ 
+set signcolumn=yes             " Always show sign column
+set fillchars+=vert:\          " Set vertical splitting char to space
 set hidden
-set nowrap
-set encoding=utf-8
-set fileencoding=utf-8
-set pumheight=10
-set ruler
-set cursorline
-set scrolloff=2
-set sidescrolloff=5
-set iskeyword+=-
+set nowrap                     " Disable line wrap
+set encoding=utf-8 fileencoding=utf-8
+set pumheight=10               " Pop up menu smaller
+set ruler                      " Show line & column number of cursor
+set cursorline                 " Highlight the current cursor line
+set scrolloff=2 sidescrolloff=5
+set iskeyword+=-               " Treat dash as a text object
 set mouse=a
-set splitbelow
-set splitright
+set splitbelow splitright      " Always split to right below
 set conceallevel=0
-set tabstop=4
-set shiftwidth=4
-set smarttab
-set expandtab
-set smartindent
-set autoindent
-set laststatus=2
-set showtabline=2
-set ignorecase
-set smartcase
+set tabstop=4 shiftwidth=4
+set smarttab expandtab smartindent autoindent
+set laststatus=2 showtabline=2 " Always show tabline & statusline
+set ignorecase smartcase       " Better search
 set noshowmode
-set nobackup
-set nowritebackup
-set updatetime=300
-set timeoutlen=300
+set nobackup nowritebackup
+set updatetime=300 timeoutlen=300
 set shortmess+=c
 set clipboard+=unnamedplus
 
