@@ -28,7 +28,6 @@ set scrolloff=2 sidescrolloff=5
 set iskeyword+=-               " Treat dash as a text object
 set mouse=a
 set splitbelow splitright      " Always split to right below
-set conceallevel=0
 set tabstop=4 shiftwidth=4
 set smarttab expandtab smartindent autoindent
 set laststatus=2 showtabline=2 " Always show tabline & statusline
