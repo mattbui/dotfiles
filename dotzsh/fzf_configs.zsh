@@ -1,5 +1,10 @@
 # fzf flags
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude .git'
+if ! command -v fd &> /dev/null; then
+  export FZF_DEFAULT_COMMAND='find * -type f'
+else
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude .git'
+fi
+
 export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
 export FZF_COMPLETION_TRIGGER='~~'
 
@@ -12,8 +17,14 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 
 fcd() {
   local dir
-  dir=$(fd --type d --hidden --follow --no-ignore --exclude .git 2> /dev/null | fzf +m) &&
-  cd "$dir"
+  if ! command -v fd &> /dev/null; then
+    dir=$(find ${1:-.} -path '*/\.*' -prune \
+                    -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+  else
+    dir=$(fd --type d --hidden --follow --no-ignore --exclude .git 2> /dev/null | fzf +m) &&
+    cd "$dir"
+  fi
 }
 
 fo() {
