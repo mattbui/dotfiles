@@ -3,7 +3,7 @@
 My dotfiles
 
 <p align="center">
-  <img src="screen_shot.png">
+  <img src="screenshot.png">
 </p>
 
 ## Intialization on a new machine
