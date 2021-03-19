@@ -6,6 +6,7 @@
     "json",
     "python"
   ],
+  "pyright.organizeimports.provider": "isort",
   "python.formatting.provider": "black",
   "python.linting.flake8Enabled": true,
   "explorer.width": 25,

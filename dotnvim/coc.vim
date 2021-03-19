@@ -57,3 +57,10 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
 
 nmap <silent> gj <Plug>(coc-float-hide)
+
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format    :call CocAction('format')
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 ISort     :call CocAction('runCommand', 'editor.action.organizeImport')

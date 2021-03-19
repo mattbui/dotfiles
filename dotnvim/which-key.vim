@@ -78,6 +78,12 @@ let g:which_key_map.c = {
       \ 'd':    [':Codi!', 'deactivate'],
       \ }
 
+let g:which_key_map.f = {
+      \ 'name': '+format',
+      \ 'f':    [":call CocAction('format')",                                     'format'],
+      \ 'i':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
@@ -88,7 +94,6 @@ let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['z'] = [ ':Goyo',            'toggle zen mode' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['r'] = [ ':Rg',                             'ripgrep' ]
-let g:which_key_map['f'] = [ ":call CocAction('format')",       'format file' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)', 'line backward']
 let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',            'line downward']
