@@ -11,7 +11,7 @@ export FZF_COMPLETION_TRIGGER='~~'
 # sainnhe/edge color scheme
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' 
 --color=fg:#4b505b,bg:#fafafa,hl:#5079be 
---color=fg+:#4b505b,bg+:#fafafa,hl+:#3a8b84 
+--color=fg+:#4b505b,bg+:#eef1f4,hl+:#3a8b84 
 --color=info:#88909f,prompt:#d05858,pointer:#b05ccc 
 --color=marker:#608e32,spinner:#d05858,header:#3a8b84'
 
