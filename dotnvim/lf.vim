@@ -4,4 +4,4 @@ let g:lf_width = 0.6
 let g:lf_height = 0.6
 let g:lf_command_override = '--wintype=float lf'
 
-map <C-o> :Lf<CR> 
+nnoremap <silent> <C-o> :Lf<CR> 
