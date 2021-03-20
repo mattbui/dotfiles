@@ -37,6 +37,4 @@ fo() {
   fi
 }
 
-bindkey -s '^x^o' 'fo\n'  # open file with ctrl+x+o
-bindkey -s '^x^f' 'fcd\n' # open folder with ctrl+x+f
-bindkey -M viins '^f' fzf-file-widget # search file with ctrl+f
+bindkey -s '^f' 'fcd\n' # open folder with ctrl+f
