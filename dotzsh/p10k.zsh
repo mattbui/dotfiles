@@ -378,10 +378,10 @@
       # local conflicted='%196F'  # red foreground
 
       # basics colors from edge-light colors
-      local       meta='%f'     # default foreground
-      local      clean='%2F'   # green foreground
-      local   modified='%11F'  # yellow foreground
-      local  untracked='%12F'   # blue foreground
+      local       meta='%f'   # default foreground
+      local      clean='%2F'  # green foreground
+      local   modified='%11F' # yellow foreground
+      local  untracked='%12F' # blue foreground
       local conflicted='%9F'  # red foreground
     else
       # Styling for incomplete and stale Git status.
