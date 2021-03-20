@@ -10,9 +10,10 @@ inoremap <expr> <C-k> ("\<C-p>")
 nnoremap <silent> <S-j> :bnext<CR>
 nnoremap <silent> <S-k> :bprevious<CR>
 " alt-w will close buffer
-nnoremap <silent> <M-w> :bw!<CR>
+nnoremap <silent> <C-w> :bw<CR>
+" go back to past buffer
+nnoremap gb <C-o>
 
-nnoremap <BS> x
 noremap! jj <Esc>
 
 " Better tabbing
@@ -36,10 +37,8 @@ nnoremap <silent> <M-l>    :vertical resize +2<CR>
 nnoremap <silent> <C-s> :w<CR>
 inoremap <silent> <C-s> <ESC>:w<CR>
 " Alternate way to quit
-nnoremap <silent> <C-q> :wq!<CR>
-inoremap <silent> <C-q> <ESC>:wq!<CR>
-nnoremap <silent> <M-q> :q!<CR>
-inoremap <silent> <M-q> <ESC>:q!<CR>
+nnoremap <silent> <C-q> :q<CR>
+inoremap <silent> <C-q> <ESC>:q<CR>
 
 " Clear search highlight by pressing ESC or ctrl+c
 nnoremap <silent> <ESC> :noh<CR><ESC>
