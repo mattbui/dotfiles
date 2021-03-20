@@ -33,7 +33,6 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 # bat flags
 export BAT_THEME='ansi-light'
 
-[[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
 # Bind interup signal to ctrl+e in cmd mode
 # and change back to ctrl+c before command executed
 # this enable to bind ctrl+c to esc in zsh vim mode
@@ -54,6 +53,7 @@ ZVM_VI_ESCAPE_BINDKEY='jj'
 # Add this so zsh-vim-mode don't override key biddings
 function zvm_after_init() {
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+    [[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
     [[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
 }
 
