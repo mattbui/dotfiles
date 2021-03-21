@@ -17,6 +17,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
     Plug 'junegunn/goyo.vim'
     Plug 'junegunn/limelight.vim'
+    Plug 'metakirby5/codi.vim'
 
     " git integration
     Plug 'tpope/vim-fugitive'

@@ -73,7 +73,6 @@ let g:which_key_map.m = {
       \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
       \ }
 
-
 " Formatting selected code.
 xmap <leader>fs  <Plug>(coc-format-selected)
 nmap <leader>fs  <Plug>(coc-format-selected)
@@ -96,6 +95,7 @@ let g:which_key_map['O'] = 'insert line above'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['Z'] = [ ':Goyo',                           'toggle zen mode' ]
+let g:which_key_map['C'] = [ ':Codi!!',                         'toggle codi' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['D'] = [ ':windo :diffthis',                'diff current windows' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
