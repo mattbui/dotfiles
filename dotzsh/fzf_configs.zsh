@@ -37,4 +37,5 @@ fo() {
   fi
 }
 
-bindkey -s '^f' 'fcd\n' # open folder with ctrl+f
+bindkey -s '^g' 'fcd\n' # go to directory with ctrl+g
+bindkey -M viins '^f' fzf-file-widget # ctrl+f for file
