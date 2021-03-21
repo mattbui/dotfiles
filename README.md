@@ -63,7 +63,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [x] startify
   - [x] floatterm
   - [ ] jupyter integration
-    - [ ] codi interactive code (alternative scratchpad)
     - [ ] [jupyter-vim](https://github.com/jupyter-vim/jupyter-vim) (send code to jupyter kernal)
     - [ ] [vim-ipynb](https://github.com/anosillus/vim-ipynb) (edit code in ipynb files)
   - [x] fzf integration
