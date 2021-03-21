@@ -45,6 +45,7 @@ let g:which_key_map.g = {
       \ 'D':    [':Git diff',                    'global diff'],
       \ 'b':    [':Git blame',                   'blame'],
       \ 'S':    [':Gstatus',                     'status'],
+      \ 'l':    [':Glog',                        'log'],
       \ 'r':    [':CocCommand git.refresh',      'refresh'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
@@ -72,16 +73,19 @@ let g:which_key_map.m = {
       \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
       \ }
 
-let g:which_key_map.c = {
-      \ 'name': '+codi',
-      \ 'a':    [':Codi',  'activate'],
-      \ 'd':    [':Codi!', 'deactivate'],
-      \ }
+
+" Formatting selected code.
+xmap <leader>fs  <Plug>(coc-format-selected)
+nmap <leader>fs  <Plug>(coc-format-selected)
 
 let g:which_key_map.f = {
       \ 'name': '+format',
-      \ 'f':    [":call CocAction('format')",                                     'format'],
+      \ 's':    'format selected',
+      \ 'm':    [":call CocAction('format')",                                     'format'],
+      \ 'f':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
       \ 'i':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
+      \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],
+      \ 'd':    [":call CocAction('fold', <f-args>)",                             'fold'],
       \ }
 
 let g:which_key_map['/'] = 'comment'
@@ -94,6 +98,7 @@ let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['z'] = [ ':Goyo',                           'toggle zen mode' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['r'] = [ ':Rg',                             'ripgrep' ]
+let g:which_key_map['D'] = [ ':windo :diffthis',                'diff current windows' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)', 'line backward']
 let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',            'line downward']

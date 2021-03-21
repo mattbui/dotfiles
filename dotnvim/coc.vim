@@ -58,9 +58,22 @@ autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | end
 
 nmap <silent> gj <Plug>(coc-float-hide)
 
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
 
 " Add `:Format` command to format current buffer.
 command! -nargs=0 Format    :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold      :call CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 ISort     :call CocAction('runCommand', 'editor.action.organizeImport')
