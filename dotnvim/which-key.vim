@@ -95,9 +95,8 @@ let g:which_key_map['o'] = 'insert line below'
 let g:which_key_map['O'] = 'insert line above'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
-let g:which_key_map['z'] = [ ':Goyo',                           'toggle zen mode' ]
+let g:which_key_map['Z'] = [ ':Goyo',                           'toggle zen mode' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
-let g:which_key_map['r'] = [ ':Rg',                             'ripgrep' ]
 let g:which_key_map['D'] = [ ':windo :diffthis',                'diff current windows' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)', 'line backward']
