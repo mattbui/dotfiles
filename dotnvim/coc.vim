@@ -18,10 +18,13 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~ '\s'
 endfunction
 
+" use tab for trigger completion with characters
+" use tab and shift-tab to navigate the completion list
 inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " Use gk to show documentation in preview window.
 function! s:show_documentation()
@@ -34,10 +37,7 @@ function! s:show_documentation()
   endif
 endfunction
 nnoremap <silent> gk :call <SID>show_documentation()<CR>
-
-" use <Tab> and <S-Tab> to navigate the completion list
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+nmap <silent> gj <Plug>(coc-float-hide)
 
 " Use `gn` and `gp` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
@@ -53,10 +53,12 @@ nmap <silent> gr <Plug>(coc-references)
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" When close all buffers, close coc-explorer
-autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
-
-nmap <silent> gj <Plug>(coc-float-hide)
+" When close coc-explorer if it's the main window on the screen
+autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | 
+        \if (len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) > 1) | bw | 
+        \else | q | 
+        \endif | 
+      \endif
 
 " Map function and class text objects
 " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
