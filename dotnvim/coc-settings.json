@@ -19,6 +19,7 @@
     "\\": "open:vsplit",
     "T": "delete",
     "D": "deleteForever",
-    "d": "cutFile:toggle"
+    "d": "cutFile:toggle",
+    ".": "toggleHidden"
   }
 }

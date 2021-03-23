@@ -9,6 +9,7 @@ set preview true
 
 map <enter> open
 map D delete
+map . set hidden!
 
 cmd trash ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
