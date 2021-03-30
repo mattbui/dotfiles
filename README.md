@@ -1,5 +1,11 @@
 # dotfiles
 
+My dotfiles
+
+<p align="center">
+  <img src="screenshot.png">
+</p>
+
 Contents:
 
 <!-- Table of contents GFM -->
@@ -10,12 +16,6 @@ Contents:
 * [TODO/Features](#todofeatures)
 
 <!-- Table of contents -->
-
-My dotfiles
-
-<p align="center">
-  <img src="screenshot.png">
-</p>
 
 ## Intialization on a new machine
 
