@@ -1,5 +1,16 @@
 # dotfiles
 
+Contents:
+
+<!-- Table of contents GFM -->
+
+* [Intialization on a new machine](#intialization-on-a-new-machine)
+  - [Pre-requirements](#pre-requirements)
+  - [Magic command](#magic-command)
+* [TODO/Features](#todofeatures)
+
+<!-- Table of contents -->
+
 My dotfiles
 
 <p align="center">
@@ -21,7 +32,7 @@ My dotfiles
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
 ```
 
-## TODO
+## TODO/Features
 
 - [x] init:
   - [x] configs:

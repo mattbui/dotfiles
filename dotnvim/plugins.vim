@@ -15,6 +15,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'junegunn/vim-easy-align'
     Plug 'ryanoasis/vim-devicons'
     Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+    Plug 'mzlogin/vim-markdown-toc'
     Plug 'junegunn/goyo.vim'
     Plug 'junegunn/limelight.vim'
     Plug 'metakirby5/codi.vim'

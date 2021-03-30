@@ -71,6 +71,7 @@ let g:which_key_map.m = {
       \ 'name': '+markdown',
       \ 'p':    ['<Plug>MarkdownPreview',     'preview'],
       \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
+      \ 't':    [':GenTocGFM',                'gen table of contents'],
       \ }
 
 let g:which_key_map.c = {
