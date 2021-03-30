@@ -20,6 +20,7 @@ source $HOME/.config/nvim/commentary.vim
 source $HOME/.config/nvim/start-screen.vim
 source $HOME/.config/nvim/which-key.vim
 source $HOME/.config/nvim/easy-align.vim
+source $HOME/.config/nvim/markdown-preview.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim
