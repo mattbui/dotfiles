@@ -53,7 +53,7 @@ nmap <silent> gr <Plug>(coc-references)
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
-" When close coc-explorer if it's the main window on the screen
+" Close coc-explorer if it's the only window on the screen
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | 
         \if (len(filter(range(1, bufnr('$')), 'buflisted(v:val)')) > 1) | bw | 
         \else | q | 
