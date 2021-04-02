@@ -7,6 +7,7 @@ source $HOME/.config/nvim/mappings.vim
 source $HOME/.config/nvim/polygot.vim
 source $HOME/.config/nvim/plugins.vim
 
+source $HOME/.config/nvim/autoclose.vim
 source $HOME/.config/nvim/coc.vim
 source $HOME/.config/nvim/goyo.vim
 source $HOME/.config/nvim/indent-line.vim
