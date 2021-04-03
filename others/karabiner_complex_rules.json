@@ -110,7 +110,7 @@
       ]
     },
     {
-      "description": "Map fn-ctrl to capslock",
+      "description": "Map fn-tab to capslock",
       "manipulators": [
         {
           "type": "basic",
@@ -119,7 +119,7 @@
               "mandatory": ["fn"],
               "optional": ["any"]
             },
-            "key_code": "left_control"
+            "key_code": "tab"
           },
           "to": [
             {
