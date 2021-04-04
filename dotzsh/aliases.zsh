@@ -9,7 +9,8 @@ alias cl='conda env list'
 alias cr='conda remove'
 alias cra='conda remove --all -n'
 
-alias e=$EDITOR
+# workaround when using e command inside floaterm/vim
+[ -z $VIMRUNTIME ] && alias e=$EDITOR || alias e=floaterm
 alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
