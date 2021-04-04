@@ -129,6 +129,26 @@
           ]
         }
       ]
+    },
+    {
+      "description": "Map ctrl-cmd-n to create new space/desktop",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["left_control", "left_command"],
+              "optional": ["any"]
+            },
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "shell_command": "/usr/bin/osascript ~/bin/newspace"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
