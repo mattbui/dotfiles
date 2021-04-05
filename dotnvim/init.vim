@@ -24,6 +24,7 @@ source $HOME/.config/nvim/easy-align.vim
 source $HOME/.config/nvim/markdown-preview.vim
 source $HOME/.config/nvim/markdown-toc.vim
 source $HOME/.config/nvim/snippets.vim
+source $HOME/.config/nvim/pydocstring.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

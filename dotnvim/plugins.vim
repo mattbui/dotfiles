@@ -20,6 +20,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'junegunn/limelight.vim'
     Plug 'metakirby5/codi.vim'
     Plug 'honza/vim-snippets'
+    Plug 'heavenshell/vim-pydocstring'
 
     " git integration
     Plug 'tpope/vim-fugitive'
