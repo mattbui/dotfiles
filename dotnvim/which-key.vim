@@ -62,8 +62,8 @@ let g:which_key_map.g = {
 let g:which_key_map.t = {
       \ 'name': '+terminal',
       \ 'n':    [':FloatermNew',                  'new terminal'],
-      \ '\':    [':FloatermNew --wintype=vsplit', 'new terminal right'],
-      \ '-':    [':FloatermNew --wintype=split',  'new terminal below'],
+      \ '\':    [':FloatermNew --wintype=vsplit --width=70', 'new terminal right'],
+      \ '-':    [':FloatermNew --wintype=split --height=20',  'new terminal below'],
       \ 't':    [':FloatermToggle',               'toggle terminal'],
       \ }
 

@@ -1,7 +1,5 @@
 let g:floaterm_opener = 'edit'
-let g:floaterm_wintype = 'split'
-let g:floaterm_width = 70
-let g:floaterm_height = 20
+let g:floaterm_width = 0.8
 
 autocmd  FileType floaterm set nonumber norelativenumber
 
@@ -9,6 +7,8 @@ autocmd  FileType floaterm set nonumber norelativenumber
 nnoremap   <silent>   <C-t>   :FloatermToggle<CR>
 tnoremap   <silent>   <C-t>   <C-\><C-n>:FloatermToggle<CR>
 tnoremap   <silent>   <C-q>   <C-\><C-n>:FloatermKill<CR>
+tnoremap   <silent>   <M-Tab>   <C-\><C-n>:FloatermNext<CR>
+tnoremap   <silent>   <M-n>   <C-\><C-n>:FloatermNew<CR>
 
 " Navigate with ctrl+hjkl (required tmux-vim-nav)
 autocmd  FileType floaterm tnoremap <buffer> <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
