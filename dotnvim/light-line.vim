@@ -1,5 +1,5 @@
 function! GitStatus() abort
-  let status = get(g:, 'coc_git_status', '')
+  let status = " ".FugitiveHead()
   return status
 endfunction
 
