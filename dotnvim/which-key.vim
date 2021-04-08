@@ -35,18 +35,19 @@ let g:which_key_map.s = {
 " reference: https://vim.fandom.com/wiki/User_input_from_a_script
 " example: https://gist.github.com/itaine/3962039
 nnoremap <leader>gc :FloatermNew! git commit -m 
+nnoremap <silent> <leader>gr :CocCommand git.refresh<cr>:call fugitive#ReloadStatus()<cr>
 
 let g:which_key_map.g = {
       \ 'name': '+git',
       \ 'c':    'commit',
+      \ 'r':    'refresh',
       \ 'a':    [':Gwrite',                      'add current file'],
-      \ 'R':    [':Git reset %',                 'reset current file'],
+      \ 'U':    [':Git reset %',                 'undo current file'],
       \ 'A':    [':Git add .',                   'add all'],
       \ 'D':    [':Git diff',                    'global diff'],
-      \ 'b':    [':Git blame',                   'blame'],
+      \ 'B':    [':Git blame',                   'blame'],
       \ 'S':    [':Gstatus',                     'status'],
-      \ 'l':    [':Glog',                        'log'],
-      \ 'r':    [':CocCommand git.refresh',      'refresh'],
+      \ 'L':    [':Glog',                        'log'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
       \ 'd':    ['<Plug>(coc-git-chunkinfo)',    'chunk diff'],
