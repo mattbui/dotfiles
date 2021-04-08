@@ -5,3 +5,4 @@ au BufRead,BufNewFile direnvrc setlocal filetype=sh
 autocmd FileType html set ts=2 sw=2
 autocmd FileType json set ts=2 sw=2
 autocmd FileType markdown set ts=2 sw=2
+autocmd FileType vim set ts=2 sw=2
