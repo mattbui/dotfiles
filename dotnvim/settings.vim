@@ -40,4 +40,3 @@ set clipboard+=unnamedplus
 
 autocmd FileType * setlocal formatoptions-=cro
 cmap w!! w !sudo tee %
-
