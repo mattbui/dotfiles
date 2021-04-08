@@ -106,14 +106,9 @@ let g:which_key_map['N'] = 'create new directory'
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['Z'] = [ ':Goyo',                           'toggle zen mode' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
-let g:which_key_map['D'] = [ ':windo :diffthis',                'diff current windows' ]
-let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',  'line forward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)', 'line backward']
-let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',            'line downward']
-let g:which_key_map['k'] = [ '<Plug>(easymotion-k)',            'line upward']
-let g:which_key_map['w'] = [ ':bw',                             'close tab']
+let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',            'jump word forward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',            'jump word backward']
 let g:which_key_map['W'] = [ ':%bw',                            'close all tab']
-let g:which_key_map['q'] = [ '<C-w>q',                          'quit']
 let g:which_key_map['Q'] = [ ':q!',                             'quit without save']
 
 " ignore <leader>0-9 for buffer switching
