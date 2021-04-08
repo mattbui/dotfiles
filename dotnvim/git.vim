@@ -16,3 +16,5 @@ function! GitRefresh()
 endfunction
 command! Grefresh call GitRefresh()
 nnoremap <silent> <leader>gr :Grefresh<cr>
+
+nnoremap <silent> <leader>gP :Git -c push.default=current push<cr>

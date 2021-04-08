@@ -32,6 +32,7 @@ let g:which_key_map.g = {
       \ 'name': '+git',
       \ 'c':    'commit',
       \ 'r':    'refresh',
+      \ 'P':    'push',
       \ 'a':    [':Gwrite',                      'add current file'],
       \ 'U':    [':Git reset %',                 'undo current file'],
       \ 'A':    [':Git add .',                   'add all'],
