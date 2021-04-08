@@ -28,15 +28,6 @@ let g:which_key_map.s = {
       \ 'x':    [':SClose',                'close sessison'],
       \ }
 
-" TODO: ERROR - :Git commit crash with gpgsign
-" potential solution:
-" - custom commit function to get input from user about commit message
-" - open git commit -m <user_input_message> with floaterm
-" reference: https://vim.fandom.com/wiki/User_input_from_a_script
-" example: https://gist.github.com/itaine/3962039
-nnoremap <leader>gc :FloatermNew! git commit -m 
-nnoremap <silent> <leader>gr :CocCommand git.refresh<cr>:call fugitive#ReloadStatus()<cr>
-
 let g:which_key_map.g = {
       \ 'name': '+git',
       \ 'c':    'commit',
