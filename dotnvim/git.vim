@@ -4,6 +4,7 @@ function! GitCommit()
   let message = input("Commit message: ")
   call inputrestore()
   execute('FloatermNew! --autoclose=2 git commit -m "'.message.'" && exit')
+  " TODO: find a way to update/refresh fugitive after this
 endfunction
 
 command! Gcommit call GitCommit()
