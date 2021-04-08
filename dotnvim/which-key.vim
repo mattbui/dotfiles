@@ -28,11 +28,15 @@ let g:which_key_map.s = {
       \ 'x':    [':SClose',                'close sessison'],
       \ }
 
+nnoremap <silent> <leader>gco :call GitChangeBranch()<cr>
+nnoremap <silent> <leader>gcb :call GitNewBranch()<cr>
 let g:which_key_map.g = {
       \ 'name': '+git',
-      \ 'c':    'commit',
-      \ 'r':    'refresh',
-      \ 'P':    'push',
+      \ 'co':   'change branch',
+      \ 'cb':   'new branch',
+      \ 'r':    [':Grefresh',                    'refresh'],
+      \ 'C':    [':Gcommit',                     'commit'],
+      \ 'P':    [':CocCommand git.push',         'push'],
       \ 'a':    [':Gwrite',                      'add current file'],
       \ 'U':    [':Git reset %',                 'undo current file'],
       \ 'A':    [':Git add .',                   'add all'],
