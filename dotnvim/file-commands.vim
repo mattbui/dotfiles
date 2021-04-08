@@ -1,5 +1,3 @@
-command! -nargs=* Md :Mkdir <args>
-
 function! NewFile()
   call inputsave()
   let filepath = input("New file: ", expand('%:h')."/")
@@ -34,7 +32,6 @@ function! Diff(bang)
     windo diffthis
   endif
 endfunction
-
 " Call :Diff to compare files in splits/windows
 " Call :Diff! to turn off diffs
 command! -bang Diff call Diff(<bang>0)
