@@ -86,11 +86,10 @@ nmap <leader>fs  <Plug>(coc-format-selected)
 
 let g:which_key_map.f = {
       \ 'name': '+format',
-      \ 's':    'format selected',
       \ 'd':    'python docstring',
       \ 'm':    [":call CocAction('format')",                                     'format'],
       \ 'f':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
-      \ 'i':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
+      \ 's':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
       \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],
       \ 'o':    [":call CocAction('fold', <f-args>)",                             'fold'],
       \ }
