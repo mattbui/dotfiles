@@ -25,6 +25,7 @@ source $HOME/.config/nvim/markdown-preview.vim
 source $HOME/.config/nvim/markdown-toc.vim
 source $HOME/.config/nvim/snippets.vim
 source $HOME/.config/nvim/pydocstring.vim
+source $HOME/.config/nvim/file-commands.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

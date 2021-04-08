@@ -99,6 +99,9 @@ let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
 let g:which_key_map['o'] = 'insert line below'
 let g:which_key_map['O'] = 'insert line above'
+let g:which_key_map['D'] = 'delete current file'
+let g:which_key_map['R'] = 'rename current file'
+let g:which_key_map['N'] = 'create new directory'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
 let g:which_key_map['Z'] = [ ':Goyo',                           'toggle zen mode' ]
