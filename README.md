@@ -77,8 +77,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
     - [ ] [jupyter-vim](https://github.com/jupyter-vim/jupyter-vim) (send code to jupyter kernal)
     - [ ] [vim-ipynb](https://github.com/anosillus/vim-ipynb) (edit code in ipynb files)
   - [x] fzf integration
-  - [x] [goyo.vim](https://github.com/junegunn/goyo.vim) (zen mode)
-  - [x] [limelight.vim](https://github.com/junegunn/limelight.vim) (code block highlight in zen mode)
 - [x] tmux:
   - [x] vim-like navigation
   - [x] vim-like copy-mode

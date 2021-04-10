@@ -102,7 +102,6 @@ let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
-let g:which_key_map['Z'] = [ ':Goyo',                           'toggle zen mode' ]
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',            'jump word forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',            'jump word backward']
