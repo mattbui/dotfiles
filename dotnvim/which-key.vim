@@ -72,12 +72,6 @@ let g:which_key_map.m = {
       \ 't':    [':GenTocGFM',                'gen table of contents'],
       \ }
 
-let g:which_key_map.c = {
-      \ 'name': '+codi',
-      \ 'a':    [':Codi',  'activate'],
-      \ 'd':    [':Codi!', 'deactivate'],
-      \ }
-
 " Formatting selected code.
 xmap <leader>fs  <Plug>(coc-format-selected)
 nmap <leader>fs  <Plug>(coc-format-selected)
