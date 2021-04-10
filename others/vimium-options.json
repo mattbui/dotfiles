@@ -9,7 +9,7 @@
   "filterLinkHints": false,
   "waitForEnterForFilteredHints": true,
   "hideHud": false,
-  "keyMappings": "# Insert your preferred key mappings here.\nunmap d\nmap <c-d> scrollPageDown\nunmap u\nmap <c-u> scrollPageUp\nunmap J\nmap J nextTab\nunmap K\nmap K previousTab\nmap gb visitPreviousTab\nmap <c-p> Vomnibar.activateInNewTab\nmap <c-b> Vomnibar.activateBookmarksInNewTab",
+  "keyMappings": "# Insert your preferred key mappings here.\nunmap d\nmap <c-d> scrollPageDown\nunmap u\nmap <c-u> scrollPageUp\nunmap J\nmap J nextTab\nunmap K\nmap K previousTab\nmap gb visitPreviousTab\nmap <c-p> Vomnibar.activateInNewTab\nmap <c-b> Vomnibar.activateTabSelection\nunmap t\nunmap x",
   "linkHintCharacters": "sadfjklewcmpgh",
   "linkHintNumbers": "0123456789",
   "newTabUrl": "about:newtab",
