@@ -1,6 +1,24 @@
 function! GitStatus() abort
-  let status = " ".FugitiveHead()
-  return status
+  let status = FugitiveHead()
+  return empty(status) ?  "" : " ".status
+endfunction
+
+function! CloseAll(...)
+  try
+    %bw
+  catch
+    echohl ErrorMsg
+    echom v:exception
+    echohl None
+  endtry
+endfunction
+
+function! NerdFontReadonly()
+  return &ft !~? 'help' && &readonly ? '' : ''
+endfunction
+
+function! NerdFontModified()
+  return &modifiable && &modified ? '' : ''
 endfunction
 
 let g:lightline = {
@@ -8,18 +26,23 @@ let g:lightline = {
       \ 'active': {
       \   'left': [
       \           ['mode',      'paste' ],
-      \           ['gitstatus', 'readonly', 'filename', 'modified' ],
+      \           ['gitstatus', 'nerdfont_readonly', 'filename', 'nerdfont_modified' ],
       \           ['coc_info',  'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
       \           ['coc_status' ]
       \           ],
       \   'right':[
       \           ['lineinfo' ],
       \           ['percent' ],
-      \           ['fileformat', 'fileencoding', 'filetype', 'charvaluehex' ],
+      \           ['fileformat', 'fileencoding', 'filetype' ],
       \           ]
+      \ },
+      \ 'component': {
+      \   'close': '%@CloseAll@  %'
       \ },
       \ 'component_function': {
       \   'gitstatus': 'GitStatus',
+      \   'nerdfont_readonly': 'NerdFontReadonly',
+      \   'nerdfont_modified': 'NerdFontModified'
       \ },
       \ 'tabline': {
       \   'left': [ ['buffers'] ],
@@ -35,10 +58,12 @@ let g:lightline = {
 
 call lightline#coc#register()
 
-let g:lightline#bufferline#show_number = 2
 let g:lightline#bufferline#enable_devicons = 1
-let g:lightline#bufferline#icon_position = 'right'
+let g:lightline#bufferline#icon_position = 'left'
 let g:lightline#bufferline#unnamed = 'unnamed'
+let g:lightline#bufferline#modified = ' '
+let g:lightline#bufferline#read_only = ' '
+let g:lightline#bufferline#more_buffers = '  '
 
 " make tabline clickable
 let g:lightline#bufferline#clickable = 1
