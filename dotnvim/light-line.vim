@@ -14,11 +14,11 @@ function! CloseAll(...)
 endfunction
 
 function! NerdFontReadonly()
-  return &ft !~? 'help' && &readonly ? '' : ''
+  return &ft !~? 'help' && &readonly ? ' ' : ''
 endfunction
 
 function! NerdFontModified()
-  return &modifiable && &modified ? '' : ''
+  return &modifiable && &modified ? ' ' : ''
 endfunction
 
 let g:lightline = {
