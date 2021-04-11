@@ -6,7 +6,7 @@ window:
 
   padding:
     x: 7
-    y: 8
+    y: 7
 
   dynamic_padding: true
 
@@ -27,7 +27,7 @@ font:
 
   # Bold font face
   bold:
-    style: Text
+    style: Light
 
   # Italic font face
   italic:
@@ -35,7 +35,7 @@ font:
 
   # Bold italic font face
   bold_italic:
-    style: Text Italic
+    style: Light Italic
   # Point size
   size: 13.0
 
