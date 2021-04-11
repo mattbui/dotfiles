@@ -121,10 +121,20 @@ key_bindings:
 
   # Fix Alt - HJKL in vim (MacOS)
   # This should be fixed with alt_send_esc option but god know why :|
-  - { key: J,     mods: Alt,     chars: "\x1bj" }
-  - { key: K,     mods: Alt,     chars: "\x1bk" }
-  - { key: H,     mods: Alt,     chars: "\x1bh" }
-  - { key: L,     mods: Alt,     chars: "\x1bl" }
-  - { key: Q,     mods: Alt,     chars: "\x1bq" }
-  - { key: N,     mods: Alt,     chars: "\x1bn" }
-  - { key: Key6,  mods: Control, chars: "\x1e"  }
+  - { key: J,    mods: Alt,     chars: "\x1bj" }
+  - { key: K,    mods: Alt,     chars: "\x1bk" }
+  - { key: H,    mods: Alt,     chars: "\x1bh" }
+  - { key: L,    mods: Alt,     chars: "\x1bl" }
+  - { key: Q,    mods: Alt,     chars: "\x1bq" }
+  - { key: N,    mods: Alt,     chars: "\x1bn" }
+
+  # Fix Ctrl-^ in MacOS 
+  - { key: Key6, mods: Control, chars: "\x1e"  }
+
+  # Fix Ctrl-Q in MacOS
+  - { key: Q,    mods: Control, chars: "\x11"  }
+  
+  # Command-delete/backspace to delete whole line
+  # Option-delete/backspace for delete word
+  - { key: Back, mods: Alt,     chars: "\x17"  }
+  - { key: Back, mods: Command, chars: "\x15"  }
