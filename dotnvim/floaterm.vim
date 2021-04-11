@@ -9,6 +9,7 @@ tnoremap   <silent>   <C-t>   <C-\><C-n>:FloatermToggle<CR>
 tnoremap   <silent>   <C-q>   <C-\><C-n>:FloatermKill<CR>
 tnoremap   <silent>   <M-Tab>   <C-\><C-n>:FloatermNext<CR>
 tnoremap   <silent>   <M-n>   <C-\><C-n>:FloatermNew<CR>
+tnoremap   <silent>   <M-q>   <C-\><C-n>
 
 " Navigate with ctrl+hjkl (required tmux-vim-nav)
 autocmd  FileType floaterm tnoremap <buffer> <silent> <C-h> <C-\><C-n>:TmuxNavigateLeft<CR>
