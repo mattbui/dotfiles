@@ -59,11 +59,15 @@ let g:lightline = {
 call lightline#coc#register()
 
 let g:lightline#bufferline#enable_devicons = 1
-let g:lightline#bufferline#icon_position = 'left'
+let g:lightline#bufferline#icon_position = 'first'
 let g:lightline#bufferline#unnamed = 'unnamed'
 let g:lightline#bufferline#modified = ' '
 let g:lightline#bufferline#read_only = ' '
 let g:lightline#bufferline#more_buffers = '  '
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#number_map = {
+\ 0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄',
+\ 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉'}
 
 " make tabline clickable
 let g:lightline#bufferline#clickable = 1
