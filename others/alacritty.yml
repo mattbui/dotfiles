@@ -5,10 +5,10 @@ window:
     lines: 30
 
   padding:
-    x: 4
-    y: 4
+    x: 8
+    y: 8
 
-  decorations: none
+  decorations: buttonless
 
 scrolling:
   history: 10000
