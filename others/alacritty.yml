@@ -25,7 +25,7 @@ font:
 
   # Bold font face
   bold:
-    style: Light
+    style: Text
 
   # Italic font face
   italic:
@@ -33,7 +33,7 @@ font:
 
   # Bold italic font face
   bold_italic:
-    style: Light Italic
+    style: Text Italic
   # Point size
   size: 14.0
 
