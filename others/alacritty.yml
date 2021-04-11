@@ -116,6 +116,7 @@ alt_send_esc: true
 # Key bindings
 key_bindings:
   # Vi Mode
+  # More infos about keycodes: https://donsnotes.com/tech/charsets/ascii.html
   - { key: Space, mods: Alt, mode: ~Search,    action: ToggleViMode   }
   - { key: Space, mods: Alt, mode: Vi|~Search, action: ScrollToBottom }
 
