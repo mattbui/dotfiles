@@ -19,6 +19,8 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'heavenshell/vim-pydocstring'
     Plug 'nathanaelkane/vim-indent-guides'
 
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
     " tpope's goodies
     Plug 'tpope/vim-eunuch'
     Plug 'tpope/vim-commentary'
