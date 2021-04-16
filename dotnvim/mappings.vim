@@ -12,9 +12,6 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " alt-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
-" go back to last/alternative buffer
-nnoremap ^ <C-^>
-
 " go back to past buffer
 nnoremap gb <C-o>
 
