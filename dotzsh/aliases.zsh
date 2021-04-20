@@ -15,4 +15,5 @@ alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
-alias ipython='python3 -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'
+alias ipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'
+alias ipython3='python3 -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'
