@@ -1,5 +1,6 @@
 set shell zsh
 set icons
+set drawbox true
 set period 1
 set scrolloff 5
 set info size:time
