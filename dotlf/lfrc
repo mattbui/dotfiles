@@ -11,6 +11,9 @@ map <enter> open
 map D delete
 map . set hidden!
 
+cmd osOpen &open "$f"
+map o osOpen
+
 cmd trash ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
