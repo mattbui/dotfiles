@@ -8,6 +8,8 @@ set info size:time
 set previewer ~/.config/lf/preview.sh
 set preview true
 
+map <c-q> quit
+map ~ cd ~
 map <enter> open
 map D delete
 map . set hidden!
@@ -17,6 +19,9 @@ map o osOpen
 
 cmd quickLook &qlmanage -p "$f"
 map = quickLook
+
+cmd extract %atool -x "$f"
+map x extract
 
 cmd trash ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
