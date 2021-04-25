@@ -1,9 +1,7 @@
 #!/bin/sh
-
-case "$1" in
-    *.tar*) tar tf "$1";;
-    *.zip) unzip -l "$1";;
-    *.rar) unrar l "$1";;
-    *.7z) 7z l "$1";;
-    *) bat --color=always --style=numbers --line-range :100 "$1";;
+mime_type=$(file --dereference --brief --mime-type "$1")
+case "$mime_type" in
+    text/*) bat --color=always --style=numbers,header --line-range=:500 "$1";;
+    *zip | *rar) atool --list "$1" || exit 1;;
+    *) exiftool "$1";;
 esac

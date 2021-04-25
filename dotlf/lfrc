@@ -15,6 +15,9 @@ map . set hidden!
 cmd osOpen &open "$f"
 map o osOpen
 
+cmd quickLook &qlmanage -p "$f"
+map = quickLook
+
 cmd trash ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
