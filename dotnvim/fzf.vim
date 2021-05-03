@@ -1,11 +1,15 @@
 let g:fzf_layout = { 'window': { 'width': 0.6, 'height': 0.6 } }
 
 map <silent> <C-p> :Files<CR>
-map <silent> <C-b> :Buffers<CR>
 " search in current buffer
 map <silent> <C-f> :BLines<CR>
 " search global
 map <silent> <C-g> :Rg<CR>
+
+nnoremap <silent> <Tab> :Buffers<CR>
+
+autocmd FileType fzf tnoremap <Tab> <C-n>
+autocmd FileType fzf tnoremap <S-TAB> <C-P>
 
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
 command! -bang -nargs=* Rg
