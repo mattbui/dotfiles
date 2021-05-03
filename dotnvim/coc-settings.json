@@ -20,7 +20,9 @@
     "T": "delete",
     "D": "deleteForever",
     "d": "cutFile:toggle",
-    ".": "toggleHidden"
+    ".": "toggleHidden",
+    "s": "gitStage",
+    "u": "gitUnstage"
   },
   "suggest.completionItemKindLabels": {
     "method": "  ",
