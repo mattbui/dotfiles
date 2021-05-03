@@ -9,7 +9,7 @@ inoremap <expr> <C-k> ("\<C-p>")
 " shift+jk to move to next/prev buffer
 nnoremap <silent> <S-j> :bnext<CR>
 nnoremap <silent> <S-k> :bprevious<CR>
-" alt-w will close buffer
+" ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
 " go back to past buffer
@@ -40,6 +40,8 @@ inoremap <silent> <C-s> <ESC>:w<CR>
 " Alternate way to quit
 nnoremap <silent> <C-q> :q<CR>
 inoremap <silent> <C-q> <ESC>:q<CR>
+" ctrl-q to close terminal windows
+tnoremap   <silent> <C-q> <C-\><C-n>:bw!<CR>
 
 " Clear search highlight by pressing ESC or ctrl+c
 nnoremap <silent> <ESC> :noh<CR><ESC>
