@@ -9,8 +9,9 @@ map <silent> <C-g> :Rg<CR>
 nnoremap <silent> <Tab> :Buffers<CR>
 
 autocmd FileType fzf tnoremap <buffer> <Tab> <C-n>
-autocmd FileType fzf tnoremap <buffer> <S-TAB> <C-p>
-autocmd FileType fzf tnoremap <buffer> * <Tab>
+autocmd FileType fzf tnoremap <buffer> <S-Tab> <C-p>
+autocmd FileType fzf tnoremap <buffer> <S-j> <Tab>
+autocmd FileType fzf tnoremap <buffer> <S-k> <S-Tab>
 
 command! -bang -nargs=? -complete=dir Files call fzf#vim#files(<q-args>, <bang>0)
 command! -bang -nargs=* Rg
