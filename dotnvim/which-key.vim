@@ -96,12 +96,13 @@ let g:which_key_map['D'] = 'delete current file'
 let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
 
-let g:which_key_map['e'] = [ ':CocCommand explorer',            'explorer' ]
-let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',               'align' ]
-let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',            'jump word forward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',            'jump word backward']
-let g:which_key_map['W'] = [ ':%bw',                            'close all tab']
-let g:which_key_map['Q'] = [ ':q!',                             'quit without save']
+let g:which_key_map['e'] = [ ':CocCommand explorer', 'explorer' ]
+let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',    'align' ]
+let g:which_key_map['l'] = [ '<Plug>(easymotion-w)', 'jump word forward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-b)', 'jump word backward']
+let g:which_key_map['S'] = [ ':source $MYVIMRC',     'update vim settings']
+let g:which_key_map['W'] = [ ':%bw',                 'close all tab']
+let g:which_key_map['Q'] = [ ':q!',                  'quit without save']
 
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'
