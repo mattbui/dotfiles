@@ -13,6 +13,8 @@ map ~ cd ~
 map <enter> open
 map D delete
 map . set hidden!
+map J :toggle; down
+map K :toggle; up
 
 cmd osOpen &open "$f"
 map o osOpen
