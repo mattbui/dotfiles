@@ -4,7 +4,6 @@ function! GitCommit()
   let message = input("Commit message: ")
   call inputrestore()
   execute('FloatermNew! --autoclose=2 git commit -m "'.message.'" && exit')
-  " TODO: find a way to update/refresh fugitive after this
 endfunction
 
 command! Gcommit call GitCommit()
@@ -49,3 +48,18 @@ function! GitNewBranch()
   redraw
   execute("Git checkout -b ".new_branch." ".old_branch)
 endfunction
+
+function! GitResetHead(...)
+  if empty(a:0)
+    call inputsave()
+    let num_commits = input("# commits reset: ")
+    call inputrestore()
+  else
+    let num_commits = a:0
+  endif
+  execute("Git reset HEAD~".num_commits)
+endfunction
+
+command! -nargs=? Grh call GitResetHead(<f-args>)
+
+autocmd BufEnter * if (&filetype == "fugitive") | call GitRefresh() | endif

@@ -35,6 +35,7 @@ let g:which_key_map.g = {
       \ 'co':   'change branch',
       \ 'cb':   'new branch',
       \ 'r':    [':Grefresh',                    'refresh'],
+      \ 'R':    [':Grh',                         'reset'],
       \ 'C':    [':Gcommit',                     'commit'],
       \ 'P':    [':call GitPushCurrentBranch()', 'push'],
       \ 'L':    [':call GitPull()',              'pull'],
