@@ -16,7 +16,6 @@ source $HOME/.config/nvim/rooter.vim
 source $HOME/.config/nvim/lf.vim
 source $HOME/.config/nvim/floaterm.vim
 source $HOME/.config/nvim/commentary.vim
-source $HOME/.config/nvim/start-screen.vim
 source $HOME/.config/nvim/which-key.vim
 source $HOME/.config/nvim/easy-align.vim
 source $HOME/.config/nvim/markdown-preview.vim
@@ -26,6 +25,7 @@ source $HOME/.config/nvim/pydocstring.vim
 source $HOME/.config/nvim/file-commands.vim
 source $HOME/.config/nvim/git.vim
 source $HOME/.config/nvim/indent-guide.vim
+source $HOME/.config/nvim/workspace.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

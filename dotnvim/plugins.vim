@@ -8,8 +8,8 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
     Plug 'ptzz/lf.vim'          " Need to be loaded before floaterm
     Plug 'voldikss/vim-floaterm'   
+    Plug 'thaerkh/vim-workspace'
     Plug 'easymotion/vim-easymotion'
-    Plug 'mhinz/vim-startify'
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
     Plug 'ryanoasis/vim-devicons'

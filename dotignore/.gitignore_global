@@ -51,6 +51,7 @@ Temporary Items
 
 ### Vim ###
 Session.vim
+.undodir
 
 ### Personal define ####
 draft*
