@@ -62,4 +62,4 @@ endfunction
 
 command! -nargs=? Grh call GitResetHead(<f-args>)
 
-autocmd BufEnter * if (&filetype == "fugitive") | call GitRefresh() | endif
+autocmd BufEnter * if (&filetype == "fugitive") | call fugitive#ReloadStatus() | endif
