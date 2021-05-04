@@ -18,16 +18,6 @@ autocmd! FileType which_key
 autocmd  FileType which_key set laststatus=0 noshowmode noruler
   \| autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
 
-let g:which_key_map.s = {
-      \ 'name': '+startify',
-      \ 'h':    [':Startify',              'home'],
-      \ 's':    [':SSave',                 'save session'],
-      \ 'i':    [':mksession Session.vim', 'save session here'],
-      \ 'l':    [':SLoad',                 'load sessison'],
-      \ 'd':    [':SDelete',               'delete sessison'],
-      \ 'x':    [':SClose',                'close sessison'],
-      \ }
-
 nnoremap <silent> <leader>gco :call GitChangeBranch()<cr>
 nnoremap <silent> <leader>gcb :call GitNewBranch()<cr>
 let g:which_key_map.g = {
@@ -96,13 +86,13 @@ let g:which_key_map['D'] = 'delete current file'
 let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
 
-let g:which_key_map['e'] = [ ':CocCommand explorer', 'explorer' ]
-let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',    'align' ]
-let g:which_key_map['l'] = [ '<Plug>(easymotion-w)', 'jump word forward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-b)', 'jump word backward']
-let g:which_key_map['S'] = [ ':source $MYVIMRC',     'update vim settings']
-let g:which_key_map['W'] = [ ':%bw',                 'close all tab']
-let g:which_key_map['Q'] = [ ':q!',                  'quit without save']
+let g:which_key_map['e'] = [ ':CocCommand explorer',                           'explorer' ]
+let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                              'align' ]
+let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',                           'jump word forward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',                           'jump word backward']
+let g:which_key_map['W'] = [ ':%bw',                                           'close all tab']
+let g:which_key_map['Q'] = [ ':q!',                                            'quit without save']
+let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"', 'update vim settings']
 
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'
