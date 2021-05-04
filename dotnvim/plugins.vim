@@ -18,6 +18,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'honza/vim-snippets'
     Plug 'heavenshell/vim-pydocstring'
     Plug 'nathanaelkane/vim-indent-guides'
+    Plug 'wfxr/minimap.vim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 

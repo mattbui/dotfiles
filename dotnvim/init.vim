@@ -29,7 +29,9 @@ source $HOME/.config/nvim/workspace.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim
-" source $HOME/.config/nvim/indent-line.vim
+
+" Load after colorscheme to makesure custom color
+source $HOME/.config/nvim/minimap.vim
 
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
