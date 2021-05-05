@@ -63,37 +63,31 @@ let g:which_key_map.m = {
       \ 't':    [':GenTocGFM',                'gen table of contents'],
       \ }
 
-" Formatting selected code.
-xmap <leader>fs  <Plug>(coc-format-selected)
-nmap <leader>fs  <Plug>(coc-format-selected)
-
-let g:which_key_map.f = {
-      \ 'name': '+format',
-      \ 'd':    'python docstring',
-      \ 'm':    [":call CocAction('format')",                                     'format'],
-      \ 'f':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
-      \ 's':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
-      \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],
-      \ 'o':    [":call CocAction('fold', <f-args>)",                             'fold'],
-      \ }
-
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
 let g:which_key_map['o'] = 'insert line below'
+let g:which_key_map['d'] = 'pydocstring'
 let g:which_key_map['O'] = 'insert line above'
 let g:which_key_map['D'] = 'delete current file'
 let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
 
-let g:which_key_map['e'] = [ ':CocCommand explorer',                           'explorer' ]
-let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                              'align' ]
-let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',                           'jump word forward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',                           'jump word backward']
-let g:which_key_map['M'] = [ ':MinimapToggle',                                 'toggle minimap']
-let g:which_key_map['W'] = [ ':%bw',                                           'close all tab']
-let g:which_key_map['Q'] = [ ':q!',                                            'quit without save']
-let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"', 'update vim settings']
+let g:which_key_map['e'] = [ ':CocCommand explorer',                                          'explorer']
+let g:which_key_map['r'] = [ '<Plug>(coc-rename)',                                            'coc rename']
+let g:which_key_map['s'] = [ ":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort import']
+let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                                             'align']
+let g:which_key_map['w'] = [ '<Plug>(easymotion-w)',                                          'jump word forward']
+let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',                                          'jump word backward']
+let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                                'line foward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                               'line backward']
+let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',                                          'line down']
+let g:which_key_map['k'] = [ '<Plug>(easymotion-k)',                                          'line up']
+let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',                             'jump anywhere']
+let g:which_key_map['M'] = [ ':MinimapToggle',                                                'toggle minimap']
+let g:which_key_map['W'] = [ ':%bw',                                                          'close all tab']
+let g:which_key_map['Q'] = [ ':q!',                                                           'quit without save']
+let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"',                'update vim settings']
 
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'
