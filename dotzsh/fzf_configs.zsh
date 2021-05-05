@@ -5,8 +5,9 @@ else
   export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude .git'
 fi
 
-export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
 export FZF_COMPLETION_TRIGGER='~~'
+
+export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
 
 # sainnhe/edge color scheme
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' 
@@ -14,6 +15,9 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --color=fg+:#4b505b,bg+:#eef1f4,hl+:#3a8b84 
 --color=info:#88909f,prompt:#d05858,pointer:#b05ccc 
 --color=marker:#608e32,spinner:#d05858,header:#3a8b84'
+
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+--bind="tab:down,shift-tab:up,J:toggle+down,K:toggle+up"'
 
 fcd() {
   local dir
