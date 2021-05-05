@@ -90,6 +90,7 @@ let g:which_key_map['e'] = [ ':CocCommand explorer',                           '
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                              'align' ]
 let g:which_key_map['l'] = [ '<Plug>(easymotion-w)',                           'jump word forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-b)',                           'jump word backward']
+let g:which_key_map['M'] = [ ':MinimapToggle',                                 'toggle minimap']
 let g:which_key_map['W'] = [ ':%bw',                                           'close all tab']
 let g:which_key_map['Q'] = [ ':q!',                                            'quit without save']
 let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"', 'update vim settings']
