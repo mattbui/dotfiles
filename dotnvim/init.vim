@@ -33,13 +33,4 @@ source $HOME/.config/nvim/colorscheme.vim
 " Load after colorscheme to makesure custom color
 source $HOME/.config/nvim/minimap.vim
 
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  ignore_install = {}, -- List of parsers to ignore installing
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = {},  -- list of language that will be disabled
-  },
-}
-EOF
+luafile $HOME/.config/nvim/treesitter.lua
