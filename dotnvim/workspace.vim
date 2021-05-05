@@ -1,2 +1,2 @@
-let g:workspace_autosave_ignore = ['vim-plug', 'fugitive',  'fugitiveblame', 'coc-explorer', 'floaterm', 'git', 'help', 'qf', 'fzf']
 let g:workspace_autosave = 0
+let g:workspace_session_disable_on_args = 1
