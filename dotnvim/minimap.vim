@@ -8,4 +8,4 @@ hi MinimapCurrentLine ctermfg=134 ctermbg=255 guibg=#eef1f4 guifg=#b05ccc
 
 let g:minimap_highlight = 'MinimapCurrentLine'
 
-autocmd WinClosed * MinimapClose
+autocmd VimLeavePre * bw 2 " Close minimap before leave Vim
