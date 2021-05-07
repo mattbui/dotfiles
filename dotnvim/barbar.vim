@@ -24,6 +24,9 @@ nnoremap <silent> <leader>p :BufferPick<CR>
 " NOTE: If barbar's option dict isn't created yet, create it
 let bufferline = get(g:, 'bufferline', {})
 
+" Enable/disable current/total tabpages indicator (top right corner)
+let bufferline.tabpages = v:false
+
 " Sets the icon's highlight group.
 " If false, will use nvim-web-devicons colors
 let bufferline.icon_custom_colors = v:true
@@ -32,8 +35,12 @@ let bufferline.icon_custom_colors = v:true
 let bufferline.icon_separator_active = '▎'
 let bufferline.icon_separator_inactive = '▏'
 
-hi link BufferCurrentSign Title
+hi BufferCurrentSign ctermfg=134 guifg=#bf75d6
 hi link BufferVisibleMod BufferVisible
 hi link BufferInactiveMod BufferInactive
+
+hi BufferCurrentTarget cterm=italic ctermfg=134 gui=italic guifg=#b05ccc
+hi BufferInactiveTarget cterm=italic ctermbg=255 ctermfg=134 gui=italic guibg=#eef1f4 guifg=#b05ccc
+hi BufferVisibleTarget cterm=italic ctermbg=231 ctermfg=134 gui=italic guibg=#bf75d6 guifg=#fafafa 
 
 autocmd TextChanged,TextChangedI,BufWritePost,FileWritePost,BufEnter * if &modified | hi link BufferCurrentIcon BufferCurrentMod | else | hi link BufferCurrentIcon BufferCurrent | endif
