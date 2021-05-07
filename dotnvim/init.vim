@@ -32,5 +32,6 @@ source $HOME/.config/nvim/colorscheme.vim
 
 " Load after colorscheme to makesure custom color
 source $HOME/.config/nvim/minimap.vim
+source $HOME/.config/nvim/barbar.vim
 
 luafile $HOME/.config/nvim/treesitter.lua

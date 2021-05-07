@@ -20,6 +20,9 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'nathanaelkane/vim-indent-guides'
     Plug 'wfxr/minimap.vim'
 
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'romgrk/barbar.nvim'
+
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
     " tpope's goodies
@@ -47,7 +50,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " Light line
     Plug 'itchyny/lightline.vim'
-    Plug 'mengelbrecht/lightline-bufferline'
+    " Plug 'mengelbrecht/lightline-bufferline'
     Plug 'josa42/vim-lightline-coc'
 
 call plug#end()
