@@ -4,7 +4,6 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'sheerun/vim-polyglot' " Better Syntax Support
     Plug 'jiangmiao/auto-pairs' " Auto pairs for '(' '[' '{'
     Plug 'machakann/vim-sandwich'
-    " Plug 'Yggdroot/indentLine'
     Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
     Plug 'ptzz/lf.vim'          " Need to be loaded before floaterm
     Plug 'voldikss/vim-floaterm'   
@@ -20,6 +19,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'nathanaelkane/vim-indent-guides'
     Plug 'wfxr/minimap.vim'
 
+    " Tabbar
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'romgrk/barbar.nvim'
 
