@@ -72,6 +72,7 @@ let g:which_key_map['O'] = 'insert line above'
 let g:which_key_map['D'] = 'delete current file'
 let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
+let g:which_key_map['p'] = 'pick buffer'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',                                          'explorer']
 let g:which_key_map['r'] = [ '<Plug>(coc-rename)',                                            'coc rename']
@@ -81,8 +82,6 @@ let g:which_key_map['w'] = [ '<Plug>(easymotion-w)',                            
 let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',                                          'word backward']
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                                'line foward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                               'line backward']
-let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',                                          'line down']
-let g:which_key_map['k'] = [ '<Plug>(easymotion-k)',                                          'line up']
 let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',                             'jump anywhere']
 let g:which_key_map['M'] = [ ':MinimapToggle',                                                'toggle minimap']
 let g:which_key_map['W'] = [ ':%bw',                                                          'close all tab']
