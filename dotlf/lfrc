@@ -9,6 +9,7 @@ set previewer ~/.config/lf/preview.sh
 set preview true
 
 map <c-q> quit
+map <esc> quit
 map ~ cd ~
 map <enter> open
 map D delete
