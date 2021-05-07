@@ -16,6 +16,7 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --color=info:#88909f,prompt:#d05858,pointer:#b05ccc 
 --color=marker:#608e32,spinner:#d05858,header:#3a8b84'
 
+# custom keybindings
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 --bind="tab:down,shift-tab:up,J:toggle+down,K:toggle+up"'
 
