@@ -49,3 +49,20 @@ hi link BufferVisibleMod BufferVisible
 hi link BufferInactiveMod BufferInactive
 
 autocmd TextChanged,TextChangedI,BufWritePost,FileWritePost,BufEnter * if &modified | hi link BufferCurrentIcon BufferCurrentMod | else | hi link BufferCurrentIcon BufferCurrent | endif
+
+if g:colors_name == 'nord'
+  hi DiffAdd guifg=#a3be8c ctermfg=144 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
+  hi DiffChange guifg=#ebcb8b ctermfg=222 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
+  hi DiffDelete guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
+  hi DiffText guifg=#81a1c1 ctermfg=109 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
+  hi diffAdded guifg=#a3be8c ctermfg=144 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
+  hi diffChanged guifg=#ebcb8b ctermfg=222 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
+  hi diffRemoved guifg=#bf616a ctermfg=131 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
+  hi diffFileId guifg=#5e81ac ctermfg=67 guibg=NONE ctermbg=NONE gui=bold,reverse cterm=bold,reverse
+  hi diffFile guifg=#3b4048 ctermfg=238 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi diffNewFile guifg=#a3be8c ctermfg=144 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi diffOldFile guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi EasyMotionTarget guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=NONE gui=bold cterm=bold
+  hi WhichKey guifg=#88C0D0 ctermfg=110 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi WhichKeySeperator guifg=#b48ead ctermfg=139 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+endif
