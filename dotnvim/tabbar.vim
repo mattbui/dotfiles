@@ -34,13 +34,3 @@ let bufferline.icon_custom_colors = v:true
 " Configure icons on the bufferline.
 let bufferline.icon_separator_active = '▎'
 let bufferline.icon_separator_inactive = '▏'
-
-hi BufferCurrentSign ctermfg=134 guifg=#bf75d6
-hi link BufferVisibleMod BufferVisible
-hi link BufferInactiveMod BufferInactive
-
-hi BufferCurrentTarget cterm=italic ctermfg=134 gui=italic guifg=#b05ccc
-hi BufferInactiveTarget cterm=italic ctermbg=255 ctermfg=134 gui=italic guibg=#eef1f4 guifg=#b05ccc
-hi BufferVisibleTarget cterm=italic ctermbg=231 ctermfg=134 gui=italic guibg=#bf75d6 guifg=#fafafa 
-
-autocmd TextChanged,TextChangedI,BufWritePost,FileWritePost,BufEnter * if &modified | hi link BufferCurrentIcon BufferCurrentMod | else | hi link BufferCurrentIcon BufferCurrent | endif
