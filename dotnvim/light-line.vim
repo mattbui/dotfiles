@@ -26,12 +26,14 @@ let g:lightline = {
       \           ['fileformat', 'fileencoding', 'filetype' ],
       \           ]
       \ },
+      \ 'enable': {
+      \   'tabline': 0
+      \ },
       \ 'component_function': {
       \   'gitstatus': 'GitStatus',
       \   'nerdfont_readonly': 'NerdFontReadonly',
       \   'nerdfont_modified': 'NerdFontModified'
       \ },
-      \ 'tabline': {},
       \ }
 
 call lightline#coc#register()
