@@ -10,11 +10,18 @@ export FZF_COMPLETION_TRIGGER='~~'
 export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
 
 # sainnhe/edge color scheme
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' 
---color=fg:#4b505b,bg:#fafafa,hl:#5079be 
---color=fg+:#4b505b,bg+:#eef1f4,hl+:#3a8b84 
---color=info:#88909f,prompt:#d05858,pointer:#b05ccc 
---color=marker:#608e32,spinner:#d05858,header:#3a8b84'
+# export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' 
+# --color=fg:#4b505b,bg:#fafafa,hl:#5079be 
+# --color=fg+:#4b505b,bg+:#eef1f4,hl+:#3a8b84 
+# --color=info:#88909f,prompt:#d05858,pointer:#b05ccc 
+# --color=marker:#608e32,spinner:#d05858,header:#3a8b84'
+
+# nord colors
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+    --color=fg:#e5e9f0,bg:#3b4252,hl:#81a1c1
+    --color=fg+:#e5e9f0,bg+:#3b4252,hl+:#81a1c1
+    --color=info:#eacb8a,prompt:#bf6069,pointer:#b48dac
+    --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b'
 
 # custom keybindings
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'

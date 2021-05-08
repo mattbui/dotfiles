@@ -186,10 +186,12 @@
   ################################[ prompt_char: prompt symbol ]################################
   # Green prompt symbol if the last command succeeded.
   # typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=76
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#b05ccc'  # edge-light colors
+  # typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#b05ccc'  # edge-light colors
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#88C0D0'  # nord colors
   # Red prompt symbol if the last command failed.
   # typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=196
-  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#d05858'  # edge-light colors
+  # typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#d05858'  # edge-light colors
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND='#BF616A'  # nord colors
   # Default prompt symbol.
   typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION='→'
   # Prompt symbol in command vi mode.
@@ -206,17 +208,20 @@
 
   ##################################[ dir: current directory ]##################################
   # Default current directory color.
-  typeset -g POWERLEVEL9K_DIR_FOREGROUND=31
+  # typeset -g POWERLEVEL9K_DIR_FOREGROUND=31
+  typeset -g POWERLEVEL9K_DIR_FOREGROUND='#5E81AC' # nord colors
   # If directory is too long, shorten some of its segments to the shortest possible unique
   # prefix. The shortened directory can be tab-completed to the original.
   typeset -g POWERLEVEL9K_SHORTEN_STRATEGY=truncate_to_unique
   # Replace removed segment suffixes with this symbol.
   typeset -g POWERLEVEL9K_SHORTEN_DELIMITER=
   # Color of the shortened directory segments.
-  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=103
+  # typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND=103
+  typeset -g POWERLEVEL9K_DIR_SHORTENED_FOREGROUND='#5E81AC' # nord colors
   # Color of the anchor directory segments. Anchor segments are never shortened. The first
   # segment is always an anchor.
-  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39
+  # typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=39
+  typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND='#88C0D0' # nord colors
   # Display anchor directory segments in bold.
   # typeset -g POWERLEVEL9K_DIR_ANCHOR_BOLD=true
   # Don't shorten directories that contain any of these files. They are anchors.
@@ -511,27 +516,31 @@
   # it will signify success by turning green.
   typeset -g POWERLEVEL9K_STATUS_OK=false
   # typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND=70
-  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND='#608e32'  # edge-light colors
+  # typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND='#608e32'  # edge-light colors
+  typeset -g POWERLEVEL9K_STATUS_OK_FOREGROUND='#A3BE8C'  # nord colors
   typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION='✓'
 
   # Status when some part of a pipe command fails but the overall exit status is zero. It may look
   # like this: 1|0.
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
   # typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND=70
-  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND='#608e32'  # edge-light corlos
+  # typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND='#608e32'  # edge-light corlos
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND='#A3BE8C'  # nord corlos
   typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION='✓'
 
   # Status when it's just an error code (e.g., '1'). No need to show it if prompt_char is enabled as
   # it will signify error by turning red.
   typeset -g POWERLEVEL9K_STATUS_ERROR=false
   # typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND=160
-  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND='#d05858'  # edge-light colors
+  # typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND='#d05858'  # edge-light colors
+  typeset -g POWERLEVEL9K_STATUS_ERROR_FOREGROUND='#BF616A'  # nord colors
   typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION='✕'
 
   # Status when the last command was terminated by a signal.
   typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL=true
   # typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND=160
-  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND='#d05858'  # edge-light colors
+  # typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND='#d05858'  # edge-light colors
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND='#BF616A'  # nord colors
   # Use terse signal names: "INT" instead of "SIGINT(2)".
   typeset -g POWERLEVEL9K_STATUS_VERBOSE_SIGNAME=false
   typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_VISUAL_IDENTIFIER_EXPANSION='✕'
@@ -540,7 +549,8 @@
   # It may look like this: 1|0.
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
   # typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=160
-  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND='#d05858'  #edge-light colors
+  # typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND='#d05858'  # edge-light colors
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND='#BF616A'  # nord colors
   typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION='✕'
 
   ###################[ command_execution_time: duration of the last command ]###################
@@ -550,7 +560,8 @@
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
   # Execution time color.
   # typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#949ba5'  # edge-light colors
+  # typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#949ba5'  # edge-light colors
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#4C566A'  # nord colors
   # Duration format: 1d 2h 3m 4s.
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
   # Custom icon.
@@ -568,7 +579,8 @@
 
   #######################[ direnv: direnv status (https://direnv.net/) ]########################
   # Direnv color.
-  typeset -g POWERLEVEL9K_DIRENV_FOREGROUND=178
+  # typeset -g POWERLEVEL9K_DIRENV_FOREGROUND=178
+  typeset -g POWERLEVEL9K_DIRENV_FOREGROUND='#EBCB8B' # nord colors
   # Custom icon.
   typeset -g POWERLEVEL9K_DIRENV_VISUAL_IDENTIFIER_EXPANSION='▾'
 
@@ -735,7 +747,8 @@
 
   ###########################[ vim_shell: vim shell indicator (:sh) ]###########################
   # Vim shell indicator color.
-  typeset -g POWERLEVEL9K_VIM_SHELL_FOREGROUND=34
+  # typeset -g POWERLEVEL9K_VIM_SHELL_FOREGROUND=34
+  typeset -g POWERLEVEL9K_VIM_SHELL_FOREGROUND='#A3BE8C' # nord colors
   # Custom icon.
   # typeset -g POWERLEVEL9K_VIM_SHELL_VISUAL_IDENTIFIER_EXPANSION='⭐'
 
@@ -851,13 +864,16 @@
   ##################################[ context: user@hostname ]##################################
   # Context color when running with privileges.
   # typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=178
-  typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='#d05858'  # edge-light colors
+  # typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='#d05858'  # edge-light colors
+  typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND='#BF616A'  # nord colors
   # Context color in SSH without privileges.
   # typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=180
-  typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND='#5079be'  # edge-light colors
+  # typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND='#5079be'  # edge-light colors
+  typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND='#5E81AC'  # nord colors
   # Default context color (no privileges, no SSH).
   # typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=180
-  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND='#5079be'  # edge-light colors
+  # typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND='#5079be'  # edge-light colors
+  typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND='#5E81AC'  # nord colors
 
   # Context format when running with privileges: user@hostname.
   typeset -g POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE='%n@%m'
@@ -877,7 +893,8 @@
 
   ###[ virtualenv: python virtual environment (https://docs.python.org/3/library/venv.html) ]###
   # Python virtual environment color.
-  typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=37
+  # typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND=37
+  typeset -g POWERLEVEL9K_VIRTUALENV_FOREGROUND='#8FBCBB'
   # Don't show Python version next to the virtual environment name.
   typeset -g POWERLEVEL9K_VIRTUALENV_SHOW_PYTHON_VERSION=false
   # If set to "false", won't show virtualenv if pyenv is already shown.
@@ -890,7 +907,8 @@
 
   #####################[ anaconda: conda environment (https://conda.io/) ]######################
   # Anaconda environment color.
-  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=37
+  # typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND=37
+  typeset -g POWERLEVEL9K_ANACONDA_FOREGROUND='#8FBCBB' # nord colors
 
   # Anaconda segment format. The following parameters are available within the expansion.
   #
@@ -923,7 +941,8 @@
 
   ################[ pyenv: python environment (https://github.com/pyenv/pyenv) ]################
   # Pyenv color.
-  typeset -g POWERLEVEL9K_PYENV_FOREGROUND=37
+  # typeset -g POWERLEVEL9K_PYENV_FOREGROUND=37
+  typeset -g POWERLEVEL9K_PYENV_FOREGROUND='#8FBCBB'
   # Hide python version if it doesn't come from one of these sources.
   typeset -g POWERLEVEL9K_PYENV_SOURCES=(shell local global)
   # If set to false, hide python version if it's the same as global:

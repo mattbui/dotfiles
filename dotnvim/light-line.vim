@@ -12,7 +12,7 @@ function! NerdFontModified()
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': 'edge',
+      \ 'colorscheme': g:colors_name,
       \ 'active': {
       \   'left': [
       \           ['mode',      'paste' ],

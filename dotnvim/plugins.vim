@@ -47,6 +47,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
     Plug 'sainnhe/edge'
+    Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
 
     " Light line
     Plug 'itchyny/lightline.vim'
