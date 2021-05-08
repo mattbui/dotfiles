@@ -55,14 +55,11 @@ if g:colors_name == 'nord'
   hi DiffChange guifg=#ebcb8b ctermfg=222 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
   hi DiffDelete guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
   hi DiffText guifg=#81a1c1 ctermfg=109 guibg=NONE ctermbg=238 gui=NONE cterm=NONE
-  hi diffAdded guifg=#a3be8c ctermfg=144 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
-  hi diffChanged guifg=#ebcb8b ctermfg=222 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
-  hi diffRemoved guifg=#bf616a ctermfg=131 guibg=#3b4252 ctermbg=238 gui=NONE cterm=NONE
-  hi diffFileId guifg=#5e81ac ctermfg=67 guibg=NONE ctermbg=NONE gui=bold,reverse cterm=bold,reverse
-  hi diffFile guifg=#3b4048 ctermfg=238 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-  hi diffNewFile guifg=#a3be8c ctermfg=144 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-  hi diffOldFile guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-  hi EasyMotionTarget guifg=#bf616a ctermfg=131 guibg=NONE ctermbg=NONE gui=bold cterm=bold
-  hi WhichKey guifg=#88C0D0 ctermfg=110 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
-  hi WhichKeySeperator guifg=#b48ead ctermfg=139 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSText guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSStrong guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSEmphasis guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSUnderline guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSTitle guifg=None ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSLiteral guifg=NONE ctermfg=None guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+  hi TSURI guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 endif
