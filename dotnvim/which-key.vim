@@ -63,6 +63,21 @@ let g:which_key_map.m = {
       \ 't':    [':GenTocGFM',                'gen table of contents'],
       \ }
 
+let g:which_key_map.W = {
+      \ 'name': '+windows',
+      \ 'w':    [':wincmd',   'command'],
+      \ 'j':    [':wincmd j', 'move down'],
+      \ 'k':    [':wincmd k', 'move up'],
+      \ 'h':    [':wincmd h', 'move left'],
+      \ 'l':    [':wincmd l', 'move right'],
+      \ 'r':    [':wincmd r', 'rotate down/right'],
+      \ 'R':    [':wincmd R', 'rotate up/left'],
+      \ 'J':    [':wincmd J', 'move bot'],
+      \ 'K':    [':wincmd K', 'move top'],
+      \ 'H':    [':wincmd H', 'move left'],
+      \ 'L':    [':wincmd L', 'move right'],
+      \ }
+
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
@@ -84,7 +99,6 @@ let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                  
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                               'line backward']
 let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',                             'jump anywhere']
 let g:which_key_map['M'] = [ ':MinimapToggle',                                                'toggle minimap']
-let g:which_key_map['W'] = [ ':%bw',                                                          'close all tab']
 let g:which_key_map['Q'] = [ ':q!',                                                           'quit without save']
 let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"',                'update vim settings']
 
