@@ -5,5 +5,6 @@ let g:minimap_close_filetypes = ['vim-plug', 'fugitive',  'fugitiveblame', 'coc-
 let g:minimap_highlight_range = 1
 
 autocmd VimLeavePre * execute("bw ".bufnr("-MINIMAP"))
+autocmd FileType qf wincmd J " Workaround for open quickfix with minimap
 
 let g:minimap_highlight = 'MinimapCurrentLine'
