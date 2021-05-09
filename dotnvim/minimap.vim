@@ -5,3 +5,5 @@ let g:minimap_close_filetypes = ['vim-plug', 'fugitive',  'fugitiveblame', 'coc-
 let g:minimap_highlight_range = 1
 
 autocmd VimLeavePre * execute("bw ".bufnr("-MINIMAP"))
+
+let g:minimap_highlight = 'MinimapCurrentLine'

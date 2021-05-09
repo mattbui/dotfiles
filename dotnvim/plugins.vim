@@ -1,5 +1,5 @@
 call plug#begin(stdpath('data') . '/plugged')
-    
+
     " Usefull utilities
     Plug 'sheerun/vim-polyglot' " Better Syntax Support
     Plug 'jiangmiao/auto-pairs' " Auto pairs for '(' '[' '{'
@@ -47,9 +47,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
     Plug 'sainnhe/edge'
-    Plug 'ChristianChiarulli/nvcode-color-schemes.vim'
-    " Plug 'arcticicestudio/nord-vim'
-    " Plug 'mrswats/nord-vim', {'branch': 'treesitter-support'}
+    Plug 'arcticicestudio/nord-vim'
 
     " Light line
     Plug 'itchyny/lightline.vim'
