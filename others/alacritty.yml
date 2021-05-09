@@ -5,8 +5,8 @@ window:
     lines: 30
 
   padding:
-    x: 7
-    y: 7
+    x: 6
+    y: 6
 
   dynamic_padding: true
 
@@ -22,7 +22,7 @@ scrolling:
 font:
   # Normal (roman) font face
   normal:
-    family: BlexMono Nerd Font
+    family: JetBrainsMonoNL Nerd Font
     style: Light
 
   # Bold font face
@@ -37,7 +37,7 @@ font:
   bold_italic:
     style: Light Italic
   # Point size
-  size: 13.0
+  size: 14.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -53,49 +53,100 @@ font:
   #  x: 0
   #  y: 0
 
-  use_thin_strokes: true
+  # use_thin_strokes: true
 
 # If `true`, bold text is drawn using the bright color variants.
 # draw_bold_text_with_bright_colors: true
 
-# Colors (Edge light)
+# Colors
+# Edge Light
+# colors:
+#   primary:
+#     background: '#fafafa'
+#     foreground: '#4b505b'
+
+#   cursor:
+#     text: CellBackground
+#     cursor: CellForeground
+
+#   vi_mode_cursor:
+#     text: CellBackground
+#     cursor: CellForeground
+
+#   # Normal colors
+#   normal:
+#     black: "#4b505b"
+#     red: "#d05858"
+#     green: "#608e32"
+#     yellow: "#be7e05"
+#     blue: "#5079be"
+#     magenta: "#b05ccc"
+#     cyan: "#3a8b84"
+#     white: "#fafafa"
+
+#   # Bright colors
+#   bright:
+#     black: "#4b505b"
+#     red: "#d05858"
+#     green: "#608e32"
+#     yellow: "#be7e05"
+#     blue: "#5079be"
+#     magenta: "#b05ccc"
+#     cyan: "#3a8b84"
+#     white: "#fafafa"
+
+# Nord
 colors:
   primary:
-    background: '#fafafa'
-    foreground: '#4b505b'
-
+    background: '#2e3440'
+    foreground: '#d8dee9'
+    dim_foreground: '#a5abb6'
   cursor:
-    text: CellBackground
-    cursor: CellForeground
-
+    text: '#2e3440'
+    cursor: '#d8dee9'
   vi_mode_cursor:
-    text: CellBackground
-    cursor: CellForeground
-
-  # Normal colors
+    text: '#2e3440'
+    cursor: '#d8dee9'
+  selection:
+    text: CellForeground
+    background: '#4c566a'
+  search:
+    matches:
+      foreground: CellBackground
+      background: '#88c0d0'
+    bar:
+      background: '#434c5e'
+      foreground: '#d8dee9'
   normal:
-    black: "#4b505b"
-    red: "#d05858"
-    green: "#608e32"
-    yellow: "#be7e05"
-    blue: "#5079be"
-    magenta: "#b05ccc"
-    cyan: "#3a8b84"
-    white: "#fafafa"
-
-  # Bright colors
+    black: '#3b4252'
+    red: '#bf616a'
+    green: '#a3be8c'
+    yellow: '#ebcb8b'
+    blue: '#81a1c1'
+    magenta: '#b48ead'
+    cyan: '#88c0d0'
+    white: '#e5e9f0'
   bright:
-    black: "#4b505b"
-    red: "#d05858"
-    green: "#608e32"
-    yellow: "#be7e05"
-    blue: "#5079be"
-    magenta: "#b05ccc"
-    cyan: "#3a8b84"
-    white: "#fafafa"
+    black: '#4c566a'
+    red: '#bf616a'
+    green: '#a3be8c'
+    yellow: '#ebcb8b'
+    blue: '#81a1c1'
+    magenta: '#b48ead'
+    cyan: '#8fbcbb'
+    white: '#eceff4'
+  dim:
+    black: '#373e4d'
+    red: '#94545d'
+    green: '#809575'
+    yellow: '#b29e75'
+    blue: '#68809a'
+    magenta: '#8c738c'
+    cyan: '#6d96a5'
+    white: '#aeb3bb'
 
 cursor:
-  shape: Block
+  shape: Beam
 
   # Vi mode cursor style
   #
