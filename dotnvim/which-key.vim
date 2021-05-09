@@ -23,23 +23,26 @@ let g:which_key_map =  {}
 let g:which_key_map['/'] = 'comment'
 let g:which_key_map['-'] = 'split below'
 let g:which_key_map['\'] = 'split right'
+let g:which_key_map['p'] = 'pick buffer'
 let g:which_key_map['o'] = 'insert line below'
 let g:which_key_map['O'] = 'insert line above'
 let g:which_key_map['D'] = 'delete current file'
 let g:which_key_map['R'] = 'rename current file'
 let g:which_key_map['N'] = 'create new directory'
-let g:which_key_map['p'] = 'pick buffer'
 
-let g:which_key_map['e'] = [ ':CocCommand explorer',                           'explorer']
-let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                              'align']
-let g:which_key_map['w'] = [ '<Plug>(easymotion-w)',                           'word forward']
-let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',                           'word backward']
-let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                 'line foward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                'line backward']
-let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',              'jump anywhere']
-let g:which_key_map['M'] = [ ':MinimapToggle',                                 'toggle minimap']
-let g:which_key_map['Q'] = [ ':q!',                                            'quit without save']
-let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"', 'update vim settings']
+let g:which_key_map['e'] = [ ':CocCommand explorer',                         'explorer']
+let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                            'align']
+let g:which_key_map['f'] = [ '<Plug>(easymotion-w)',                         'word forward']
+let g:which_key_map['F'] = [ '<Plug>(easymotion-b)',                         'word backward']
+let g:which_key_map['j'] = [ '<Plug>(easymotion-j)',                         'line down']
+let g:which_key_map['k'] = [ '<Plug>(easymotion-k)',                         'line up']
+let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',               'line foward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',              'line backward']
+let g:which_key_map['M'] = [ ':MinimapToggle',                               'toggle minimap']
+let g:which_key_map['W'] = [ ':BufferCloseAllButCurrent',                    'close other tabs']
+let g:which_key_map['Q'] = [ ':q!',                                          'quit without save']
+let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Saved Vim Settings"', 'save settings']
+let g:which_key_map['V'] = [ ':e $MYVIMRC',                                  'vim settings']
 " }}}
 
 " Git mappings - g+ {{{
@@ -110,10 +113,12 @@ let g:which_key_map.c = {
       \ }
 " }}}
 
-" Window commands mappings - W+ {{{
-let g:which_key_map.W = {
+" Window commands mappings - w+ {{{
+nnoremap <leader>ww <C-w>
+
+let g:which_key_map.w = {
       \ 'name': '+windows',
-      \ 'w':    [':wincmd',   'command'],
+      \ 'w':    'command',
       \ 'j':    [':wincmd j', 'move down'],
       \ 'k':    [':wincmd k', 'move up'],
       \ 'h':    [':wincmd h', 'move left'],
