@@ -1,0 +1,39 @@
+# Key mappings
+unmap t
+unmap x
+unmap r
+unmap b
+unmap B
+unmap o
+unmap O
+unmap T
+unmap W
+
+unmap d
+map <c-d> scrollPageDown
+
+unmap u
+map <c-u> scrollPageUp
+
+unmap J
+map J nextTab
+
+unmap K
+map K previousTab
+
+map gb visitPreviousTab
+map <c-6> visitPreviousTab
+map <c-p> Vomnibar.activateInNewTab
+map <c-b> Vomnibar.activateBookmarksInNewTab
+map <tab> Vomnibar.activateTabSelection
+map <space>0 lastTab
+map <space>ww closeOtherTabs
+
+
+# Search engines
+w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
+g: https://www.google.com/search?q=%s Google
+m: https://www.google.com/maps?q=%s Google Maps
+d: https://duckduckgo.com/?q= Duck
+j: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?containls=%s Jira
+c: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Confluence
