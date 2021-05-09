@@ -561,7 +561,7 @@
   # Execution time color.
   # typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND=101
   # typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#949ba5'  # edge-light colors
-  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#4C566A'  # nord colors
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='#aeb3bb'  # nord colors
   # Duration format: 1d 2h 3m 4s.
   typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
   # Custom icon.
