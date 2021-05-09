@@ -100,7 +100,7 @@ nmap <silent> <leader>cf  :call CocAction('format')<CR>
 nmap <silent> <leader>cp  <Plug>(pydocstring)
 
 let g:which_key_map.c = {
-      \ 'name': '+code actions',
+      \ 'name': '+code-actions',
       \ 'f':    'format',
       \ 'p':    'pydocstring',
       \ 'a':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
