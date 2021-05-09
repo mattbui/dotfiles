@@ -6,6 +6,9 @@ nnoremap <silent> <S-j> :BufferNext<CR>
 nnoremap <silent> <S-l> :BufferMoveNext<CR>
 nnoremap <silent> <S-h> :BufferMovePrevious<CR>
 
+" ctrl-w to close buffer
+nnoremap <silent> <C-w> :BufferClose<CR>
+
 " Goto buffer in position...
 nnoremap <silent> <leader>1 :BufferGoto 1<CR>
 nnoremap <silent> <leader>2 :BufferGoto 2<CR>
@@ -34,3 +37,7 @@ let bufferline.icon_custom_colors = v:true
 " Configure icons on the bufferline.
 let bufferline.icon_separator_active = '▎'
 let bufferline.icon_separator_inactive = '▏'
+
+" Sets the name of unnamed buffers. By default format is "[Buffer X]"
+" where X is the buffer number. But only a static string is accepted here.
+let bufferline.no_name_title = 'unnamed'
