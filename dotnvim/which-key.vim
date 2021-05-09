@@ -1,5 +1,3 @@
-" Create map to add keys to
-let g:which_key_map =  {}
 " Define a separator
 let g:which_key_sep = '→'
 " set timeoutlen=100
@@ -18,6 +16,33 @@ autocmd! FileType which_key
 autocmd  FileType which_key set laststatus=0 noshowmode noruler
   \| autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
 
+" Create map to add keys to
+let g:which_key_map =  {}
+
+" Generals {{{
+let g:which_key_map['/'] = 'comment'
+let g:which_key_map['-'] = 'split below'
+let g:which_key_map['\'] = 'split right'
+let g:which_key_map['o'] = 'insert line below'
+let g:which_key_map['O'] = 'insert line above'
+let g:which_key_map['D'] = 'delete current file'
+let g:which_key_map['R'] = 'rename current file'
+let g:which_key_map['N'] = 'create new directory'
+let g:which_key_map['p'] = 'pick buffer'
+
+let g:which_key_map['e'] = [ ':CocCommand explorer',                           'explorer']
+let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                              'align']
+let g:which_key_map['w'] = [ '<Plug>(easymotion-w)',                           'word forward']
+let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',                           'word backward']
+let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                 'line foward']
+let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                'line backward']
+let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',              'jump anywhere']
+let g:which_key_map['M'] = [ ':MinimapToggle',                                 'toggle minimap']
+let g:which_key_map['Q'] = [ ':q!',                                            'quit without save']
+let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"', 'update vim settings']
+" }}}
+
+" Git mappings - g+ {{{
 nnoremap <silent> <leader>gco :call GitChangeBranch()<cr>
 nnoremap <silent> <leader>gcb :call GitNewBranch()<cr>
 let g:which_key_map.g = {
@@ -47,7 +72,9 @@ let g:which_key_map.g = {
       \ 'ki':   [':CocCommand git.keepIncoming', 'keep incoming'],
       \ 'kc':   [':CocCommand git.keepCurrent',  'keep current'],
       \ }
+" }}}
 
+" Terminal mappings - t+ {{{
 let g:which_key_map.t = {
       \ 'name': '+terminal',
       \ 'n':    [':FloatermNew',                  'new terminal'],
@@ -55,14 +82,35 @@ let g:which_key_map.t = {
       \ '-':    [':FloatermNew --wintype=split --height=25',  'new terminal below'],
       \ 't':    [':FloatermToggle',               'toggle terminal'],
       \ }
+" }}}
 
+" Markdown mappings - m+ {{{
 let g:which_key_map.m = {
       \ 'name': '+markdown',
       \ 'p':    ['<Plug>MarkdownPreview',     'preview'],
       \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
       \ 't':    [':GenTocGFM',                'gen table of contents'],
       \ }
+" }}}
 
+" Code actions mappings - c+ {{{
+" Formatting selected code.
+xmap <silent> <leader>cf  <Plug>(coc-format-selected)
+nmap <silent> <leader>cf  :call CocAction('format')<CR>
+nmap <silent> <leader>cp  <Plug>(pydocstring)
+
+let g:which_key_map.c = {
+      \ 'name': '+code actions',
+      \ 'f':    'format',
+      \ 'p':    'pydocstring',
+      \ 'a':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
+      \ 's':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
+      \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],
+      \ 'o':    [":call CocAction('fold', <f-args>)",                             'fold'],
+      \ }
+" }}}
+
+" Window commands mappings - W+ {{{
 let g:which_key_map.W = {
       \ 'name': '+windows',
       \ 'w':    [':wincmd',   'command'],
@@ -77,31 +125,9 @@ let g:which_key_map.W = {
       \ 'H':    [':wincmd H', 'move left'],
       \ 'L':    [':wincmd L', 'move right'],
       \ }
+" }}}
 
-let g:which_key_map['/'] = 'comment'
-let g:which_key_map['-'] = 'split below'
-let g:which_key_map['\'] = 'split right'
-let g:which_key_map['o'] = 'insert line below'
-let g:which_key_map['d'] = 'pydocstring'
-let g:which_key_map['O'] = 'insert line above'
-let g:which_key_map['D'] = 'delete current file'
-let g:which_key_map['R'] = 'rename current file'
-let g:which_key_map['N'] = 'create new directory'
-let g:which_key_map['p'] = 'pick buffer'
-
-let g:which_key_map['e'] = [ ':CocCommand explorer',                                          'explorer']
-let g:which_key_map['r'] = [ '<Plug>(coc-rename)',                                            'coc rename']
-let g:which_key_map['s'] = [ ":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort import']
-let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                                             'align']
-let g:which_key_map['w'] = [ '<Plug>(easymotion-w)',                                          'word forward']
-let g:which_key_map['b'] = [ '<Plug>(easymotion-b)',                                          'word backward']
-let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',                                'line foward']
-let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',                               'line backward']
-let g:which_key_map['f'] = [ '<Plug>(easymotion-jumptoanywhere)',                             'jump anywhere']
-let g:which_key_map['M'] = [ ':MinimapToggle',                                                'toggle minimap']
-let g:which_key_map['Q'] = [ ':q!',                                                           'quit without save']
-let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Updated Vim settings"',                'update vim settings']
-
+" Ignore {{{
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'
 let g:which_key_map.2 = 'which_key_ignore'
@@ -113,6 +139,7 @@ let g:which_key_map.7 = 'which_key_ignore'
 let g:which_key_map.8 = 'which_key_ignore'
 let g:which_key_map.9 = 'which_key_ignore'
 let g:which_key_map.0 = 'which_key_ignore'
+" }}}
 
 " Register which key map
 call which_key#register('<Space>', "g:which_key_map")
