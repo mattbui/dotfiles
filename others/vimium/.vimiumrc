@@ -27,8 +27,7 @@ map <c-p> Vomnibar.activateInNewTab
 map <c-b> Vomnibar.activateBookmarksInNewTab
 map <tab> Vomnibar.activateTabSelection
 map <space>0 lastTab
-map <space>ww closeOtherTabs
-
+map <space>W closeOtherTabs
 
 # Search engines
 w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
