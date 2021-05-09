@@ -13,6 +13,7 @@ endif
 " colorscheme edge
 colorscheme nord
 
+hi link BufferCurrentMod BufferCurrent
 hi link BufferVisibleMod BufferVisible
 hi link BufferInactiveMod BufferInactive
 
