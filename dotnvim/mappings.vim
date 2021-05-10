@@ -21,6 +21,10 @@ noremap! jj <Esc>
 vnoremap < <gv
 vnoremap > >gv
 
+" ctrl-a, ctrl-e for Home and End
+inoremap <C-e> <End>
+inoremap <C-a> <Home>
+
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 
