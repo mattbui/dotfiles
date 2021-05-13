@@ -24,6 +24,8 @@ vnoremap > >gv
 " ctrl-a, ctrl-e for Home and End
 inoremap <C-e> <End>
 inoremap <C-a> <Home>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
 
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
