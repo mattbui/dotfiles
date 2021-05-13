@@ -27,6 +27,7 @@ source $HOME/.config/nvim/indent-guide.vim
 source $HOME/.config/nvim/workspace.vim
 source $HOME/.config/nvim/minimap.vim
 source $HOME/.config/nvim/tabbar.vim
+source $HOME/.config/nvim/ipynb.vim
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

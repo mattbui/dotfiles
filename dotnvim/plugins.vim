@@ -25,6 +25,11 @@ call plug#begin(stdpath('data') . '/plugged')
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+    " ipynb support
+    Plug 'jpalardy/vim-slime', { 'for': 'python' }
+    Plug 'mattbui/vim-ipython-cell', { 'for': 'python' }
+    Plug 'anosillus/vim-ipynb'
+
     " tpope's goodies
     Plug 'tpope/vim-eunuch'
     Plug 'tpope/vim-commentary'

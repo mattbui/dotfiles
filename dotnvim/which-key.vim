@@ -132,6 +132,22 @@ let g:which_key_map.w = {
       \ }
 " }}}
 
+" IPython commands mappings - i+ {{{
+let g:which_key_map.i = {
+      \ 'name': '+ipython',
+      \ 's':    [':SlimeSend1 ipython',      'start'],
+      \ 'b':    [':IPythonCellInsertBelow',  'insert cell below'],
+      \ 'a':    [':IPythonCellInsertAbove',  'insert cell above'],
+      \ 'n':    [':IPythonCellNextCell',     'next cell'],
+      \ 'p':    [':IPythonCellPrevCell', 'previous cell'],
+      \ 'j':    [':IPythonCellNextCell',     'next cell'],
+      \ 'k':    [':IPythonCellPrevCell', 'previous cell'],
+      \ 'r':    [':IPythonCellRestart',      'restart'],
+      \ 'd':    [':SlimeSend1 %debug',       'debug'],
+      \ 'q':    [':SlimeSend1 exit',         'exit'],
+      \ }
+" }}}
+
 " Ignore {{{
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'

@@ -73,9 +73,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
     - [x] coc-git
   - [x] startify
   - [x] floatterm
-  - [ ] jupyter integration
-    - [ ] [jupyter-vim](https://github.com/jupyter-vim/jupyter-vim) (send code to jupyter kernal)
-    - [ ] [vim-ipynb](https://github.com/anosillus/vim-ipynb) (edit code in ipynb files)
+  - [x] ipynb integration
   - [x] fzf integration
 - [x] tmux:
   - [x] vim-like navigation
