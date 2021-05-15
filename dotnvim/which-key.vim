@@ -119,6 +119,7 @@ nnoremap <leader>ww <C-w>
 let g:which_key_map.w = {
       \ 'name': '+windows',
       \ 'w':    'command',
+      \ 'o':    [':wincmd o', 'only current'],
       \ 'j':    [':wincmd j', 'move down'],
       \ 'k':    [':wincmd k', 'move up'],
       \ 'h':    [':wincmd h', 'move left'],
