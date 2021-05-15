@@ -16,4 +16,16 @@ function IPynbMappings()
   xmap <buffer> <cr> <Plug>SlimeRegionSend
 endfunction
 
+function IPynbStart()
+  call system('tmux split-window -fh -l 90 -c '. '"' . expand('%:h') . '"')
+  silent execute('SlimeSend1 ipython')
+  call system('tmux last-pane')
+endfunction
+
+function IPynbClose()
+  " Exit ipython and exit tmux window
+  silent execute('SlimeSend1 exit')
+  silent execute('SlimeSend1 exit')
+endfunction
+
 autocmd FileType python if get(b:, 'ipynb_on', 0) is 1 | call IPynbMappings() | endif
