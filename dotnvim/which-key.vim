@@ -62,8 +62,8 @@ let g:which_key_map.g = {
       \ 'A':    [':Git add .',                   'add all'],
       \ 'D':    [':Git diff',                    'global diff'],
       \ 'B':    [':Git blame',                   'blame'],
-      \ 'S':    [':Gstatus',                     'status'],
-      \ 'l':    [':Glog',                        'log'],
+      \ 'S':    [':G',                           'status'],
+      \ 'l':    [':Gclog',                       'log'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
       \ 'd':    ['<Plug>(coc-git-chunkinfo)',    'chunk diff'],
@@ -71,9 +71,9 @@ let g:which_key_map.g = {
       \ 's':    [':CocCommand git.chunkStage',   'stage chunk'],
       \ 'n':    ['<Plug>(coc-git-nextconflict)', 'next conflict'],
       \ 'p':    ['<Plug>(coc-git-prevconflict)', 'prev conflict'],
-      \ 'kb':   [':CocCommand git.keepBoth',     'keep both'],
-      \ 'ki':   [':CocCommand git.keepIncoming', 'keep incoming'],
-      \ 'kc':   [':CocCommand git.keepCurrent',  'keep current'],
+      \ 'b':   [':CocCommand git.keepBoth',     'keep both'],
+      \ '>':   [':CocCommand git.keepIncoming', 'keep incoming'],
+      \ '<':   [':CocCommand git.keepCurrent',  'keep current'],
       \ }
 " }}}
 
