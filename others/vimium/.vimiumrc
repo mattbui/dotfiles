@@ -23,8 +23,8 @@ map K previousTab
 
 map gb visitPreviousTab
 map <c-6> visitPreviousTab
-map <c-p> Vomnibar.activateInNewTab
-map <c-b> Vomnibar.activateBookmarksInNewTab
+map <c-p> Vomnibar.activate
+map <c-b> Vomnibar.activateBookmarks
 map <tab> Vomnibar.activateTabSelection
 map <space>0 lastTab
 map <space>W closeOtherTabs
