@@ -181,6 +181,7 @@ key_bindings:
   - { key: L,    mods: Alt,     chars: "\x1bl" }
   - { key: Q,    mods: Alt,     chars: "\x1bq" }
   - { key: N,    mods: Alt,     chars: "\x1bn" }
+  - { key: U,    mods: Alt,     chars: "\x1bu" }
 
   # Fix Ctrl-^ in MacOS 
   - { key: Key6, mods: Control, chars: "\x1e"  }
