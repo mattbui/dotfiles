@@ -7,7 +7,7 @@ let g:minimap_highlight_range = 1
 
 augroup MinimapAutoCmd
   autocmd!
-  autocmd VimLeavePre * execute("bw ".bufnr("-MINIMAP"))
+  autocmd VimLeavePre * execute("bw ".bufnr("-MINIMAP-"))
   autocmd FileType qf wincmd J " Workaround for open quickfix with minimap
 augroup END
 
