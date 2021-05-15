@@ -17,13 +17,11 @@ command! Grefresh call GitRefresh()
 
 function! GitPushCurrentBranch()
   echo "Pushing to  ".fugitive#head()
-  redraw
   execute("Git -c push.default=current push")
 endfunction
 
 function! GitPull()
   echo "Pulling"
-  redraw
   execute("Git pull")
 endfunction
 
