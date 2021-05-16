@@ -1,9 +1,11 @@
+let g:reload_fugitive = v:false
 " Workaround for using gpg sign
 function! GitCommit()
   call inputsave()
   let message = input("Commit message: ")
   call inputrestore()
   execute('FloatermNew! --autoclose=2 git commit -m "'.message.'" && exit')
+  let g:reload_fugitive = v:true
 endfunction
 
 command! Gcommit call GitCommit()
@@ -60,4 +62,4 @@ endfunction
 
 command! -nargs=? Grh call GitResetHead(<f-args>)
 
-autocmd BufEnter * if (&filetype == "fugitive") | call fugitive#ReloadStatus() | endif
+autocmd BufEnter * if g:reload_fugitive == v:true | call fugitive#ReloadStatus() | let g:reload_fugitive = v:false | endif
