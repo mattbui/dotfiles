@@ -1,8 +1,8 @@
 " Easymotion colors {{{
-hi EasyMotionTarget guifg=#eceff4 ctermfg=255 guibg=#8fbcbb ctermbg=109 gui=bold cterm=bold
+hi EasyMotionTarget guifg=#E5E9F0 ctermfg=255 guibg=#8FBCBB ctermbg=109 gui=bold cterm=bold
 hi EasyMotionTarget2First guifg=#5E81AC ctermfg=67 guibg=NONE ctermbg=NONE gui=bold cterm=bold
 hi EasyMotionTarget2Second guifg=#8FBCBB ctermfg=109 guibg=NONE ctermbg=NONE gui=bold cterm=bold
-hi EasyMotionShade guifg=NONE ctermfg=NONE guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
+hi EasyMotionShade guifg=#616E88 ctermfg=8 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 " }}}
 
 " Which-key colors {{{
