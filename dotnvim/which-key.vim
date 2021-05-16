@@ -129,13 +129,15 @@ let g:which_key_map.w = {
       \ 'L':    [':wincmd L', 'move right'],
       \ }
 " }}}
+nnoremap <silent> <leader>ib :IPythonCellInsertBelow<CR>o
+nnoremap <silent> <leader>ia :IPythonCellInsertAbove<CR>o
 
 " IPython commands mappings - i+ {{{
 let g:which_key_map.i = {
       \ 'name': '+ipython',
+      \ 'a':    'insert cell above',
+      \ 'b':    'insert cell below',
       \ 's':    [':call IPynbStart()',      'start'],
-      \ 'b':    [':IPythonCellInsertBelow', 'insert cell below'],
-      \ 'a':    [':IPythonCellInsertAbove', 'insert cell above'],
       \ 'n':    [':IPythonCellNextCell',    'next cell'],
       \ 'p':    [':IPythonCellPrevCell',    'previous cell'],
       \ 'j':    [':IPythonCellNextCell',    'next cell'],

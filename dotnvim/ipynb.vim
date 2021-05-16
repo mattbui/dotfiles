@@ -10,6 +10,8 @@ let g:slime_default_config = {
             \ 'target_pane': '{top-right}' }
 let g:slime_dont_ask_default = 1
 
+let g:ipython_cell_insert_tag = '# %%'
+
 function IPynbMappings()
   nnoremap <buffer> <silent> <leader><cr> :IPythonCellExecuteCellJump<CR>
   nmap <buffer> <cr> <Plug>SlimeLineSend
