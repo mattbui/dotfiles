@@ -26,6 +26,10 @@ inoremap <C-e> <End>
 inoremap <C-a> <Home>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
+inoremap <M-b> <S-left>
+inoremap <M-f> <S-right>
+cnoremap <M-b> <S-left>
+cnoremap <M-f> <S-right>
 
 nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>

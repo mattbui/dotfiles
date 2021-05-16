@@ -37,7 +37,7 @@ font:
   bold_italic:
     style: Light Italic
   # Point size
-  size: 14.0
+  size: 14.5
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
@@ -175,13 +175,15 @@ key_bindings:
 
   # Fix Alt - HJKL in vim (MacOS)
   # This should be fixed with alt_send_esc option but god know why :|
-  - { key: J,    mods: Alt,     chars: "\x1bj" }
-  - { key: K,    mods: Alt,     chars: "\x1bk" }
-  - { key: H,    mods: Alt,     chars: "\x1bh" }
-  - { key: L,    mods: Alt,     chars: "\x1bl" }
-  - { key: Q,    mods: Alt,     chars: "\x1bq" }
-  - { key: N,    mods: Alt,     chars: "\x1bn" }
-  - { key: U,    mods: Alt,     chars: "\x1bu" }
+  - { key: J,     mods: Alt,     chars: "\x1bj" }
+  - { key: K,     mods: Alt,     chars: "\x1bk" }
+  - { key: H,     mods: Alt,     chars: "\x1bh" }
+  - { key: L,     mods: Alt,     chars: "\x1bl" }
+  - { key: Q,     mods: Alt,     chars: "\x1bq" }
+  - { key: N,     mods: Alt,     chars: "\x1bn" }
+  - { key: U,     mods: Alt,     chars: "\x1bu" }
+  - { key: Left,  mods: Alt,     chars: "\x1bb" }
+  - { key: Right, mods: Alt,     chars: "\x1bf" }
 
   # Fix Ctrl-^ in MacOS 
   - { key: Key6, mods: Control, chars: "\x1e"  }

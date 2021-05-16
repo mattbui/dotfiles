@@ -55,6 +55,8 @@ function zvm_after_init() {
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
     [[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
     [[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
+    bindkey -M viins '^[f' forward-word
+    bindkey -M viins '^[b' backward-word
 }
 
 [[ ! -f $HOME/.config/zsh/gcloud.zsh ]] || source $HOME/.config/zsh/gcloud.zsh  # enable gcloud autocomplete

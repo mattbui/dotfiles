@@ -9,6 +9,7 @@ source $HOME/.config/nvim/plugins.vim
 
 source $HOME/.config/nvim/autoclose.vim
 source $HOME/.config/nvim/coc.vim
+source $HOME/.config/nvim/auto-pairs.vim
 source $HOME/.config/nvim/tmux-line.vim
 source $HOME/.config/nvim/fzf.vim
 source $HOME/.config/nvim/rooter.vim
