@@ -6,7 +6,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'machakann/vim-sandwich'
     Plug 'airblade/vim-rooter'  " Smartly change project directory when open file
     Plug 'ptzz/lf.vim'          " Need to be loaded before floaterm
-    Plug 'voldikss/vim-floaterm'   
+    Plug 'voldikss/vim-floaterm'
     Plug 'thaerkh/vim-workspace'
     Plug 'easymotion/vim-easymotion'
     Plug 'liuchengxu/vim-which-key'
@@ -16,8 +16,8 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'mzlogin/vim-markdown-toc'
     Plug 'honza/vim-snippets'
     Plug 'heavenshell/vim-pydocstring'
-    Plug 'nathanaelkane/vim-indent-guides'
     Plug 'wfxr/minimap.vim'
+    Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
 
     " Tabbar
     Plug 'kyazdani42/nvim-web-devicons'

@@ -24,7 +24,7 @@ source $HOME/.config/nvim/snippets.vim
 source $HOME/.config/nvim/pydocstring.vim
 source $HOME/.config/nvim/file-commands.vim
 source $HOME/.config/nvim/git.vim
-source $HOME/.config/nvim/indent-guide.vim
+source $HOME/.config/nvim/indent-line.vim
 source $HOME/.config/nvim/workspace.vim
 source $HOME/.config/nvim/minimap.vim
 source $HOME/.config/nvim/tabbar.vim
