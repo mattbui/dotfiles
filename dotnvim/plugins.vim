@@ -18,6 +18,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'heavenshell/vim-pydocstring'
     Plug 'wfxr/minimap.vim'
     Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+    Plug 'karb94/neoscroll.nvim'
 
     " Tabbar
     Plug 'kyazdani42/nvim-web-devicons'
