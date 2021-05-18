@@ -32,7 +32,7 @@ let g:which_key_map['N'] = 'create new directory'
 
 let g:which_key_map['e'] = [ ':CocCommand explorer',                         'explorer']
 let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                            'align']
-let g:which_key_map['f'] = [ '<Plug>(easymotion-bd-W)',                      'jump word']
+let g:which_key_map['f'] = [ '<Plug>(easymotion-bd-w)',                      'jump word']
 let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',               'line forward']
 let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',              'line backward']
 let g:which_key_map['M'] = [ ':MinimapToggle',                               'toggle minimap']

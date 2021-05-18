@@ -84,3 +84,7 @@ command! -nargs=? Fold        :call CocAction('fold', <f-args>)
 command! -nargs=0 SortImport  :call CocAction('runCommand', 'editor.action.organizeImport')
 
 command! -nargs=? Marketplace   :CocList marketplace <args>
+
+" " Disable coc during easy motion
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
