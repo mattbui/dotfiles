@@ -129,22 +129,24 @@ let g:which_key_map.w = {
       \ 'L':    [':wincmd L', 'move right'],
       \ }
 " }}}
+
+" IPython commands mappings - i+ {{{
 nnoremap <silent> <leader>ib :IPythonCellInsertBelow<CR>o
 nnoremap <silent> <leader>ia :IPythonCellInsertAbove<CR>o
 
-" IPython commands mappings - i+ {{{
 let g:which_key_map.i = {
       \ 'name': '+ipython',
       \ 'a':    'insert cell above',
       \ 'b':    'insert cell below',
-      \ 's':    [':call IPynbStart()',      'start'],
-      \ 'n':    [':IPythonCellNextCell',    'next cell'],
-      \ 'p':    [':IPythonCellPrevCell',    'previous cell'],
-      \ 'j':    [':IPythonCellNextCell',    'next cell'],
-      \ 'k':    [':IPythonCellPrevCell',    'previous cell'],
-      \ 'r':    [':IPythonCellRestart',     'restart'],
-      \ 'd':    [':SlimeSend1 %debug',      'debug'],
-      \ 'q':    [':call IPynbClose()',      'quit'],
+      \ 's':    [':call IPynbStart()',   'start'],
+      \ 'n':    [':IPythonCellNextCell', 'next cell'],
+      \ 'p':    [':IPythonCellPrevCell', 'previous cell'],
+      \ 'j':    [':IPythonCellNextCell', 'next cell'],
+      \ 'k':    [':IPythonCellPrevCell', 'previous cell'],
+      \ 'r':    [':IPythonCellRestart',  'restart'],
+      \ 'd':    [':SlimeSend1 %debug',   'debug'],
+      \ 'q':    [':call IPynbClose()',   'quit'],
+      \ 'c':    [':SlimeSend0 "\x03"',   'cancel'],
       \ }
 " }}}
 

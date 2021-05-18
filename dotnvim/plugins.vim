@@ -28,7 +28,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " ipynb support
     Plug 'jpalardy/vim-slime'
-    Plug 'mattbui/vim-ipython-cell', { 'for': 'python' }
+    Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
     Plug 'mattbui/vim-ipynb'
 
     " tpope's goodies

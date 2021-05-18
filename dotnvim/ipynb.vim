@@ -13,13 +13,13 @@ let g:slime_dont_ask_default = 1
 let g:ipython_cell_insert_tag = '# %%'
 
 function IPynbMappings()
-  nnoremap <buffer> <silent> <leader><cr> :IPythonCellExecuteCellJump<CR>
+  nnoremap <buffer> <silent> <leader><cr> :IPythonCellExecuteCellVerboseJump<CR>
   nmap <buffer> <cr> <Plug>SlimeLineSend
   xmap <buffer> <cr> <Plug>SlimeRegionSend
 endfunction
 
 function IPynbStart()
-  call system('tmux split-window -fh -l 90 -c '. '"' . expand('%:h') . '"')
+  call system('tmux split-window -fh -l 80 -c '. '"' . expand('%:p:h') . '"')
   silent execute('SlimeSend1 ipython')
   call system('tmux last-pane')
 endfunction
