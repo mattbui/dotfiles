@@ -149,6 +149,155 @@
           ]
         }
       ]
+    },
+    {
+      "description": "Map fn-esc to ` and fn-num rows to functions",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "`"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "1"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "display_brightness_decrement"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "2"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "display_brightness_increment"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "7"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "rewind"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "8"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "play_or_pause"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "9"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "fast_forward"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "0"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "mute"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "hyphen"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "volume_decrement"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "equal_sign"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "volume_increment"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
