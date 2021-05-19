@@ -138,6 +138,7 @@ let g:which_key_map.i = {
       \ 'name': '+ipython',
       \ 'a':    'insert cell above',
       \ 'b':    'insert cell below',
+      \ 'i':    [':SlimeSend1 ipython',  'ipython'],
       \ 's':    [':call IPynbStart()',   'start'],
       \ 'n':    [':IPythonCellNextCell', 'next cell'],
       \ 'p':    [':IPythonCellPrevCell', 'previous cell'],
@@ -145,7 +146,7 @@ let g:which_key_map.i = {
       \ 'k':    [':IPythonCellPrevCell', 'previous cell'],
       \ 'r':    [':IPythonCellRestart',  'restart'],
       \ 'd':    [':SlimeSend1 %debug',   'debug'],
-      \ 'q':    [':call IPynbClose()',   'quit'],
+      \ 'q':    [':SlimeSend1 exit',     'quit'],
       \ 'c':    [':SlimeSend0 "\x03"',   'cancel'],
       \ }
 " }}}
