@@ -38,7 +38,7 @@ d: https://duckduckgo.com/?q= Duck
 f: https://www.facebook.com/search/top?q=%s Facebook
 y: https://www.youtube.com/results?search_query=%s Youtube
 j: https://cinnamon-ai.atlassian.net/secure/QuickSearch.jspa?searchString=%s Jira
-jp: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?containls=%s Jira Projects
+jp: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?contains=%s Jira Projects
 c: https://cinnamon-ai.atlassian.net/wiki/search?text=%s Confluence
 cs: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Confluence Spaces
 gh/: https://github.com/%s github/
