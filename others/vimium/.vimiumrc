@@ -30,9 +30,16 @@ map <space>0 lastTab
 map <space>W closeOtherTabs
 
 # Search engines
+a: https://www.amazon.com/s?k=%s Amazon
 w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
 g: https://www.google.com/search?q=%s Google
 m: https://www.google.com/maps?q=%s Google Maps
 d: https://duckduckgo.com/?q= Duck
-j: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?containls=%s Jira
-c: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Confluence
+f: https://www.facebook.com/search/top?q=%s Facebook
+y: https://www.youtube.com/results?search_query=%s Youtube
+j: https://cinnamon-ai.atlassian.net/secure/QuickSearch.jspa?searchString=%s Jira
+jp: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?containls=%s Jira Projects
+c: https://cinnamon-ai.atlassian.net/wiki/search?text=%s Confluence
+cs: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Confluence Spaces
+gh/: https://github.com/%s github/
+gc/: https://github.com/cinnamon/%s github/cinnamon/
