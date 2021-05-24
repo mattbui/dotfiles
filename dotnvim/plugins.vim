@@ -28,8 +28,8 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " ipynb support
     Plug 'jpalardy/vim-slime'
-    Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
-    Plug 'mattbui/vim-ipynb'
+    Plug 'mattbui/vim-ipython-cell', { 'for': 'python' }
+    Plug 'mattbui/jupytext.vim', { 'branch': 'jupytext_opts' }
 
     " tpope's goodies
     Plug 'tpope/vim-eunuch'

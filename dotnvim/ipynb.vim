@@ -10,6 +10,7 @@ let g:slime_default_config = {
             \ 'target_pane': '{top-right}' }
 let g:slime_dont_ask_default = 1
 
+let g:ipython_cell_tag = ['# %%', '#%%', '# <codecell>']
 let g:ipython_cell_insert_tag = '# %%'
 
 function IPynbMappings()
@@ -24,4 +25,14 @@ function IPynbStart()
   call system('tmux last-pane')
 endfunction
 
-autocmd FileType python if get(b:, 'ipynb_on', 0) is 1 | call IPynbMappings() | endif
+function IPynbAutoReload()
+  silent execute('SlimeSend1 %load_ext autoreload')
+  silent execute('SlimeSend1 %autoreload 2')
+endfunction
+
+let g:jupytext_fmt = 'py:percent'
+let s:cell_markers = '\"\"\"'
+let s:update_meta = '{"jupytext": {"cell_markers": "' . s:cell_markers . '"}}'
+let g:jupytext_opts = '--update-metadata ' . "'" . s:update_meta . "'"
+
+autocmd FileType python if len(get(b:, 'jupytext_file', '')) > 0 | call IPynbMappings() | endif
