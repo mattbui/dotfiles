@@ -12,7 +12,6 @@ map <c-q> quit
 map <esc> quit
 map ~ cd ~
 map <enter> open
-map D delete
 map . set hidden!
 map J :toggle; down
 map K :toggle; up
@@ -40,7 +39,7 @@ cmd trash ${{
 		trash "$(echo $file | sed s/$tok_space/$space/g )"
 	done
 }}
-map T trash
+map D trash
 
 cmd addDir %{{
 	printf "Directory name or path? "
