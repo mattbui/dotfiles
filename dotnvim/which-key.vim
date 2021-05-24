@@ -68,9 +68,9 @@ let g:which_key_map.g = {
       \ 's':    [':CocCommand git.chunkStage',   'stage chunk'],
       \ 'n':    ['<Plug>(coc-git-nextconflict)', 'next conflict'],
       \ 'p':    ['<Plug>(coc-git-prevconflict)', 'prev conflict'],
-      \ 'b':   [':CocCommand git.keepBoth',     'keep both'],
-      \ '>':   [':CocCommand git.keepIncoming', 'keep incoming'],
-      \ '<':   [':CocCommand git.keepCurrent',  'keep current'],
+      \ 'b':    [':CocCommand git.keepBoth',     'keep both'],
+      \ '>':    [':CocCommand git.keepIncoming', 'keep incoming'],
+      \ '<':    [':CocCommand git.keepCurrent',  'keep current'],
       \ }
 " }}}
 
