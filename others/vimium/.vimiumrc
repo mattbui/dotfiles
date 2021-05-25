@@ -26,8 +26,8 @@ map <c-6> visitPreviousTab
 map <c-p> Vomnibar.activate
 map <c-b> Vomnibar.activateBookmarks
 map <tab> Vomnibar.activateTabSelection
-map <space>0 lastTab
-map <space>W closeOtherTabs
+map <c-W> closeOtherTabs
+map g0 lastTab
 
 # Search engines
 a: https://www.amazon.com/s?k=%s Amazon
