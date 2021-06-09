@@ -3,9 +3,6 @@ inoremap <expr> <C-j> ("\<C-n>")
 inoremap <expr> <C-k> ("\<C-p>")
 
 " tab in general mode will move to next buffer
-" nnoremap <TAB> :bnext<CR>
-" shift-tab will go back to prev buffer
-" nnoremap <S-TAB> :bprevious<CR>
 " shift+jk to move to next/prev buffer
 nnoremap <silent> <S-j> :bnext<CR>
 nnoremap <silent> <S-k> :bprevious<CR>
@@ -14,6 +11,8 @@ nnoremap <silent> <C-w> :bw<CR>
 
 " go back to past buffer
 nnoremap gb <C-o>
+" go forward buffer
+nnoremap gt <C-i>
 
 noremap! jj <Esc>
 
