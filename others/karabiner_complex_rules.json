@@ -236,6 +236,70 @@
               "mandatory": ["fn"],
               "optional": ["any"]
             },
+            "key_code": "3"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "f3"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "4"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "f4"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "5"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "f5"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "6"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "f6"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
             "key_code": "7"
           },
           "to": [
