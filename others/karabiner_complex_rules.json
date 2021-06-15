@@ -12,20 +12,9 @@
             },
             "key_code": "spacebar"
           },
-          "conditions": [
-            {
-              "type": "device_unless",
-              "identifiers": [
-                {
-                  "vendor_id": "17498",
-                  "product_id": "4897"
-                }
-              ]
-            }
-          ],
           "parameters": {
-            "basic.to_if_alone_timeout_milliseconds": 150,
-            "basic.to_if_held_down_threshold_milliseconds": 150
+            "basic.to_if_alone_timeout_milliseconds": 300,
+            "basic.to_if_held_down_threshold_milliseconds": 100
           },
           "to_if_alone": [
             {
