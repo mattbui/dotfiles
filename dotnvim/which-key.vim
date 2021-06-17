@@ -102,11 +102,13 @@ nmap <silent> <leader>cp  <Plug>(pydocstring)
 let g:which_key_map.c = {
       \ 'name': '+code-actions',
       \ 'f':    'format',
-      \ 'p':    'pydocstring',
+      \ 'd':    'pydocstring',
       \ 'a':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
       \ 's':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
       \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],
       \ 'o':    [":call CocAction('fold', <f-args>)",                             'fold'],
+      \ 'n':    [":cnext",                                                        'quickfix next'],
+      \ 'p':    [":cprevious",                                                    'quickfix previous'],
       \ }
 " }}}
 
