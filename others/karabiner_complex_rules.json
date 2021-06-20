@@ -13,8 +13,7 @@
             "key_code": "spacebar"
           },
           "parameters": {
-            "basic.to_if_alone_timeout_milliseconds": 300,
-            "basic.to_if_held_down_threshold_milliseconds": 100
+            "basic.to_if_held_down_threshold_milliseconds": 150
           },
           "to_if_alone": [
             {
