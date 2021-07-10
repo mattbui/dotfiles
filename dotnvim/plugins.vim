@@ -17,7 +17,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'honza/vim-snippets'
     Plug 'heavenshell/vim-pydocstring'
     Plug 'wfxr/minimap.vim'
-    Plug 'lukas-reineke/indent-blankline.nvim', {'branch': 'lua'}
+    Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'karb94/neoscroll.nvim'
 
     " Tabbar
@@ -28,7 +28,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " ipynb support
     Plug 'jpalardy/vim-slime'
-    Plug 'mattbui/vim-ipython-cell', { 'for': 'python' }
+    Plug 'hanschen/vim-ipython-cell', { 'for': 'python' }
     Plug 'mattbui/jupytext.vim', { 'branch': 'jupytext_opts' }
 
     " tpope's goodies
