@@ -9,6 +9,20 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
+" shift-y to yank from cursor to $
+nnoremap Y y$
+
+" keeping it centered
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" undo break points
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
+inoremap : :<c-g>u
+
 " go back to past buffer
 nnoremap gb <C-o>
 " go forward buffer
