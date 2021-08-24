@@ -21,6 +21,14 @@ map J nextTab
 unmap K
 map K previousTab
 
+map < goBack
+map > goForward
+
+unmap H
+unmap L
+map H moveTabLeft
+map L moveTabRight
+
 map gb visitPreviousTab
 map <c-6> visitPreviousTab
 map <c-p> Vomnibar.activate
@@ -34,12 +42,11 @@ a: https://www.amazon.com/s?k=%s Amazon
 w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
 g: https://www.google.com/search?q=%s Google
 m: https://www.google.com/maps?q=%s Google Maps
-d: https://duckduckgo.com/?q= Duck
+d: https://duckduckgo.com/?q=%s Duck
 f: https://www.facebook.com/search/top?q=%s Facebook
 y: https://www.youtube.com/results?search_query=%s Youtube
 j: https://cinnamon-ai.atlassian.net/secure/QuickSearch.jspa?searchString=%s Jira
-jp: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?contains=%s Jira Projects
+p: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?contains=%s Projects
 c: https://cinnamon-ai.atlassian.net/wiki/search?text=%s Confluence
-cs: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Confluence Spaces
-gh/: https://github.com/%s github/
+s: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Spaces
 gc/: https://github.com/cinnamon/%s github/cinnamon/
