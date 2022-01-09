@@ -9,10 +9,6 @@ hi EasyMotionShade guifg=#616E88 ctermfg=8 guibg=NONE ctermbg=NONE gui=NONE cter
 hi WhichKeySeperator guifg=#8fbcbb ctermfg=139 guibg=NONE ctermbg=NONE gui=NONE cterm=NONE
 " }}}
 
-" Minimap colors {{{
-hi MinimapCurrentLine ctermbg=238 ctermfg=110 guibg=#3b4252 guifg=#88C0D0
-" }}}
-
 " Indent guide colors {{{
 hi IndentGuidesOdd guibg=#434C5E
 hi IndentGuidesEven guibg=#4C566A

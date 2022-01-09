@@ -16,7 +16,6 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'mzlogin/vim-markdown-toc'
     Plug 'honza/vim-snippets'
     Plug 'heavenshell/vim-pydocstring'
-    Plug 'wfxr/minimap.vim'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'karb94/neoscroll.nvim'
 
@@ -53,7 +52,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
     Plug 'sainnhe/edge'
-    Plug 'arcticicestudio/nord-vim'
+    Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
 
     " Light line
     Plug 'itchyny/lightline.vim'

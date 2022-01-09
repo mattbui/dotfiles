@@ -26,7 +26,6 @@ source $HOME/.config/nvim/file-commands.vim
 source $HOME/.config/nvim/git.vim
 source $HOME/.config/nvim/indent-line.vim
 source $HOME/.config/nvim/workspace.vim
-source $HOME/.config/nvim/minimap.vim
 source $HOME/.config/nvim/tabbar.vim
 source $HOME/.config/nvim/ipynb.vim
 luafile $HOME/.config/nvim/neoscroll.lua
