@@ -18,14 +18,14 @@ function ApplyCustomColors()
   elseif (g:colors_name == 'edge' && &background =='light')
     source $HOME/.config/nvim/edge-light-colors.vim
   endif
+
+  hi link BufferCurrentMod BufferCurrent
+  hi link BufferVisibleMod BufferVisible
+  hi link BufferInactiveMod BufferInactive
+
+  autocmd TextChanged,TextChangedI,BufWritePost,FileWritePost,BufEnter,ColorScheme * if &modified | hi link BufferCurrentIcon BufferCurrentMod | else | hi link BufferCurrentIcon BufferCurrent | endif
 endfunction
 
 autocmd VimEnter,ColorScheme * call ApplyCustomColors()
 
 colorscheme nord
-
-hi link BufferCurrentMod BufferCurrent
-hi link BufferVisibleMod BufferVisible
-hi link BufferInactiveMod BufferInactive
-
-autocmd TextChanged,TextChangedI,BufWritePost,FileWritePost,BufEnter,ColorScheme * if &modified | hi link BufferCurrentIcon BufferCurrentMod | else | hi link BufferCurrentIcon BufferCurrent | endif
