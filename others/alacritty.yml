@@ -195,3 +195,7 @@ key_bindings:
   # Option-delete/backspace for delete word
   - { key: Back, mods: Alt,     chars: "\x17"  }
   - { key: Back, mods: Command, chars: "\x15"  }
+
+  # Bind Cmd+W to Ctrl+W, Cmd+Q to Ctrl+Q to avoid accidently close
+  - { key: W, mods: Command,    chars: "\x17"  }
+  - { key: Q, mods: Command,    chars: "\x11"  }
