@@ -18,7 +18,7 @@ augroup END
 
 set signcolumn=yes             " Always show sign column
 set fillchars+=vert:\│,eob:\   " Set vertical splitting char to space
-set list listchars+=eol:↴,trail:·,precedes:«,extends:»,tab:▸\ 
+set list listchars+=eol:⤦,trail:·,precedes:«,extends:»,tab:▸\ 
 set hidden
 set nowrap                     " Disable line wrap
 set encoding=utf-8 fileencoding=utf-8
