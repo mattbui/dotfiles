@@ -20,7 +20,7 @@ function IPynbMappings()
 endfunction
 
 function IPynbStart()
-  call system('tmux split-window -fh -l 80 -c '. '"' . expand('%:p:h') . '"')
+  call system('tmux split-window -fh -p 40 -c '. '"' . expand('%:p:h') . '"')
   silent execute('SlimeSend1 ipython')
   call system('tmux last-pane')
 endfunction
