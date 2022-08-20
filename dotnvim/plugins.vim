@@ -23,7 +23,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'romgrk/barbar.nvim'
 
-    Plug 'nvim-treesitter/nvim-treesitter', {'branch': '0.5-compat', 'do': ':TSUpdate'}
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
     " ipynb support
     Plug 'jpalardy/vim-slime'
@@ -52,7 +52,7 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
     Plug 'sainnhe/edge'
-    Plug 'arcticicestudio/nord-vim', { 'branch': 'develop' }
+    Plug 'arcticicestudio/nord-vim'
 
     " Light line
     Plug 'itchyny/lightline.vim'
