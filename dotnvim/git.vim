@@ -18,7 +18,7 @@ endfunction
 command! Grefresh call GitRefresh()
 
 function! GitPushCurrentBranch()
-  echo "Pushing to  ".fugitive#head()
+  echo "Pushing to  ".FugitiveHead()
   execute("Git -c push.default=current push")
 endfunction
 
@@ -43,7 +43,7 @@ function! GitNewBranch()
   let old_branch = input("From old branch: ")
   call inputrestore()
   if empty(old_branch)
-    let old_branch = "".fugitive#head()
+    let old_branch = "".FugitiveHead()
   endif
   redraw
   execute("Git checkout -b ".new_branch." ".old_branch)
