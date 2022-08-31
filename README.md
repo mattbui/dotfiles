@@ -46,13 +46,13 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/in
   - [ ] setup scripts (support for homebrew, apt, apk, without package manager):
     - [ ] zsh
     - [ ] git
-    - [ ] nvim
+    - [x] nvim
     - [ ] tmux
-    - [ ] fzf
-    - [ ] lf
+    - [x] fzf
+    - [x] lf
     - [ ] fd
     - [x] conda
-    - [ ] direnv
+    - [x] direnv
 - [x] zsh:
   - [x] antigen plugins manager
   - [x] auto-complete
