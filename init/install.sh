@@ -1,5 +1,5 @@
 #!/bin/sh
-[ ! -d $HOME/bin] && mkdir $HOME/bin && echo "export PATH=\$PATH:$HOME/bin" >> .zshrc
+[ ! -d $HOME/bin ] && mkdir $HOME/bin && echo "export PATH=\$PATH:$HOME/bin" >> .zshrc
 
 if ! command -v conda &> /dev/null
 then

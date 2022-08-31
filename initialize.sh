@@ -8,7 +8,7 @@ sh $DOTFILES/init/link.sh  # link configs from dotfiles
 
 # Zshell
 # Add "source $HOME/.config/zsh/init.zsh" at the begining of $HOME/.zshrc
-[ ! -f  $HOME/.zshrc] && touch $HOME/.zshrc
+[ ! -f  $HOME/.zshrc ] && touch $HOME/.zshrc
 (echo "source $HOME/.config/zsh/init.zsh" &&\
     cat $HOME/.zshrc 2>/dev/null) > $HOME/.zshrc_tmp\
     && mv $HOME/.zshrc_tmp $HOME/.zshrc
