@@ -78,7 +78,7 @@ if ! command -v nvim &> /dev/null
 then
     echo "INSTALLING NeoVim"
     case "$(uname -s)" in
-        Linux*) artifact_url=https://github.com/neovim/neovim/releases/download/stable/nvim-linux-64.tar.gz && bin_path=nvim-linux64/bin;;
+        Linux*) artifact_url=https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz && bin_path=nvim-linux64/bin;;
         Darwin*) artifact_url=https://github.com/neovim/neovim/releases/download/stable/nvim-macos.tar.gz && bin_path=nvim-macos/bin;;
         *) echo "UNKNOWN:$(uname -a)";;
     esac
@@ -88,5 +88,10 @@ then
 
         tar xzvf nvim.tar.gz -C $HOME
         echo "export PATH=\$PATH:$HOME/$bin_path" >> .zshrc
+
+        sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
+        $HOME/$bin_path/nvim +PlugInstall +qall
     fi
 fi
