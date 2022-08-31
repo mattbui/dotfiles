@@ -24,6 +24,7 @@ then
         eval "$(${conda_path}/bin/conda shell.zsh hook)"
         echo "CONDA_HOME=$conda_path" >> .zshrc
         conda init zsh
+        conda init bash
     fi
 fi
 
@@ -36,7 +37,7 @@ fi
 if ! command -v antigen &> /dev/null
 then
     echo "INSTALLING Antigen"
-    curl -L git.io/antigen > $HOME/.antigen.zsh  # antigen as zsh plugins manager
+    curl -L git.io/antigen > $HOME/antigen.zsh  # antigen as zsh plugins manager
 fi
 
 if ! command -v lf &> /dev/null
