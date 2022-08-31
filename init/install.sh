@@ -3,7 +3,7 @@
 
 if ! command -v conda &> /dev/null
 then
-    echo "INSTALLING Conda"
+    echo "INSTALLING CONDA"
     case "$(uname -s)" in
         Linux*)
             case "$(uname -m)" in
@@ -17,7 +17,7 @@ then
     esac
 
     if [ ! -z $artifact_url ]; then
-        echo "INSTALLING Conda from: $artifact_url"
+        echo "INSTALLING CONDA from: $artifact_url"
         wget -O $HOME/miniconda_installer.sh $artifact_url
         zsh $HOME/miniconda_installer.sh -b
         conda_path=$HOME/miniconda3
@@ -30,19 +30,19 @@ fi
 
 if ! command -v fzf &> /dev/null
 then
-    echo "INSTALLING Fzf"
+    echo "INSTALLING FZF"
     git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
 fi
 
 if ! command -v antigen &> /dev/null
 then
-    echo "INSTALLING Antigen"
+    echo "INSTALLING ANTIGEN.ZSH"
     curl -L git.io/antigen > $HOME/antigen.zsh  # antigen as zsh plugins manager
 fi
 
 if ! command -v lf &> /dev/null
 then
-    echo "INSTALLING Lf"
+    echo "INSTALLING LF"
     latest_release=$(curl -L -s -H 'Accept: application/json' https://github.com/gokcehan/lf/releases/latest)
     latest_version=$(echo $latest_release | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
     case "$(uname -s)" in
@@ -58,7 +58,7 @@ then
     esac
 
     if [ ! -z $artifact_url ]; then
-        echo "INSTALLING Lf from: $artifact_url"
+        echo "INSTALLING LF from: $artifact_url"
         wget -O $HOME/lf.tar.gz $artifact_url
         tar xvf $HOME/lf.tar.gz -C $HOME/bin
         chmod +x $HOME/bin/lf
@@ -67,7 +67,7 @@ fi
 
 if ! command -v direnv &> /dev/null
 then
-    echo "INSTALLING Direnv"
+    echo "INSTALLING DIRENV"
     export bin_path=$HOME/bin
     curl -sfL https://direnv.net/install.sh | bash
     echo "eval \"\$(direnv hook zsh)\"" >> $HOME/.zshrc
@@ -76,14 +76,14 @@ fi
 
 if ! command -v nvim &> /dev/null
 then
-    echo "INSTALLING NeoVim"
+    echo "INSTALLING NEOVIM"
     case "$(uname -s)" in
         Linux*) artifact_url=https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz && bin_path=nvim-linux64/bin;;
         Darwin*) artifact_url=https://github.com/neovim/neovim/releases/download/stable/nvim-macos.tar.gz && bin_path=nvim-macos/bin;;
         *) echo "UNKNOWN:$(uname -a)";;
     esac
     if [ ! -z $artifact_url ]; then
-        echo "INSTALLING NeoVim from: $artifact_url"
+        echo "INSTALLING NEOVIM from: $artifact_url"
         wget -O $HOME/nvim.tar.gz $artifact_url
 
         tar xzvf nvim.tar.gz -C $HOME
