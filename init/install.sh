@@ -70,6 +70,8 @@ then
     echo "INSTALLING Direnv"
     export bin_path=$HOME/bin
     curl -sfL https://direnv.net/install.sh | bash
+    echo "eval \"\$(direnv hook zsh)\"" >> $HOME/.zshrc
+
 fi
 
 if ! command -v nvim &> /dev/null
