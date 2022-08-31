@@ -14,7 +14,7 @@ sh $DOTFILES/init/link.sh  # link configs from dotfiles
     && mv $HOME/.zshrc_tmp $HOME/.zshrc
 
 sh $DOTFILES/init/git.sh  # git configs
-sh $DOTFILES/init/installs.sh  # setup essential packages
+sh $DOTFILES/init/install.sh  # setup essential packages
 
 # use this if cannot change default shell to zsh
 printf "Done intialization"

@@ -1,21 +1,22 @@
 #!/bin/sh
 if ! command -v conda &> /dev/null
 then
+    echo "Installing Conda"
     case "$(uname -s)" in
         Linux*)
             case "$(uname -m)" in
-                x86_64) conda_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;;
-                i686 | i386) conda_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh;;
+                x86_64) artifact_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh;;
+                i686 | i386) artifact_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh;;
                 *) echo "UNKNOWN:$(uname -a)";;
             esac
             ;;
-        Darwin*) conda_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;;
+        Darwin*) artifact_url=https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh;;
         *) echo "UNKNOWN:$(uname -a)";;
     esac
 
-    if [ ! -z $conda_url ]; then
-        echo "Installing conda from: $conda_url"
-        wget -O $HOME/miniconda_installer.sh $conda_url
+    if [ ! -z $artifact_url ]; then
+        echo "Installing Conda from: $artifact_url"
+        wget -O $HOME/miniconda_installer.sh $artifact_url
         zsh $HOME/miniconda_installer.sh -b
         conda_path=$HOME/miniconda3
         eval "$(${conda_path}/bin/conda shell.zsh hook)"
@@ -53,7 +54,7 @@ then
     esac
 
     if [ ! -z $artifact_url ]; then
-        echo "Installing LF from: $artifact_url"
+        echo "Installing Lf from: $artifact_url"
         wget -O $HOME/lf.tar.gz $artifact_url
         [! -d $HOME/bin] && mkdir $HOME/bin && echo "export PATH=\$PATH:$HOME/bin" >> .zshrc
         tar xvf $HOME/lf.tar.gz -C $HOME/bin
