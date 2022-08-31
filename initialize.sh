@@ -14,7 +14,14 @@ sh $DOTFILES/init/link.sh  # link configs from dotfiles
     && mv $HOME/.zshrc_tmp $HOME/.zshrc
 
 sh $DOTFILES/init/git.sh  # git configs
-sh $DOTFILES/init/install.sh  # setup essential packages
+
+# Setup essential packages
+case "$(uname -s)" in
+    Linux*) sh $DOTFILES/init/apt_install.sh;;
+    Darwin*) sh $DOTFILES/init/mac_install.sh;;
+    *) echo "UNKNOWN:$(uname -a)";;
+esac
+sh $DOTFILES/init/install.sh
 
 # use this if cannot change default shell to zsh
 printf "Done intialization"
