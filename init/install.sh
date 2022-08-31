@@ -95,3 +95,10 @@ then
         $HOME/$bin_path/nvim +PlugInstall +qall
     fi
 fi
+
+if command -v tmux &> /dev/null
+then
+    echo "INSTALLING TPM"
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+    ~/.tmux/plugins/tpm/bin/install_plugins
+fi
