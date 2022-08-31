@@ -21,4 +21,3 @@ sh $DOTFILES/init/git.sh  # git configs
 # use this if cannot change default shell to zsh
 printf "Done intialization"
 printf "To use zsh as default shell use:\n\tchsh -s \$(which zsh)\nor\n\techo \"exec zsh\" >> $HOME/.bashrc\n"
-
