@@ -7,5 +7,5 @@ git config --global user.username mattbui
 git config --global core.excludesfile $HOME/.gitignore_global
 
 # git config --global user.signingkey <key_id>
-git config --global commit.gpgsign true
+# git config --global commit.gpgsign true
 
