@@ -35,4 +35,5 @@ let s:cell_markers = '\"\"\"'
 let s:update_meta = '{"jupytext": {"cell_markers": "' . s:cell_markers . '"}}'
 let g:jupytext_opts = '--update-metadata ' . "'" . s:update_meta . "'"
 
-autocmd FileType python if len(get(b:, 'jupytext_file', '')) > 0 | call IPynbMappings() | endif
+" autocmd FileType python if len(get(b:, 'jupytext_file', '')) > 0 | call IPynbMappings() | endif
+autocmd FileType python call IPynbMappings()
