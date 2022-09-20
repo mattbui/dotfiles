@@ -7,7 +7,7 @@ fi
 
 export FZF_COMPLETION_TRIGGER='~~'
 
-export FZF_DEFAULT_OPTS="--color=light --height 40% --layout=reverse --info=inline"
+export FZF_DEFAULT_OPTS="--color=light --border --height 40% --reverse --info=inline"
 
 # sainnhe/edge color scheme
 # export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' 
