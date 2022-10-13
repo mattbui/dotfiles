@@ -11,7 +11,7 @@ antigen bundle tmux
 antigen bundle jeffreytse/zsh-vi-mode
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zdharma/fast-syntax-highlighting
+antigen bundle z-shell/F-Sy-H --branch=main
 
 # Load the theme.
 antigen theme romkatv/powerlevel10k
