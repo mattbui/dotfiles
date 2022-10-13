@@ -17,7 +17,7 @@ sh $DOTFILES/init/git.sh  # git configs
 
 # Setup essential packages
 case "$(uname -s)" in
-    Linux*) [ "$EUID" -ne 0 ] || sh $DOTFILES/init/apt_install.sh;;
+    Linux*) sh $DOTFILES/init/apt_install.sh;;
     Darwin*) sh $DOTFILES/init/mac_install.sh;;
     *) echo "UNKNOWN:$(uname -a)";;
 esac
