@@ -46,10 +46,6 @@ export BAT_THEME='ansi-light'
 # add-zsh-hook precmd _bind_intr_ce
 # add-zsh-hook preexec _bind_intr_cc
 
-# zsh vim mode flags
-ZVM_KEYTIMEOUT=0.2
-ZVM_VI_ESCAPE_BINDKEY='jj'
-
 # Add this so zsh-vim-mode don't override key biddings
 function zvm_after_init() {
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -67,8 +63,19 @@ if [[ $(uname -s) == Linux* && -f "${HOME}/.config/zsh/start_ssh_agent.zsh" ]]; 
     source "${HOME}/.config/zsh/start_ssh_agent.zsh"
 fi
 
-# Add ssh github key
+# Add ssh keys
 GITKEY="$HOME/.ssh/github.key"
+if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
+    GITKEY_FPRINT=$(ssh-keygen -lf $GITKEY)
+    LIST_KEYS=$(ssh-add -l)
+
+    # Add git key if not available
+    if [[ $LIST_KEYS != *$GITKEY_FPRINT* ]]; then
+        ssh-add $GITKEY 2> /dev/null
+    fi
+fi
+
+GITKEY="$HOME/.ssh/glimpse"
 if [[ $(uname -s) == Linux* && -f $GITKEY ]]; then
     GITKEY_FPRINT=$(ssh-keygen -lf $GITKEY)
     LIST_KEYS=$(ssh-add -l)
