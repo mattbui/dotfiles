@@ -15,3 +15,10 @@ alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
+
+alias rpush='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" ./ $RSYNC_REMOTE'
+alias rpull='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" $RSYNC_REMOTE ../'
+alias rstatus='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || (echo "PUSH CHANGES:" && rpush --delete -n && echo "PULL CHANGES:" && rpull --delete -n)'
+
+alias ppip='python -m pip'
+alias pipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'

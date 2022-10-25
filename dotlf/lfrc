@@ -39,7 +39,18 @@ cmd trash ${{
 		trash "$(echo $file | sed s/$tok_space/$space/g )"
 	done
 }}
-map D trash
+map T trash
+
+# purge the unclean
+cmd remove ${{
+	clear; tput cup $(($(tput lines)/3)); tput bold
+	set -f
+	printf "%s\n\t" "$fx"
+	printf "Delete?[y/N] "
+	read ans
+	[ $ans = 'y' ] && (echo 'deleting files...' && rm -fr $fs) || (echo 'cancelled...')
+}}
+map D remove
 
 cmd addDir %{{
 	printf "Directory name or path? "
