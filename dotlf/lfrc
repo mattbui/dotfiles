@@ -45,10 +45,16 @@ map T trash
 cmd remove ${{
 	clear; tput cup $(($(tput lines)/3)); tput bold
 	set -f
+	space=$' '
+	tok_space=$'<SPACE>'
+
 	printf "%s\n\t" "$fx"
 	printf "Delete?[y/N] "
 	read ans
-	[ $ans = 'y' ] && (echo 'deleting files...' && rm -fr $fs) || (echo 'cancelled...')
+	[ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
+	do
+		rm -rf "$(echo $file | sed s/$tok_space/$space/g )"
+	done
 }}
 map D remove
 
