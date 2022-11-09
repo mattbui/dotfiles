@@ -37,8 +37,11 @@ let g:lightline = {
       \   'cursorinfo': "CursorInfo",
       \   'gitstatus': 'GitStatus',
       \   'nerdfont_readonly': 'NerdFontReadonly',
-      \   'nerdfont_modified': 'NerdFontModified'
+      \   'nerdfont_modified': 'NerdFontModified',
       \ },
+      \ 'component':{
+      \   'relativepath': '%<%f'
+      \ }
       \ }
 
 call lightline#coc#register()
