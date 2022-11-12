@@ -53,10 +53,14 @@
   },
   "suggest.snippetIndicator": "...",
   "snippets.ultisnips.usePythonx": false,
-  "git.changedSign.text": "▐",
-  "git.addedSign.text": "▐",
-  "git.removedSign.text": "▐",
-  "git.topRemovedSign.text": "▐",
-  "git.changeRemovedSign.text": "▐",
-  "snippets.ultisnips.pythonPrompt": false
+  "git.changedSign.text": "┃",
+  "git.addedSign.text": "┃",
+  "git.removedSign.text": "┃",
+  "git.topRemovedSign.text": "┃",
+  "git.changeRemovedSign.text": "┃",
+  "snippets.ultisnips.pythonPrompt": false,
+  "diagnostic.hintSign": "❭",
+  "diagnostic.infoSign": "❭",
+  "diagnostic.errorSign": "❭",
+  "diagnostic.warningSign": "❭"
 }
