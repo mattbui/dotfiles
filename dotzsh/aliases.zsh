@@ -22,3 +22,5 @@ alias rstatus='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYN
 
 alias ppip='python -m pip'
 alias pipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'
+
+[ -z $(command -v brew) ] || alias ctags="`brew --prefix`/bin/ctags"

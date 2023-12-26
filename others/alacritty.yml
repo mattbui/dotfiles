@@ -3,6 +3,12 @@ env:
 
 # Window configuration
 window:
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  option_as_alt: Both
   dimensions:
     columns: 120
     lines: 30
@@ -152,7 +158,9 @@ colors:
     white: '#aeb3bb'
 
 cursor:
-  shape: Beam
+  style:
+    shape: Beam
+    blinking: Off
 
   # Vi mode cursor style
   #
@@ -160,9 +168,8 @@ cursor:
   # the style of the active value of the normal cursor.
   #
   # See `cursor.style` for available options.
-  vi_mode_style: Block
-# Send ESC (\x1b) before characters when alt is pressed.
-alt_send_esc: true
+  vi_mode_style:
+    shape: Block
 
 #mouse:
     # URL modifiers
