@@ -21,7 +21,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " Tabbar
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'romgrk/barbar.nvim'
+    Plug 'romgrk/barbar.nvim', {'branch': 'v1.5.0'}
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
@@ -51,11 +51,14 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'ayu-theme/ayu-vim'
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
-    Plug 'sainnhe/edge'
+    " Plug 'sainnhe/edge'
     Plug 'arcticicestudio/nord-vim'
+    " Plug 'shaunsingh/nord.nvim'
+    Plug 'EdenEast/nightfox.nvim'
 
     " Light line
     Plug 'itchyny/lightline.vim'
+    Plug 'majutsushi/tagbar'
     " Plug 'mengelbrecht/lightline-bufferline'
     Plug 'josa42/vim-lightline-coc'
 
