@@ -19,15 +19,15 @@ let g:lightline = {
       \ 'colorscheme': g:colors_name,
       \ 'active': {
       \   'left': [
-      \           ['mode',      'paste' ],
-      \           ['gitstatus', 'nerdfont_readonly', 'relativepath', 'nerdfont_modified', 'cursorinfo' ],
-      \           ['coc_info',  'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok' ],
-      \           ['coc_status' ],
+      \           ['mode', 'paste'],
+      \           ['gitstatus', 'nerdfont_readonly', 'relativepath', 'nerdfont_modified', 'tagbar'],
+      \           ['coc_info', 'coc_hints', 'coc_errors', 'coc_warnings', 'coc_ok'],
+      \           ['coc_status'],
       \           ],
       \   'right':[
-      \           [ ],
-      \           ['percent' ],
-      \           ['fileformat', 'fileencoding', 'filetype' ],
+      \           [],
+      \           ['cursorinfo', 'percent'],
+      \           ['fileformat', 'fileencoding', 'filetype'],
       \           ]
       \ },
       \ 'enable': {
@@ -40,7 +40,8 @@ let g:lightline = {
       \   'nerdfont_modified': 'NerdFontModified',
       \ },
       \ 'component':{
-      \   'relativepath': '%<%f'
+      \   'relativepath': '%<%f',
+      \   'tagbar': '%<%{tagbar#currenttag("[%s]", "", "f")}',
       \ }
       \ }
 
