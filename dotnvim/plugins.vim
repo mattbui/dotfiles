@@ -53,8 +53,10 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'lifepillar/vim-wwdc17-theme'
     " Plug 'sainnhe/edge'
     Plug 'arcticicestudio/nord-vim'
+    Plug 'folke/tokyonight.nvim'
     " Plug 'shaunsingh/nord.nvim'
     Plug 'EdenEast/nightfox.nvim'
+
 
     " Light line
     Plug 'itchyny/lightline.vim'

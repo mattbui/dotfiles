@@ -28,4 +28,4 @@ endfunction
 
 autocmd VimEnter,ColorScheme * call ApplyCustomColors()
 
-colorscheme nord
+colorscheme tokyonight-storm
