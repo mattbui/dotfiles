@@ -54,8 +54,9 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sainnhe/edge'
     Plug 'arcticicestudio/nord-vim'
     Plug 'folke/tokyonight.nvim'
+    Plug 'folke/tokyonight.nvim'
+    Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
     " Plug 'shaunsingh/nord.nvim'
-    Plug 'EdenEast/nightfox.nvim'
 
 
     " Light line

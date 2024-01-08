@@ -35,11 +35,10 @@ let bufferline.tabpages = v:false
 let bufferline.icon_custom_colors = v:true
 
 " Configure icons on the bufferline.
-" let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_inactive = ''
 " let bufferline.icon_separator_inactive = '▏'
 
-let bufferline.icon_separator_active = ''
-let bufferline.icon_separator_inactive = ''
 
 " Sets the name of unnamed buffers. By default format is "[Buffer X]"
 " where X is the buffer number. But only a static string is accepted here.
