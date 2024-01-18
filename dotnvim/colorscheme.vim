@@ -18,22 +18,7 @@ function ApplyCustomColors()
   elseif (g:colors_name == 'edge' && &background =='light')
     source $HOME/.config/nvim/edge-light-colors.vim
   elseif (g:colors_name == 'tokyonight')
-    hi BufferCurrentSign ctermfg=110 guifg=#bb9af7
-    hi BufferCurrentTarget ctermfg=110 guifg=#bb9af7
-    hi BufferInactiveTarget ctermbg=238 ctermfg=110 guibg=#3b4261 guifg=#bb9af7
-    hi BufferVisibleTarget ctermbg=240 ctermfg=110 guibg=#3b4261 guifg=#bb9af7 
-
-    hi BufferVisible guifg=#636a8d guibg=#292e42
-    hi BufferVisibleINFO guifg=#0db9d7 guibg=#292e42
-    hi BufferVisibleWARN guifg=#e0af68 guibg=#292e42
-    hi BufferVisibleERROR guifg=#db4b4b guibg=#292e42
-    hi BufferVisibleSign guifg=#636a8d guibg=#292e42
-
-    hi BufferInactive guifg=#636a8d guibg=#292e42
-    hi BufferInactiveINFO guifg=#0db9d7 guibg=#292e42
-    hi BufferInactiveWARN guifg=#e0af68 guibg=#292e42
-    hi BufferInactiveERROR guifg=#db4b4b guibg=#292e42
-    hi BufferInactiveSign guifg=#292e42 guibg=#292e42
+    source $HOME/.config/nvim/tokyo-night-storm-colors.vim
   endif
 
   hi link BufferCurrentMod BufferCurrent
