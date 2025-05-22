@@ -51,11 +51,15 @@ nnoremap <Leader>O O<Esc>
 nnoremap <silent> <Leader>\ :vsplit<CR>
 nnoremap <silent> <Leader>- :split<CR>
 
-" Use alt + hjkl to resize windows
-nnoremap <silent> <M-j>    :resize -2<CR>
-nnoremap <silent> <M-k>    :resize +2<CR>
-nnoremap <silent> <M-h>    :vertical resize -2<CR>
-nnoremap <silent> <M-l>    :vertical resize +2<CR>
+" Resize windows
+" nnoremap <silent> <M-j>    :resize -2<CR>
+" nnoremap <silent> <M-k>    :resize +2<CR>
+" nnoremap <silent> <M-h>    :vertical resize -2<CR>
+" nnoremap <silent> <M-l>    :vertical resize +2<CR>
+nnoremap <silent> =    :vertical resize +2<CR>
+nnoremap <silent> -    :vertical resize -2<CR>
+nnoremap <silent> +    :resize +2<CR>
+nnoremap <silent> _    :resize -2<CR>
 
 " Alternate way to save
 nnoremap <silent> <C-s> :w<CR>
