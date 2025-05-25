@@ -29,6 +29,53 @@
       ]
     },
     {
+      "description": "Map right_option-tab to capslock",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["right_option"],
+              "optional": ["any"]
+            },
+            "key_code": "tab"
+          },
+          "to": [
+            {
+              "key_code": "caps_lock"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Map tab option",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "optional": ["any"]
+            },
+            "key_code": "tab"
+          },
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 100
+          },
+          "to_if_alone": [
+            {
+              "key_code": "tab"
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "left_option"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "Map ctrl-del to opt-delete",
       "manipulators": [
         {
@@ -44,7 +91,7 @@
             {
               "repeat": true,
               "key_code": "delete_or_backspace",
-              "modifiers": ["left_alt"]
+              "modifiers": ["left_option"]
             }
           ]
         },
@@ -61,7 +108,7 @@
             {
               "repeat": true,
               "key_code": "delete_or_backspace",
-              "modifiers": ["right_alt"]
+              "modifiers": ["right_option"]
             }
           ]
         }
@@ -150,7 +197,6 @@
           },
           "to": [
             {
-              "repeat": true,
               "key_code": "caps_lock"
             }
           ]
@@ -172,6 +218,42 @@
           "to": [
             {
               "shell_command": "/usr/bin/osascript ~/bin/newspace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Map fn-esc to ` and shift-esc to ~",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            },
+            "key_code": "escape"
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde",
+              "modifiers": ["shift"]
             }
           ]
         }
