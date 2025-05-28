@@ -185,6 +185,75 @@
       ]
     },
     {
+      "description": "Map fn-np<> to pgup/down/home/end",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "comma"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "home"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "period"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "end"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "n"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "page_down"
+            }
+          ]
+        },
+        {
+          "type": "basic",
+          "from": {
+            "modifiers": {
+              "mandatory": ["fn"],
+              "optional": ["any"]
+            },
+            "key_code": "p"
+          },
+          "to": [
+            {
+              "repeat": true,
+              "key_code": "page_up"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "description": "Map fn-tab to capslock",
       "manipulators": [
         {
