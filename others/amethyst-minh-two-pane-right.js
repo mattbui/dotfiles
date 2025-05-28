@@ -2,7 +2,7 @@ function layout() {
   return {
     name: "Minh's Two Pane Right",
     initialState: {
-      mainPaneRatio: 0.7, // Default 80% for single window, configurable for multi-window
+      mainPaneRatio: 0.675, // Default 80% for single window, configurable for multi-window
     },
     commands: {
       shrinkMain: {
