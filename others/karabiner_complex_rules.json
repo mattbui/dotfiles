@@ -1,544 +1,625 @@
 {
-  "title": "Matt's keyboard rules",
   "rules": [
     {
-      "description": "Map space fn",
+      "description": "Tab Mod-Tap (Tap: Tab, Hold: Option) with Ctrl+Tab exception",
       "manipulators": [
         {
-          "type": "basic",
+          "description": "Ctrl+Tab -> Ctrl+Tab (exception)",
           "from": {
+            "key_code": "tab",
             "modifiers": {
-              "optional": ["any"]
-            },
-            "key_code": "spacebar"
+              "mandatory": ["control"],
+              "optional": ["shift"]
+            }
           },
-          "parameters": {
-            "basic.to_if_held_down_threshold_milliseconds": 100
-          },
-          "to_if_alone": [
+          "to": [
             {
-              "key_code": "spacebar"
+              "key_code": "tab",
+              "modifiers": ["control"]
             }
           ],
-          "to_if_held_down": [
-            {
-              "key_code": "fn"
-            }
-          ]
+          "type": "basic"
+        },
+        {
+          "description": "Tab -> Option (mod-tap)",
+          "from": {
+            "key_code": "tab",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "left_option" }],
+          "to_if_alone": [{ "key_code": "tab" }],
+          "to_if_held_down": [{ "key_code": "left_option" }],
+          "type": "basic"
         }
       ]
     },
     {
-      "description": "Map right_option-tab to capslock",
+      "description": "Shift + Esc → Tilde",
       "manipulators": [
         {
-          "type": "basic",
+          "description": "Shift + Esc → Tilde",
           "from": {
-            "modifiers": {
-              "mandatory": ["right_option"],
-              "optional": ["any"]
-            },
-            "key_code": "tab"
-          },
-          "to": [
-            {
-              "repeat": false,
-              "key_code": "caps_lock"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map tab option",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "optional": ["any"]
-            },
-            "key_code": "tab"
-          },
-          "parameters": {
-            "basic.to_if_held_down_threshold_milliseconds": 150
-          },
-          "to_if_alone": [
-            {
-              "key_code": "tab"
-            }
-          ],
-          "to_if_held_down": [
-            {
-              "key_code": "left_option"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map ctrl-del to opt-delete",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["left_control"],
-              "optional": ["any"]
-            },
-            "key_code": "delete_or_backspace"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "delete_or_backspace",
-              "modifiers": ["left_option"]
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["right_control"],
-              "optional": ["any"]
-            },
-            "key_code": "delete_or_backspace"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "delete_or_backspace",
-              "modifiers": ["right_option"]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map fn-hjkl to arrows",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "h"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "left_arrow"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "j"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "down_arrow"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "k"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "up_arrow"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "l"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "right_arrow"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map fn-np<> to pgup/down/home/end",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "comma"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "home"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "period"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "end"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "n"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "page_down"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "p"
-          },
-          "to": [
-            {
-              "repeat": true,
-              "key_code": "page_up"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map fn-tab to capslock",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "tab"
-          },
-          "to": [
-            {
-              "key_code": "caps_lock"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map ctrl-cmd-n to create new space/desktop",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["left_control", "left_command"],
-              "optional": ["any"]
-            },
-            "key_code": "n"
-          },
-          "to": [
-            {
-              "shell_command": "/usr/bin/osascript ~/bin/newspace"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "description": "Map fn-esc to ` and shift-esc to ~",
-      "manipulators": [
-        {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "escape"
-          },
-          "to": [
-            {
-              "key_code": "grave_accent_and_tilde"
-            }
-          ]
-        },
-        {
-          "type": "basic",
-          "from": {
+            "key_code": "escape",
             "modifiers": {
               "mandatory": ["shift"],
               "optional": ["any"]
-            },
-            "key_code": "escape"
+            }
           },
           "to": [
             {
               "key_code": "grave_accent_and_tilde",
               "modifiers": ["shift"]
             }
-          ]
+          ],
+          "type": "basic"
         }
       ]
     },
     {
-      "description": "Map fn-esc to ` and fn-num rows to functions",
+      "description": "Ctrl + Delete → Option + Delete",
       "manipulators": [
         {
-          "type": "basic",
+          "description": "Ctrl + Delete → Option + Delete",
           "from": {
+            "key_code": "delete_or_backspace",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "escape"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "grave_accent_and_tilde"
+              "key_code": "delete_or_backspace",
+              "modifiers": ["option"],
+              "repeat": true
             }
-          ]
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "Ctrl + Arrow Keys → Option + Arrow Keys",
+      "manipulators": [
+        {
+          "description": "Ctrl + Left Arrow → Option + Left Arrow",
+          "from": {
+            "key_code": "left_arrow",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": ["option"]
+            }
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "description": "Ctrl + Right Arrow → Option + Right Arrow",
           "from": {
+            "key_code": "right_arrow",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "1"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "display_brightness_decrement"
+              "key_code": "right_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "description": "Ctrl + Up Arrow → Option + Up Arrow",
           "from": {
+            "key_code": "up_arrow",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "2"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "display_brightness_increment"
+              "key_code": "up_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "description": "Ctrl + Down Arrow → Option + Down Arrow",
           "from": {
+            "key_code": "down_arrow",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "3"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "f3"
+              "key_code": "down_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "SpaceFN + Ctrl + HJKL → Option + Arrow Keys",
+      "manipulators": [
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + Ctrl + h → Option + Left Arrow",
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": ["control"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_arrow",
+              "modifiers": ["option"]
+            }
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + Ctrl + j → Option + Down Arrow",
           "from": {
+            "key_code": "j",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "4"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "f4"
+              "key_code": "down_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + Ctrl + k → Option + Up Arrow",
           "from": {
+            "key_code": "k",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "5"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "f5"
+              "key_code": "up_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + Ctrl + l → Option + Right Arrow",
           "from": {
+            "key_code": "l",
             "modifiers": {
-              "mandatory": ["fn"],
+              "mandatory": ["control"],
               "optional": ["any"]
-            },
-            "key_code": "6"
+            }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "f6"
+              "key_code": "right_arrow",
+              "modifiers": ["option"]
             }
-          ]
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "SpaceFN Layer",
+      "manipulators": [
+        {
+          "description": "Spacebar -> SpaceFN",
+          "from": {
+            "key_code": "spacebar",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "spacefn",
+                "value": 1
+              }
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "set_variable": {
+                "name": "spacefn",
+                "value": 0
+              }
+            }
+          ],
+          "to_if_alone": [{ "key_code": "spacebar" }],
+          "type": "basic"
         },
         {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "7"
-          },
-          "to": [
+          "conditions": [
             {
-              "repeat": true,
-              "key_code": "rewind"
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
             }
-          ]
+          ],
+          "description": "SpaceFN + esc → Backtick",
+          "from": {
+            "key_code": "escape",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "grave_accent_and_tilde" }],
+          "type": "basic"
         },
         {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "8"
-          },
-          "to": [
+          "conditions": [
             {
-              "repeat": true,
-              "key_code": "play_or_pause"
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
             }
-          ]
+          ],
+          "description": "SpaceFN + 1 → F1",
+          "from": {
+            "key_code": "1",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f1" }],
+          "type": "basic"
         },
         {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "9"
-          },
-          "to": [
+          "conditions": [
             {
-              "repeat": true,
-              "key_code": "fastforward"
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
             }
-          ]
+          ],
+          "description": "SpaceFN + 2 → F2",
+          "from": {
+            "key_code": "2",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f2" }],
+          "type": "basic"
         },
         {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "0"
-          },
-          "to": [
+          "conditions": [
             {
-              "repeat": true,
-              "key_code": "mute"
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
             }
-          ]
+          ],
+          "description": "SpaceFN + 3 → F3",
+          "from": {
+            "key_code": "3",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f3" }],
+          "type": "basic"
         },
         {
-          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 4 → F4",
           "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "hyphen"
+            "key_code": "4",
+            "modifiers": { "optional": ["any"] }
           },
           "to": [
             {
-              "repeat": true,
-              "key_code": "volume_decrement"
+              "key_code": "f4",
+              "modifiers": ["fn"]
             }
-          ]
+          ],
+          "type": "basic"
         },
         {
-          "type": "basic",
-          "from": {
-            "modifiers": {
-              "mandatory": ["fn"],
-              "optional": ["any"]
-            },
-            "key_code": "equal_sign"
-          },
-          "to": [
+          "conditions": [
             {
-              "repeat": true,
-              "key_code": "volume_increment"
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
             }
-          ]
+          ],
+          "description": "SpaceFN + 5 → F5",
+          "from": {
+            "key_code": "5",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f5" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 6 → F6",
+          "from": {
+            "key_code": "6",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f6" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 7 → F7",
+          "from": {
+            "key_code": "7",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f7" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 8 → F8",
+          "from": {
+            "key_code": "8",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f8" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 9 → F9",
+          "from": {
+            "key_code": "9",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f9" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + 0 → F10",
+          "from": {
+            "key_code": "0",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f10" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + - → F11",
+          "from": {
+            "key_code": "hyphen",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f11" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + = → F12",
+          "from": {
+            "key_code": "equal_sign",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "f12" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + h → Left Arrow",
+          "from": {
+            "key_code": "h",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "left_arrow" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + j → Down Arrow",
+          "from": {
+            "key_code": "j",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "down_arrow" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + k → Up Arrow",
+          "from": {
+            "key_code": "k",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "up_arrow" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + l → Right Arrow",
+          "from": {
+            "key_code": "l",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "right_arrow" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + , → Home",
+          "from": {
+            "key_code": "comma",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "home" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + . → End",
+          "from": {
+            "key_code": "period",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "end" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + n → Page Down",
+          "from": {
+            "key_code": "n",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "page_down" }],
+          "type": "basic"
+        },
+        {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "description": "SpaceFN + p → Page Up",
+          "from": {
+            "key_code": "p",
+            "modifiers": { "optional": ["any"] }
+          },
+          "to": [{ "key_code": "page_up" }],
+          "type": "basic"
         }
       ]
     }
