@@ -150,3 +150,8 @@ ENV/
 env.bak/
 venv.bak/
 pythonenv*
+
+# Data files
+*.csv
+*.jsonl
+*.png
