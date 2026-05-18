@@ -1,0 +1,190 @@
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Space"
+mode = "~Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Space"
+mode = "Vi|~Search"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "ToggleViMode"
+key = "Escape"
+mode = "Vi|~Search"
+
+# \u001B is ESC; ESC plus a key is how terminals encode Alt-key chords.
+[[keyboard.bindings]]
+chars = "\u001Bj"
+key = "J"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bk"
+key = "K"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bh"
+key = "H"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bl"
+key = "L"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bq"
+key = "Q"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bn"
+key = "N"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bu"
+key = "U"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "Left"
+mods = "Alt"
+
+[[keyboard.bindings]]
+chars = "\u001Bf"
+key = "Right"
+mods = "Alt"
+
+# Ctrl-6 sends RS (Record Separator), ASCII 0x1E.
+[[keyboard.bindings]]
+chars = "\u001E"
+key = "Key6"
+mods = "Control"
+
+# Ctrl-Q sends DC1/XON, ASCII 0x11.
+[[keyboard.bindings]]
+chars = "\u0011"
+key = "Q"
+mods = "Control"
+
+# Ctrl-W sends ETB, ASCII 0x17.
+[[keyboard.bindings]]
+chars = "\u0017"
+key = "Back"
+mods = "Alt"
+
+# Ctrl-U sends NAK, ASCII 0x15.
+[[keyboard.bindings]]
+chars = "\u0015"
+key = "Back"
+mods = "Command"
+
+# Ctrl-W sends ETB, ASCII 0x17.
+[[keyboard.bindings]]
+chars = "\u0017"
+key = "W"
+mods = "Command"
+
+# Ctrl-Q sends DC1/XON, ASCII 0x11.
+[[keyboard.bindings]]
+chars = "\u0011"
+key = "Q"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ReceiveChar"
+key = "T"
+mods = "Command"
+
+# Ctrl+- sends US (Unit Separator), ASCII 0x1F.
+[[keyboard.bindings]]
+chars = "\u001F"
+key = "Z"
+mods = "Command"
+
+[[colors.indexed_colors]]
+color = "#ff9e64"
+index = 16
+
+[[colors.indexed_colors]]
+color = "#db4b4b"
+index = 17
+
+[colors.bright]
+black = "#414868"
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+magenta = "#bb9af7"
+red = "#f7768e"
+white = "#c0caf5"
+yellow = "#e0af68"
+
+[colors.normal]
+black = "#1d202f"
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+magenta = "#bb9af7"
+red = "#f7768e"
+white = "#a9b1d6"
+yellow = "#e0af68"
+
+[colors.primary]
+background = "#24283b"
+foreground = "#c0caf5"
+
+[cursor.style]
+blinking = "Off"
+shape = "Beam"
+
+[cursor.vi_mode_style]
+shape = "Block"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 14.5
+
+[font.bold]
+style = "Light"
+
+[font.bold_italic]
+style = "Light Italic"
+
+[font.italic]
+style = "Light Italic"
+
+[font.normal]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Light"
+
+[font.offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 10000
+multiplier = 5
+
+[window]
+decorations = "buttonless"
+dynamic_padding = true
+option_as_alt = "Both"
+
+[window.dimensions]
+columns = 120
+lines = 30
+
+[window.padding]
+x = 6
+y = 6
+
+[keyboard]
