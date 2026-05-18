@@ -29,3 +29,8 @@ ln -s $DOTFILES/dotlf $CONFIGS/lf
 # direnv configs
 [ -d $CONFIGS/direnv ] || [ -h $CONFIGS/direnv ] && rm -rf $CONFIGS/direnv
 ln -s $DOTFILES/dotdirenv $CONFIGS/direnv
+
+# JankyBorders configs
+[ ! -d $CONFIGS/borders ] && mkdir -p $CONFIGS/borders
+[ -f $CONFIGS/borders/bordersrc ] || [ -h $CONFIGS/borders/bordersrc ] && rm $CONFIGS/borders/bordersrc
+ln -s $DOTFILES/others/bordersrc $CONFIGS/borders/bordersrc
