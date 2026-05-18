@@ -46,16 +46,10 @@ export BAT_THEME='ansi-light'
 # add-zsh-hook precmd _bind_intr_ce
 # add-zsh-hook preexec _bind_intr_cc
 
-# Add this so zsh-vim-mode don't override key biddings
-function zvm_after_init() {
-    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-    [[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
-    [[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
-    bindkey -M viins '^[f' forward-word
-    bindkey -M viins '^[b' backward-word
-}
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
+[[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
 
-[[ ! -f $HOME/.config/zsh/gcloud.zsh ]] || source $HOME/.config/zsh/gcloud.zsh  # enable gcloud autocomplete
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh  # my custom aliases
 [[ ! -f $HOME/.config/lf/lf_icons.sh ]] || source $HOME/.config/lf/lf_icons.sh  # specify icons of lf
 

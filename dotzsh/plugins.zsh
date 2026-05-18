@@ -8,7 +8,6 @@ antigen bundle git
 antigen bundle extract
 antigen bundle tmux
 
-antigen bundle jeffreytse/zsh-vi-mode
 antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle z-shell/F-Sy-H --branch=main
