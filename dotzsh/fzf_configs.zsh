@@ -24,8 +24,11 @@ export FZF_DEFAULT_OPTS="--color=dark --border --height 40% --reverse --info=inl
 #     --color=marker:#a3be8b,spinner:#b48dac,header:#a3be8b'
 
 # custom keybindings
+# export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
+# --bind="tab:down,shift-tab:up,J:toggle+down,K:toggle+up"'
+
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
---bind="tab:down,shift-tab:up,J:toggle+down,K:toggle+up"'
+--bind="tab:down,shift-tab:up,>:select+down,<:deselect+up"'
 
 fcd() {
   local dir
