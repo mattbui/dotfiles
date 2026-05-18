@@ -34,3 +34,9 @@ ln -s $DOTFILES/dotdirenv $CONFIGS/direnv
 [ ! -d $CONFIGS/borders ] && mkdir -p $CONFIGS/borders
 [ -f $CONFIGS/borders/bordersrc ] || [ -h $CONFIGS/borders/bordersrc ] && rm $CONFIGS/borders/bordersrc
 ln -s $DOTFILES/others/bordersrc $CONFIGS/borders/bordersrc
+
+# Alacritty configs
+[ ! -d $CONFIGS/alacritty ] && mkdir -p $CONFIGS/alacritty
+[ -f $CONFIGS/alacritty/alacritty.yml ] || [ -h $CONFIGS/alacritty/alacritty.yml ] && rm $CONFIGS/alacritty/alacritty.yml
+[ -f $CONFIGS/alacritty/alacritty.toml ] || [ -h $CONFIGS/alacritty/alacritty.toml ] && rm $CONFIGS/alacritty/alacritty.toml
+ln -s $DOTFILES/others/alacritty.toml $CONFIGS/alacritty/alacritty.toml
