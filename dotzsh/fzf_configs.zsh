@@ -52,5 +52,7 @@ fo() {
   fi
 }
 
-bindkey -s '^g' 'fcd\n' # go to directory with ctrl+g
-bindkey -M viins '^f' fzf-file-widget # ctrl+f for file
+for keymap in emacs viins; do
+  bindkey -M "$keymap" -s '^g' 'fcd\n' # go to directory with ctrl+g
+  bindkey -M "$keymap" '^f' fzf-file-widget # ctrl+f for file
+done
