@@ -142,7 +142,7 @@ foreground = "#c0caf5"
 
 [cursor.style]
 blinking = "Off"
-shape = "Beam"
+shape = "Block"
 
 [cursor.vi_mode_style]
 shape = "Block"
