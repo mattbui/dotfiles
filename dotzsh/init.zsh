@@ -82,5 +82,10 @@ fi
 
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh  # load plugins
 
+# Make Ctrl-U, including Alacritty's Cmd-Backspace mapping, delete only back to
+# the start of the line instead of killing the whole command line.
+bindkey '^U' backward-kill-line
+bindkey -M viins '^U' backward-kill-line
+
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
 [[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
