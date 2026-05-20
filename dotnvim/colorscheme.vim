@@ -17,7 +17,7 @@ function ApplyCustomColors()
     source $HOME/.config/nvim/nord-colors.vim
   elseif (g:colors_name == 'edge' && &background =='light')
     source $HOME/.config/nvim/edge-light-colors.vim
-  elseif (g:colors_name == 'tokyonight')
+  elseif (g:colors_name == 'tokyonight-storm')
     source $HOME/.config/nvim/tokyo-night-storm-colors.vim
   endif
 

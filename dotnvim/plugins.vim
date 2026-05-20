@@ -20,8 +20,9 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'karb94/neoscroll.nvim'
 
     " Tabbar
+    Plug 'lewis6991/gitsigns.nvim'
     Plug 'kyazdani42/nvim-web-devicons'
-    Plug 'romgrk/barbar.nvim', {'branch': 'v1.5.0'}
+    Plug 'romgrk/barbar.nvim'
 
     Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 

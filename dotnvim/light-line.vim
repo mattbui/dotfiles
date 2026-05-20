@@ -16,7 +16,7 @@ function! CursorInfo() abort
 endfunction
 
 let g:lightline = {
-      \ 'colorscheme': g:colors_name,
+      \ 'colorscheme': 'tokyonight',
       \ 'active': {
       \   'left': [
       \           ['mode', 'paste'],

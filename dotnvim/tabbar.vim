@@ -24,22 +24,37 @@ nnoremap <silent> <leader>0 :BufferLast<CR>
 " Magic buffer-picking mode
 nnoremap <silent> <leader>p :BufferPick<CR>
 
-" NOTE: If barbar's option dict isn't created yet, create it
-let bufferline = get(g:, 'bufferline', {})
+lua << EOF
+require('barbar').setup({
+  -- Enable/disable current/total tabpages indicator (top right corner)
+  tabpages = false,
 
-" Enable/disable current/total tabpages indicator (top right corner)
-let bufferline.tabpages = v:false
+  icons = {
+    button = '⨉',
+    scroll = {
+      left = '',
+      right = '',
+    },
 
-" Sets the icon's highlight group.
-" If false, will use nvim-web-devicons colors
-let bufferline.icon_custom_colors = v:true
+    -- Sets the icon's highlight group.
+    -- If false, will use nvim-web-devicons colors.
+    filetype = {
+      custom_colors = true,
+    },
 
-" Configure icons on the bufferline.
-let bufferline.icon_separator_active = '▎'
-let bufferline.icon_separator_inactive = ''
-" let bufferline.icon_separator_inactive = '▏'
+    -- Configure icons on the bufferline.
+    separator = {
+      left = '▎',
+    },
+    gitsigns = {
+      added = { enabled = true, icon = '+' },
+      changed = { enabled = true, icon = '~' },
+      deleted = { enabled = true, icon = '-' },
+    },
+  },
 
-
-" Sets the name of unnamed buffers. By default format is "[Buffer X]"
-" where X is the buffer number. But only a static string is accepted here.
-let bufferline.no_name_title = 'unnamed'
+  -- Sets the name of unnamed buffers. By default format is "[Buffer X]"
+  -- where X is the buffer number. But only a static string is accepted here.
+  no_name_title = 'unnamed',
+})
+EOF
