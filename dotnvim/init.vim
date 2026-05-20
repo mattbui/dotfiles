@@ -18,10 +18,6 @@ source $HOME/.config/nvim/floaterm.vim
 source $HOME/.config/nvim/commentary.vim
 source $HOME/.config/nvim/which-key.vim
 source $HOME/.config/nvim/easy-align.vim
-source $HOME/.config/nvim/markdown-preview.vim
-source $HOME/.config/nvim/markdown-toc.vim
-source $HOME/.config/nvim/snippets.vim
-source $HOME/.config/nvim/pydocstring.vim
 source $HOME/.config/nvim/file-commands.vim
 source $HOME/.config/nvim/git.vim
 source $HOME/.config/nvim/indent-line.vim

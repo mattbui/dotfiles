@@ -84,25 +84,14 @@ let g:which_key_map.t = {
       \ }
 " }}}
 
-" Markdown mappings - m+ {{{
-let g:which_key_map.m = {
-      \ 'name': '+markdown',
-      \ 'p':    ['<Plug>MarkdownPreview',     'preview'],
-      \ 's':    ['<Plug>MarkdownPreviewStop', 'stop preview'],
-      \ 't':    [':GenTocGFM',                'gen table of contents'],
-      \ }
-" }}}
-
 " Code actions mappings - c+ {{{
 " Formatting selected code.
 xmap <silent> <leader>cf  <Plug>(coc-format-selected)
 nmap <silent> <leader>cf  :call CocAction('format')<CR>
-nmap <silent> <leader>cp  <Plug>(pydocstring)
 
 let g:which_key_map.c = {
       \ 'name': '+code-actions',
       \ 'f':    'format',
-      \ 'd':    'pydocstring',
       \ 'a':    ['<Plug>(coc-fix-current)',                                       'autofix current file'],
       \ 's':    [":call CocAction('runCommand', 'editor.action.organizeImport')", 'sort imports'],
       \ 'r':    ['<Plug>(coc-rename)',                                            'rename'],

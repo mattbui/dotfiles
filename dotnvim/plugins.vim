@@ -12,10 +12,6 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
     Plug 'ryanoasis/vim-devicons'
-    Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
-    Plug 'mzlogin/vim-markdown-toc'
-    Plug 'honza/vim-snippets'
-    Plug 'heavenshell/vim-pydocstring'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'karb94/neoscroll.nvim'
 
@@ -42,7 +38,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " Tmux integration
     " Plug 'edkolev/tmuxline.vim'
-    Plug 'sainnhe/tmuxline.vim'  " enable true color for tmux line
+    " Plug 'sainnhe/tmuxline.vim'  " enable true color for tmux line
     Plug 'christoomey/vim-tmux-navigator'
 
     " Coc plugin for intellisense
@@ -53,10 +49,9 @@ call plug#begin(stdpath('data') . '/plugged')
     " Plug 'sonph/onehalf', {'rtp': 'vim/'}
     " Plug 'lifepillar/vim-wwdc17-theme'
     " Plug 'sainnhe/edge'
-    Plug 'arcticicestudio/nord-vim'
+    " Plug 'arcticicestudio/nord-vim'
     Plug 'folke/tokyonight.nvim'
-    Plug 'folke/tokyonight.nvim'
-    Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+    " Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
     " Plug 'shaunsingh/nord.nvim'
 
 
