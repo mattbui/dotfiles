@@ -154,6 +154,12 @@ chars = "\u001B9"
 key = "Key9"
 mods = "Command"
 
+# Command-Enter sends Alt-Enter for terminal apps that cannot receive Command.
+[[keyboard.bindings]]
+chars = "\u001B\r"
+key = "Enter"
+mods = "Command"
+
 [[colors.indexed_colors]]
 color = "#ff9e64"
 index = 16
