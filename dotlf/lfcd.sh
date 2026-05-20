@@ -27,4 +27,6 @@ lfcd () {
         fi
     fi
 }
-bindkey -s '^o' 'lfcd\n'
+for keymap in emacs viins; do
+    bindkey -M "$keymap" -s '^o' 'lfcd\n'
+done
