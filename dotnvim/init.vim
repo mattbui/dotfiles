@@ -25,6 +25,7 @@ source $HOME/.config/nvim/workspace.vim
 source $HOME/.config/nvim/tabbar.vim
 source $HOME/.config/nvim/ipynb.vim
 luafile $HOME/.config/nvim/neoscroll.lua
+luafile $HOME/.config/nvim/yank_path.lua
 
 " Theme configs
 source $HOME/.config/nvim/colorscheme.vim

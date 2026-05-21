@@ -144,6 +144,28 @@ let g:which_key_map.i = {
       \ }
 " }}}
 
+" Yank path mappings - y+ {{{
+nnoremap <silent> <leader>yy :YankRelativePathLine<CR>
+nnoremap <silent> <leader>yY :YankAbsolutePathLine<CR>
+nnoremap <silent> <leader>yf :YankRelativePath<CR>
+nnoremap <silent> <leader>yF :YankAbsolutePath<CR>
+nnoremap <silent> <leader>yt :YankRelativePathTag<CR>
+nnoremap <silent> <leader>yT :YankAbsolutePathTag<CR>
+
+xnoremap <silent> <leader>yy :YankRelativePathRange<CR>
+xnoremap <silent> <leader>yY :YankAbsolutePathRange<CR>
+
+let g:which_key_map.y = {
+      \ 'name': '+yank-path',
+      \ 'y':    'relative path line/range',
+      \ 'Y':    'absolute path line/range',
+      \ 'f':    'relative file path',
+      \ 'F':    'absolute file path',
+      \ 't':    'relative path tag',
+      \ 'T':    'absolute path tag',
+      \ }
+" }}}
+
 " Ignore {{{
 " ignore <leader>0-9 for buffer switching
 let g:which_key_map.1 = 'which_key_ignore'
