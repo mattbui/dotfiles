@@ -18,7 +18,7 @@ alias pipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_ins
 
 ssh() {
     local title
-    local status
+    local exit_code
 
     if [[ -n "$TMUX" ]]; then
         title=$(command ssh -G "$@" 2>/dev/null | awk '
@@ -47,18 +47,18 @@ ssh() {
     fi
 
     command ssh "$@"
-    status=$?
+    exit_code=$?
 
     [[ -n "$TMUX" && -n "$title" ]] && tmux select-pane -T ""
-    return $status
+    return $exit_code
 }
 
 codex() {
     [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
 
     command codex "$@"
-    local status=$?
+    local exit_code=$?
 
     [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
-    return $status
+    return $exit_code
 }
