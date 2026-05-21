@@ -57,7 +57,7 @@ call plug#begin(stdpath('data') . '/plugged')
 
     " Light line
     Plug 'itchyny/lightline.vim'
-    Plug 'majutsushi/tagbar'
+    Plug 'preservim/tagbar'
     " Plug 'mengelbrecht/lightline-bufferline'
     Plug 'josa42/vim-lightline-coc'
 
