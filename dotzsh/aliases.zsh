@@ -56,7 +56,7 @@ ssh() {
 codex() {
     [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
 
-    command codex "$@"
+    CODEX_TMUX_TITLE_HOOK=1 command codex "$@"
     local exit_code=$?
 
     [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""

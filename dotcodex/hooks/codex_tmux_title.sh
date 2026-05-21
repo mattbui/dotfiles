@@ -1,6 +1,9 @@
 #!/bin/sh
 popup_script=/Users/minhbui/dotfiles/dotcodex/hooks/codex_tmux_title_popup.sh
 
+[ "${CODEX_TMUX_TITLE_HOOK:-}" = 1 ] || exit 0
+[ -n "${TMUX:-}" ] || exit 0
+
 shell_quote() {
   printf "'"
   printf '%s' "$1" | sed "s/'/'\\\\''/g"
