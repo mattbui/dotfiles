@@ -28,6 +28,12 @@ nnoremap gb <C-o>
 " go forward buffer
 nnoremap gt <C-i>
 
+" Jump between code blocks
+nmap <silent> gm ]m
+nmap <silent> gM [m
+nmap <silent> gl ]]
+nmap <silent> gL [[
+
 noremap! jj <Esc>
 
 " Better tabbing
