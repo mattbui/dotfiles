@@ -85,9 +85,21 @@ chars = "\u0015"
 key = "Back"
 mods = "Command"
 
-# Ctrl-W sends ETB, ASCII 0x17.
+# Command-N sends Alt-N for tmux window creation.
 [[keyboard.bindings]]
-chars = "\u0017"
+chars = "\u001Bn"
+key = "N"
+mods = "Command"
+
+# Command-Shift-N creates a new Alacritty window.
+[[keyboard.bindings]]
+action = "CreateNewWindow"
+key = "N"
+mods = "Command|Shift"
+
+# Command-W sends Alt-W for tmux window close.
+[[keyboard.bindings]]
+chars = "\u001Bw"
 key = "W"
 mods = "Command"
 
@@ -152,6 +164,18 @@ mods = "Command"
 [[keyboard.bindings]]
 chars = "\u001B9"
 key = "Key9"
+mods = "Command"
+
+# Command-B sends Alt-B for tmux tree picker.
+[[keyboard.bindings]]
+chars = "\u001Bb"
+key = "B"
+mods = "Command"
+
+# Command-P sends Alt-P for tmux pane picker.
+[[keyboard.bindings]]
+chars = "\u001Bp"
+key = "P"
 mods = "Command"
 
 # Command-Enter sends Alt-Enter for terminal apps that cannot receive Command.
