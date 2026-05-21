@@ -52,3 +52,13 @@ ssh() {
     [[ -n "$TMUX" && -n "$title" ]] && tmux select-pane -T ""
     return $status
 }
+
+codex() {
+    [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
+
+    command codex "$@"
+    local status=$?
+
+    [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
+    return $status
+}

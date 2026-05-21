@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.codex/hooks/codex_tmux_title.sh start",
+            "statusMessage": "Setting tmux title"
+          }
+        ]
+      }
+    ]
+  }
+}
