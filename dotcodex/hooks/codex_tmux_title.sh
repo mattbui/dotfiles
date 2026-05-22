@@ -39,7 +39,7 @@ popup_y=$((pane_top + (pane_height - popup_height) / 2))
 tmux display-popup \
   -E \
   -t "$tmux_pane" \
-  -T 'Codex title' \
+  -T 'Tmux pane title' \
   -x "$popup_x" \
   -y "$popup_y" \
   -w "$popup_width" \

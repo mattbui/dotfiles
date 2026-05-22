@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh ~/.codex/hooks/codex_tmux_title.sh start",
+            "command": "sh ~/.codex/hooks/codex_tmux_title.sh",
             "statusMessage": "Setting tmux title"
           }
         ]
