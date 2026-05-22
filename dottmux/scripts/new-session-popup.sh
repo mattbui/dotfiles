@@ -1,7 +1,11 @@
 #!/bin/sh
 
-printf 'Session name (empty to skip): '
-IFS= read -r session_name || exit 0
+if [ "$#" -gt 0 ]; then
+  session_name=$1
+else
+  printf 'Session name (empty to skip): '
+  IFS= read -r session_name || exit 0
+fi
 [ -n "$session_name" ] || exit 0
 
 case "$session_name" in
@@ -12,7 +16,7 @@ case "$session_name" in
     ;;
 esac
 
-current_path=${PWD:-$HOME}
+current_path=${2:-${PWD:-$HOME}}
 [ -d "$current_path" ] || current_path=$HOME
 
 if tmux has-session -t "=$session_name" 2>/dev/null; then
