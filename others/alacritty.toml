@@ -10,6 +10,15 @@ key = "Space"
 mode = "Vi|~Search"
 mods = "Alt"
 
+[[hints.enabled]]
+command = "open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { enabled = true, mods = "Command|Shift" }
+binding = { key = "O", mods = "Command|Shift" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
 [[keyboard.bindings]]
 action = "ToggleViMode"
 key = "Escape"
@@ -178,11 +187,17 @@ chars = "\u001Bp"
 key = "P"
 mods = "Command"
 
-# Command-Enter sends Alt-Enter for terminal apps that cannot receive Command.
+# Command-Enter sends CSI-u Alt-Enter for terminal apps like pi.
 [[keyboard.bindings]]
-chars = "\u001B\r"
+chars = "\u001B[13;3u"
 key = "Enter"
 mods = "Command"
+
+# Command-Shift-Enter sends CSI-u Shift-Alt-Enter for pi follow-up messages.
+[[keyboard.bindings]]
+chars = "\u001B[13;4u"
+key = "Enter"
+mods = "Command|Shift"
 
 [[colors.indexed_colors]]
 color = "#ff9e64"
