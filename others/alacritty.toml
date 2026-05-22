@@ -94,9 +94,9 @@ chars = "\u0015"
 key = "Back"
 mods = "Command"
 
-# Command-N sends tmux User2 for session creation.
+# Command-N sends Alt-N for tmux session creation.
 [[keyboard.bindings]]
-chars = "\u001B[101~"
+chars = "\u001Bn"
 key = "N"
 mods = "Command"
 
@@ -124,9 +124,9 @@ chars = "\u0011"
 key = "Q"
 mods = "Command"
 
-# Command-T sends tmux User1 for window creation.
+# Command-T sends Alt-T for tmux window creation.
 [[keyboard.bindings]]
-chars = "\u001B[100~"
+chars = "\u001Bt"
 key = "T"
 mods = "Command"
 
