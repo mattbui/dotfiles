@@ -79,6 +79,50 @@
       ]
     },
     {
+      "description": "Hold Command + H to Hide",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "h",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["caps_lock"]
+            }
+          },
+          "to_if_held_down": [
+            {
+              "key_code": "h",
+              "modifiers": ["left_command"],
+              "repeat": false
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "Quit application by holding command-q",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "q",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["caps_lock"]
+            }
+          },
+          "to_if_held_down": [
+            {
+              "key_code": "q",
+              "modifiers": ["left_command"],
+              "repeat": false
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "Ctrl + Arrow Keys → Option + Arrow Keys",
       "manipulators": [
         {
