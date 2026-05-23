@@ -62,7 +62,10 @@ Before committing or pushing, show:
 - proposed commit message(s)
 - whether push will happen
 
-Ask for confirmation before committing/pushing.
+Confirmation policy:
+- If `push` is present and changes are safe/clear, proceed with staging, committing, and pushing after showing the plan; do not ask for confirmation.
+- If `push` is absent, ask for confirmation before committing.
+- Never force-push unless explicitly asked, and always ask before any destructive or risky action.
 
 Stop and ask if:
 - not in a git repo
@@ -70,3 +73,4 @@ Stop and ask if:
 - no relevant changes exist
 - grouping/type/scope is unclear
 - untracked files look risky/unrelated
+- `push` is present but branch/upstream state is missing, unexpected, or unsafe
