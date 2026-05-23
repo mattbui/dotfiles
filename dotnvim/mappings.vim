@@ -9,8 +9,9 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
-" shift-y to yank from cursor to $
-nnoremap Y y$
+" shift-y to yank absolute path with line/range
+nnoremap <silent> Y :YankAbsolutePathLine<CR>
+xnoremap <silent> Y :YankAbsolutePathRange<CR>
 
 " keeping it centered
 nnoremap n nzzzv
