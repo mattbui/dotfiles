@@ -26,7 +26,7 @@ class CustomizedEditor extends CustomEditor {
   }
   setPaddingX(padding: number): void {
     // Keep enough left padding to draw the prompt marker without changing line width.
-    super.setPaddingX(Math.max(2, padding));
+    super.setPaddingX(Math.max(1, padding));
   }
 
   render(width: number): string[] {
@@ -40,10 +40,6 @@ class CustomizedEditor extends CustomEditor {
       withoutTopBorder.splice(bottomBorderIndex, 1);
     }
 
-    const firstContentLine = withoutTopBorder.findIndex((line) => line.startsWith("  "));
-    if (firstContentLine !== -1) {
-      withoutTopBorder[firstContentLine] = ` ${this.promptMarkerColor("›")} ${withoutTopBorder[firstContentLine].slice(2)}`;
-    }
     const editorLines = ["", ...withoutTopBorder, ""];
     return editorLines.map((line) =>
       // The editor cursor contains an ANSI reset (\x1b[0m). If we wrap the
@@ -109,7 +105,7 @@ export default function (pi: ExtensionAPI) {
         tui,
         theme,
         keybindings,
-        (text: string) => ctx.ui.theme.fg("accent", text),
+        (text: string) => text,
         (text: string) => ctx.ui.theme.bg("userMessageBg", text),
       ),
     );

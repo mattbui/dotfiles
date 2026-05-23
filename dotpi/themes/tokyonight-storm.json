@@ -42,11 +42,11 @@
     "diff_text": "#a9b1d6"
   },
   "colors": {
-    "accent": "blue",
+    "accent": "magenta",
     "border": "border_highlight",
     "borderAccent": "cyan",
     "borderMuted": "border",
-    "success": "green1",
+    "success": "green",
     "error": "red1",
     "warning": "yellow",
     "muted": "fg_dark",

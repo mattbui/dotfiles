@@ -49,7 +49,7 @@ export default function (pi: ExtensionAPI) {
           const sessionName = ctx.sessionManager.getSessionName();
           const pwdLineParts = [theme.fg("dim", pwd)];
           if (branch) {
-            pwdLineParts.push(theme.fg("dim", " ("), theme.fg("accent", branch), theme.fg("dim", ")"));
+            pwdLineParts.push(theme.fg("dim", " ("), theme.fg("success", branch), theme.fg("dim", ")"));
           }
           if (sessionName) {
             pwdLineParts.push(separator, theme.fg("muted", sessionName));
@@ -57,7 +57,7 @@ export default function (pi: ExtensionAPI) {
 
           const modelName = ctx.model?.id || "no-model";
           const modelParts: string[] = [];
-          if (footerData.getAvailableProviderCount() > 1 && ctx.model) {
+          if (ctx.model) {
             modelParts.push(theme.fg("dim", `(${ctx.model.provider}) `));
           }
           modelParts.push(theme.fg("accent", modelName));
