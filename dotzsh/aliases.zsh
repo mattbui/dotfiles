@@ -20,7 +20,7 @@ ssh() {
     local title
     local exit_code
 
-    if [[ -n "$TMUX" ]]; then
+    if [[ -n "$TMUX_PANE" ]]; then
         title=$(command ssh -G "$@" 2>/dev/null | awk '
             $1 == "host" { host = $2 }
             $1 == "user" { user = $2 }
@@ -43,22 +43,36 @@ ssh() {
             }
         ')
 
-        [[ -n "$title" ]] && tmux select-pane -T "$title"
+        tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
+        tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
+        if [[ -n "$title" ]]; then
+            tmux set-option -p -t "$TMUX_PANE" @ssh_session_active 1 2>/dev/null || true
+            tmux set-option -p -t "$TMUX_PANE" @ssh_session_name "$title" 2>/dev/null || true
+        fi
     fi
 
     command ssh "$@"
     exit_code=$?
 
-    [[ -n "$TMUX" && -n "$title" ]] && tmux select-pane -T ""
+    if [[ -n "$TMUX_PANE" ]]; then
+        tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
+        tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
+    fi
     return $exit_code
 }
 
 codex() {
-    [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
+    if [[ -n "$TMUX_PANE" ]]; then
+        tmux set-option -p -t "$TMUX_PANE" @codex_session_active 1 2>/dev/null || true
+        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_name 2>/dev/null || true
+    fi
 
     CODEX_TMUX_TITLE_HOOK=1 command codex "$@"
     local exit_code=$?
 
-    [[ -n "$TMUX_PANE" ]] && tmux select-pane -t "$TMUX_PANE" -T ""
+    if [[ -n "$TMUX_PANE" ]]; then
+        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_active 2>/dev/null || true
+        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_name 2>/dev/null || true
+    fi
     return $exit_code
 }

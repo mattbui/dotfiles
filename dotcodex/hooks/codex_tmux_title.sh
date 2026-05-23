@@ -19,7 +19,8 @@ fi
 
 [ -n "$tmux_pane" ] || exit 0
 
-tmux select-pane -t "$tmux_pane" -T '' 2>/dev/null || true
+tmux set-option -p -t "$tmux_pane" @codex_session_active 1 2>/dev/null || true
+tmux set-option -p -u -t "$tmux_pane" @codex_session_name 2>/dev/null || true
 
 popup_command="$popup_script $(shell_quote "$tmux_pane")"
 pane_left=$(tmux display-message -p -t "$tmux_pane" '#{pane_left}' 2>/dev/null || printf 0)

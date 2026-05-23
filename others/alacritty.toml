@@ -100,12 +100,6 @@ chars = "\u001Bn"
 key = "N"
 mods = "Command"
 
-# Command-B sends tmux User0 for choose-tree split.
-[[keyboard.bindings]]
-chars = "\u001B[99~"
-key = "B"
-mods = "Command"
-
 # Command-Shift-N creates a new Alacritty window.
 [[keyboard.bindings]]
 action = "CreateNewWindow"
