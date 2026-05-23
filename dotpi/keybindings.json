@@ -1,5 +1,6 @@
 {
   "tui.input.newLine": ["enter", "shift+enter"],
   "tui.input.submit": ["alt+enter"],
-  "app.message.followUp": ["shift+alt+enter"]
+  "app.message.followUp": ["shift+alt+enter"],
+  "tui.editor.undo": ["ctrl+-"]
 }
