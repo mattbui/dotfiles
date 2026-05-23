@@ -59,13 +59,10 @@ class CustomizedEditor extends CustomEditor {
   handleInput(data: string): void {
     const text = this.getText();
 
-    // If autocomplete/slash-command menu is open, Enter should first accept
-    // the highlighted completion, then submit the filled slash command.
+    // If autocomplete/slash-command menu is open, Enter should accept the
+    // highlighted completion only. Submitting remains a separate Enter press.
     if (matchesKey(data, "enter") && this.isShowingAutocomplete()) {
       super.handleInput("\t");
-      if (this.getText().trimStart().startsWith("/")) {
-        this.submitCurrentText();
-      }
       return;
     }
 
