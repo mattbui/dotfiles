@@ -70,4 +70,3 @@ Stop and ask if:
 - no relevant changes exist
 - grouping/type/scope is unclear
 - untracked files look risky/unrelated
-- push is requested but branch/upstream is unclear
