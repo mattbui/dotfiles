@@ -1,8 +1,8 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { basename } from "node:path";
 
 const MAX_TITLE_LENGTH = 100;
 const TITLE_ELLIPSIS = "..";
+const AGENT_DONE_MESSAGE = "pi done";
 
 function isTmuxPane(): boolean {
 	return !!process.env.TMUX && !!process.env.TMUX_PANE;
@@ -52,16 +52,38 @@ export default function (pi: ExtensionAPI) {
 		await pi.exec("tmux", args, { timeout: 1000 }).catch(() => {});
 	}
 
-	async function setTmuxPiState(title: string): Promise<void> {
+	async function isCurrentTmuxPaneFocused(): Promise<boolean> {
+		const pane = process.env.TMUX_PANE;
+		if (!pane) return false;
+
+		const result = await pi
+			.exec("tmux", ["display-message", "-p", "-t", pane, "#{pane_active} #{window_active}"], { timeout: 1000 })
+			.catch(() => undefined);
+		const output = typeof result?.stdout === "string" ? result.stdout : typeof result?.output === "string" ? result.output : "";
+		return output.trim() === "1 1";
+	}
+
+	async function notifyTmuxAgentDone(): Promise<void> {
+		if (!isTmuxPane()) return;
+		if (await isCurrentTmuxPaneFocused()) return;
+
+		const message = lastTitle ? `${AGENT_DONE_MESSAGE}: ${lastTitle}` : AGENT_DONE_MESSAGE;
+		process.stdout.write("\x07");
+		await tmux(["display-message", message]);
+	}
+
+	async function setTmuxPiState(title?: string): Promise<void> {
 		const pane = process.env.TMUX_PANE;
 		if (!pane) return;
 
-		const cleanTitle = sanitizeTitle(title);
-		if (!cleanTitle) return;
-
-		lastTitle = cleanTitle;
+		const cleanTitle = title ? sanitizeTitle(title) : "";
+		lastTitle = cleanTitle || undefined;
 		await tmux(["set-option", "-p", "-t", pane, "@pi_session_active", "1"]);
-		await tmux(["set-option", "-p", "-t", pane, "@pi_session_name", cleanTitle]);
+		if (cleanTitle) {
+			await tmux(["set-option", "-p", "-t", pane, "@pi_session_name", cleanTitle]);
+		} else {
+			await tmux(["set-option", "-p", "-u", "-t", pane, "@pi_session_name"]);
+		}
 	}
 
 	async function updateTmuxPiTitle(title: string): Promise<void> {
@@ -88,10 +110,9 @@ export default function (pi: ExtensionAPI) {
 
 		const sessionName = pi.getSessionName();
 		const firstUserMessage = getFirstUserMessage(ctx);
-		const fallbackTitle = basename(ctx.cwd);
-		const title = sessionName || firstUserMessage || fallbackTitle;
+		const title = sessionName || firstUserMessage;
 
-		firstMessageCaptured = !!(sessionName || firstUserMessage);
+		firstMessageCaptured = !!title;
 		pendingTmuxUpdate = setTmuxPiState(title);
 		void pendingTmuxUpdate;
 	});
@@ -111,6 +132,10 @@ export default function (pi: ExtensionAPI) {
 		pendingTmuxUpdate = updateTmuxPiTitle(title);
 		void pendingTmuxUpdate;
 		return { action: "continue" };
+	});
+
+	pi.on("agent_end", async () => {
+		await notifyTmuxAgentDone();
 	});
 
 	pi.on("session_shutdown", async () => {
