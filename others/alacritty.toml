@@ -2,12 +2,17 @@
 action = "ToggleViMode"
 key = "Space"
 mode = "~Search"
-mods = "Alt"
+mods = "Alt|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollToBottom"
 key = "Space"
 mode = "Vi|~Search"
+mods = "Alt|Shift"
+
+[[keyboard.bindings]]
+chars = "\u001B "
+key = "Space"
 mods = "Alt"
 
 [[hints.enabled]]
