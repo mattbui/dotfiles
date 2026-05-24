@@ -187,6 +187,12 @@ chars = "\u001Bp"
 key = "P"
 mods = "Command"
 
+# Command-Shift-M sends CSI-u Alt-Shift-M for pi model picker.
+[[keyboard.bindings]]
+chars = "\u001B[109;4u"
+key = "M"
+mods = "Command|Shift"
+
 # Command-Enter sends CSI-u Alt-Enter for terminal apps like pi.
 [[keyboard.bindings]]
 chars = "\u001B[13;3u"
