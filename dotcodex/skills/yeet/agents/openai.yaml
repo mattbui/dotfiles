@@ -1,0 +1,4 @@
+interface:
+  display_name: "yeet"
+  short_description: "Stage, commit, split, and push Git changes"
+  default_prompt: "$yeet"

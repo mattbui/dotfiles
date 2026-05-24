@@ -1,13 +1,13 @@
 ---
-description: Stage, commit, and optionally push changes
-argument-hint: "[staged] [split] [push]"
+name: yeet
+description: Stage, commit, split, and optionally push Git changes.
 ---
 
-Help me stage, commit, and optionally push changes.
+# Yeet
 
-Arguments: `$ARGUMENTS`
+Help stage, commit, and optionally push changes.
 
-Treat arguments as unordered flags:
+Arguments are unordered flags:
 
 - `staged`: inspect only staged changes
 - `split`: split changes into sensible commits
@@ -48,7 +48,7 @@ Rules:
 - use `repo` only for truly repo-wide changes
 - subject is imperative, concise, lowercase unless needed, no trailing period
 
-When `split` is used, create multiple focused commits. Each commit gets its own message in the same format and may be one-line or multiline based on that commit's size/scope. Do not mix unrelated changes in one commit.
+When `split` is used, create multiple focused commits. Do not mix unrelated changes in one commit.
 
 Before committing or pushing, show:
 
@@ -59,9 +59,9 @@ Before committing or pushing, show:
 
 Confirmation policy:
 
-- If `push` is present and changes are safe/clear, proceed with staging, committing, and pushing after showing the plan; do not ask for confirmation.
-- If `push` is absent, ask for confirmation before committing.
-- Never force-push unless explicitly asked, and always ask before any destructive or risky action.
+- If `push` is present and changes are safe/clear, proceed after showing the plan
+- If `push` is absent, ask before committing
+- Never force-push unless explicitly asked, and always ask before risky actions
 
 Stop and ask if:
 
