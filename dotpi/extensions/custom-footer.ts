@@ -74,6 +74,12 @@ export default function (pi: ExtensionAPI) {
             modelParts.push(separator, thinkingText);
           }
 
+          const extensionStatuses = footerData.getExtensionStatuses();
+          const fastStatus = extensionStatuses.get("fast-mode");
+          if (fastStatus) {
+            modelParts.push(separator, theme.fg("success", sanitizeStatusText(fastStatus)));
+          }
+
           const statsParts: string[] = [];
           if (totalInput) statsParts.push(theme.fg("muted", `↑${formatTokens(totalInput)}`));
           if (totalOutput) statsParts.push(theme.fg("muted", `↓${formatTokens(totalOutput)}`));
@@ -102,9 +108,9 @@ export default function (pi: ExtensionAPI) {
             "",
           ];
 
-          const extensionStatuses = footerData.getExtensionStatuses();
-          if (extensionStatuses.size > 0) {
-            const statusLine = Array.from(extensionStatuses.entries())
+          const otherExtensionStatuses = Array.from(extensionStatuses.entries()).filter(([key]) => key !== "fast-mode");
+          if (otherExtensionStatuses.length > 0) {
+            const statusLine = otherExtensionStatuses
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([, text]) => sanitizeStatusText(text))
               .join(" ");
