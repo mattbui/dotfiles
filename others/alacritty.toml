@@ -50,6 +50,27 @@ chars = "\u001Bl"
 key = "L"
 mods = "Alt"
 
+# Karabiner maps tapped Command-H to F13 so held Command-H can still hide apps.
+# Command/F13/J/K/L send tmux user-key sequences for directional splits.
+[[keyboard.bindings]]
+chars = "\u001B[9001u"
+key = "F13"
+
+[[keyboard.bindings]]
+chars = "\u001B[9002u"
+key = "J"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u001B[9003u"
+key = "K"
+mods = "Command"
+
+[[keyboard.bindings]]
+chars = "\u001B[9004u"
+key = "L"
+mods = "Command"
+
 [[keyboard.bindings]]
 chars = "\u001Bq"
 key = "Q"
