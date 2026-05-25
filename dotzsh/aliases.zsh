@@ -51,8 +51,10 @@ ssh() {
         fi
     fi
 
+    printf '\e[2 q'
     command ssh "$@"
     exit_code=$?
+    printf '\e[6 q'
 
     if [[ -n "$TMUX_PANE" ]]; then
         tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
