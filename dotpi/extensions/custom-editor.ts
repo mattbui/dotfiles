@@ -9,6 +9,32 @@ function padToVisibleWidth(text: string, width: number): string {
   return text + " ".repeat(Math.max(0, width - visibleWidth(text)));
 }
 
+function removeLeadingVisibleSpace(text: string): string {
+  let index = 0;
+  let prefix = "";
+
+  while (index < text.length) {
+    const ansiMatch = text.slice(index).match(/^\x1b\[[0-?]*[ -/]*[@-~]/);
+    if (!ansiMatch) break;
+
+    prefix += ansiMatch[0];
+    index += ansiMatch[0].length;
+  }
+
+  if (text[index] !== " ") return text;
+  return prefix + text.slice(index + 1);
+}
+
+function applyBgToFullLine(text: string, width: number, bg: (text: string) => string): string {
+  // The editor cursor contains an ANSI reset. If we wrap the whole line once,
+  // that reset clears the background for the rest of the line. Apply the
+  // background to each reset-delimited segment instead.
+  return padToVisibleWidth(text, width)
+    .split("\x1b[0m")
+    .map((segment) => bg(segment))
+    .join("\x1b[0m");
+}
+
 class CustomizedEditor extends CustomEditor {
   private promptMarkerColor: (text: string) => string;
   private editorBg: (text: string) => string;
@@ -41,15 +67,12 @@ class CustomizedEditor extends CustomEditor {
     }
 
     const editorLines = ["", ...withoutTopBorder, ""];
+    const marker = this.editorBg(this.promptMarkerColor("▎"));
+    const contentWidth = Math.max(0, width - 1);
+
     return editorLines.map((line) =>
-      // The editor cursor contains an ANSI reset (\x1b[0m). If we wrap the
-      // whole line once, that reset clears the background for the rest of the
-      // line. Apply the background to each reset-delimited segment instead.
       truncateToWidth(
-        padToVisibleWidth(line, width)
-          .split("\x1b[0m")
-          .map((segment) => this.editorBg(segment))
-          .join("\x1b[0m"),
+        marker + applyBgToFullLine(removeLeadingVisibleSpace(line), contentWidth, this.editorBg),
         width,
         "",
       ),
@@ -102,7 +125,7 @@ export default function (pi: ExtensionAPI) {
         tui,
         theme,
         keybindings,
-        (text: string) => text,
+        (text: string) => ctx.ui.theme.fg("accent", text),
         (text: string) => ctx.ui.theme.bg("userMessageBg", text),
       ),
     );
