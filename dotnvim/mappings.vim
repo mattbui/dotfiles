@@ -13,6 +13,11 @@ nnoremap <silent> <C-w> :bw<CR>
 nnoremap <silent> Y :YankAbsolutePathLine<CR>
 xnoremap <silent> Y :YankAbsolutePathRange<CR>
 
+" yank file paths
+nnoremap <silent> yt :YankRelativePathTag<CR>
+nnoremap <silent> yf :YankRelativePath<CR>
+nnoremap <silent> yl :YankRelativePathLine<CR>
+
 " keeping it centered
 nnoremap n nzzzv
 nnoremap N Nzzzv
