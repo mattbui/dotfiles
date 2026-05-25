@@ -35,4 +35,10 @@ endfunction
 
 autocmd VimEnter,ColorScheme * call ApplyCustomColors()
 
+lua << EOF
+require("tokyonight").setup({
+  style = "storm",
+})
+EOF
+
 colorscheme tokyonight-storm
