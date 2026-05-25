@@ -38,7 +38,7 @@ type(scope): tighter subject
 - meaningful change
 ```
 
-Preferred types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`.
+Preferred types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
 
 Rules:
 
