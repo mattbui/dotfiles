@@ -21,8 +21,6 @@ let g:which_key_map =  {}
 
 " Generals {{{
 let g:which_key_map['/'] = 'comment'
-let g:which_key_map['-'] = 'split below'
-let g:which_key_map['\'] = 'split right'
 let g:which_key_map['h'] = 'split left'
 let g:which_key_map['j'] = 'split below'
 let g:which_key_map['k'] = 'split above'
@@ -39,7 +37,6 @@ let g:which_key_map['a'] = [ '<Plug>(EasyAlign)',                            'al
 " let g:which_key_map['f'] = [ '<Plug>(easymotion-bd-w)',                      'jump word']
 " let g:which_key_map['l'] = [ '<Plug>(easymotion-lineforward)',               'line forward']
 " let g:which_key_map['h'] = [ '<Plug>(easymotion-linebackward)',              'line backward']
-let g:which_key_map['M'] = [ ':MinimapToggle',                               'toggle minimap']
 let g:which_key_map['W'] = [ ':BufferCloseAllButCurrent',                    'close other tabs']
 let g:which_key_map['Q'] = [ ':q!',                                          'quit without save']
 let g:which_key_map['S'] = [ ':source $MYVIMRC | echo "Saved Vim Settings"', 'save settings']

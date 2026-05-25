@@ -55,8 +55,6 @@ nnoremap <Leader>o o<Esc>
 nnoremap <Leader>O O<Esc>
 
 " Better window splitting
-nnoremap <silent> <Leader>\ :vsplit<CR>
-nnoremap <silent> <Leader>- :split<CR>
 nnoremap <silent> <Leader>h :leftabove vsplit<CR>
 nnoremap <silent> <Leader>j :rightbelow split<CR>
 nnoremap <silent> <Leader>k :leftabove split<CR>
