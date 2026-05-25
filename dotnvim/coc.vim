@@ -88,5 +88,5 @@ command! -nargs=0 SortImport  :call CocAction('runCommand', 'editor.action.organ
 command! -nargs=? Marketplace   :CocList marketplace <args>
 
 " " Disable coc during easy motion
-autocmd User EasyMotionPromptBegin silent! CocDisable
-autocmd User EasyMotionPromptEnd silent! CocEnable
+" autocmd User EasyMotionPromptBegin silent! CocDisable
+" autocmd User EasyMotionPromptEnd silent! CocEnable

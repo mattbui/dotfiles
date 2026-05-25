@@ -8,7 +8,7 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'ptzz/lf.vim'          " Need to be loaded before floaterm
     Plug 'voldikss/vim-floaterm'
     Plug 'thaerkh/vim-workspace'
-    Plug 'easymotion/vim-easymotion'
+    " Plug 'easymotion/vim-easymotion'
     Plug 'liuchengxu/vim-which-key'
     Plug 'junegunn/vim-easy-align'
     Plug 'ryanoasis/vim-devicons'
