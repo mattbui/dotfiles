@@ -302,7 +302,7 @@ columns = 120
 lines = 30
 
 [window.padding]
-x = 6
-y = 6
+x = 8
+y = 8
 
 [keyboard]
