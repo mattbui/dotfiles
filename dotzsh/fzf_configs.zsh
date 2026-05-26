@@ -2,7 +2,7 @@
 if ! command -v fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND='find * -type f'
 else
-  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude "{.venv,.git,.DS_Store,.undodir*}"'
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude "{.src,.venv,.git,.DS_Store,.undodir*}"'
 fi
 
 export FZF_COMPLETION_TRIGGER='~~'
