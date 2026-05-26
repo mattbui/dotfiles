@@ -101,10 +101,10 @@ export default function (pi: ExtensionAPI) {
     if (!pane) return false;
 
     const result = await pi
-      .exec("tmux", ["display-message", "-p", "-t", pane, "#{pane_active} #{window_active}"], { timeout: 1000 })
+      .exec("tmux", ["display-message", "-p", "-t", pane, "#{pane_active} #{window_active} #{window_visible}"], { timeout: 1000 })
       .catch(() => undefined);
     const output = typeof result?.stdout === "string" ? result.stdout : typeof result?.output === "string" ? result.output : "";
-    return output.trim() === "1 1";
+    return output.trim() === "1 1 1";
   }
 
   async function notifyTmuxAgentDone(): Promise<void> {
