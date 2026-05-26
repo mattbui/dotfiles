@@ -70,11 +70,15 @@ export function createAtAutocompleteSuppressingProvider(current: AutocompletePro
 }
 
 function extractInlineFzfToken(textBeforeCursor: string, line: number, cursorCol: number): InlineFzfToken | null {
-  const match = textBeforeCursor.match(/(^|\s)@([^\s]*)$/);
+  const match = textBeforeCursor.match(/(^|.*\s)@(.*)$/);
   if (!match || match.index === undefined) return null;
 
   const boundary = match[1] ?? "";
   const query = match[2] ?? "";
+  // `@` opens the file picker, but `@ ` should close immediately.
+  // Spaces are allowed after the first query character: `@foo bar`.
+  if (/^\s/.test(query)) return null;
+
   const startCol = match.index + boundary.length;
   return {
     query,
@@ -117,7 +121,7 @@ export class InlineFileFzfController {
   private loadError: string | null = null;
   private state: InlineFzfState | null = null;
   private widgetVisible = false;
-  private dismissedTokenKey: string | null = null;
+  private dismissedTokenStartKey: string | null = null;
 
   constructor(
     private pi: ExtensionAPI,
@@ -146,12 +150,13 @@ export class InlineFileFzfController {
     const token = extractInlineFzfToken(currentLine.slice(0, col), line, col);
 
     if (!token) {
+      this.dismissedTokenStartKey = null;
       this.close(false);
       return;
     }
 
-    const tokenKey = this.getTokenKey(token);
-    if (this.dismissedTokenKey === tokenKey) {
+    const tokenStartKey = this.getTokenStartKey(token);
+    if (this.dismissedTokenStartKey === tokenStartKey) {
       this.close(false);
       return;
     }
@@ -173,7 +178,7 @@ export class InlineFileFzfController {
     if (!this.state) return false;
 
     if (matchesKey(data, "escape")) {
-      this.dismissedTokenKey = this.getTokenKey(this.state);
+      this.dismissedTokenStartKey = this.getTokenStartKey(this.state);
       this.close(true);
       return true;
     }
@@ -308,7 +313,7 @@ export class InlineFileFzfController {
     const currentLine = lines[this.state.line] ?? "";
     lines[this.state.line] = currentLine.slice(0, this.state.startCol) + candidate.insertText + currentLine.slice(this.state.endCol);
     setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + candidate.insertText.length);
-    this.dismissedTokenKey = null;
+    this.dismissedTokenStartKey = null;
     this.close(true);
     this.requestRender();
   }
@@ -333,8 +338,8 @@ export class InlineFileFzfController {
     this.ui.setWidget(INLINE_FILE_FZF_WIDGET_KEY, undefined);
   }
 
-  private getTokenKey(token: InlineFzfToken): string {
-    return `${token.line}:${token.startCol}:${token.endCol}:${token.token}`;
+  private getTokenStartKey(token: InlineFzfToken): string {
+    return `${token.line}:${token.startCol}`;
   }
 
   private render(width: number, theme: any): string[] {

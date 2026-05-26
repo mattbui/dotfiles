@@ -40,7 +40,7 @@ function shellQuote(value: string): string {
 }
 
 function extractInlineRgToken(textBeforeCursor: string, line: number, cursorCol: number): InlineRgToken | null {
-  const match = textBeforeCursor.match(/(^|\s)@@(.*)$/);
+  const match = textBeforeCursor.match(/(^|.*\s)@@(.*)$/);
   if (!match || match.index === undefined) return null;
 
   const boundary = match[1] ?? "";
@@ -94,7 +94,7 @@ function parseRgLine(raw: string): InlineRgMatch | null {
 export class InlineRipgrepFzfController {
   private state: InlineRgState | null = null;
   private widgetVisible = false;
-  private dismissedTokenKey: string | null = null;
+  private dismissedTokenStartKey: string | null = null;
   private debounceTimer: ReturnType<typeof setTimeout> | undefined;
   private requestId = 0;
   private defaultRgAvailable: boolean | null = null;
@@ -133,12 +133,13 @@ export class InlineRipgrepFzfController {
     const token = extractInlineRgToken(currentLine.slice(0, col), line, col);
 
     if (!token) {
+      this.dismissedTokenStartKey = null;
       this.close(false);
       return;
     }
 
-    const tokenKey = this.getTokenKey(token);
-    if (this.dismissedTokenKey === tokenKey) {
+    const tokenStartKey = this.getTokenStartKey(token);
+    if (this.dismissedTokenStartKey === tokenStartKey) {
       this.close(false);
       return;
     }
@@ -170,7 +171,7 @@ export class InlineRipgrepFzfController {
     if (!this.state) return false;
 
     if (matchesKey(data, "escape")) {
-      this.dismissedTokenKey = this.getTokenKey(this.state);
+      this.dismissedTokenStartKey = this.getTokenStartKey(this.state);
       this.close(true);
       return true;
     }
@@ -304,7 +305,7 @@ export class InlineRipgrepFzfController {
     const currentLine = lines[this.state.line] ?? "";
     lines[this.state.line] = currentLine.slice(0, this.state.startCol) + match.insertText + currentLine.slice(this.state.endCol);
     setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + match.insertText.length);
-    this.dismissedTokenKey = null;
+    this.dismissedTokenStartKey = null;
     this.close(true);
     this.requestRender();
   }
@@ -335,8 +336,8 @@ export class InlineRipgrepFzfController {
     this.debounceTimer = undefined;
   }
 
-  private getTokenKey(token: InlineRgToken): string {
-    return `${token.line}:${token.startCol}:${token.endCol}:${token.token}`;
+  private getTokenStartKey(token: InlineRgToken): string {
+    return `${token.line}:${token.startCol}`;
   }
 
   private render(width: number, theme: any): string[] {
