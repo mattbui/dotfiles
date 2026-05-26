@@ -1,8 +1,15 @@
 # fzf flags
 if ! command -v fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND='find * -type f'
+  export PI_INLINE_FZF_COMMAND='find . \( -path "./.git" -o -path "./.src" -o -path "./.venv" -o -path "./.undodir*" -o -name ".DS_Store" \) -prune -o \( -type f -o -type d \) -print'
 else
-  export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --no-ignore --exclude "{.src,.venv,.git,.DS_Store,.undodir*}"'
+  export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow --no-ignore --exclude .src --exclude .venv --exclude .git --exclude .DS_Store --exclude .undodir'
+  export FZF_DEFAULT_COMMAND="$FZF_CTRL_T_COMMAND"
+  export PI_INLINE_FZF_COMMAND='fd --hidden --follow --type f --type d --exclude .git --exclude .DS_Store --exclude .src --exclude .venv --exclude ".undodir*"'
+fi
+
+if command -v rg &> /dev/null; then
+  export PI_INLINE_RG_COMMAND='rg --column --line-number --no-heading --color=always --smart-case --hidden --follow --glob "!.git" --glob "!.src" --glob "!.venv" --glob "!.DS_Store" --glob "!.undodir*"'
 fi
 
 export FZF_COMPLETION_TRIGGER='~~'
@@ -44,7 +51,7 @@ fcd() {
                     -o -type d -print 2> /dev/null | fzf +m) &&
     cd "$dir"
   else
-    dir=$(fd --type d --hidden --follow --no-ignore --exclude .git 2> /dev/null | fzf +m) &&
+    dir=$(fd --type d --hidden --follow --no-ignore --exclude .src --exclude .venv --exclude .git --exclude .DS_Store --exclude .undodir 2> /dev/null | fzf +m) &&
     cd "$dir"
   fi
 }

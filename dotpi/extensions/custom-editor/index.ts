@@ -1,5 +1,21 @@
 import { CustomEditor, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { CURSOR_MARKER, matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { matchesKey, truncateToWidth, visibleWidth, type AutocompleteProvider } from "@earendil-works/pi-tui";
+import {
+  addCursorMarkerBeforeSoftwareCursor,
+  BEAM_CURSOR_SHAPE,
+  type CursorCleanup,
+  type CursorRuntime,
+  enableBeamCursorSupport,
+  FOCUS_IN,
+  FOCUS_OUT,
+  getCursorRuntime,
+  hasCursorMarker,
+  HIDE_CURSOR,
+  SHOW_CURSOR,
+  stripSoftwareCursorWhenHardwareCursorIsUsed,
+} from "./cursor.ts";
+import { createAtAutocompleteSuppressingProvider, InlineFileFzfController } from "./inline-file-fzf.ts";
+import { InlineRipgrepFzfController } from "./inline-ripgrep-fzf.ts";
 
 function stripAnsi(text: string): string {
   return text.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");
@@ -7,123 +23,6 @@ function stripAnsi(text: string): string {
 
 function padToVisibleWidth(text: string, width: number): string {
   return text + " ".repeat(Math.max(0, width - visibleWidth(text)));
-}
-
-const SOFTWARE_CURSOR_START = "\x1b[7m";
-const SOFTWARE_CURSOR_RESETS = ["\x1b[0m", "\x1b[27m"] as const;
-const BEAM_CURSOR_SHAPE = "\x1b[6 q";
-const RESET_CURSOR_SHAPE = "\x1b[0 q";
-const SHOW_CURSOR = "\x1b[?25h";
-const HIDE_CURSOR = "\x1b[?25l";
-const ENABLE_FOCUS_EVENTS = "\x1b[?1004h";
-const DISABLE_FOCUS_EVENTS = "\x1b[?1004l";
-const FOCUS_IN = "\x1b[I";
-const FOCUS_OUT = "\x1b[O";
-
-type CursorRuntime = {
-  write: (data: string) => void;
-  setShowHardwareCursor: (show: boolean) => void;
-  getShowHardwareCursor?: () => boolean | undefined;
-};
-
-type CursorCleanup = () => void;
-
-function getCursorRuntime(tui: any): CursorRuntime | null {
-  const terminal = tui?.terminal;
-  if (typeof terminal?.write !== "function" || typeof tui?.setShowHardwareCursor !== "function") return null;
-
-  const runtime: CursorRuntime = {
-    write(data: string) {
-      terminal.write(data);
-    },
-    setShowHardwareCursor(show: boolean) {
-      tui.setShowHardwareCursor(show);
-    },
-  };
-
-  if (typeof tui?.getShowHardwareCursor === "function") {
-    runtime.getShowHardwareCursor = () => {
-      const value = tui.getShowHardwareCursor();
-      return typeof value === "boolean" ? value : undefined;
-    };
-  }
-
-  return runtime;
-}
-
-function enableBeamCursorSupport(tui: any): CursorCleanup | null {
-  const runtime = getCursorRuntime(tui);
-  if (!runtime) return null;
-
-  const previousShowHardwareCursor = runtime.getShowHardwareCursor?.();
-  runtime.setShowHardwareCursor(true);
-  runtime.write(ENABLE_FOCUS_EVENTS + SHOW_CURSOR + BEAM_CURSOR_SHAPE);
-
-  return () => {
-    if (previousShowHardwareCursor !== undefined) {
-      runtime.setShowHardwareCursor(previousShowHardwareCursor);
-    }
-    // Write this last so the shell always gets a visible, reset cursor after Pi exits.
-    runtime.write(SHOW_CURSOR + RESET_CURSOR_SHAPE + DISABLE_FOCUS_EVENTS);
-  };
-}
-
-function findSoftwareCursorReset(
-  line: string,
-  startIndex: number,
-): { index: number; sequence: (typeof SOFTWARE_CURSOR_RESETS)[number] } | null {
-  let firstReset: { index: number; sequence: (typeof SOFTWARE_CURSOR_RESETS)[number] } | null = null;
-
-  for (const sequence of SOFTWARE_CURSOR_RESETS) {
-    const index = line.indexOf(sequence, startIndex);
-    if (index === -1) continue;
-    if (!firstReset || index < firstReset.index) {
-      firstReset = { index, sequence };
-    }
-  }
-
-  return firstReset;
-}
-
-function stripSoftwareCursorAfterMarker(line: string): string {
-  const markerIndex = line.indexOf(CURSOR_MARKER);
-  if (markerIndex === -1) return line;
-
-  const searchStart = markerIndex + CURSOR_MARKER.length;
-  const cursorStart = line.indexOf(SOFTWARE_CURSOR_START, searchStart);
-  if (cursorStart === -1) return line;
-
-  const cursorContentStart = cursorStart + SOFTWARE_CURSOR_START.length;
-  const reset = findSoftwareCursorReset(line, cursorContentStart);
-  if (!reset) return line;
-
-  return line.slice(0, cursorStart) + line.slice(cursorContentStart, reset.index) + line.slice(reset.index + reset.sequence.length);
-}
-
-function addCursorMarkerBeforeSoftwareCursor(lines: string[]): void {
-  if (lines.some((line) => line.includes(CURSOR_MARKER))) return;
-
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i];
-    const cursorStart = line?.indexOf(SOFTWARE_CURSOR_START) ?? -1;
-    if (cursorStart === -1) continue;
-
-    const cursorContentStart = cursorStart + SOFTWARE_CURSOR_START.length;
-    if (!findSoftwareCursorReset(line, cursorContentStart)) continue;
-
-    lines[i] = line.slice(0, cursorStart) + CURSOR_MARKER + line.slice(cursorStart);
-    return;
-  }
-}
-
-function stripSoftwareCursorWhenHardwareCursorIsUsed(lines: string[]): void {
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i];
-    if (!line?.includes(CURSOR_MARKER)) continue;
-
-    lines[i] = stripSoftwareCursorAfterMarker(line);
-    return;
-  }
 }
 
 function removeLeadingVisibleSpace(text: string): string {
@@ -188,6 +87,21 @@ function getSlashCommandName(text: string): string | undefined {
   return commandName || undefined;
 }
 
+function getTextBeforeCursor(editor: CustomEditor): string {
+  const { line, col } = editor.getCursor();
+  return editor.getLines()[line]?.slice(0, col) ?? "";
+}
+
+function isAtInlineAtTriggerBoundary(editor: CustomEditor): boolean {
+  const textBeforeCursor = getTextBeforeCursor(editor);
+  if (textBeforeCursor.length === 0) return true;
+  return /\s$/.test(textBeforeCursor);
+}
+
+function isAtInlineRipgrepSecondAtTrigger(editor: CustomEditor): boolean {
+  return /(^|\s)@$/.test(getTextBeforeCursor(editor));
+}
+
 class CustomizedEditor extends CustomEditor {
   private activePromptMarkerColor: (text: string) => string;
   private inactivePromptMarkerColor: (text: string) => string;
@@ -205,6 +119,8 @@ class CustomizedEditor extends CustomEditor {
     inactivePromptMarkerColor: (text: string) => string,
     editorBg: (text: string) => string,
     private isSlashCommand: (commandName: string) => boolean,
+    private inlineFileSearch: InlineFileFzfController,
+    private inlineRipgrepSearch: InlineRipgrepFzfController,
   ) {
     super(tui, theme, keybindings);
     this.activePromptMarkerColor = activePromptMarkerColor;
@@ -213,6 +129,11 @@ class CustomizedEditor extends CustomEditor {
     this.cursorRuntime = getCursorRuntime(tui);
     this.requestRender = typeof tui?.requestRender === "function" ? () => tui.requestRender() : undefined;
   }
+
+  override setAutocompleteProvider(provider: AutocompleteProvider): void {
+    super.setAutocompleteProvider(createAtAutocompleteSuppressingProvider(provider));
+  }
+
   setPaddingX(padding: number): void {
     // Keep enough left padding to draw the prompt marker without changing line width.
     super.setPaddingX(Math.max(1, padding));
@@ -254,6 +175,28 @@ class CustomizedEditor extends CustomEditor {
       return;
     }
 
+    if (this.inlineRipgrepSearch.handleInput(this, data)) {
+      return;
+    }
+
+    if (this.inlineFileSearch.handleInput(this, data)) {
+      return;
+    }
+
+    // Own @/@@ triggers instead of letting the built-in file autocomplete
+    // consume them. This also makes @ at column 0 open reliably.
+    if (data === "@" && isAtInlineRipgrepSecondAtTrigger(this)) {
+      this.insertTextAtCursor("@");
+      this.updateInlineSearches();
+      return;
+    }
+
+    if (data === "@" && isAtInlineAtTriggerBoundary(this)) {
+      this.insertTextAtCursor("@");
+      this.updateInlineSearches();
+      return;
+    }
+
     const text = this.getText();
     const hasInput = text.trim().length > 0;
     const { line, col } = this.getCursor();
@@ -270,6 +213,7 @@ class CustomizedEditor extends CustomEditor {
     // Avoid converting an empty prompt Enter into Tab/autocomplete acceptance.
     if (matchesKey(data, "enter") && hasInput && this.isShowingAutocomplete()) {
       super.handleInput("\t");
+      this.updateInlineSearches();
       return;
     }
 
@@ -281,6 +225,7 @@ class CustomizedEditor extends CustomEditor {
       } else {
         this.insertTextAtCursor("\n");
       }
+      this.updateInlineSearches();
       return;
     }
 
@@ -288,10 +233,21 @@ class CustomizedEditor extends CustomEditor {
     // Submit directly instead of passing through pi's follow-up keybinding.
     if (matchesKey(data, "alt+enter")) {
       this.submitCurrentText();
+      this.updateInlineSearches();
       return;
     }
 
     super.handleInput(data);
+    this.updateInlineSearches();
+  }
+
+  private updateInlineSearches(): void {
+    this.inlineRipgrepSearch.updateFromEditor(this);
+    if (this.inlineRipgrepSearch.isActive() || this.inlineRipgrepSearch.hasTokenAtCursor(this)) {
+      this.inlineFileSearch.close(false);
+    } else {
+      this.inlineFileSearch.updateFromEditor(this);
+    }
   }
 
   private submitCurrentText(): void {
@@ -320,7 +276,7 @@ class CustomizedEditor extends CustomEditor {
     // software cursor visible. Add the marker back at the software cursor so the
     // hardware beam keeps working while dropdowns are shown.
     addCursorMarkerBeforeSoftwareCursor(lines);
-    if (!lines.some((line) => line.includes(CURSOR_MARKER))) return;
+    if (!hasCursorMarker(lines)) return;
 
     stripSoftwareCursorWhenHardwareCursorIsUsed(lines);
     this.cursorRuntime.setShowHardwareCursor(this.terminalFocused);
@@ -341,10 +297,14 @@ class CustomizedEditor extends CustomEditor {
 
 export default function (pi: ExtensionAPI) {
   let cursorCleanup: CursorCleanup | null = null;
+  let inlineFileSearch: InlineFileFzfController | null = null;
+  let inlineRipgrepSearch: InlineRipgrepFzfController | null = null;
 
   pi.on("session_start", (_event, ctx) => {
     ctx.ui.setEditorComponent((tui, theme, keybindings) => {
       cursorCleanup = enableBeamCursorSupport(tui);
+      inlineFileSearch = new InlineFileFzfController(pi, ctx.cwd, ctx.ui, () => tui.requestRender());
+      inlineRipgrepSearch = new InlineRipgrepFzfController(pi, ctx.ui, () => tui.requestRender());
       return new CustomizedEditor(
         tui,
         theme,
@@ -354,14 +314,20 @@ export default function (pi: ExtensionAPI) {
         (text: string) => ctx.ui.theme.bg("userMessageBg", text),
         (commandName: string) =>
           BUILTIN_SLASH_COMMANDS.has(commandName) || pi.getCommands().some((command) => command.name === commandName),
+        inlineFileSearch,
+        inlineRipgrepSearch,
       );
     });
   });
 
   pi.on("session_shutdown", () => {
     try {
+      inlineRipgrepSearch?.dispose();
+      inlineFileSearch?.dispose();
       cursorCleanup?.();
     } finally {
+      inlineRipgrepSearch = null;
+      inlineFileSearch = null;
       cursorCleanup = null;
     }
   });
