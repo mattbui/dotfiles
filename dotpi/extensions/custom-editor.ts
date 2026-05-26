@@ -1,5 +1,5 @@
 import { CustomEditor, type ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { CURSOR_MARKER, matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { CURSOR_MARKER, matchesKey, truncateToWidth, visibleWidth, type AutocompleteProvider } from "@earendil-works/pi-tui";
 
 function stripAnsi(text: string): string {
   return text.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");
@@ -150,6 +150,54 @@ function applyBgToFullLine(text: string, width: number, bg: (text: string) => st
     .split("\x1b[0m")
     .map((segment) => bg(segment))
     .join("\x1b[0m");
+}
+
+function stripCompletionAtPrefix(value: string): string {
+  if (value.startsWith('@"')) return value.slice(1);
+  if (value.startsWith("@")) return value.slice(1);
+  return value;
+}
+
+function createAtPathCompletionWithoutAtProvider(current: AutocompleteProvider): AutocompleteProvider {
+  return {
+    getSuggestions(lines, cursorLine, cursorCol, options) {
+      return current.getSuggestions(lines, cursorLine, cursorCol, options);
+    },
+
+    applyCompletion(lines, cursorLine, cursorCol, item, prefix) {
+      if (!prefix.startsWith("@")) {
+        return current.applyCompletion(lines, cursorLine, cursorCol, item, prefix);
+      }
+
+      const currentLine = lines[cursorLine] ?? "";
+      const beforePrefix = currentLine.slice(0, cursorCol - prefix.length);
+      const afterCursor = currentLine.slice(cursorCol);
+      const value = stripCompletionAtPrefix(item.value);
+      const isDirectory = item.label.endsWith("/");
+      const suffix = isDirectory ? "" : " ";
+      const isQuotedPrefix = prefix.startsWith('@"');
+      const hasTrailingQuoteInItem = value.endsWith('"');
+      const adjustedAfterCursor = isQuotedPrefix && hasTrailingQuoteInItem && afterCursor.startsWith('"')
+        ? afterCursor.slice(1)
+        : afterCursor;
+
+      const newLines = [...lines];
+      newLines[cursorLine] = beforePrefix + value + suffix + adjustedAfterCursor;
+
+      // For quoted directories, keep the cursor inside the quote so another
+      // completion can continue from that directory path.
+      const cursorOffset = isDirectory && hasTrailingQuoteInItem ? value.length - 1 : value.length;
+      return {
+        lines: newLines,
+        cursorLine,
+        cursorCol: beforePrefix.length + cursorOffset + suffix.length,
+      };
+    },
+
+    shouldTriggerFileCompletion(lines, cursorLine, cursorCol) {
+      return current.shouldTriggerFileCompletion?.(lines, cursorLine, cursorCol) ?? true;
+    },
+  };
 }
 
 const BUILTIN_SLASH_COMMANDS = new Set([
@@ -333,6 +381,8 @@ export default function (pi: ExtensionAPI) {
   let cursorCleanup: CursorCleanup | null = null;
 
   pi.on("session_start", (_event, ctx) => {
+    ctx.ui.addAutocompleteProvider(createAtPathCompletionWithoutAtProvider);
+
     ctx.ui.setEditorComponent((tui, theme, keybindings) => {
       cursorCleanup = enableBeamCursorSupport(tui);
       return new CustomizedEditor(
