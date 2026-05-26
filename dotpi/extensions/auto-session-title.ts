@@ -96,24 +96,6 @@ export default function (pi: ExtensionAPI) {
     await pi.exec("tmux", args, { timeout: 1000 }).catch(() => {});
   }
 
-  async function isCurrentTmuxPaneFocused(): Promise<boolean> {
-    const pane = process.env.TMUX_PANE;
-    if (!pane) return false;
-
-    const result = await pi
-      .exec("tmux", ["display-message", "-p", "-t", pane, "#{pane_active} #{window_active} #{window_visible}"], { timeout: 1000 })
-      .catch(() => undefined);
-    const output = typeof result?.stdout === "string" ? result.stdout : typeof result?.output === "string" ? result.output : "";
-    return output.trim() === "1 1 1";
-  }
-
-  async function notifyTmuxAgentDone(): Promise<void> {
-    if (!isTmuxPane()) return;
-    if (await isCurrentTmuxPaneFocused()) return;
-
-    process.stdout.write("\x07");
-  }
-
   async function setTmuxPiState(title?: string): Promise<void> {
     const pane = process.env.TMUX_PANE;
     if (!pane) return;
@@ -237,10 +219,6 @@ export default function (pi: ExtensionAPI) {
     }
     startTitleGeneration(text, ctx);
     return { action: "continue" };
-  });
-
-  pi.on("agent_end", async () => {
-    await notifyTmuxAgentDone();
   });
 
   pi.on("session_shutdown", async () => {
