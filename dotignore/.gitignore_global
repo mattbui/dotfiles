@@ -155,3 +155,9 @@ pythonenv*
 *.csv
 *.jsonl
 *.png
+
+# Local source code for exploration
+.src/
+
+# Node
+node_modules/

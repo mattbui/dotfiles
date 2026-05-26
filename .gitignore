@@ -3,3 +3,4 @@
 .src
 autoload/
 startify_bookmarks.vim
+node_modules/
