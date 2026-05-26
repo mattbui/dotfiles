@@ -15,7 +15,7 @@ import {
   stripSoftwareCursorWhenHardwareCursorIsUsed,
 } from "./cursor.ts";
 import { createAtAutocompleteSuppressingProvider, InlineFileFzfController } from "./inline-file-fzf.ts";
-import { InlineRipgrepFzfController } from "./inline-ripgrep-fzf.ts";
+import { InlineRipgrepFzfController } from "./inline-ripgrep.ts";
 
 function stripAnsi(text: string): string {
   return text.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");

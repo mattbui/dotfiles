@@ -72,5 +72,5 @@ The ripgrep command is read from `PI_INLINE_RG_COMMAND`, with a built-in `rg` de
 - `index.ts` — main editor extension and key handling.
 - `cursor.ts` — hardware cursor/focus helpers.
 - `inline-file-fzf.ts` — single-`@` file and directory picker.
-- `inline-ripgrep-fzf.ts` — double-`@@` ripgrep picker.
+- `inline-ripgrep.ts` — double-`@@` ripgrep picker.
 - `package.json` — local dependency on `fzf`.
