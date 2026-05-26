@@ -66,15 +66,14 @@ ssh() {
 codex() {
     if [[ -n "$TMUX_PANE" ]]; then
         tmux set-option -p -t "$TMUX_PANE" @codex_session_active 1 2>/dev/null || true
-        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_name 2>/dev/null || true
     fi
 
-    CODEX_TMUX_TITLE_HOOK=1 command codex "$@"
+    command codex "$@"
     local exit_code=$?
 
     if [[ -n "$TMUX_PANE" ]]; then
         tmux set-option -p -u -t "$TMUX_PANE" @codex_session_active 2>/dev/null || true
-        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_name 2>/dev/null || true
     fi
     return $exit_code
 }
+
