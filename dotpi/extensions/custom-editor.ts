@@ -256,9 +256,12 @@ class CustomizedEditor extends CustomEditor {
 
     const text = this.getText();
     const hasInput = text.trim().length > 0;
+    const { line, col } = this.getCursor();
+    const textBeforeCursor = this.getLines()[line]?.slice(0, col) ?? "";
+    const hasInputAtCursor = /\S$/.test(textBeforeCursor);
 
-    // Don't trigger file/autocomplete lookup from an empty prompt.
-    if (matchesKey(data, "tab") && !hasInput) {
+    // Don't trigger file/autocomplete lookup when the current cursor token is empty.
+    if (matchesKey(data, "tab") && !hasInputAtCursor) {
       return;
     }
 
