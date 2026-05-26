@@ -303,10 +303,17 @@ class CustomizedEditor extends CustomEditor {
     }
 
     const text = this.getText();
+    const hasInput = text.trim().length > 0;
+
+    // Don't trigger file/autocomplete lookup from an empty prompt.
+    if (matchesKey(data, "tab") && !hasInput) {
+      return;
+    }
 
     // If autocomplete/slash-command menu is open, Enter should accept the
     // highlighted completion only. Submitting remains a separate Enter press.
-    if (matchesKey(data, "enter") && this.isShowingAutocomplete()) {
+    // Avoid converting an empty prompt Enter into Tab/autocomplete acceptance.
+    if (matchesKey(data, "enter") && hasInput && this.isShowingAutocomplete()) {
       super.handleInput("\t");
       return;
     }
