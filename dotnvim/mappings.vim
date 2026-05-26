@@ -9,14 +9,19 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
-" shift-y to yank absolute path with line/range
-nnoremap <silent> Y :YankAbsolutePathLine<CR>
+" shift-y to yank to end of line
+nnoremap Y y$
+
+" visual shift-y to yank absolute path with range
 xnoremap <silent> Y :YankAbsolutePathRange<CR>
 
 " yank file paths
 nnoremap <silent> yt :YankRelativePathTag<CR>
+nnoremap <silent> yT :YankAbsolutePathTag<CR>
 nnoremap <silent> yf :YankRelativePath<CR>
+nnoremap <silent> yF :YankAbsolutePath<CR>
 nnoremap <silent> yl :YankRelativePathLine<CR>
+nnoremap <silent> yL :YankAbsolutePathLine<CR>
 
 " keeping it centered
 nnoremap n nzzzv
