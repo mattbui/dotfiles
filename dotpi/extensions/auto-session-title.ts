@@ -1,20 +1,20 @@
 import { complete, type UserMessage } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
-const MAX_TITLE_LENGTH = 100;
+const MAX_TITLE_LENGTH = 60;
 const MAX_TITLE_SOURCE_LENGTH = 12000;
-const TITLE_ELLIPSIS = "..";
+const TITLE_ELLIPSIS = "...";
 const TITLE_MODEL_PROVIDER = "openai-codex";
 const TITLE_MODEL_ID = "gpt-5.4-mini";
-const TITLE_FALLBACK_MODEL_PROVIDER = "openai";
 const TITLE_GENERATION_SYSTEM_PROMPT = `You generate concise session titles for coding-agent conversations.
 
 Given the user's first message, produce a short descriptive title.
 Rules:
 - Output only the title.
-- Do not use quotes, markdown, prefixes, or trailing punctuation.
-- Keep it under 5 words when possible.
-- Prefer important file, command, or feature names over generic wording.`;
+- Summarize the request; do not restate it verbatim.
+- Keep it short and specific, ideally 3-8 words.
+- Prefer important file, command, error, or feature names over generic wording.
+- Do not use quotes, markdown, prefixes, or trailing punctuation.`;
 
 function isTmuxPane(): boolean {
   return !!process.env.TMUX && !!process.env.TMUX_PANE;
@@ -148,9 +148,7 @@ export default function (pi: ExtensionAPI) {
   }
 
   async function generateSessionTitle(firstMessage: string, ctx: ExtensionContext, signal: AbortSignal): Promise<string | undefined> {
-    const model =
-      ctx.modelRegistry.find(TITLE_MODEL_PROVIDER, TITLE_MODEL_ID) ??
-      ctx.modelRegistry.find(TITLE_FALLBACK_MODEL_PROVIDER, TITLE_MODEL_ID);
+    const model = ctx.modelRegistry.find(TITLE_MODEL_PROVIDER, TITLE_MODEL_ID);
     if (!model) return undefined;
 
     const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
