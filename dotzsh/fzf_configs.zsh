@@ -9,7 +9,7 @@ else
 fi
 
 if command -v rg &> /dev/null; then
-  export PI_INLINE_RG_COMMAND='rg --column --line-number --no-heading --color=always --smart-case --hidden --follow --glob "!.git" --glob "!.src" --glob "!.venv" --glob "!.DS_Store" --glob "!.undodir*"'
+  export PI_FZF_RG_COMMAND='rg --column --line-number --no-heading --color=never --hidden --follow --glob "!.git" --glob "!.src" --glob "!.venv" --glob "!.DS_Store" --glob "!.undodir*" "^"'
 fi
 
 export FZF_COMPLETION_TRIGGER='~~'

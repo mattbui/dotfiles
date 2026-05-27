@@ -1,7 +1,7 @@
 import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { CustomEditor, ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { matchesKey, truncateToWidth, type AutocompleteProvider } from "@earendil-works/pi-tui";
+import { matchesKey, truncateToWidth, visibleWidth, type AutocompleteProvider } from "@earendil-works/pi-tui";
 import { extendedMatch, Fzf, type FzfResultItem } from "fzf";
 
 const INLINE_FILE_FZF_WIDGET_KEY = "inline-file-fzf";
@@ -98,6 +98,17 @@ function highlightPositions(text: string, positions: Set<number>, highlight: (te
     result += positions.has(i) ? highlight(char) : char;
   }
   return result;
+}
+
+function padToVisibleWidth(text: string, width: number): string {
+  return text + " ".repeat(Math.max(0, width - visibleWidth(text)));
+}
+
+function applyBgToFullLine(text: string, width: number, bg: (text: string) => string): string {
+  return padToVisibleWidth(text, width)
+    .split("\x1b[0m")
+    .map((segment) => bg(segment))
+    .join("\x1b[0m");
 }
 
 function setEditorTextAndCursor(editor: CustomEditor, lines: string[], cursorLine: number, cursorCol: number): void {
@@ -353,6 +364,7 @@ export class InlineFileFzfController {
     const dim = (text: string) => theme.fg("dim", text);
     const warning = (text: string) => theme.fg("warning", text);
     const border = (text: string) => theme.fg("border", text);
+    const selectedBg = (text: string) => theme.bg("selectedBg", text);
 
     lines.push(truncateToWidth(`${accent("@")} ${state.query ? dim(state.query) : dim("type to filter files/dirs")}`, width, ""));
 
@@ -383,9 +395,10 @@ export class InlineFileFzfController {
       const prefix = selected ? accent("→ ") : "  ";
       const suffix = candidate.isDirectory ? border("/") : "";
       const displayPath = candidate.isDirectory ? candidate.path.slice(0, -1) : candidate.path;
-      const highlighted = highlightPositions(displayPath, match.positions, (text) => theme.fg("accent", theme.bold(text)));
+      const highlighted = highlightPositions(displayPath, match.positions, (text) => theme.fg("warning", theme.bold(text)));
       const text = selected ? accent(highlighted) + suffix : highlighted + suffix;
-      lines.push(truncateToWidth(prefix + text, width, ""));
+      const row = truncateToWidth(prefix + text, width, "");
+      lines.push(selected ? applyBgToFullLine(row, width, selectedBg) : row);
     }
 
     const count = state.matches.length >= INLINE_FILE_FZF_MAX_MATCHES ? `${INLINE_FILE_FZF_MAX_MATCHES}+` : String(state.matches.length);

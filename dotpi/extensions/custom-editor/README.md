@@ -44,9 +44,9 @@ Behavior:
 
 The candidate command is read from `PI_INLINE_FZF_COMMAND`, with a built-in `fd`/`find` fallback.
 
-## Inline `@@` ripgrep picker
+## Inline `@@` line fzf picker
 
-Typing `@@` at the start of a token opens a custom ripgrep picker below the editor.
+Typing `@@` at the start of a token opens a custom line picker below the editor.
 
 Examples:
 
@@ -57,20 +57,21 @@ explain @@function name
 
 Behavior:
 
-- Uses `rg` to search file contents live as you type.
-- Spaces are allowed inside the search query after the first character.
+- Uses `rg` once to load project line results, then fuzzy-filters them as you type.
+- Bare `@@` shows results immediately.
+- Spaces are allowed inside the fuzzy query after the first character.
 - `@@ ` closes/does not trigger the picker.
-- Displays colored ripgrep output.
+- Highlights fzf-matched characters.
 - Enter inserts `path/to/file:line`.
 - Esc closes the picker while leaving the typed `@@query` intact.
 - Shows a widget error if `rg` is not installed.
 
-The ripgrep command is read from `PI_INLINE_RG_COMMAND`, with a built-in `rg` default.
+The ripgrep source command is read from `PI_FZF_RG_COMMAND`, with a built-in `rg` default. Custom commands are not passed the query and should emit `file:line:column:text` lines.
 
 ## Files
 
 - `index.ts` — main editor extension and key handling.
 - `cursor.ts` — hardware cursor/focus helpers.
 - `inline-file-fzf.ts` — single-`@` file and directory picker.
-- `inline-ripgrep.ts` — double-`@@` ripgrep picker.
+- `inline-lines-fzf.ts` — double-`@@` line fzf picker.
 - `package.json` — local dependency on `fzf`.

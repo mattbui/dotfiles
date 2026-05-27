@@ -15,7 +15,7 @@ import {
   stripSoftwareCursorWhenHardwareCursorIsUsed,
 } from "./cursor.ts";
 import { createAtAutocompleteSuppressingProvider, InlineFileFzfController } from "./inline-file-fzf.ts";
-import { InlineRipgrepFzfController } from "./inline-ripgrep.ts";
+import { InlineLinesFzfController } from "./inline-lines-fzf.ts";
 
 function stripAnsi(text: string): string {
   return text.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");
@@ -98,7 +98,7 @@ function isAtInlineAtTriggerBoundary(editor: CustomEditor): boolean {
   return /\s$/.test(textBeforeCursor);
 }
 
-function isAtInlineRipgrepSecondAtTrigger(editor: CustomEditor): boolean {
+function isAtInlineLinesSecondAtTrigger(editor: CustomEditor): boolean {
   return /(^|\s)@$/.test(getTextBeforeCursor(editor));
 }
 
@@ -120,7 +120,7 @@ class CustomizedEditor extends CustomEditor {
     editorBg: (text: string) => string,
     private isSlashCommand: (commandName: string) => boolean,
     private inlineFileSearch: InlineFileFzfController,
-    private inlineRipgrepSearch: InlineRipgrepFzfController,
+    private inlineLinesSearch: InlineLinesFzfController,
   ) {
     super(tui, theme, keybindings);
     this.activePromptMarkerColor = activePromptMarkerColor;
@@ -175,7 +175,7 @@ class CustomizedEditor extends CustomEditor {
       return;
     }
 
-    if (this.inlineRipgrepSearch.handleInput(this, data)) {
+    if (this.inlineLinesSearch.handleInput(this, data)) {
       return;
     }
 
@@ -185,7 +185,7 @@ class CustomizedEditor extends CustomEditor {
 
     // Own @/@@ triggers instead of letting the built-in file autocomplete
     // consume them. This also makes @ at column 0 open reliably.
-    if (data === "@" && isAtInlineRipgrepSecondAtTrigger(this)) {
+    if (data === "@" && isAtInlineLinesSecondAtTrigger(this)) {
       this.insertTextAtCursor("@");
       this.updateInlineSearches();
       return;
@@ -242,8 +242,8 @@ class CustomizedEditor extends CustomEditor {
   }
 
   private updateInlineSearches(): void {
-    this.inlineRipgrepSearch.updateFromEditor(this);
-    if (this.inlineRipgrepSearch.isActive() || this.inlineRipgrepSearch.hasTokenAtCursor(this)) {
+    this.inlineLinesSearch.updateFromEditor(this);
+    if (this.inlineLinesSearch.isActive() || this.inlineLinesSearch.hasTokenAtCursor(this)) {
       this.inlineFileSearch.close(false);
     } else {
       this.inlineFileSearch.updateFromEditor(this);
@@ -298,13 +298,13 @@ class CustomizedEditor extends CustomEditor {
 export default function (pi: ExtensionAPI) {
   let cursorCleanup: CursorCleanup | null = null;
   let inlineFileSearch: InlineFileFzfController | null = null;
-  let inlineRipgrepSearch: InlineRipgrepFzfController | null = null;
+  let inlineLinesSearch: InlineLinesFzfController | null = null;
 
   pi.on("session_start", (_event, ctx) => {
     ctx.ui.setEditorComponent((tui, theme, keybindings) => {
       cursorCleanup = enableBeamCursorSupport(tui);
       inlineFileSearch = new InlineFileFzfController(pi, ctx.cwd, ctx.ui, () => tui.requestRender());
-      inlineRipgrepSearch = new InlineRipgrepFzfController(pi, ctx.ui, () => tui.requestRender());
+      inlineLinesSearch = new InlineLinesFzfController(pi, ctx.ui, () => tui.requestRender());
       return new CustomizedEditor(
         tui,
         theme,
@@ -315,18 +315,18 @@ export default function (pi: ExtensionAPI) {
         (commandName: string) =>
           BUILTIN_SLASH_COMMANDS.has(commandName) || pi.getCommands().some((command) => command.name === commandName),
         inlineFileSearch,
-        inlineRipgrepSearch,
+        inlineLinesSearch,
       );
     });
   });
 
   pi.on("session_shutdown", () => {
     try {
-      inlineRipgrepSearch?.dispose();
+      inlineLinesSearch?.dispose();
       inlineFileSearch?.dispose();
       cursorCleanup?.();
     } finally {
-      inlineRipgrepSearch = null;
+      inlineLinesSearch = null;
       inlineFileSearch = null;
       cursorCleanup = null;
     }

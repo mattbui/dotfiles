@@ -1,21 +1,29 @@
 import type { CustomEditor, ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { matchesKey, truncateToWidth } from "@earendil-works/pi-tui";
+import { matchesKey, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import { extendedMatch, Fzf, type FzfResultItem } from "fzf";
 
-const INLINE_RG_WIDGET_KEY = "inline-ripgrep-fzf";
-const INLINE_RG_DEFAULT_COMMAND =
-  "rg --column --line-number --no-heading --color=always --smart-case --hidden --follow --glob '!.git' --glob '!.src' --glob '!.venv' --glob '!.DS_Store' --glob '!.undodir*'";
-const INLINE_RG_MAX_VISIBLE = 10;
-const INLINE_RG_DEBOUNCE_MS = 100;
+const INLINE_LINES_FZF_WIDGET_KEY = "inline-lines-fzf";
+const INLINE_LINES_FZF_DEFAULT_COMMAND =
+  "rg --column --line-number --no-heading --color=never --hidden --follow --glob '!.git' --glob '!.src' --glob '!.venv' --glob '!.DS_Store' --glob '!.undodir*' '^'";
+const INLINE_LINES_FZF_MAX_MATCHES = 200;
+const INLINE_LINES_FZF_MAX_VISIBLE = 10;
 
-interface InlineRgMatch {
+interface InlineLineCandidate {
   raw: string;
+  displayText: string;
   file: string;
   line: string;
   column: string;
+  text: string;
   insertText: string;
 }
 
-interface InlineRgToken {
+interface InlineLineFzfMatch {
+  candidate: InlineLineCandidate;
+  positions: Set<number>;
+}
+
+interface InlineLineToken {
   query: string;
   token: string;
   line: number;
@@ -23,29 +31,19 @@ interface InlineRgToken {
   endCol: number;
 }
 
-interface InlineRgState extends InlineRgToken {
+interface InlineLineFzfState extends InlineLineToken {
   active: boolean;
   selectedIndex: number;
-  matches: InlineRgMatch[];
-  loading: boolean;
-  error: string | null;
+  matches: InlineLineFzfMatch[];
 }
 
-function stripAnsi(text: string): string {
-  return text.replace(/\x1b\[[0-?]*[ -/]*[@-~]/g, "");
-}
-
-function shellQuote(value: string): string {
-  return `'${value.replace(/'/g, `'"'"'`)}'`;
-}
-
-function extractInlineRgToken(textBeforeCursor: string, line: number, cursorCol: number): InlineRgToken | null {
+function extractInlineLineToken(textBeforeCursor: string, line: number, cursorCol: number): InlineLineToken | null {
   const match = textBeforeCursor.match(/(^|.*\s)@@(.*)$/);
   if (!match || match.index === undefined) return null;
 
   const boundary = match[1] ?? "";
   const query = match[2] ?? "";
-  // `@@` opens the ripgrep picker, but `@@ ` should close immediately.
+  // `@@` opens the line picker, but `@@ ` should close immediately.
   // Spaces are allowed after the first query character: `@@some text`.
   if (/^\s/.test(query)) return null;
 
@@ -57,6 +55,28 @@ function extractInlineRgToken(textBeforeCursor: string, line: number, cursorCol:
     startCol,
     endCol: cursorCol,
   };
+}
+
+function highlightPositions(text: string, positions: Set<number>, highlight: (text: string) => string): string {
+  if (positions.size === 0) return text;
+
+  let result = "";
+  for (let i = 0; i < text.length; i++) {
+    const char = text.charAt(i);
+    result += positions.has(i) ? highlight(char) : char;
+  }
+  return result;
+}
+
+function padToVisibleWidth(text: string, width: number): string {
+  return text + " ".repeat(Math.max(0, width - visibleWidth(text)));
+}
+
+function applyBgToFullLine(text: string, width: number, bg: (text: string) => string): string {
+  return padToVisibleWidth(text, width)
+    .split("\x1b[0m")
+    .map((segment) => bg(segment))
+    .join("\x1b[0m");
 }
 
 function setEditorTextAndCursor(editor: CustomEditor, lines: string[], cursorLine: number, cursorCol: number): void {
@@ -72,31 +92,35 @@ function setEditorTextAndCursor(editor: CustomEditor, lines: string[], cursorLin
   }
 }
 
-function parseRgLine(raw: string): InlineRgMatch | null {
-  const plain = stripAnsi(raw);
-  const parts = plain.split(":");
-  if (parts.length < 4) return null;
+function parseLineCandidate(raw: string): InlineLineCandidate | null {
+  const match = raw.match(/^(.*?):(\d+):(\d+):(.*)$/);
+  if (!match) return null;
 
-  const file = parts[0];
-  const line = parts[1];
-  const column = parts[2];
+  const file = match[1] ?? "";
+  const line = match[2] ?? "";
+  const column = match[3] ?? "";
+  const text = match[4] ?? "";
   if (!file || !line || !column) return null;
 
   return {
     raw,
+    displayText: raw,
     file,
     line,
     column,
+    text,
     insertText: `${file}:${line}`,
   };
 }
 
-export class InlineRipgrepFzfController {
-  private state: InlineRgState | null = null;
+export class InlineLinesFzfController {
+  private candidates: InlineLineCandidate[] = [];
+  private fzf: Fzf<InlineLineCandidate[]> | undefined;
+  private loadPromise: Promise<void> | undefined;
+  private loadError: string | null = null;
+  private state: InlineLineFzfState | null = null;
   private widgetVisible = false;
   private dismissedTokenStartKey: string | null = null;
-  private debounceTimer: ReturnType<typeof setTimeout> | undefined;
-  private requestId = 0;
   private defaultRgAvailable: boolean | null = null;
 
   constructor(
@@ -112,17 +136,15 @@ export class InlineRipgrepFzfController {
   hasTokenAtCursor(editor: CustomEditor): boolean {
     const { line, col } = editor.getCursor();
     const currentLine = editor.getLines()[line] ?? "";
-    return Boolean(extractInlineRgToken(currentLine.slice(0, col), line, col));
+    return Boolean(extractInlineLineToken(currentLine.slice(0, col), line, col));
   }
 
   dispose(): void {
-    this.clearDebounce();
     this.hideWidget();
   }
 
   close(render = false): void {
     this.state = null;
-    this.clearDebounce();
     this.hideWidget();
     if (render) this.requestRender();
   }
@@ -130,7 +152,7 @@ export class InlineRipgrepFzfController {
   updateFromEditor(editor: CustomEditor): void {
     const { line, col } = editor.getCursor();
     const currentLine = editor.getLines()[line] ?? "";
-    const token = extractInlineRgToken(currentLine.slice(0, col), line, col);
+    const token = extractInlineLineToken(currentLine.slice(0, col), line, col);
 
     if (!token) {
       this.dismissedTokenStartKey = null;
@@ -144,26 +166,16 @@ export class InlineRipgrepFzfController {
       return;
     }
 
-    const previous = this.state;
-    const queryChanged = previous?.query !== token.query;
-    const previousSelected = queryChanged ? 0 : previous?.selectedIndex ?? 0;
-    const matches = queryChanged ? [] : previous?.matches ?? [];
-
+    this.ensureLoaded();
+    const previousSelected = this.state?.query === token.query ? this.state.selectedIndex : 0;
+    const matches = this.getMatches(token.query);
     this.state = {
       ...token,
       active: true,
       selectedIndex: Math.max(0, Math.min(previousSelected, Math.max(0, matches.length - 1))),
       matches,
-      loading: false,
-      error: null,
     };
-
     this.showWidget();
-
-    if (queryChanged) {
-      this.scheduleSearch(token.query);
-    }
-
     this.requestRender();
   }
 
@@ -187,12 +199,12 @@ export class InlineRipgrepFzfController {
     }
 
     if (matchesKey(data, "pageUp")) {
-      this.moveSelection(-INLINE_RG_MAX_VISIBLE, false);
+      this.moveSelection(-INLINE_LINES_FZF_MAX_VISIBLE, false);
       return true;
     }
 
     if (matchesKey(data, "pageDown")) {
-      this.moveSelection(INLINE_RG_MAX_VISIBLE, false);
+      this.moveSelection(INLINE_LINES_FZF_MAX_VISIBLE, false);
       return true;
     }
 
@@ -204,71 +216,64 @@ export class InlineRipgrepFzfController {
     return false;
   }
 
-  private scheduleSearch(query: string): void {
-    this.clearDebounce();
-    const state = this.state;
-    if (!state) return;
+  private ensureLoaded(): void {
+    if (this.fzf || this.loadPromise) return;
 
-    if (!query.trim()) {
-      state.matches = [];
-      state.loading = false;
-      state.error = null;
-      this.requestRender();
-      return;
-    }
+    const customCommand = process.env.PI_FZF_RG_COMMAND?.trim();
+    const command = customCommand || INLINE_LINES_FZF_DEFAULT_COMMAND;
 
-    state.matches = [];
-    state.selectedIndex = 0;
-    state.loading = true;
-    state.error = null;
-    const id = ++this.requestId;
-
-    this.debounceTimer = setTimeout(() => {
-      this.debounceTimer = undefined;
-      void this.runSearch(id, query);
-    }, INLINE_RG_DEBOUNCE_MS);
-  }
-
-  private async runSearch(id: number, query: string): Promise<void> {
-    const customCommand = process.env.PI_INLINE_RG_COMMAND?.trim();
-
-    try {
+    this.loadPromise = (async () => {
       if (!customCommand && !(await this.hasDefaultRipgrep())) {
-        if (id !== this.requestId || !this.state || this.state.query !== query) return;
-        this.state.matches = [];
-        this.state.loading = false;
-        this.state.error = "ripgrep (rg) not found. Install ripgrep to use @@ search.";
+        this.loadError = "ripgrep (rg) not found. Install ripgrep to use @@ search.";
         this.requestRender();
         return;
       }
 
-      const commandPrefix = customCommand || INLINE_RG_DEFAULT_COMMAND;
-      const command = `${commandPrefix} -- ${shellQuote(query)}`;
       const result = await this.pi.exec("bash", ["-lc", command], { timeout: 10000 });
-      if (id !== this.requestId || !this.state || this.state.query !== query) return;
-
       if (result.code !== 0 && result.code !== 1) {
-        this.state.matches = [];
-        this.state.error = result.stderr?.trim() || `ripgrep failed with exit ${result.code}`;
-      } else {
-        this.state.matches = result.stdout
-          .split("\n")
-          .filter(Boolean)
-          .map(parseRgLine)
-          .filter((match): match is InlineRgMatch => Boolean(match));
-        this.state.error = null;
+        this.loadError = result.stderr?.trim() || `ripgrep source command failed with exit ${result.code}`;
+        this.requestRender();
+        return;
       }
 
-      this.state.loading = false;
-      this.state.selectedIndex = Math.max(0, Math.min(this.state.selectedIndex, Math.max(0, this.state.matches.length - 1)));
+      this.candidates = result.stdout
+        .split("\n")
+        .filter(Boolean)
+        .map(parseLineCandidate)
+        .filter((match): match is InlineLineCandidate => Boolean(match));
+      this.fzf = new Fzf(this.candidates, {
+        selector: (match) => match.displayText,
+        forward: false,
+        match: extendedMatch,
+        limit: INLINE_LINES_FZF_MAX_MATCHES,
+      });
+      this.loadError = null;
+      if (this.state) {
+        this.state.matches = this.getMatches(this.state.query);
+        this.state.selectedIndex = Math.max(0, Math.min(this.state.selectedIndex, Math.max(0, this.state.matches.length - 1)));
+        this.requestRender();
+      }
+    })().catch((error) => {
+      this.loadError = error instanceof Error ? error.message : String(error);
       this.requestRender();
-    } catch (error) {
-      if (id !== this.requestId || !this.state || this.state.query !== query) return;
-      this.state.matches = [];
-      this.state.loading = false;
-      this.state.error = error instanceof Error ? error.message : String(error);
-      this.requestRender();
+    });
+  }
+
+  private getMatches(query: string): InlineLineFzfMatch[] {
+    if (!this.fzf) return [];
+
+    if (!query) {
+      return this.candidates.slice(0, INLINE_LINES_FZF_MAX_MATCHES).map((candidate) => ({
+        candidate,
+        positions: new Set<number>(),
+      }));
     }
+
+    const results: FzfResultItem<InlineLineCandidate>[] = this.fzf.find(query);
+    return results.slice(0, INLINE_LINES_FZF_MAX_MATCHES).map((result) => ({
+      candidate: result.item,
+      positions: result.positions,
+    }));
   }
 
   private async hasDefaultRipgrep(): Promise<boolean> {
@@ -299,9 +304,10 @@ export class InlineRipgrepFzfController {
   private acceptSelection(editor: CustomEditor): void {
     if (!this.state) return;
     const match = this.state.matches[this.state.selectedIndex];
-    if (!match) return;
+    const candidate = match?.candidate;
+    if (!candidate) return;
 
-    const insertText = `${match.insertText} `;
+    const insertText = `${candidate.insertText} `;
     const lines = [...editor.getLines()];
     const currentLine = lines[this.state.line] ?? "";
     lines[this.state.line] = currentLine.slice(0, this.state.startCol) + insertText + currentLine.slice(this.state.endCol);
@@ -316,7 +322,7 @@ export class InlineRipgrepFzfController {
 
     this.widgetVisible = true;
     this.ui.setWidget(
-      INLINE_RG_WIDGET_KEY,
+      INLINE_LINES_FZF_WIDGET_KEY,
       (_tui: any, theme: any) => ({
         render: (width: number) => this.render(width, theme),
         invalidate: () => {},
@@ -328,16 +334,10 @@ export class InlineRipgrepFzfController {
   private hideWidget(): void {
     if (!this.widgetVisible) return;
     this.widgetVisible = false;
-    this.ui.setWidget(INLINE_RG_WIDGET_KEY, undefined);
+    this.ui.setWidget(INLINE_LINES_FZF_WIDGET_KEY, undefined);
   }
 
-  private clearDebounce(): void {
-    if (!this.debounceTimer) return;
-    clearTimeout(this.debounceTimer);
-    this.debounceTimer = undefined;
-  }
-
-  private getTokenStartKey(token: InlineRgToken): string {
+  private getTokenStartKey(token: InlineLineToken): string {
     return `${token.line}:${token.startCol}`;
   }
 
@@ -349,20 +349,17 @@ export class InlineRipgrepFzfController {
     const accent = (text: string) => theme.fg("accent", text);
     const dim = (text: string) => theme.fg("dim", text);
     const warning = (text: string) => theme.fg("warning", text);
+    const selectedBg = (text: string) => theme.bg("selectedBg", text);
 
-    lines.push(truncateToWidth(`${accent("@@")} ${state.query ? dim(state.query) : dim("type to search file contents")}`, width, ""));
+    lines.push(truncateToWidth(`${accent("@@")} ${state.query ? dim(state.query) : dim("type to fuzzy-filter ripgrep lines")}`, width, ""));
 
-    if (state.error) {
-      lines.push(truncateToWidth(warning(`ripgrep failed: ${state.error}`), width, ""));
+    if (this.loadError) {
+      lines.push(truncateToWidth(warning(`ripgrep failed: ${this.loadError}`), width, ""));
       return lines;
     }
 
-    if (!state.query.trim()) {
-      return lines;
-    }
-
-    if (state.loading) {
-      lines.push(truncateToWidth(dim("searching…"), width, ""));
+    if (!this.fzf) {
+      lines.push(truncateToWidth(dim("loading ripgrep results…"), width, ""));
       return lines;
     }
 
@@ -371,7 +368,7 @@ export class InlineRipgrepFzfController {
       return lines;
     }
 
-    const visible = Math.min(INLINE_RG_MAX_VISIBLE, state.matches.length);
+    const visible = Math.min(INLINE_LINES_FZF_MAX_VISIBLE, state.matches.length);
     const startIndex = Math.max(0, Math.min(state.selectedIndex - Math.floor(visible / 2), state.matches.length - visible));
     const endIndex = Math.min(startIndex + visible, state.matches.length);
 
@@ -380,10 +377,14 @@ export class InlineRipgrepFzfController {
       if (!match) continue;
       const selected = i === state.selectedIndex;
       const prefix = selected ? accent("→ ") : "  ";
-      lines.push(truncateToWidth(prefix + match.raw, width, ""));
+      const highlighted = highlightPositions(match.candidate.displayText, match.positions, (text) => theme.fg("warning", theme.bold(text)));
+      const text = selected ? accent(highlighted) : highlighted;
+      const row = truncateToWidth(prefix + text, width, "");
+      lines.push(selected ? applyBgToFullLine(row, width, selectedBg) : row);
     }
 
-    lines.push(truncateToWidth(dim(`↑↓ navigate • enter select • esc close • ${state.selectedIndex + 1}/${state.matches.length}`), width, ""));
+    const count = state.matches.length >= INLINE_LINES_FZF_MAX_MATCHES ? `${INLINE_LINES_FZF_MAX_MATCHES}+` : String(state.matches.length);
+    lines.push(truncateToWidth(dim(`↑↓ navigate • enter select • esc close • ${state.selectedIndex + 1}/${count}`), width, ""));
     return lines;
   }
 }
