@@ -3,5 +3,6 @@
   "tui.input.submit": ["alt+enter"],
   "app.message.followUp": ["shift+alt+enter"],
   "app.model.select": ["alt+shift+m"],
+  "app.tree.filter.labeledOnly": ["ctrl+shift+l"],
   "tui.editor.undo": ["ctrl+-"]
 }
