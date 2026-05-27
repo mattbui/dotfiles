@@ -301,10 +301,11 @@ export class InlineRipgrepFzfController {
     const match = this.state.matches[this.state.selectedIndex];
     if (!match) return;
 
+    const insertText = `${match.insertText} `;
     const lines = [...editor.getLines()];
     const currentLine = lines[this.state.line] ?? "";
-    lines[this.state.line] = currentLine.slice(0, this.state.startCol) + match.insertText + currentLine.slice(this.state.endCol);
-    setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + match.insertText.length);
+    lines[this.state.line] = currentLine.slice(0, this.state.startCol) + insertText + currentLine.slice(this.state.endCol);
+    setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + insertText.length);
     this.dismissedTokenStartKey = null;
     this.close(true);
     this.requestRender();

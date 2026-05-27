@@ -309,10 +309,11 @@ export class InlineFileFzfController {
     const candidate = match?.candidate;
     if (!candidate) return;
 
+    const insertText = `${candidate.insertText} `;
     const lines = [...editor.getLines()];
     const currentLine = lines[this.state.line] ?? "";
-    lines[this.state.line] = currentLine.slice(0, this.state.startCol) + candidate.insertText + currentLine.slice(this.state.endCol);
-    setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + candidate.insertText.length);
+    lines[this.state.line] = currentLine.slice(0, this.state.startCol) + insertText + currentLine.slice(this.state.endCol);
+    setEditorTextAndCursor(editor, lines, this.state.line, this.state.startCol + insertText.length);
     this.dismissedTokenStartKey = null;
     this.close(true);
     this.requestRender();
