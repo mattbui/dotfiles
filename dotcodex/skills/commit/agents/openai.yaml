@@ -2,3 +2,6 @@ interface:
   display_name: "commit"
   short_description: "Commit staged, split, or pushed Git changes"
   default_prompt: "$commit"
+
+policy:
+  allow_implicit_invocation: false
