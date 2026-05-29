@@ -59,6 +59,18 @@ type ParsedCommitArgs =
       error: string;
     };
 
+type ClearMode = "clear" | "summarize" | "cancel";
+
+type ParsedClearArgs =
+  | {
+      ok: true;
+      mode?: Exclude<ClearMode, "cancel">;
+    }
+  | {
+      ok: false;
+      error: string;
+    };
+
 function getCommitEntryData(entry: unknown): { event?: unknown; createdAt?: unknown; markerId?: unknown; clearedAt?: unknown } | undefined {
   if (!entry || typeof entry !== "object") return undefined;
 
@@ -216,6 +228,27 @@ function parseCommitArgs(args: string): ParsedCommitArgs {
   };
 }
 
+function parseClearArgs(trimmed: string): ParsedClearArgs {
+  if (trimmed === "clear") return { ok: true };
+
+  const rest = trimmed.slice("clear".length).trim();
+  if (rest === "--no-summary") return { ok: true, mode: "clear" };
+  if (rest === "--summary") return { ok: true, mode: "summarize" };
+
+  return { ok: false, error: "Usage: /commit clear [--no-summary|--summary]" };
+}
+
+function isGitPushCommand(command: unknown): boolean {
+  if (typeof command !== "string") return false;
+
+  return command.split(/\n|;|&&|\|\|/).some((part) => {
+    const segment = part.trim();
+    if (!/\bgit\s+push\b/.test(segment)) return false;
+    if (/\bgit\s+push\b[^\n;|&]*\s(?:--dry-run|-n)(?:\s|$)/.test(segment)) return false;
+    return true;
+  });
+}
+
 function buildCommitPrompt(args: string, parsed: Extract<ParsedCommitArgs, { ok: true }>): string {
   const uniqueFlags = [...new Set(parsed.flags)];
   const flagsText = uniqueFlags.length > 0 ? uniqueFlags.join(", ") : "none";
@@ -249,7 +282,7 @@ async function createMarker(pi: ExtensionAPI, ctx: ExtensionCommandContext): Pro
   return marker;
 }
 
-async function chooseClearMode(ctx: ExtensionCommandContext): Promise<"clear" | "summarize" | "cancel"> {
+async function chooseClearMode(ctx: ExtensionCommandContext): Promise<ClearMode> {
   if (!ctx.hasUI) return "clear";
 
   const choice = await ctx.ui.select("Clean up commit context", [
@@ -263,8 +296,23 @@ async function chooseClearMode(ctx: ExtensionCommandContext): Promise<"clear" | 
   return "clear";
 }
 
+async function choosePostPushClearMode(ctx: ExtensionContext): Promise<ClearMode> {
+  if (!ctx.hasUI) return "cancel";
+
+  const choice = await ctx.ui.select("Push finished. Clear commit context?", [
+    "Clear without summary",
+    "Summarize then clear",
+    "Not now",
+  ]);
+
+  if (choice === "Clear without summary") return "clear";
+  if (choice === "Summarize then clear") return "summarize";
+  return "cancel";
+}
+
 export default function (pi: ExtensionAPI) {
   let marker: CommitMarker | undefined;
+  let postPushPromptInFlight = false;
 
   function refresh(ctx: ExtensionContext, options: { backfillLabels?: boolean } = {}): void {
     marker = deriveMarkerFromCurrentBranch(ctx);
@@ -286,11 +334,35 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_shutdown", (_event, ctx) => {
     marker = undefined;
+    postPushPromptInFlight = false;
     syncCommitWidget(ctx, undefined);
   });
 
+  pi.on("tool_result", async (event, ctx) => {
+    if (postPushPromptInFlight) return;
+    if (!ctx.hasUI) return;
+    if (event.toolName !== "bash") return;
+    if (event.isError) return;
+    if (!isGitPushCommand(event.input.command)) return;
+
+    refresh(ctx);
+    if (!marker) return;
+
+    postPushPromptInFlight = true;
+    try {
+      const mode = await choosePostPushClearMode(ctx);
+      if (mode === "clear") {
+        pi.sendUserMessage("/commit clear --no-summary", { deliverAs: "followUp" });
+      } else if (mode === "summarize") {
+        pi.sendUserMessage("/commit clear --summary", { deliverAs: "followUp" });
+      }
+    } finally {
+      postPushPromptInFlight = false;
+    }
+  });
+
   pi.registerCommand("commit", {
-    description: "Stage, commit, and optionally push changes ([staged] [split] [push] [extra instruction...] | clear)",
+    description: "Stage, commit, and optionally push changes ([staged] [split] [push] [extra instruction...] | clear [--no-summary|--summary])",
     handler: async (args, ctx) => {
       if (!ctx.hasUI) {
         throw new Error("/commit requires interactive mode");
@@ -298,7 +370,13 @@ export default function (pi: ExtensionAPI) {
 
       const trimmed = args.trim();
 
-      if (trimmed === "clear") {
+      if (trimmed === "clear" || trimmed.startsWith("clear ")) {
+        const clearArgs = parseClearArgs(trimmed);
+        if (!clearArgs.ok) {
+          notify(ctx, clearArgs.error, "error");
+          return;
+        }
+
         await ctx.waitForIdle();
         refresh(ctx);
 
@@ -311,7 +389,7 @@ export default function (pi: ExtensionAPI) {
         const beforeMarkerId = findEntryBeforeMarker(ctx, activeMarker.entryId);
         const targetId = beforeMarkerId ?? activeMarker.entryId;
 
-        const mode = await chooseClearMode(ctx);
+        const mode = clearArgs.mode ?? (await chooseClearMode(ctx));
         if (mode === "cancel") return;
 
         const stopSummarizingWidget = mode === "summarize" ? startCommitSummarizingWidget(ctx) : undefined;
@@ -343,11 +421,6 @@ export default function (pi: ExtensionAPI) {
 
         refresh(ctx);
         notify(ctx, "Commit context cleaned up", "info");
-        return;
-      }
-
-      if (trimmed.startsWith("clear ")) {
-        notify(ctx, "Usage: /commit clear", "error");
         return;
       }
 
