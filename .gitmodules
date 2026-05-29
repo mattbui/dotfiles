@@ -1,0 +1,3 @@
+[submodule "dotpi"]
+	path = dotpi
+	url = git@github.com:mattbui/dotpi.git
