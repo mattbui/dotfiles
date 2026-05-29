@@ -313,11 +313,43 @@ async function choosePostPushClearMode(ctx: ExtensionContext): Promise<ClearMode
 export default function (pi: ExtensionAPI) {
   let marker: CommitMarker | undefined;
   let postPushPromptState: "idle" | "pending" | "prompting" = "idle";
+  let postPushPromptTimer: ReturnType<typeof setTimeout> | undefined;
 
   function refresh(ctx: ExtensionContext, options: { backfillLabels?: boolean } = {}): void {
     marker = deriveMarkerFromCurrentBranch(ctx);
     if (marker && options.backfillLabels) ensureMarkerLabels(pi, ctx, marker);
     syncCommitWidget(ctx, marker);
+  }
+
+  async function runPostPushPrompt(ctx: ExtensionContext): Promise<void> {
+    postPushPromptTimer = undefined;
+
+    if (postPushPromptState !== "prompting") return;
+
+    if (!ctx.hasUI) {
+      postPushPromptState = "idle";
+      return;
+    }
+
+    refresh(ctx);
+    if (!marker) {
+      postPushPromptState = "idle";
+      return;
+    }
+
+    try {
+      const mode = await choosePostPushClearMode(ctx);
+      if (mode === "clear") {
+        pi.sendUserMessage("/commit clear --no-summary", { deliverAs: "followUp" });
+      } else if (mode === "summarize") {
+        pi.sendUserMessage("/commit clear --summary", { deliverAs: "followUp" });
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      notify(ctx, `Could not show post-push cleanup prompt: ${message}`, "error");
+    } finally {
+      postPushPromptState = "idle";
+    }
   }
 
   pi.on("session_start", (_event, ctx) => {
@@ -335,6 +367,10 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_shutdown", (_event, ctx) => {
     marker = undefined;
     postPushPromptState = "idle";
+    if (postPushPromptTimer) {
+      clearTimeout(postPushPromptTimer);
+      postPushPromptTimer = undefined;
+    }
     syncCommitWidget(ctx, undefined);
   });
 
@@ -351,31 +387,13 @@ export default function (pi: ExtensionAPI) {
     postPushPromptState = "pending";
   });
 
-  pi.on("agent_end", async (_event, ctx) => {
+  pi.on("agent_end", (_event, ctx) => {
     if (postPushPromptState !== "pending") return;
 
-    if (!ctx.hasUI) {
-      postPushPromptState = "idle";
-      return;
-    }
-
-    refresh(ctx);
-    if (!marker) {
-      postPushPromptState = "idle";
-      return;
-    }
-
     postPushPromptState = "prompting";
-    try {
-      const mode = await choosePostPushClearMode(ctx);
-      if (mode === "clear") {
-        pi.sendUserMessage("/commit clear --no-summary", { deliverAs: "followUp" });
-      } else if (mode === "summarize") {
-        pi.sendUserMessage("/commit clear --summary", { deliverAs: "followUp" });
-      }
-    } finally {
-      postPushPromptState = "idle";
-    }
+    postPushPromptTimer = setTimeout(() => {
+      void runPostPushPrompt(ctx);
+    }, 25);
   });
 
   pi.registerCommand("commit", {
