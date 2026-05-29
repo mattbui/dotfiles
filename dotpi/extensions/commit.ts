@@ -61,16 +61,6 @@ type ParsedCommitArgs =
 
 type ClearMode = "clear" | "summarize" | "cancel";
 
-type ParsedClearArgs =
-  | {
-      ok: true;
-      mode?: Exclude<ClearMode, "cancel">;
-    }
-  | {
-      ok: false;
-      error: string;
-    };
-
 function getCommitEntryData(entry: unknown): { event?: unknown; createdAt?: unknown; markerId?: unknown; clearedAt?: unknown } | undefined {
   if (!entry || typeof entry !== "object") return undefined;
 
@@ -228,16 +218,6 @@ function parseCommitArgs(args: string): ParsedCommitArgs {
   };
 }
 
-function parseClearArgs(trimmed: string): ParsedClearArgs {
-  if (trimmed === "clear") return { ok: true };
-
-  const rest = trimmed.slice("clear".length).trim();
-  if (rest === "--no-summary") return { ok: true, mode: "clear" };
-  if (rest === "--summary") return { ok: true, mode: "summarize" };
-
-  return { ok: false, error: "Usage: /commit clear [--no-summary|--summary]" };
-}
-
 function isGitPushCommand(command: unknown): boolean {
   if (typeof command !== "string") return false;
 
@@ -312,6 +292,7 @@ async function choosePostPushClearMode(ctx: ExtensionContext): Promise<ClearMode
 
 export default function (pi: ExtensionAPI) {
   let marker: CommitMarker | undefined;
+  let commitCommandCtx: ExtensionCommandContext | undefined;
   let postPushPromptState: "idle" | "pending" | "prompting" = "idle";
   let postPushPromptTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -319,6 +300,50 @@ export default function (pi: ExtensionAPI) {
     marker = deriveMarkerFromCurrentBranch(ctx);
     if (marker && options.backfillLabels) ensureMarkerLabels(pi, ctx, marker);
     syncCommitWidget(ctx, marker);
+  }
+
+  async function clearCommitContext(ctx: ExtensionCommandContext, mode: Exclude<ClearMode, "cancel">): Promise<void> {
+    await ctx.waitForIdle();
+    refresh(ctx);
+
+    if (!marker) {
+      notify(ctx, "No active commit marker", "warning");
+      return;
+    }
+
+    const activeMarker = marker;
+    const beforeMarkerId = findEntryBeforeMarker(ctx, activeMarker.entryId);
+    const targetId = beforeMarkerId ?? activeMarker.entryId;
+
+    const stopSummarizingWidget = mode === "summarize" ? startCommitSummarizingWidget(ctx) : undefined;
+
+    let result: { cancelled: boolean };
+    try {
+      result = await ctx.navigateTree(targetId, {
+        summarize: mode === "summarize",
+        customInstructions: mode === "summarize" ? SUMMARY_INSTRUCTIONS : undefined,
+        replaceInstructions: mode === "summarize",
+        label: mode === "summarize" ? "commit-summary" : undefined,
+      });
+    } finally {
+      stopSummarizingWidget?.();
+    }
+
+    if (result.cancelled) {
+      syncCommitWidget(ctx, marker);
+      return;
+    }
+
+    if (!beforeMarkerId) {
+      pi.appendEntry(CUSTOM_TYPE, {
+        event: "clear",
+        markerId: activeMarker.entryId,
+        clearedAt: Date.now(),
+      });
+    }
+
+    refresh(ctx);
+    notify(ctx, "Commit context cleaned up", "info");
   }
 
   async function runPostPushPrompt(ctx: ExtensionContext): Promise<void> {
@@ -339,11 +364,14 @@ export default function (pi: ExtensionAPI) {
 
     try {
       const mode = await choosePostPushClearMode(ctx);
-      if (mode === "clear") {
-        pi.sendUserMessage("/commit clear --no-summary", { deliverAs: "followUp" });
-      } else if (mode === "summarize") {
-        pi.sendUserMessage("/commit clear --summary", { deliverAs: "followUp" });
+      if (mode === "cancel") return;
+
+      if (!commitCommandCtx) {
+        notify(ctx, "Cannot auto-clear commit context from this restored session; run /commit clear instead", "warning");
+        return;
       }
+
+      await clearCommitContext(commitCommandCtx, mode);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       notify(ctx, `Could not show post-push cleanup prompt: ${message}`, "error");
@@ -366,6 +394,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_shutdown", (_event, ctx) => {
     marker = undefined;
+    commitCommandCtx = undefined;
     postPushPromptState = "idle";
     if (postPushPromptTimer) {
       clearTimeout(postPushPromptTimer);
@@ -397,21 +426,17 @@ export default function (pi: ExtensionAPI) {
   });
 
   pi.registerCommand("commit", {
-    description: "Stage, commit, and optionally push changes ([staged] [split] [push] [extra instruction...] | clear [--no-summary|--summary])",
+    description: "Stage, commit, and optionally push changes ([staged] [split] [push] [extra instruction...] | clear)",
     handler: async (args, ctx) => {
       if (!ctx.hasUI) {
         throw new Error("/commit requires interactive mode");
       }
 
+      commitCommandCtx = ctx;
+
       const trimmed = args.trim();
 
-      if (trimmed === "clear" || trimmed.startsWith("clear ")) {
-        const clearArgs = parseClearArgs(trimmed);
-        if (!clearArgs.ok) {
-          notify(ctx, clearArgs.error, "error");
-          return;
-        }
-
+      if (trimmed === "clear") {
         await ctx.waitForIdle();
         refresh(ctx);
 
@@ -420,42 +445,15 @@ export default function (pi: ExtensionAPI) {
           return;
         }
 
-        const activeMarker = marker;
-        const beforeMarkerId = findEntryBeforeMarker(ctx, activeMarker.entryId);
-        const targetId = beforeMarkerId ?? activeMarker.entryId;
-
-        const mode = clearArgs.mode ?? (await chooseClearMode(ctx));
+        const mode = await chooseClearMode(ctx);
         if (mode === "cancel") return;
 
-        const stopSummarizingWidget = mode === "summarize" ? startCommitSummarizingWidget(ctx) : undefined;
+        await clearCommitContext(ctx, mode);
+        return;
+      }
 
-        let result: { cancelled: boolean };
-        try {
-          result = await ctx.navigateTree(targetId, {
-            summarize: mode === "summarize",
-            customInstructions: mode === "summarize" ? SUMMARY_INSTRUCTIONS : undefined,
-            replaceInstructions: mode === "summarize",
-            label: mode === "summarize" ? "commit-summary" : undefined,
-          });
-        } finally {
-          stopSummarizingWidget?.();
-        }
-
-        if (result.cancelled) {
-          syncCommitWidget(ctx, marker);
-          return;
-        }
-
-        if (!beforeMarkerId) {
-          pi.appendEntry(CUSTOM_TYPE, {
-            event: "clear",
-            markerId: activeMarker.entryId,
-            clearedAt: Date.now(),
-          });
-        }
-
-        refresh(ctx);
-        notify(ctx, "Commit context cleaned up", "info");
+      if (trimmed.startsWith("clear ")) {
+        notify(ctx, "Usage: /commit clear", "error");
         return;
       }
 
