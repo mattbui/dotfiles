@@ -2,3 +2,5 @@
 # Defaults are kept unless explicitly overridden.
 
 map esc quit
+map i confirm
+map I annotate_file

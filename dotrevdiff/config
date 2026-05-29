@@ -8,3 +8,5 @@ line-numbers = true
 word-diff = true
 cross-file-hunks = true
 wrap = true
+compact = true
+history-dir = /tmp/revdiff-history
