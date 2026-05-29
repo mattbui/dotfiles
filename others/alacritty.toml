@@ -208,6 +208,12 @@ chars = "\u001Bp"
 key = "P"
 mods = "Command"
 
+# Command-D sends a tmux user key for revdiff popup.
+[[keyboard.bindings]]
+chars = "\u001B[9005u"
+key = "D"
+mods = "Command"
+
 # Command-Shift-M sends CSI-u Alt-Shift-M for pi model picker.
 [[keyboard.bindings]]
 chars = "\u001B[109;4u"
