@@ -1,0 +1,10 @@
+[Application Options]
+# Use the local Tokyo Night Storm palette from dotrevdiff/themes/tokyonight-storm.
+theme = tokyonight-storm
+untracked = true
+vim-motion = true
+no-status-bar = true
+line-numbers = true
+word-diff = true
+cross-file-hunks = true
+wrap = true

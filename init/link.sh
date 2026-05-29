@@ -30,6 +30,10 @@ ln -s $DOTFILES/dotlf $CONFIGS/lf
 [ -d $CONFIGS/direnv ] || [ -h $CONFIGS/direnv ] && rm -rf $CONFIGS/direnv
 ln -s $DOTFILES/dotdirenv $CONFIGS/direnv
 
+# revdiff configs
+[ -d $CONFIGS/revdiff ] || [ -h $CONFIGS/revdiff ] && rm -rf $CONFIGS/revdiff
+ln -s $DOTFILES/dotrevdiff $CONFIGS/revdiff
+
 # JankyBorders configs
 [ ! -d $CONFIGS/borders ] && mkdir -p $CONFIGS/borders
 [ -f $CONFIGS/borders/bordersrc ] || [ -h $CONFIGS/borders/bordersrc ] && rm $CONFIGS/borders/bordersrc

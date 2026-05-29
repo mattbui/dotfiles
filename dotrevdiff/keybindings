@@ -1,0 +1,4 @@
+# revdiff keybindings
+# Defaults are kept unless explicitly overridden.
+
+map esc quit

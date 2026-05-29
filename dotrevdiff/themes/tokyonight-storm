@@ -1,0 +1,28 @@
+# name: tokyonight-storm
+# description: Tokyo Night Storm palette for revdiff, based on dotnvim/dotpi colors from folke/tokyonight.nvim
+# author: folke / mattbui
+
+chroma-style = tokyonight-storm
+color-accent = #bb9af7
+color-border = #3b4261
+color-normal = #c0caf5
+color-muted = #565f89
+color-selected-fg = #24283b
+color-selected-bg = #bb9af7
+color-annotation = #e0af68
+color-cursor-fg = #7dcfff
+color-cursor-bg = #292e42
+color-add-fg = #73daca
+color-add-bg = #2c3a44
+color-remove-fg = #f7768e
+color-remove-bg = #3a3044
+color-word-add-bg = #31594f
+color-word-remove-bg = #593044
+color-modify-fg = #e0af68
+color-modify-bg = #383545
+color-tree-bg = #24283b
+color-diff-bg = #24283b
+color-status-fg = #24283b
+color-status-bg = #bb9af7
+color-search-fg = #24283b
+color-search-bg = #e0af68
