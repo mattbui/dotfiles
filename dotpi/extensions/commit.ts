@@ -15,7 +15,7 @@ Flag behavior:
 
 Inspect git status/diffs and recent commits. Show detected changes, plan, and proposed message(s) before committing.
 
-Commit style: "type(scope): imperative lowercase subject". For large changes, include a concise bullet-list body. Types: "feat", "fix", "chore", "docs", "refactor", "test". Avoid generic scopes unless the repo uses them. Use "deps" for dependency updates and "repo" only for repo-wide changes.
+Commit style: "type(scope): imperative lowercase subject". For large changes, add bullets break down the changes. Types: "feat", "fix", "chore", "docs", "refactor", "test". Avoid generic scopes unless the repo uses them. Use "deps" for dependency updates and "repo" only for repo-wide changes.
 
 If push is absent, ask before committing. Never force-push or do risky/destructive actions without explicit confirmation. Stop and ask if conflicts exist or anything is unclear.
 
