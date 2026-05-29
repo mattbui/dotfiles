@@ -312,7 +312,7 @@ async function choosePostPushClearMode(ctx: ExtensionContext): Promise<ClearMode
 
 export default function (pi: ExtensionAPI) {
   let marker: CommitMarker | undefined;
-  let postPushPromptInFlight = false;
+  let postPushPromptState: "idle" | "pending" | "prompting" = "idle";
 
   function refresh(ctx: ExtensionContext, options: { backfillLabels?: boolean } = {}): void {
     marker = deriveMarkerFromCurrentBranch(ctx);
@@ -334,12 +334,12 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("session_shutdown", (_event, ctx) => {
     marker = undefined;
-    postPushPromptInFlight = false;
+    postPushPromptState = "idle";
     syncCommitWidget(ctx, undefined);
   });
 
   pi.on("tool_result", async (event, ctx) => {
-    if (postPushPromptInFlight) return;
+    if (postPushPromptState !== "idle") return;
     if (!ctx.hasUI) return;
     if (event.toolName !== "bash") return;
     if (event.isError) return;
@@ -348,7 +348,24 @@ export default function (pi: ExtensionAPI) {
     refresh(ctx);
     if (!marker) return;
 
-    postPushPromptInFlight = true;
+    postPushPromptState = "pending";
+  });
+
+  pi.on("agent_end", async (_event, ctx) => {
+    if (postPushPromptState !== "pending") return;
+
+    if (!ctx.hasUI) {
+      postPushPromptState = "idle";
+      return;
+    }
+
+    refresh(ctx);
+    if (!marker) {
+      postPushPromptState = "idle";
+      return;
+    }
+
+    postPushPromptState = "prompting";
     try {
       const mode = await choosePostPushClearMode(ctx);
       if (mode === "clear") {
@@ -357,7 +374,7 @@ export default function (pi: ExtensionAPI) {
         pi.sendUserMessage("/commit clear --summary", { deliverAs: "followUp" });
       }
     } finally {
-      postPushPromptInFlight = false;
+      postPushPromptState = "idle";
     }
   });
 
