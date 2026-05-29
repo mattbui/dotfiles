@@ -139,8 +139,7 @@ export default function diffExtension(pi: ExtensionAPI) {
     description: "Open revdiff in a tmux popup",
     handler: async (args, ctx) => {
       if (!ctx.hasUI) {
-        ctx.ui.notify("/diff requires interactive mode", "error");
-        return;
+        throw new Error("/diff requires interactive mode");
       }
 
       if (!process.env.TMUX) {

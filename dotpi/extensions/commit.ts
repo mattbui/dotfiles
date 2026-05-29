@@ -292,6 +292,10 @@ export default function (pi: ExtensionAPI) {
   pi.registerCommand("commit", {
     description: "Stage, commit, and optionally push changes ([staged] [split] [push] [extra instruction...] | clear)",
     handler: async (args, ctx) => {
+      if (!ctx.hasUI) {
+        throw new Error("/commit requires interactive mode");
+      }
+
       const trimmed = args.trim();
 
       if (trimmed === "clear") {
