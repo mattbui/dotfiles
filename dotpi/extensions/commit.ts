@@ -152,11 +152,18 @@ function findVisibleMarkerLabelTarget(ctx: ExtensionContext, markerId: string): 
   return undefined;
 }
 
-function ensureMarkerLabels(pi: ExtensionAPI, ctx: ExtensionContext, marker: CommitMarker): void {
-  if (ctx.sessionManager.getLabel(marker.entryId) !== MARKER_LABEL) {
-    pi.setLabel(marker.entryId, MARKER_LABEL);
+function findEntryBeforeMarker(ctx: ExtensionContext, markerId: string): string | undefined {
+  let previousId: string | undefined;
+
+  for (const entry of ctx.sessionManager.getBranch()) {
+    if (entry.id === markerId) return previousId;
+    previousId = entry.id;
   }
 
+  return undefined;
+}
+
+function ensureMarkerLabels(pi: ExtensionAPI, ctx: ExtensionContext, marker: CommitMarker): void {
   const visibleLabelTargetId = findVisibleMarkerLabelTarget(ctx, marker.entryId);
   if (visibleLabelTargetId && ctx.sessionManager.getLabel(visibleLabelTargetId) !== MARKER_LABEL) {
     pi.setLabel(visibleLabelTargetId, MARKER_LABEL);
@@ -296,6 +303,10 @@ export default function (pi: ExtensionAPI) {
           return;
         }
 
+        const activeMarker = marker;
+        const beforeMarkerId = findEntryBeforeMarker(ctx, activeMarker.entryId);
+        const targetId = beforeMarkerId ?? activeMarker.entryId;
+
         const mode = await chooseClearMode(ctx);
         if (mode === "cancel") return;
 
@@ -303,7 +314,7 @@ export default function (pi: ExtensionAPI) {
 
         let result: { cancelled: boolean };
         try {
-          result = await ctx.navigateTree(marker.entryId, {
+          result = await ctx.navigateTree(targetId, {
             summarize: mode === "summarize",
             customInstructions: mode === "summarize" ? SUMMARY_INSTRUCTIONS : undefined,
             replaceInstructions: mode === "summarize",
@@ -318,11 +329,13 @@ export default function (pi: ExtensionAPI) {
           return;
         }
 
-        pi.appendEntry(CUSTOM_TYPE, {
-          event: "clear",
-          markerId: marker.entryId,
-          clearedAt: Date.now(),
-        });
+        if (!beforeMarkerId) {
+          pi.appendEntry(CUSTOM_TYPE, {
+            event: "clear",
+            markerId: activeMarker.entryId,
+            clearedAt: Date.now(),
+          });
+        }
 
         refresh(ctx);
         notify(ctx, "Commit context cleaned up", "info");
