@@ -5,11 +5,50 @@
 # Usage:
 #   revdiff-popup.sh --visual -- [revdiff args...]
 #   revdiff-popup.sh --output /tmp/annotations.md -- [revdiff args...]
+#   revdiff-popup.sh --clipboard -- [revdiff args...]
 
 set -eu
 
 usage() {
-  echo "usage: $0 (--visual | --output FILE) -- [revdiff args...]" >&2
+  echo "usage: $0 (--visual | --output FILE | --clipboard) -- [revdiff args...]" >&2
+}
+
+notify() {
+  if [ -n "${TMUX:-}" ]; then
+    tmux display-message "$*"
+  else
+    printf '%s\n' "$*" >&2
+  fi
+}
+
+copy_to_clipboard() {
+  file=$1
+
+  if command -v pbcopy >/dev/null 2>&1; then
+    pbcopy < "$file"
+    return
+  fi
+
+  if command -v wl-copy >/dev/null 2>&1; then
+    wl-copy < "$file"
+    return
+  fi
+
+  if command -v xclip >/dev/null 2>&1; then
+    xclip -in -selection clipboard < "$file"
+    return
+  fi
+
+  if command -v xsel >/dev/null 2>&1; then
+    xsel --clipboard --input < "$file"
+    return
+  fi
+
+  return 1
+}
+
+cleanup_clipboard_temp() {
+  rm -rf "$temp_dir"
 }
 
 run_revdiff() {
@@ -17,6 +56,7 @@ run_revdiff() {
   shift || true
 
   output_file=
+  copy_output=0
   case "$mode" in
     --visual)
       ;;
@@ -28,6 +68,9 @@ run_revdiff() {
       output_file=$1
       shift
       ;;
+    --clipboard)
+      copy_output=1
+      ;;
     *)
       usage
       exit 2
@@ -36,6 +79,35 @@ run_revdiff() {
 
   if [ "${1:-}" = "--" ]; then
     shift
+  fi
+
+  if [ "$copy_output" -eq 1 ]; then
+    temp_dir=$(mktemp -d "${TMPDIR:-/tmp}/revdiff-clipboard.XXXXXX")
+    trap cleanup_clipboard_temp EXIT HUP INT TERM
+    output_file="$temp_dir/annotations.md"
+
+    set +e
+    "${REVDIFF_BIN:-revdiff}" --output "$output_file" "$@"
+    status=$?
+    set -e
+
+    if [ -s "$output_file" ]; then
+      if copy_to_clipboard "$output_file"; then
+        notify "Copied revdiff annotations to clipboard"
+        exit 0
+      fi
+
+      notify "No clipboard command found for revdiff annotations"
+      exit 1
+    fi
+
+    if [ "$status" -eq 0 ] || [ "$status" -eq 10 ]; then
+      notify "No revdiff annotations captured"
+      exit 0
+    fi
+
+    notify "revdiff exited with code $status"
+    exit "$status"
   fi
 
   if [ -n "$output_file" ]; then
@@ -58,6 +130,8 @@ case "${1:-}" in
       usage
       exit 2
     fi
+    ;;
+  --clipboard)
     ;;
   *)
     usage
