@@ -35,7 +35,7 @@ set laststatus=2 showtabline=2 " Always show tabline & statusline
 set ignorecase smartcase       " Better search
 set noshowmode
 set nobackup nowritebackup
-set updatetime=300 timeoutlen=300
+set updatetime=300 timeoutlen=600
 set shortmess+=c
 set clipboard+=unnamedplus
 
