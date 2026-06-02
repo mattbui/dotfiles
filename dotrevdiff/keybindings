@@ -1,6 +1,13 @@
 # revdiff keybindings
 # Defaults are kept unless explicitly overridden.
 
+# Free Ctrl+E for readline-style line editing in annotation input.
+unmap ctrl+e
+map ctrl+o open_editor
+
+# Move default `i` behavior (info popup) to comma so `i` can annotate.
+map , info
+
 map esc quit
 map i confirm
 map I annotate_file
