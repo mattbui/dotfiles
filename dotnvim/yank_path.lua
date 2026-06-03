@@ -20,13 +20,26 @@ local function copy(value)
   notify("Yanked " .. value)
 end
 
+local function path_label(path, suffix)
+  local label = vim.fn.fnamemodify(path, ":t")
+  if suffix ~= nil and suffix ~= "" then
+    label = label .. suffix
+  end
+
+  return label
+end
+
+local function markdown_link(label, target)
+  return string.format("[%s](%s)", label, target)
+end
+
 local function yank_path(kind)
   local path = current_path(kind)
   if not path then
     return
   end
 
-  copy(path)
+  copy(markdown_link(path_label(path), path))
 end
 
 local function yank_path_line(kind)
@@ -35,7 +48,8 @@ local function yank_path_line(kind)
     return
   end
 
-  copy(string.format("%s:%d", path, vim.fn.line(".")))
+  local line = vim.fn.line(".")
+  copy(markdown_link(path_label(path, ":" .. line), string.format("%s:%d", path, line)))
 end
 
 local function yank_path_range(kind, opts)
@@ -53,11 +67,11 @@ local function yank_path_range(kind, opts)
   local end_line = math.max(opts.line1, opts.line2)
 
   if start_line == end_line then
-    copy(string.format("%s:%d", path, start_line))
+    copy(markdown_link(path_label(path, ":" .. start_line), string.format("%s:%d", path, start_line)))
     return
   end
 
-  copy(string.format("%s:%d-%d", path, start_line, end_line))
+  copy(markdown_link(path_label(path, string.format(":%d-%d", start_line, end_line)), string.format("%s:%d-%d", path, start_line, end_line)))
 end
 
 local function current_tag()
@@ -139,11 +153,11 @@ local function yank_path_tag(kind)
 
   local line = tag_start_line(tag)
   if line == nil then
-    copy(string.format("%s::%s", path, tag))
+    copy(markdown_link(tag, string.format("%s::%s", path, tag)))
     return
   end
 
-  copy(string.format("%s:%d::%s", path, line, tag))
+  copy(markdown_link(tag, string.format("%s:%d::%s", path, line, tag)))
 end
 
 vim.api.nvim_create_user_command("YankRelativePath", function()
