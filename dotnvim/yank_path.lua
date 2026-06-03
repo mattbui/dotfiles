@@ -29,8 +29,12 @@ local function path_label(path, suffix)
   return label
 end
 
+local function markdown_label(label)
+  return string.gsub(label, "%]", "\\]")
+end
+
 local function markdown_link(label, target)
-  return string.format("[%s](%s)", label, target)
+  return string.format("[%s](%s)", markdown_label(label), target)
 end
 
 local function yank_path(kind)
