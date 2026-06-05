@@ -11,13 +11,13 @@ Flag behavior:
 
 - `staged`: use only staged changes
 - `split`: make multiple focused commits; do NOT mix unrelated changes into a single commit
-- `push`: push after committing; if clear, proceed without asking
+- `push`: push after committing; run `git push` separately
 
 Inspect git status/diffs and recent commits. Show detected changes, plan, and proposed message(s) before committing.
 
 Commit style: `type(scope): imperative lowercase subject`. For large changes, include a concise multiline body with bullets to break down the changes. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`. Avoid generic scopes unless the repo uses them. Use `deps` for dependency updates and `repo` only for repo-wide changes.
 
-If `push` is absent, ask before committing. Never force-push or do risky/destructive actions without explicit confirmation. Stop and ask if conflicts exist or anything is unclear.
+If `push` is absent, ask before committing. Even with `push`, run `git push` separately so it's easier to review. Never force-push or do risky/destructive actions without explicit confirmation. Stop and ask if conflicts exist or anything is unclear.
 
 Inputs:
 
