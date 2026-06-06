@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+
+# yabai config - SIP-safe defaults
+
+# Core layout defaults. scripts/layout.sh will apply display-aware overrides.
+yabai -m config \
+  layout                       bsp \
+  split_type                   auto \
+  split_ratio                  0.45 \
+  auto_balance                 off \
+  window_placement             second_child \
+  window_insertion_point       focused \
+  window_zoom_persist          on \
+  mouse_follows_focus          off \
+  focus_follows_mouse          off \
+  window_shadow                on \
+  window_opacity               off \
+  window_animation_duration    0.0 \
+  skip_window_focus_animation  on \
+  top_padding                  8 \
+  bottom_padding               12 \
+  left_padding                 12 \
+  right_padding                12 \
+  window_gap                   10 \
+  mouse_modifier               alt \
+  mouse_action1                move \
+  mouse_action2                resize \
+  mouse_drop_action            stack
+
+# Label displays by physical left-to-right order.
+$HOME/.config/yabai/scripts/label-displays.sh
+
+# Floating app/window rules.
+yabai -m rule --add app="^System Settings$" manage=off
+yabai -m rule --add app="^Finder$" manage=off
+yabai -m rule --add app="^Spark$" manage=off
+yabai -m rule --add app="^Raycast$" manage=off
+yabai -m rule --add app="^Calculator$" manage=off
+yabai -m rule --add app="^Keybase$" manage=off
+yabai -m rule --add app="^1Password$" manage=off
+yabai -m rule --add app="^Zalo$" manage=off
+yabai -m rule --add app="^Spotify$" manage=off
+yabai -m rule --add app="^Cloudflare WARP$" manage=off
+yabai -m rule --add app="^Messages$" manage=off
+yabai -m rule --add app="^Find My$" manage=off
+yabai -m rule --add app="^Calendar$" manage=off
+yabai -m rule --add app="^Karabiner-Elements$" manage=off
+yabai -m rule --add app="^Logi Options\\+$" manage=off
+yabai -m rule --add app="^AppCleaner$" manage=off
+yabai -m rule --add app="^Activity Monitor$" manage=off
+yabai -m rule --add app="^App Store$" manage=off
+yabai -m rule --add app="^Disk Utility$" manage=off
+
+# Display-aware layout automation.
+# Keep this to window create/destroy only to avoid flicker during space/display focus changes.
+yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/layout.sh"
+yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/layout.sh"
+yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/layout.sh"
+yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/label-displays.sh; $HOME/.config/yabai/scripts/layout.sh"
+
+$HOME/.config/yabai/scripts/layout.sh
+
+printf '%s\n' "yabai config loaded"

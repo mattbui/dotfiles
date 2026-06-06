@@ -34,6 +34,18 @@ ln -s $DOTFILES/dotdirenv $CONFIGS/direnv
 [ -d $CONFIGS/revdiff ] || [ -h $CONFIGS/revdiff ] && rm -rf $CONFIGS/revdiff
 ln -s $DOTFILES/dotrevdiff $CONFIGS/revdiff
 
+# yabai configs
+[ ! -d $CONFIGS/yabai ] && mkdir -p $CONFIGS/yabai
+[ -f $CONFIGS/yabai/yabairc ] || [ -h $CONFIGS/yabai/yabairc ] && rm $CONFIGS/yabai/yabairc
+[ -d $CONFIGS/yabai/scripts ] || [ -h $CONFIGS/yabai/scripts ] && rm -rf $CONFIGS/yabai/scripts
+ln -s $DOTFILES/dotyabai/yabairc $CONFIGS/yabai/yabairc
+ln -s $DOTFILES/dotyabai/scripts $CONFIGS/yabai/scripts
+
+# skhd configs
+[ ! -d $CONFIGS/skhd ] && mkdir -p $CONFIGS/skhd
+[ -f $CONFIGS/skhd/skhdrc ] || [ -h $CONFIGS/skhd/skhdrc ] && rm $CONFIGS/skhd/skhdrc
+ln -s $DOTFILES/dotyabai/skhdrc $CONFIGS/skhd/skhdrc
+
 # JankyBorders configs
 [ ! -d $CONFIGS/borders ] && mkdir -p $CONFIGS/borders
 [ -f $CONFIGS/borders/bordersrc ] || [ -h $CONFIGS/borders/bordersrc ] && rm $CONFIGS/borders/bordersrc
