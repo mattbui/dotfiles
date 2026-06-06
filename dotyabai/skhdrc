@@ -28,26 +28,26 @@ alt - 2 : yabai -m display --focus display-2
 alt - 3 : yabai -m display --focus display-3
 
 # Focus spaces.
-ctrl - 1 : yabai -m space --focus 1
-ctrl - 2 : yabai -m space --focus 2
-ctrl - 3 : yabai -m space --focus 3
-ctrl - 4 : yabai -m space --focus 4
-ctrl - 5 : yabai -m space --focus 5
-ctrl - 6 : yabai -m space --focus 6
-ctrl - 7 : yabai -m space --focus 7
-ctrl - 8 : yabai -m space --focus 8
-ctrl - 9 : yabai -m space --focus 9
+ctrl - 1 : $HOME/.config/yabai/scripts/focus-space.sh 1
+ctrl - 2 : $HOME/.config/yabai/scripts/focus-space.sh 2
+ctrl - 3 : $HOME/.config/yabai/scripts/focus-space.sh 3
+ctrl - 4 : $HOME/.config/yabai/scripts/focus-space.sh 4
+ctrl - 5 : $HOME/.config/yabai/scripts/focus-space.sh 5
+ctrl - 6 : $HOME/.config/yabai/scripts/focus-space.sh 6
+ctrl - 7 : $HOME/.config/yabai/scripts/focus-space.sh 7
+ctrl - 8 : $HOME/.config/yabai/scripts/focus-space.sh 8
+ctrl - 9 : $HOME/.config/yabai/scripts/focus-space.sh 9
 
 # Move focused window to spaces and follow it.
-ctrl + cmd - 1 : yabai -m window --space 1; yabai -m space --focus 1
-ctrl + cmd - 2 : yabai -m window --space 2; yabai -m space --focus 2
-ctrl + cmd - 3 : yabai -m window --space 3; yabai -m space --focus 3
-ctrl + cmd - 4 : yabai -m window --space 4; yabai -m space --focus 4
-ctrl + cmd - 5 : yabai -m window --space 5; yabai -m space --focus 5
-ctrl + cmd - 6 : yabai -m window --space 6; yabai -m space --focus 6
-ctrl + cmd - 7 : yabai -m window --space 7; yabai -m space --focus 7
-ctrl + cmd - 8 : yabai -m window --space 8; yabai -m space --focus 8
-ctrl + cmd - 9 : yabai -m window --space 9; yabai -m space --focus 9
+ctrl + cmd - 1 : $HOME/.config/yabai/scripts/move-space.sh 1
+ctrl + cmd - 2 : $HOME/.config/yabai/scripts/move-space.sh 2
+ctrl + cmd - 3 : $HOME/.config/yabai/scripts/move-space.sh 3
+ctrl + cmd - 4 : $HOME/.config/yabai/scripts/move-space.sh 4
+ctrl + cmd - 5 : $HOME/.config/yabai/scripts/move-space.sh 5
+ctrl + cmd - 6 : $HOME/.config/yabai/scripts/move-space.sh 6
+ctrl + cmd - 7 : $HOME/.config/yabai/scripts/move-space.sh 7
+ctrl + cmd - 8 : $HOME/.config/yabai/scripts/move-space.sh 8
+ctrl + cmd - 9 : $HOME/.config/yabai/scripts/move-space.sh 9
 
 # Move focused window to displays by physical left-to-right order and follow it.
 alt + cmd - 1 : yabai -m window --display display-1; yabai -m display --focus display-1
