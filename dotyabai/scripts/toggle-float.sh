@@ -26,7 +26,7 @@ window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
 
 is_floating=$(printf '%s' "$window_json" | jq -r '."is-floating"')
 if [ "$is_floating" != "true" ]; then
-  $HOME/.config/yabai/scripts/layout.sh
+  $HOME/.config/yabai/scripts/apply-layout.sh
   exit 0
 fi
 

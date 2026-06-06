@@ -25,9 +25,6 @@ if ! mkdir "$lock_dir" 2>/dev/null; then
 fi
 trap 'rmdir "$lock_dir" 2>/dev/null' EXIT INT TERM
 
-# Give yabai a moment to finish inserting/removing windows before querying layout state.
-sleep 0.1
-
 require() {
   command -v "$1" >/dev/null 2>&1 || exit 0
 }

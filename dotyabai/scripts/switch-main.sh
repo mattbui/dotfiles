@@ -45,7 +45,7 @@ fi
 printf '%s\n' "$new_main_id" >"$main_state_file" 2>/dev/null || exit 0
 
 # If the new main is inside a stack, pull that individual window out first.
-# Warp un-stacks the target window; layout.sh will then place it as main and
+# Warp un-stacks the target window; apply-layout.sh will then place it as main and
 # stack every other managed window on the left.
 stack_index=$(printf '%s' "$new_main_json" | jq -r '."stack-index"')
 if [ "$stack_index" != "0" ]; then
@@ -53,4 +53,4 @@ if [ "$stack_index" != "0" ]; then
   sleep 0.05
 fi
 
-$HOME/.config/yabai/scripts/layout.sh
+$HOME/.config/yabai/scripts/apply-layout.sh
