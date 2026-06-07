@@ -2,8 +2,9 @@
 
 options=(
 	style=round
-	width=8.0
+	width=3.0
 	hidpi=on
+	order=a
 	active_color=0xffe2e2e3
 	inactive_color=0x00000000
 )
