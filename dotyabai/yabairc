@@ -57,6 +57,7 @@ yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/a
 yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/label-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=system_woke action="$HOME/.config/yabai/scripts/apply-layout.sh"
 
 $HOME/.config/yabai/scripts/apply-layout.sh
 
