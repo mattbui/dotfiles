@@ -6,7 +6,6 @@
 step_ratio="0.025"
 floating_step="80"
 solo_padding_step="80"
-solo_vertical_padding="12"
 
 action="$1"
 [ "$action" = "grow" ] || [ "$action" = "shrink" ] || exit 1
@@ -77,9 +76,12 @@ solo_count=$(printf '%s' "$windows_json" | jq '[.[] | select(."is-floating" == f
 
 if [ "$solo_count" -le 1 ]; then
   display_json=$(yabai -m query --displays --display 2>/dev/null) || exit 0
+  space_index=$(printf '%s' "$window_json" | jq -r '.space')
 
   dw=$(printf '%s' "$display_json" | jq -r '.frame.w')
   ww=$(printf '%s' "$window_json" | jq -r '.frame.w')
+  sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
+  sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
 
   if [ "$action" = "grow" ]; then
     delta="-$solo_padding_step"
@@ -96,8 +98,8 @@ if [ "$solo_count" -le 1 ]; then
   printf \"%d\", side;
 }")
 
-  # Width-only solo resize: change left/right padding, keep vertical padding fixed.
-  yabai -m space --padding abs:"$solo_vertical_padding":"$solo_vertical_padding":"$side":"$side"
+  # Width-only solo resize: change left/right padding, preserve current vertical padding.
+  yabai -m space --padding abs:"$sp_top":"$sp_bottom":"$side":"$side"
   exit 0
 fi
 
