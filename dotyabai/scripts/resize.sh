@@ -43,8 +43,8 @@ $(awk "BEGIN {
 }")
 EOF
 
-  yabai -m window --move abs:"$nx":"$ny"
   yabai -m window --resize abs:"$nw":"$nh"
+  yabai -m window --move abs:"$nx":"$ny"
   exit 0
 fi
 
