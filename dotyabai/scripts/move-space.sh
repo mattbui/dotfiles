@@ -11,11 +11,13 @@ command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 
 current_display="$(yabai -m query --displays --display 2>/dev/null | jq -r '.index // empty')"
-target_display="$(yabai -m query --spaces 2>/dev/null | jq -r --argjson idx "$space_index" '.[] | select(.index == $idx) | .display')"
+target_space_json="$(yabai -m query --spaces --space "$space_index" 2>/dev/null)" || exit 1
+target_display="$(printf '%s' "$target_space_json" | jq -r '.display // empty')"
+target_has_focus="$(printf '%s' "$target_space_json" | jq -r '."has-focus" // false')"
 
 [ -n "$current_display" ] || exit 1
 [ -n "$target_display" ] || exit 1
 
-if [ "$target_display" = "$current_display" ]; then
+if [ "$target_display" = "$current_display" ] && [ "$target_has_focus" != "true" ]; then
   yabai -m window --space "$space_index" && yabai -m space --focus "$space_index"
 fi

@@ -51,9 +51,22 @@ fi
 
 split_child=$(printf '%s' "$window_json" | jq -r '."split-child"')
 
-# Solo tiled window: there may be no BSP split ratio to adjust. Detect solo by
-# counting current-space tiled candidates, not only by split-child, because yabai
-# can still report a split-child briefly after layout changes/restarts.
+case "$split_child:$action" in
+  first_child:grow)   delta="$step_ratio" ;;
+  first_child:shrink) delta="-$step_ratio" ;;
+  second_child:grow)  delta="-$step_ratio" ;;
+  second_child:shrink) delta="$step_ratio" ;;
+  none:*)             delta="" ;;
+  *) exit 0 ;;
+esac
+
+if [ -n "$delta" ]; then
+  yabai -m window --ratio rel:"$delta"
+  exit 0
+fi
+
+# Solo tiled window: there may be no BSP split ratio to adjust. Only do the
+# space-wide window query when the focused window itself reports no split child.
 windows_json=$(yabai -m query --windows --space 2>/dev/null) || windows_json="[]"
 solo_count=$(printf '%s' "$windows_json" | jq '[.[] | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false)] | length')
 
@@ -83,12 +96,4 @@ if [ "$solo_count" -le 1 ]; then
   exit 0
 fi
 
-case "$split_child:$action" in
-  first_child:grow)   delta="$step_ratio" ;;
-  first_child:shrink) delta="-$step_ratio" ;;
-  second_child:grow)  delta="-$step_ratio" ;;
-  second_child:shrink) delta="$step_ratio" ;;
-  *) exit 0 ;;
-esac
-
-yabai -m window --ratio rel:"$delta"
+exit 0
