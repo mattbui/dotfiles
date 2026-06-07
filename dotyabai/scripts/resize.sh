@@ -61,12 +61,17 @@ case "$split_child:$action" in
 esac
 
 if [ -n "$delta" ]; then
-  yabai -m window --ratio rel:"$delta"
-  exit 0
+  # If yabai has a real BSP parent for this window, ratio resize is enough.
+  # Solo windows can briefly report a stale split-child after layout changes;
+  # in that case --ratio fails, so fall through to the solo-padding resize.
+  if yabai -m window --ratio rel:"$delta" 2>/dev/null; then
+    exit 0
+  fi
 fi
 
 # Solo tiled window: there may be no BSP split ratio to adjust. Only do the
-# space-wide window query when the focused window itself reports no split child.
+# space-wide window query when the focused window itself reports no split child
+# or when the ratio resize above failed due to stale split-child metadata.
 windows_json=$(yabai -m query --windows --space 2>/dev/null) || windows_json="[]"
 solo_count=$(printf '%s' "$windows_json" | jq '[.[] | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false)] | length')
 

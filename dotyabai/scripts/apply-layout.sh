@@ -172,25 +172,29 @@ if [ "$is_wide" -eq 1 ]; then
       if [ -n "$main_x" ] && [ -n "$anchor_x" ] && awk "BEGIN { exit !($main_x < $anchor_x) }"; then
         if yabai -m window "$main_id" --swap east 2>/dev/null; then
           did_swap=1
+          did_mutate=1
         fi
       fi
 
       # Existing BSP nodes can keep their old ratio across yabai restarts.
-      # Force the parent split to 45/55 only when the observed frame ratio is off.
-      if [ "$did_swap" -eq 1 ]; then
-        updated_windows=$(yabai -m query --windows --space 2>/dev/null) || exit 0
-      fi
+      # Force the parent split to 45/55 only after this script actually changed
+      # layout/topology. Plain space_changed runs should preserve manual resize.sh ratios.
+      if [ "$did_mutate" -eq 1 ]; then
+        if [ "$did_swap" -eq 1 ]; then
+          updated_windows=$(yabai -m query --windows --space 2>/dev/null) || exit 0
+        fi
 
-      main_w=$(printf '%s' "$updated_windows" | jq -r --argjson id "$main_id" '.[] | select(.id == $id) | .frame.w')
-      anchor_w=$(printf '%s' "$updated_windows" | jq -r --argjson id "$anchor_id" '.[] | select(.id == $id) | .frame.w')
+        main_w=$(printf '%s' "$updated_windows" | jq -r --argjson id "$main_id" '.[] | select(.id == $id) | .frame.w')
+        anchor_w=$(printf '%s' "$updated_windows" | jq -r --argjson id "$anchor_id" '.[] | select(.id == $id) | .frame.w')
 
-      need_ratio=1
-      if [ -n "$main_w" ] && [ -n "$anchor_w" ] && awk "BEGIN { sum = $anchor_w + $main_w; if (sum <= 0) exit 1; d = ($anchor_w / sum) - $wide_split_ratio; if (d < 0) d = -d; exit !(d <= $wide_ratio_tolerance) }"; then
-        need_ratio=0
-      fi
+        need_ratio=1
+        if [ -n "$main_w" ] && [ -n "$anchor_w" ] && awk "BEGIN { sum = $anchor_w + $main_w; if (sum <= 0) exit 1; d = ($anchor_w / sum) - $wide_split_ratio; if (d < 0) d = -d; exit !(d <= $wide_ratio_tolerance) }"; then
+          need_ratio=0
+        fi
 
-      if [ "$need_ratio" -eq 1 ]; then
-        yabai -m window "$main_id" --ratio abs:"$wide_split_ratio" 2>/dev/null
+        if [ "$need_ratio" -eq 1 ]; then
+          yabai -m window "$main_id" --ratio abs:"$wide_split_ratio" 2>/dev/null
+        fi
       fi
 
       # Preserve current focus during automatic layout; switch-main.sh handles explicit main changes.
