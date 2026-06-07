@@ -17,10 +17,10 @@ yabai -m config \
   window_opacity               off \
   window_animation_duration    0.0 \
   skip_window_focus_animation  on \
-  top_padding                  8 \
-  bottom_padding               10 \
-  left_padding                 10 \
-  right_padding                10 \
+  top_padding                  6 \
+  bottom_padding               8 \
+  left_padding                 8 \
+  right_padding                8 \
   window_gap                   10 \
   mouse_modifier               alt \
   mouse_action1                move \

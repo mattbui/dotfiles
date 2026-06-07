@@ -1,20 +1,20 @@
 #!/usr/bin/env sh
 
 # Display-aware layout:
-# - wide displays (aspect >= 2.0): BSP, 16 padding, 12 gap
+# - wide displays (aspect >= 2.0): BSP, 12 padding (6 top), 10 gap
 #   - one managed window: centered at 70% width
 #   - multiple managed windows: 45/55 vertical split, saved main on right, others stacked left
-# - normal displays: stack, 10 padding, 8 gap
+# - normal displays: stack, 8 padding (6 top), 8 gap
 
 wide_threshold="2.0"
 wide_solo_ratio="0.7"
 wide_split_ratio="0.45"
 wide_ratio_tolerance="0.01"
-wide_top_padding="8"
-wide_padding="16"
-wide_gap="12"
-normal_top_padding="8"
-normal_padding="10"
+wide_top_padding="6"
+wide_padding="12"
+wide_gap="10"
+normal_top_padding="6"
+normal_padding="8"
 normal_gap="8"
 state_dir="$HOME/.local/state/yabai"
 force_layout=0
