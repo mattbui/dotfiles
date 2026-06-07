@@ -16,7 +16,7 @@ yabai -m config \
   window_shadow                on \
   window_opacity               off \
   window_animation_duration    0.0 \
-  skip_window_focus_animation  on \
+  skip_window_focus_animation  off \
   top_padding                  6 \
   bottom_padding               8 \
   left_padding                 8 \
