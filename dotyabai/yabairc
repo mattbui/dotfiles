@@ -52,9 +52,12 @@ yabai -m rule --add app="^App Store$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
 
 # Display-aware layout automation.
-# Keep this to window create/destroy only to avoid flicker during space/display focus changes.
 yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=application_hidden action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=application_visible action="$HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=window_deminimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/label-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=system_woke action="$HOME/.config/yabai/scripts/apply-layout.sh"
