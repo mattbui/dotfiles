@@ -7,12 +7,12 @@
 # - normal displays: stack, 10 padding, 8 gap
 
 wide_threshold="2.0"
-solo_ratio="0.65"
+wide_solo_ratio="0.7"
 wide_split_ratio="0.45"
-wide_top_padding="6"
-wide_padding="12"
-wide_gap="10"
-normal_top_padding="6"
+wide_top_padding="8"
+wide_padding="16"
+wide_gap="12"
+normal_top_padding="8"
 normal_padding="10"
 normal_gap="8"
 state_dir="$HOME/.local/state/yabai"
@@ -76,7 +76,7 @@ if [ "$is_wide" -eq 1 ]; then
     fi
 
     # Apply solo padding even when the query briefly returns 0 managed windows during space switches.
-    side_padding=$(awk "BEGIN { printf \"%d\", ($w * (1 - $solo_ratio) / 2) }")
+    side_padding=$(awk "BEGIN { printf \"%d\", ($w * (1 - $wide_solo_ratio) / 2) }")
     yabai -m space --padding abs:"$wide_top_padding":"$wide_padding":"$side_padding":"$side_padding"
   elif [ "$managed_count" -gt 1 ]; then
     yabai -m space --padding abs:"$wide_top_padding":"$wide_padding":"$wide_padding":"$wide_padding"
