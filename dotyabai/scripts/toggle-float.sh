@@ -2,13 +2,13 @@
 
 # Toggle float modes.
 # Usage:
-#   toggle-float.sh center      -> centered floating window, 80% display height, 120% display-height width
-#   toggle-float.sh fullscreen  -> centered floating window, 90% display width, 90% display height
+#   toggle-float.sh center      -> centered floating window, 80% tiling-area height, 120% tiling-area-height width
+#   toggle-float.sh fullscreen  -> centered floating window, 100% tiling-area width, 100% tiling-area height
 
 mode="${1:-center}"
 height_ratio="0.80"
 width_height_ratio="1.20"
-fullscreen_ratio="0.90"
+fullscreen_ratio="1.00"
 
 command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
@@ -34,12 +34,51 @@ display_id=$(printf '%s' "$window_json" | jq -r '.display')
 display_json=$(yabai -m query --displays --display "$display_id" 2>/dev/null) || exit 0
 [ -n "$display_json" ] || exit 0
 
-# Use the display's visible frame. This excludes menu bar / dock areas and
-# matches the coordinate system yabai uses for tiled windows better than frame.
+# Start from the display's visible frame. This excludes menu bar / dock areas
+# when available and is closest to yabai's constrained display bounds.
 dx=$(printf '%s' "$display_json" | jq -r '."visible-frame".x // .frame.x')
 dy=$(printf '%s' "$display_json" | jq -r '."visible-frame".y // .frame.y')
 dw=$(printf '%s' "$display_json" | jq -r '."visible-frame".w // .frame.w')
 dh=$(printf '%s' "$display_json" | jq -r '."visible-frame".h // .frame.h')
+
+menu_bar_height="0"
+top_reserved_height="0"
+if [ "$mode" = "fullscreen" ]; then
+  command -v osascript >/dev/null 2>&1 || exit 0
+
+  # yabai does not expose its constrained display bounds in query --displays.
+  # Account for the macOS menu bar / top reserved area using NSScreen.visibleFrame.
+  menu_bar_height=$(osascript -l JavaScript <<'EOF' 2>/dev/null || printf '0'
+ObjC.import('AppKit')
+const s = $.NSScreen.mainScreen
+const f = s.frame
+const v = s.visibleFrame
+Math.max(0, f.size.height - v.size.height - v.origin.y)
+EOF
+)
+  [ -n "$menu_bar_height" ] || menu_bar_height="0"
+  top_reserved_height="$menu_bar_height"
+fi
+
+# Match yabai's tiling area by applying the current space's padding on top of
+# the constrained display bounds. See .src/yabai/src/view.c:view_update().
+space_index=$(printf '%s' "$window_json" | jq -r '.space')
+sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
+sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
+sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
+sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
+
+read -r dx dy dw dh <<EOF
+$(awk "BEGIN {
+  dx = $dx + $sp_left;
+  dy = $dy + $top_reserved_height + $sp_top;
+  dw = $dw - ($sp_left + $sp_right);
+  dh = $dh - ($top_reserved_height + $sp_top + $sp_bottom);
+  if (dw < 1) dw = 1;
+  if (dh < 1) dh = 1;
+  printf \"%d %d %d %d\", dx, dy, dw, dh;
+}")
+EOF
 
 if [ "$mode" = "fullscreen" ]; then
   read -r x y w h <<EOF
@@ -63,9 +102,12 @@ $(awk "BEGIN {
 EOF
 fi
 
-# Resize first, then move. Some apps adjust origin asynchronously during resize,
-# so move twice to preserve the requested padding.
+# Resize before move so JankyBorders receives the expensive size update before
+# the cheap move update. This avoids briefly showing an old-size border at the
+# final floated position.
 yabai -m window --resize abs:"$w":"$h"
 yabai -m window --move abs:"$x":"$y"
-sleep 0.05
-yabai -m window --move abs:"$x":"$y"
+
+if [ "$mode" = "center" ]; then
+  $HOME/.config/yabai/scripts/apply-layout.sh
+fi
