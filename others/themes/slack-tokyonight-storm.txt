@@ -1,3 +1,3 @@
 # TokyoNight Storm Slack theme
 # System navigation, Selected items, Presence indication, Notifications
-#24283B,#BB9AF7,#73DACA,#F7768E
+#24283B,#B4F9F8,#73DACA,#F7768E
