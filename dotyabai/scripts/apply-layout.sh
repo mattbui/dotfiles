@@ -17,6 +17,11 @@ normal_top_padding="8"
 normal_padding="10"
 normal_gap="8"
 state_dir="$HOME/.local/state/yabai"
+force_layout=0
+
+case "${1:-}" in
+  --force|force|reset) force_layout=1 ;;
+esac
 
 mkdir -p "$state_dir" 2>/dev/null
 
@@ -43,7 +48,7 @@ space_type=$(printf '%s' "$space_json" | jq -r '.type')
 
 main_state_file="$state_dir/main-$space_id"
 settings_state_file="$state_dir/settings-$space_id"
-settings_dirty=0
+settings_dirty="$force_layout"
 space_settings_changed=0
 
 # Include the yabai daemon pid in the settings cache key so persisted state does
@@ -178,8 +183,9 @@ if [ "$is_wide" -eq 1 ]; then
 
       # Existing BSP nodes can keep their old ratio across yabai restarts.
       # Force the parent split to 45/55 only after this script actually changed
-      # layout/topology. Plain space_changed runs should preserve manual resize.sh ratios.
-      if [ "$did_mutate" -eq 1 ]; then
+      # layout/topology, or when invoked explicitly as a reset. Plain space_changed
+      # runs should preserve manual resize.sh ratios.
+      if [ "$did_mutate" -eq 1 ] || [ "$force_layout" -eq 1 ]; then
         if [ "$did_swap" -eq 1 ]; then
           updated_windows=$(yabai -m query --windows --space 2>/dev/null) || exit 0
         fi

@@ -20,7 +20,7 @@ alt - return : $HOME/.config/yabai/scripts/toggle-float.sh fullscreen
 
 # Switch focused/left-stack window into main, or reset/re-apply display-aware layout.
 alt - m : $HOME/.config/yabai/scripts/switch-main.sh
-alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh
+alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh --force
 
 # Focus displays by physical left-to-right order. Labels are assigned by scripts/label-displays.sh.
 alt - 1 : yabai -m display --focus display-1
