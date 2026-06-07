@@ -59,6 +59,7 @@ settings_cache_prefix="v2 pid=$yabai_pid"
 
 set_space_layout() {
   desired="$1"
+
   if [ "$space_type" != "$desired" ]; then
     if yabai -m space --layout "$desired"; then
       space_type="$desired"
@@ -69,13 +70,15 @@ set_space_layout() {
 
 apply_space_settings() {
   mode="$1"
-  gap="$2"
-  top="$3"
-  bottom="$4"
-  left="$5"
-  right="$6"
+  placement="$2"
+  insertion_point="$3"
+  gap="$4"
+  top="$5"
+  bottom="$6"
+  left="$7"
+  right="$8"
 
-  desired="$settings_cache_prefix mode=$mode gap=$gap padding=$top:$bottom:$left:$right"
+  desired="$settings_cache_prefix mode=$mode placement=$placement insertion=$insertion_point gap=$gap padding=$top:$bottom:$left:$right"
   current=""
   if [ -f "$settings_state_file" ]; then
     IFS= read -r current <"$settings_state_file" || current=""
@@ -83,7 +86,10 @@ apply_space_settings() {
 
   space_settings_changed=0
   if [ "$settings_dirty" -eq 1 ] || [ "$current" != "$desired" ]; then
-    if yabai -m space --gap abs:"$gap" && yabai -m space --padding abs:"$top":"$bottom":"$left":"$right"; then
+    if yabai -m config --space "$space_index" window_placement "$placement" && \
+       yabai -m config --space "$space_index" window_insertion_point "$insertion_point" && \
+       yabai -m space --gap abs:"$gap" && \
+       yabai -m space --padding abs:"$top":"$bottom":"$left":"$right"; then
       printf '%s\n' "$desired" >"$settings_state_file" 2>/dev/null
       settings_dirty=0
       space_settings_changed=1
@@ -121,9 +127,9 @@ if [ "$is_wide" -eq 1 ]; then
 
     # Apply solo padding even when the query briefly returns 0 managed windows during space switches.
     side_padding=$(awk "BEGIN { printf \"%d\", ($w * (1 - $wide_solo_ratio) / 2) }")
-    apply_space_settings "wide-solo" "$wide_gap" "$wide_top_padding" "$wide_padding" "$side_padding" "$side_padding"
+    apply_space_settings "wide-solo" first_child first "$wide_gap" "$wide_top_padding" "$wide_padding" "$side_padding" "$side_padding"
   elif [ "$managed_count" -gt 1 ]; then
-    apply_space_settings "wide-multi" "$wide_gap" "$wide_top_padding" "$wide_padding" "$wide_padding" "$wide_padding"
+    apply_space_settings "wide-multi" first_child first "$wide_gap" "$wide_top_padding" "$wide_padding" "$wide_padding" "$wide_padding"
     did_mutate="$space_settings_changed"
 
     # Keep split type local to this space; split_ratio is global-only in yabai.
@@ -208,5 +214,5 @@ if [ "$is_wide" -eq 1 ]; then
   fi
 else
   set_space_layout stack
-  apply_space_settings "normal" "$normal_gap" "$normal_top_padding" "$normal_padding" "$normal_padding" "$normal_padding"
+  apply_space_settings "normal" second_child focused "$normal_gap" "$normal_top_padding" "$normal_padding" "$normal_padding" "$normal_padding"
 fi
