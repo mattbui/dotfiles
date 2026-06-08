@@ -33,20 +33,13 @@ map gb visitPreviousTab
 map <c-6> visitPreviousTab
 map <c-p> Vomnibar.activate
 map <c-b> Vomnibar.activateBookmarks
-map <tab> Vomnibar.activateTabSelection
 map <c-W> closeOtherTabs
 map g0 lastTab
 
 # Search engines
-a: https://www.amazon.com/s?k=%s Amazon
 w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
 g: https://www.google.com/search?q=%s Google
 m: https://www.google.com/maps?q=%s Google Maps
 d: https://duckduckgo.com/?q=%s Duck
 f: https://www.facebook.com/search/top?q=%s Facebook
 y: https://www.youtube.com/results?search_query=%s Youtube
-j: https://cinnamon-ai.atlassian.net/secure/QuickSearch.jspa?searchString=%s Jira
-p: https://cinnamon-ai.atlassian.net/secure/BrowseProjects.jspa?contains=%s Projects
-c: https://cinnamon-ai.atlassian.net/wiki/search?text=%s Confluence
-s: https://cinnamon-ai.atlassian.net/wiki/spaces?search=%s Spaces
-gc/: https://github.com/cinnamon/%s github/cinnamon/
