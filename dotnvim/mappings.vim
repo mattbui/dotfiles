@@ -11,9 +11,13 @@ nnoremap <silent> <C-w> :bw<CR>
 
 " shift-y to yank to end of line
 nnoremap Y y$
+" double shift-y to yank the whole file
+nnoremap <silent> YY :%y<CR>
 
-" visual shift-y to yank absolute path with range
-xnoremap <silent> Y :YankAbsolutePathRange<CR>
+" visual shift-y to yank relative path with range
+xnoremap <silent> Y :YankRelativePathRange<CR>
+" visual leader-y to yank absolute path with range
+xnoremap <silent> <Leader>y :YankAbsolutePathRange<CR>
 
 " yank file paths
 nnoremap <silent> yt :YankRelativePathTag<CR>
