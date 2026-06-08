@@ -22,14 +22,12 @@ iframe.vimium-hud-frame {
 
 #vimium-hint-marker-container div.internal-vimium-hint-marker,
 #vimium-hint-marker-container div.vimiumHintMarker {
-  padding: 5px 7px;
+  padding: 2px 4px;
   background: var(--vimium-accent);
   border: none;
   border-radius: 4px;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-    0 2px 5px rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 2px 5px rgba(0, 0, 0, 0.28);
   font-size: 14px;
   line-height: 1;
 }
@@ -41,7 +39,9 @@ iframe.vimium-hud-frame {
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-#vimium-hint-marker-container div.internal-vimium-hint-marker > .matchingCharacter,
+#vimium-hint-marker-container
+  div.internal-vimium-hint-marker
+  > .matchingCharacter,
 #vimium-hint-marker-container div.vimiumHintMarker > .matchingCharacter {
   color: var(--vimium-crust);
 }
@@ -110,17 +110,15 @@ iframe.vimium-hud-frame {
   color: var(--vimium-mantle);
   border: none;
   border-radius: 6px !important;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.18),
-    0 3px 8px rgba(0, 0, 0, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18), 0 3px 8px rgba(0, 0, 0, 0.28);
 }
 
 #hud-container #hud,
 #hud-container span#hud-find-input,
 #hud-container span#hud-match-count {
   color: var(--vimium-mantle);
-  font-weight: bold;
+  font-weight: none;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
