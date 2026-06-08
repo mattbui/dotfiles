@@ -299,7 +299,7 @@ style = "Light Italic"
 style = "Light Italic"
 
 [font.normal]
-family = "JetBrainsMonoNL Nerd Font"
+family = "JetBrainsMonoNL Nerd Font Mono"
 style = "Light"
 
 [font.offset]
