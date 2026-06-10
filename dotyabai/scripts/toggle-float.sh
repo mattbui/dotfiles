@@ -79,6 +79,15 @@ sp_right=$(layout_state_get "$layout_state_file" padding_right "")
 [ -n "$sp_left" ] || sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
 [ -n "$sp_right" ] || sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
 
+# In wide-solo mode, left/right padding is intentionally large to center the
+# single tiled window. For floating fullscreen, use the regular edge padding
+# instead so the window can occupy the full usable display width.
+layout_mode=$(layout_state_get "$layout_state_file" mode "")
+if [ "$mode" = "fullscreen" ] && [ "$layout_mode" = "wide-solo" ]; then
+  sp_left="$sp_bottom"
+  sp_right="$sp_bottom"
+fi
+
 read -r dx dy dw dh <<EOF
 $(awk "BEGIN {
   dx = $dx + $sp_left;
@@ -113,11 +122,21 @@ $(awk "BEGIN {
 EOF
 fi
 
-# Resize before move so JankyBorders receives the expensive size update before
-# the cheap move update. This avoids briefly showing an old-size border at the
-# final floated position.
-yabai -m window --resize abs:"$w":"$h"
-yabai -m window --move abs:"$x":"$y"
+# For fullscreen, move first. If the window starts centered with large
+# wide-solo padding, resizing to display width before moving can be clamped by
+# macOS/yabai at the current x position, leaving a right-side gap.
+if [ "$mode" = "fullscreen" ]; then
+  yabai -m window --move abs:"$x":"$y"
+  sleep 0.01
+  yabai -m window --resize abs:"$w":"$h"
+  yabai -m window --move abs:"$x":"$y"
+else
+  # Resize before move so JankyBorders receives the expensive size update before
+  # the cheap move update. This avoids briefly showing an old-size border at the
+  # final floated position.
+  yabai -m window --resize abs:"$w":"$h"
+  yabai -m window --move abs:"$x":"$y"
+fi
 
 if [ "$mode" = "center" ]; then
   $HOME/.config/yabai/scripts/apply-layout.sh

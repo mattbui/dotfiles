@@ -172,8 +172,7 @@ if [ "$is_wide" -eq 1 ]; then
     main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
     if [ -n "$main_stack_index" ] && [ "$main_stack_index" != "0" ]; then
       if yabai -m window "$main_id" --warp east 2>/dev/null; then
-        sleep 0.05
-
+        sleep 0.01
         candidate_windows=$(query_candidate_windows) || exit 0
       fi
     fi
