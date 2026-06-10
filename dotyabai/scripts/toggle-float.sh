@@ -127,7 +127,7 @@ fi
 # macOS/yabai at the current x position, leaving a right-side gap.
 if [ "$mode" = "fullscreen" ]; then
   yabai -m window --move abs:"$x":"$y"
-  sleep 0.01
+  sleep 0.01  # wait for JankyBorders to render correctly
   yabai -m window --resize abs:"$w":"$h"
   yabai -m window --move abs:"$x":"$y"
 else
