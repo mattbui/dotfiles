@@ -1,18 +1,27 @@
 #!/usr/bin/env sh
 
 # Intuitive focused-window resize for yabai.
-# Usage: resize.sh grow|shrink
+# Usage: resize.sh grow|shrink [multiplier]
 
 step_ratio="0.025"
 floating_step="80"
 solo_padding_step="80"
 
 action="$1"
+multiplier="${2:-1}"
 [ "$action" = "grow" ] || [ "$action" = "shrink" ] || exit 1
+case "$multiplier" in
+  ''|*[!0-9]*) exit 1 ;;
+esac
+[ "$multiplier" -ge 1 ] || exit 1
 
 command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 command -v awk >/dev/null 2>&1 || exit 0
+
+step_ratio=$(awk "BEGIN { printf \"%.3f\", $step_ratio * $multiplier }")
+floating_step=$((floating_step * multiplier))
+solo_padding_step=$((solo_padding_step * multiplier))
 
 state_dir="$HOME/.local/state/yabai"
 # shellcheck source=/dev/null

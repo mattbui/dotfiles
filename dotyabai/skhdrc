@@ -13,6 +13,8 @@ cmd + alt - l : if yabai -m window --space next; then yabai -m space --focus nex
 # Resize focused window/pane.
 alt - 0x1B : $HOME/.config/yabai/scripts/resize.sh shrink
 alt - 0x18 : $HOME/.config/yabai/scripts/resize.sh grow
+alt + shift - 0x1B : $HOME/.config/yabai/scripts/resize.sh shrink 4
+alt + shift - 0x18 : $HOME/.config/yabai/scripts/resize.sh grow 4
 
 # Toggle float modes.
 alt - c : $HOME/.config/yabai/scripts/toggle-float.sh center
