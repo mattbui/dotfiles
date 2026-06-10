@@ -67,10 +67,8 @@ fi
 # Match yabai's tiling area by applying the current space's padding on top of
 # the constrained display bounds. See .src/yabai/src/view.c:view_update().
 space_index=$(printf '%s' "$window_json" | jq -r '.space')
-space_json=$(yabai -m query --spaces --space 2>/dev/null) || space_json=""
-current_space_index=$(printf '%s' "$space_json" | jq -r '.index // empty' 2>/dev/null)
 layout_state_file=""
-[ -n "$current_space_index" ] && layout_state_file=$(layout_state_file_for_space "$current_space_index")
+[ -n "$space_index" ] && layout_state_file=$(layout_state_file_for_space "$space_index")
 
 sp_top=$(layout_state_get "$layout_state_file" padding_top "")
 sp_bottom=$(layout_state_get "$layout_state_file" padding_bottom "")

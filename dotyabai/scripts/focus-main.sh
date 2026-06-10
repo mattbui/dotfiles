@@ -12,10 +12,8 @@ command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
-space_id=$(printf '%s' "$space_json" | jq -r '.id')
 space_index=$(printf '%s' "$space_json" | jq -r '.index')
 space_type=$(printf '%s' "$space_json" | jq -r '.type')
-[ -n "$space_id" ] && [ "$space_id" != "null" ] || exit 0
 [ -n "$space_index" ] && [ "$space_index" != "null" ] || exit 0
 
 if [ "$space_type" = "stack" ]; then
@@ -28,9 +26,6 @@ fi
 
 layout_state_file=$(layout_state_file_for_space "$space_index")
 main_id=$(layout_state_get "$layout_state_file" main_id "")
-if [ -z "$main_id" ] && [ -f "$state_dir/main-$space_id" ]; then
-  main_id=$(cat "$state_dir/main-$space_id" 2>/dev/null)
-fi
 [ -n "$main_id" ] && [ "$main_id" != "null" ] || exit 0
 
 main_window_json=$(yabai -m query --windows --window "$main_id" 2>/dev/null) || exit 0
