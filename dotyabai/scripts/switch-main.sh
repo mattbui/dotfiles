@@ -51,7 +51,6 @@ layout_state_update "$layout_state_file" main_id "$new_main_id" 2>/dev/null || e
 stack_index=$(printf '%s' "$new_main_json" | jq -r '."stack-index"')
 if [ "$stack_index" != "0" ]; then
   yabai -m window "$new_main_id" --warp east 2>/dev/null
-  sleep 0.05
 fi
 
 $HOME/.config/yabai/scripts/apply-layout.sh
