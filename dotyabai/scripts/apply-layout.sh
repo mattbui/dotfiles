@@ -69,7 +69,9 @@ layout_state_file=$(layout_state_file_for_space "$space_index")
 
 query_candidate_windows() {
   yabai -m query --windows --space "$space_index" 2>/dev/null |
-    jq '[.[] | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false)]'
+    jq '[.[] | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false)] as $windows
+        | ($windows | map(.frame.h) | max // 0) as $max_h
+        | [$windows[] | select(.frame.h >= ($max_h - 5))]'
 }
 
 apply_config_if_needed() {
