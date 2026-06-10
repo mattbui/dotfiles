@@ -14,6 +14,10 @@ command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 command -v awk >/dev/null 2>&1 || exit 0
 
+state_dir="$HOME/.local/state/yabai"
+# shellcheck source=/dev/null
+. "$(dirname "$0")/layout-state.sh"
+
 case "$mode" in
   center|fullscreen) ;;
   *) exit 1 ;;
@@ -63,10 +67,19 @@ fi
 # Match yabai's tiling area by applying the current space's padding on top of
 # the constrained display bounds. See .src/yabai/src/view.c:view_update().
 space_index=$(printf '%s' "$window_json" | jq -r '.space')
-sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
-sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
-sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
-sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
+space_json=$(yabai -m query --spaces --space 2>/dev/null) || space_json=""
+current_space_index=$(printf '%s' "$space_json" | jq -r '.index // empty' 2>/dev/null)
+layout_state_file=""
+[ -n "$current_space_index" ] && layout_state_file=$(layout_state_file_for_space "$current_space_index")
+
+sp_top=$(layout_state_get "$layout_state_file" padding_top "")
+sp_bottom=$(layout_state_get "$layout_state_file" padding_bottom "")
+sp_left=$(layout_state_get "$layout_state_file" padding_left "")
+sp_right=$(layout_state_get "$layout_state_file" padding_right "")
+[ -n "$sp_top" ] || sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
+[ -n "$sp_bottom" ] || sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
+[ -n "$sp_left" ] || sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
+[ -n "$sp_right" ] || sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
 
 read -r dx dy dw dh <<EOF
 $(awk "BEGIN {
