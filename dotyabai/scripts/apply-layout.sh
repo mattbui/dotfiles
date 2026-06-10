@@ -2,8 +2,8 @@
 
 # Display-aware layout:
 # - wide displays (aspect >= 2.0): BSP, 12 padding (6 top), 10 gap
-#   - one managed window: centered at 70% width
-#   - multiple managed windows: 45/55 vertical split, saved main on right, others stacked left
+#   - one managed window: centered at 65% width
+#   - multiple managed windows: 40/60 vertical split, saved main on right, others stacked left
 # - normal displays: stack, 8 padding (6 top), 8 gap
 
 wide_threshold="2.0"
