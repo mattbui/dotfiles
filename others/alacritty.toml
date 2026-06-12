@@ -156,49 +156,49 @@ chars = "\u001F"
 key = "Z"
 mods = "Command"
 
-# Command-number sends Alt-number sequences for tmux window selection.
+# Command-number sends tmux user-key sequences for direct window selection.
 [[keyboard.bindings]]
-chars = "\u001B1"
+chars = "\u001B[9011u"
 key = "Key1"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B2"
+chars = "\u001B[9012u"
 key = "Key2"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B3"
+chars = "\u001B[9013u"
 key = "Key3"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B4"
+chars = "\u001B[9014u"
 key = "Key4"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B5"
+chars = "\u001B[9015u"
 key = "Key5"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B6"
+chars = "\u001B[9016u"
 key = "Key6"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B7"
+chars = "\u001B[9017u"
 key = "Key7"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B8"
+chars = "\u001B[9018u"
 key = "Key8"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B9"
+chars = "\u001B[9019u"
 key = "Key9"
 mods = "Command"
 
