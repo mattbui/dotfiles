@@ -53,6 +53,19 @@ current_space="$(yabai -m query --spaces --space | jq -r '.index')"
 # Focus the space first to avoid the cross-space window-focus sliding animation.
 if [[ -n "$window_space" && "$window_space" != "null" && "$window_space" != "$current_space" ]]; then
   yabai -m space --focus "$window_space"
+
+  for _ in {1..10}; do
+    [[ "$(yabai -m query --spaces --space | jq -r '.index')" == "$window_space" ]] && break
+    sleep 0.05
+  done
 fi
 
-yabai -m window --focus "$window_id"
+# After switching spaces, macOS may initially focus that space's previous window.
+# Retry until the requested window actually has focus.
+for _ in {1..10}; do
+  yabai -m window --focus "$window_id" || true
+  yabai -m query --windows --window "$window_id" | jq -e '."has-focus" == true' >/dev/null && exit 0
+  sleep 0.05
+done
+
+exit 1
