@@ -92,7 +92,14 @@ run_revdiff() {
     set -e
 
     if [ -s "$output_file" ]; then
-      if copy_to_clipboard "$output_file"; then
+      clipboard_file="$temp_dir/clipboard.md"
+      {
+        printf '%s\n\n' "I reviewed the changes and added the following annotations:"
+        cat "$output_file"
+        printf '\n'
+      } > "$clipboard_file"
+
+      if copy_to_clipboard "$clipboard_file"; then
         notify "Copied revdiff annotations to clipboard"
         exit 0
       fi
