@@ -57,6 +57,7 @@ yabai -m rule --add app="^AppCleaner$" manage=off
 yabai -m rule --add app="^Activity Monitor$" manage=off
 yabai -m rule --add app="^App Store$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
+yabai -m rule --add app="^Notes$" manage=off
 
 # Re-apply layout when window/application visibility changes.
 yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
