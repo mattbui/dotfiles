@@ -16,8 +16,15 @@ alt - 0x18 : $HOME/.config/yabai/scripts/resize.sh grow
 alt + shift - 0x1B : $HOME/.config/yabai/scripts/resize.sh shrink 4
 alt + shift - 0x18 : $HOME/.config/yabai/scripts/resize.sh grow 4
 
+# Focus/open applications.
+alt - s : $HOME/.config/yabai/scripts/focus-app.sh Slack
+alt - t : $HOME/.config/yabai/scripts/focus-app.sh Alacritty
+alt - c : $HOME/.config/yabai/scripts/focus-app.sh Codex
+alt - b : $HOME/.config/yabai/scripts/focus-app.sh Arc
+alt - d : $HOME/.config/yabai/scripts/focus-app.sh Discord
+
 # Toggle float modes.
-alt - c : $HOME/.config/yabai/scripts/toggle-float.sh center
+alt + shift - return : $HOME/.config/yabai/scripts/toggle-float.sh center
 alt - return : $HOME/.config/yabai/scripts/toggle-float.sh fullscreen
 
 # Switch focused/left-stack window into main, or reset/re-apply display-aware layout.
