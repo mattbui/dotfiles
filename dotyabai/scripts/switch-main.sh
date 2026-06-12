@@ -14,8 +14,10 @@ command -v jq >/dev/null 2>&1 || exit 0
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
 space_index=$(printf '%s' "$space_json" | jq -r '.index')
+space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
 [ -n "$space_index" ] && [ "$space_index" != "null" ] || exit 0
-layout_state_file=$(layout_state_file_for_space "$space_index")
+[ -n "$space_label" ] && [ "$space_label" != "null" ] || exit 0
+layout_state_file=$(layout_state_file_for_space_label "$space_label")
 
 window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
 window_id=$(printf '%s' "$window_json" | jq -r '.id')

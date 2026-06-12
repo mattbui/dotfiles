@@ -60,12 +60,14 @@ require awk
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
 space_index=$(printf '%s' "$space_json" | jq -r '.index')
+space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
 space_type=$(printf '%s' "$space_json" | jq -r '.type')
 space_display=$(printf '%s' "$space_json" | jq -r '.display')
 [ -n "$space_index" ] && [ "$space_index" != "null" ] || exit 0
+[ -n "$space_label" ] && [ "$space_label" != "null" ] || exit 0
 [ -n "$space_display" ] && [ "$space_display" != "null" ] || exit 0
 
-layout_state_file=$(layout_state_file_for_space "$space_index")
+layout_state_file=$(layout_state_file_for_space_label "$space_label")
 
 query_candidate_windows() {
   yabai -m query --windows --space "$space_index" 2>/dev/null |

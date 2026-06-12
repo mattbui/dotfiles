@@ -63,10 +63,11 @@ fi
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || space_json=""
 space_index=$(printf '%s' "$space_json" | jq -r '.index // empty' 2>/dev/null)
+space_label=$(printf '%s' "$space_json" | jq -r '.label // empty' 2>/dev/null)
 layout_state_file=""
 layout_mode=""
-if [ -n "$space_index" ]; then
-  layout_state_file=$(layout_state_file_for_space "$space_index")
+if [ -n "$space_label" ]; then
+  layout_state_file=$(layout_state_file_for_space_label "$space_label")
   if [ ! -f "$layout_state_file" ]; then
     "$HOME/.config/yabai/scripts/apply-layout.sh" 2>/dev/null
   fi
@@ -121,6 +122,11 @@ fi
 if [ "$solo_count" -le 1 ]; then
   display_json=$(yabai -m query --displays --display 2>/dev/null) || exit 0
   space_index=$(printf '%s' "$window_json" | jq -r '.space')
+  if [ -z "$layout_state_file" ]; then
+    space_json=$(yabai -m query --spaces --space "$space_index" 2>/dev/null) || space_json=""
+    space_label=$(printf '%s' "$space_json" | jq -r '.label // empty' 2>/dev/null)
+    [ -n "$space_label" ] && layout_state_file=$(layout_state_file_for_space_label "$space_label")
+  fi
 
   dw=$(printf '%s' "$display_json" | jq -r '.frame.w')
   ww=$(printf '%s' "$window_json" | jq -r '.frame.w')

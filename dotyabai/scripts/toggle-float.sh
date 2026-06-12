@@ -68,7 +68,11 @@ fi
 # the constrained display bounds. See .src/yabai/src/view.c:view_update().
 space_index=$(printf '%s' "$window_json" | jq -r '.space')
 layout_state_file=""
-[ -n "$space_index" ] && layout_state_file=$(layout_state_file_for_space "$space_index")
+if [ -n "$space_index" ] && [ "$space_index" != "null" ]; then
+  space_json=$(yabai -m query --spaces --space "$space_index" 2>/dev/null) || space_json=""
+  space_label=$(printf '%s' "$space_json" | jq -r '.label // empty' 2>/dev/null)
+  [ -n "$space_label" ] && layout_state_file=$(layout_state_file_for_space_label "$space_label")
+fi
 
 sp_top=$(layout_state_get "$layout_state_file" padding_top "")
 sp_bottom=$(layout_state_get "$layout_state_file" padding_bottom "")

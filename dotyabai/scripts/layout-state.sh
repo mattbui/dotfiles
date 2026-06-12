@@ -3,9 +3,9 @@
 # Helpers for per-space dotyabai JSON layout state files.
 # Do not source state files.
 
-layout_state_file_for_space() {
-  # Use Mission Control space index, matching yabai SPACE_SEL numbers used in
-  # rules/keybindings such as `space=1` and `window --space 1`.
+layout_state_file_for_space_label() {
+  # Use the yabai space label for per-space layout state.
+  # Example: space-1 -> layout-space-1.json
   printf '%s/layout-%s.json' "$state_dir" "$1"
 }
 

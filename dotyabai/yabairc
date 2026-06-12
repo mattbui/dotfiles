@@ -27,15 +27,15 @@ yabai -m config \
   mouse_action2                resize \
   mouse_drop_action            stack
 
-# Label displays by physical left-to-right order.
-$HOME/.config/yabai/scripts/label-displays.sh
+# Label displays and spaces by physical left-to-right display order.
+$HOME/.config/yabai/scripts/label-spaces-displays.sh
 
 # Default space rules.
-yabai -m rule --add app="^Alacritty$" space=1
-yabai -m rule --add app="^Codex$" space=1
-yabai -m rule --add app="^Slack$" space=3
-yabai -m rule --add app="^Discord$" space=3
-yabai -m rule --add app="^Spark$" space=3
+yabai -m rule --add app="^Alacritty$" space=space-2
+yabai -m rule --add app="^Codex$" space=space-2
+yabai -m rule --add app="^Slack$" space=space-1
+yabai -m rule --add app="^Discord$" space=space-1
+yabai -m rule --add app="^Spark$" space=space-1
 
 # Floating app/window rules.
 yabai -m rule --add app="^System Settings$" manage=off
@@ -58,16 +58,30 @@ yabai -m rule --add app="^Activity Monitor$" manage=off
 yabai -m rule --add app="^App Store$" manage=off
 yabai -m rule --add app="^Disk Utility$" manage=off
 
-# Display-aware layout automation.
+# Re-apply layout when window/application visibility changes.
 yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=application_hidden action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=application_visible action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=window_deminimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
+
+# Re-apply layout when focus moves to another space/display.
 yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/label-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=system_woke action="$HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
+
+# Re-label spaces when the space set changes.
+yabai -m signal --add event=space_created action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+yabai -m signal --add event=space_destroyed action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+
+# Re-label displays/spaces when display topology changes.
+yabai -m signal --add event=display_added action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+yabai -m signal --add event=display_removed action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+yabai -m signal --add event=display_moved action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+yabai -m signal --add event=display_resized action="$HOME/.config/yabai/scripts/label-spaces-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+
+# Refresh labels/layout after wake because display state may have changed.
+yabai -m signal --add event=system_woke action="$HOME/.config/yabai/scripts/label-spaces-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 
 $HOME/.config/yabai/scripts/apply-layout.sh
 
