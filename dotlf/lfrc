@@ -17,6 +17,43 @@ map . set hidden!
 map J :toggle; down
 map K :toggle; up
 
+cmd yank-path &{{
+	links=$(
+		first=1
+		printf '%s\n' "$fx" | while IFS= read -r file; do
+			label=${file##*/}
+			target=$file
+			if [ -d "$file" ]; then
+				target="$target/"
+			fi
+			label=$(printf '%s' "$label" | sed 's/]/\\]/g')
+
+			if [ "$first" -eq 1 ]; then
+				first=0
+			else
+				printf '\n'
+			fi
+
+			printf '[%s](%s)' "$label" "$target"
+		done
+	)
+
+	if command -v pbcopy >/dev/null 2>&1; then
+		printf '%s' "$links" | pbcopy
+	elif command -v xclip >/dev/null 2>&1; then
+		printf '%s' "$links" | xclip -selection clipboard
+	else
+		lf -remote "send $id echoerr 'yank-path: pbcopy or xclip not found'"
+		exit 1
+	fi
+
+	lf -remote "send $id echo 'yanked path'"
+}}
+
+map y
+map yy copy
+map yp yank-path
+
 cmd osOpen &open "$f"
 map o osOpen
 
