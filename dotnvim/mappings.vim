@@ -9,8 +9,6 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
-" shift-y to yank to end of line
-nnoremap Y y$
 " double shift-y to yank the whole file
 nnoremap <silent> YY :%y<CR>
 
@@ -22,8 +20,8 @@ xnoremap <silent> <Leader>y :YankAbsolutePathRange<CR>
 " yank file paths
 nnoremap <silent> yt :YankRelativePathTag<CR>
 nnoremap <silent> yT :YankAbsolutePathTag<CR>
-nnoremap <silent> yf :YankRelativePath<CR>
-nnoremap <silent> yF :YankAbsolutePath<CR>
+nnoremap <silent> yp :YankRelativePath<CR>
+nnoremap <silent> yP :YankAbsolutePath<CR>
 nnoremap <silent> yl :YankRelativePathLine<CR>
 nnoremap <silent> yL :YankAbsolutePathLine<CR>
 
