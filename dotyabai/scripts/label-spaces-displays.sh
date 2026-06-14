@@ -7,6 +7,13 @@
 #   space-1   = first space on leftmost display, sorted by mission-control index
 #   space-2   = next space in left-to-right display order, then space index order
 
+notify=0
+case "${1:-}" in
+  --notify|-n)
+    notify=1
+    ;;
+esac
+
 command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 
@@ -40,3 +47,9 @@ jq -nr --argjson displays "$displays_json" --argjson spaces "$spaces_json" '
     yabai -m space "$space_index" --label "space-$i" 2>/dev/null
     i=$((i + 1))
   done
+
+if [ "$notify" -eq 1 ] && command -v osascript >/dev/null 2>&1; then
+  display_count=$(printf '%s' "$displays_json" | jq 'length')
+  space_count=$(printf '%s' "$spaces_json" | jq 'length')
+  osascript -e "display notification \"Labelled $display_count displays and $space_count spaces.\" with title \"yabai\" subtitle \"Labels refreshed\"" >/dev/null 2>&1
+fi
