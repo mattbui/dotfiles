@@ -60,14 +60,26 @@ require awk
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
 space_index=$(printf '%s' "$space_json" | jq -r '.index')
+space_id=$(printf '%s' "$space_json" | jq -r '.id')
 space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
 space_type=$(printf '%s' "$space_json" | jq -r '.type')
 space_display=$(printf '%s' "$space_json" | jq -r '.display')
 [ -n "$space_index" ] && [ "$space_index" != "null" ] || exit 0
-[ -n "$space_label" ] && [ "$space_label" != "null" ] || exit 0
 [ -n "$space_display" ] && [ "$space_display" != "null" ] || exit 0
 
-layout_state_file=$(layout_state_file_for_space_label "$space_label")
+# Refresh space labels if missing; fall back to space id for state.
+if [ -z "$space_label" ] || [ "$space_label" = "null" ]; then
+  "$(dirname "$0")/label-spaces-displays.sh" >/dev/null 2>&1
+  space_json=$(yabai -m query --spaces --space "$space_index" 2>/dev/null) || exit 0
+  space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
+  space_type=$(printf '%s' "$space_json" | jq -r '.type')
+fi
+
+if [ -n "$space_label" ] && [ "$space_label" != "null" ]; then
+  layout_state_file=$(layout_state_file_for_space_label "$space_label")
+else
+  layout_state_file=$(layout_state_file_for_space_label "id-$space_id")
+fi
 
 query_candidate_windows() {
   yabai -m query --windows --space "$space_index" 2>/dev/null |

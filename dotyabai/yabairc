@@ -82,9 +82,6 @@ yabai -m signal --add event=display_removed action="$HOME/.config/yabai/scripts/
 yabai -m signal --add event=display_moved action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
 yabai -m signal --add event=display_resized action="$HOME/.config/yabai/scripts/label-spaces-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 
-# Refresh labels/layout after wake because display state may have changed.
-yabai -m signal --add event=system_woke action="$HOME/.config/yabai/scripts/label-spaces-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
-
 $HOME/.config/yabai/scripts/apply-layout.sh
 
 printf '%s\n' "yabai config loaded"
