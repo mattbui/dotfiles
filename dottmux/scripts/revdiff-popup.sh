@@ -96,7 +96,6 @@ run_revdiff() {
       {
         printf '%s\n\n' "I reviewed the changes and added the following annotations:"
         cat "$output_file"
-        printf '\n'
       } > "$clipboard_file"
 
       if copy_to_clipboard "$clipboard_file"; then
