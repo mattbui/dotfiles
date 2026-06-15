@@ -108,7 +108,6 @@ run_revdiff() {
     fi
 
     if [ "$status" -eq 0 ] || [ "$status" -eq 10 ]; then
-      notify "No revdiff annotations captured"
       exit 0
     fi
 
