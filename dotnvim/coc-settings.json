@@ -9,7 +9,7 @@
   "pyright.organizeimports.provider": "isort",
   "python.formatting.provider": "black",
   "python.linting.flake8Enabled": true,
-  "explorer.width": 25,
+  "explorer.width": 40,
   "explorer.file.showHiddenFiles": true,
   "explorer.icon.enableNerdfont": true,
   "explorer.icon.source": "vim-devicons",
