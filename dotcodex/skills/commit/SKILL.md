@@ -5,21 +5,22 @@ description: Use when the user asks Codex to commit the current Git changes.
 
 # Commit
 
-Help me commit the current git changes.
+Prepare git commit(s) according to the user's leading flags (`staged`, `split`, and/or `push`) and treat any remaining input as extra instruction:
 
-Flag behavior:
-
-- `staged`: use only staged changes
+- `staged`: commit only staged changes. Inspect only staged changes for commit content; inspect recent commits only to match repository style and scope conventions. Do not include unstaged or untracked changes unless explicitly asked.
 - `split`: make multiple focused commits; do NOT mix unrelated changes into a single commit
-- `push`: push after committing; run `git push` separately
+- `push`: proceed to stage as needed, create the commit(s), then run `git push` separately
 
-Inspect git status/diffs and recent commits. Show detected changes, plan, and proposed message(s) before committing.
+Without `staged`, inspect git status, staged changes, unstaged changes, untracked files, and recent commits. Show detected changes, staging/grouping plan, and proposed commit message(s) before committing.
 
-Commit style: `type(scope): imperative lowercase subject`. For large changes, include a concise multiline body with bullets to break down the changes. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`. Avoid generic scopes unless the repo uses them. Use `deps` for dependency updates and `repo` only for repo-wide changes.
+Commit style:
 
-If `push` is absent, ask before committing. Even with `push`, run `git push` separately so it's easier to review. Never force-push or do risky/destructive actions without explicit confirmation. Stop and ask if conflicts exist or anything is unclear.
+- Use `type(scope): imperative lowercase subject`
+- For large changes, include a concise multiline body with bullets to break down the changes
+- Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
+- Use `deps` for dependency updates and `repo` only for repo-wide changes
+- Avoid generic scopes unless the repo uses them
 
-Inputs:
-
-- Flags: parse leading words matching `staged`, `split`, or `push`
-- Extra instruction: treat the rest of the user's request as extra instruction; use `none` if absent
+If `split` is absent, prefer a single focused commit unless the changes clearly require separation.
+If `push` is absent, stop and ask for confirmation before running `git add`, creating any commit, or pushing. If `push` is present, proceed to stage as needed and commit without re-confirmation, then run `git push` separately.
+Stop and ask before committing or pushing if conflicts exist, unsafe/sensitive files are involved, the target branch/remote is unclear, any operation would be destructive, or anything is unclear. Never force-push or do risky/destructive actions without explicit confirmation.
