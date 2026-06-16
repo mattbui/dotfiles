@@ -14,6 +14,20 @@ fi
 
 app_name="$*"
 
+state_dir="$HOME/.local/state/yabai"
+mkdir -p "$state_dir" 2>/dev/null
+latest_focus_file="$state_dir/focus-app.latest"
+focus_request="$$-$(date +%s%N)-$app_name"
+printf '%s\n' "$focus_request" >"$latest_focus_file"
+
+# Focus requests can overlap when hotkeys are pressed faster than macOS/yabai
+# finishes a cross-space focus. Make the newest request win: older invocations
+# check this latest-request marker between async-ish yabai operations and exit
+# before they can steal focus back.
+is_latest_focus_request() {
+  [[ -f "$latest_focus_file" ]] && [[ "$(<"$latest_focus_file")" == "$focus_request" ]]
+}
+
 if ! command -v yabai >/dev/null 2>&1; then
   echo "Error: yabai is not available in PATH" >&2
   exit 127
@@ -41,6 +55,7 @@ window_json="$(
 )"
 
 if [[ -z "$window_json" ]]; then
+  is_latest_focus_request || exit 0
   open -a "$app_name"
   exit 0
 fi
@@ -52,9 +67,11 @@ current_space="$(yabai -m query --spaces --space | jq -r '.index')"
 
 # Focus the space first to avoid the cross-space window-focus sliding animation.
 if [[ -n "$window_space" && "$window_space" != "null" && "$window_space" != "$current_space" ]]; then
+  is_latest_focus_request || exit 0
   yabai -m space --focus "$window_space"
 
   for _ in {1..10}; do
+    is_latest_focus_request || exit 0
     [[ "$(yabai -m query --spaces --space | jq -r '.index')" == "$window_space" ]] && break
     sleep 0.05
   done
@@ -63,6 +80,7 @@ fi
 # After switching spaces, macOS may initially focus that space's previous window.
 # Retry until the requested window actually has focus.
 for _ in {1..10}; do
+  is_latest_focus_request || exit 0
   yabai -m window --focus "$window_id" || true
   yabai -m query --windows --window "$window_id" | jq -e '."has-focus" == true' >/dev/null && exit 0
   sleep 0.05
