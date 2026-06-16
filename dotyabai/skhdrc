@@ -9,6 +9,7 @@ alt - k : yabai -m window --focus north || yabai -m window --focus stack.prev ||
 # Yabai controls.
 cmd + alt + shift - r : yabai --restart-service
 cmd + alt - r : $HOME/.config/yabai/scripts/label-spaces-displays.sh --notify
+cmd + alt - 0x2F : app=$(yabai -m query --windows --window | jq -r '.app // empty'); [ -n "$app" ] && $HOME/.config/yabai/scripts/ignore-list.sh toggle "$app"
 
 # Move/reinsert focused window. Warp un-stacks a single focused window instead of moving the whole stack pane.
 cmd + alt - h : if yabai -m window --space prev; then yabai -m space --focus prev; else yabai -m window --space last; yabai -m space --focus last; fi

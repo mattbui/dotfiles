@@ -57,6 +57,10 @@ require awk
 
 # shellcheck source=/dev/null
 . "$(dirname "$0")/layout-state.sh"
+# shellcheck source=/dev/null
+. "$(dirname "$0")/ignore-list.sh"
+
+ignored_apps_json=$(list_ignore 2>/dev/null | jq -R . | jq -s .)
 
 space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
 space_index=$(printf '%s' "$space_json" | jq -r '.index')
@@ -82,10 +86,12 @@ else
 fi
 
 query_candidate_windows() {
+  # Only layout visible, managed candidate windows.
+  # Ignore floating windows, minimized windows, hidden windows, and apps listed
+  # in ~/.local/state/yabai/yabaiignore because they should not influence the
+  # main/stack layout decisions.
   yabai -m query --windows --space "$space_index" 2>/dev/null |
-    jq '[.[] | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false)] as $windows
-        | ($windows | map(.frame.h) | max // 0) as $max_h
-        | [$windows[] | select(.frame.h >= ($max_h - 5))]'
+    jq --argjson ignored_apps "$ignored_apps_json" '[.[] | .app as $app | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false and (($ignored_apps | index($app)) | not))]'
 }
 
 apply_config_if_needed() {

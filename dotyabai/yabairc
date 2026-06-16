@@ -2,6 +2,26 @@
 
 # yabai config - SIP-safe defaults
 
+add_and_apply_rule() {
+  label="$1"
+  shift
+
+  yabai -m rule --remove "$label" >/dev/null 2>&1 || :
+  yabai -m rule --add label="$label" "$@"
+  yabai -m rule --apply "$label"
+}
+
+# Apply manage=off rules before setting layout defaults so ignored windows are
+# excluded before yabai starts reconfiguring spaces on reload.
+# shellcheck source=/dev/null
+. "$HOME/.config/yabai/scripts/ignore-list.sh"
+list_ignore | while IFS= read -r app; do
+  [ -n "$app" ] || continue
+  label=$(ignore_rule_label "$app")
+  regex=$(ignore_app_regex "$app")
+  add_and_apply_rule "$label" app="$regex" manage=off
+done
+
 # Core layout defaults. scripts/apply-layout.sh will apply display-aware overrides.
 yabai -m config \
   layout                       bsp \
@@ -31,34 +51,11 @@ yabai -m config \
 $HOME/.config/yabai/scripts/label-spaces-displays.sh
 
 # Default space rules.
-yabai -m rule --add app="^Alacritty$" space=space-2
-yabai -m rule --add app="^Codex$" space=space-2
-yabai -m rule --add app="^Slack$" space=space-1
-yabai -m rule --add app="^Discord$" space=space-1
-yabai -m rule --add app="^Spark$" space=space-1
-
-# Floating app/window rules.
-yabai -m rule --add app="^System Settings$" manage=off
-yabai -m rule --add app="^Finder$" manage=off
-yabai -m rule --add app="^Spark$" manage=off
-yabai -m rule --add app="^Raycast$" manage=off
-yabai -m rule --add app="^Homerow$" manage=off
-yabai -m rule --add app="^Calculator$" manage=off
-yabai -m rule --add app="^Keybase$" manage=off
-yabai -m rule --add app="^1Password$" manage=off
-yabai -m rule --add app="^Zalo$" manage=off
-yabai -m rule --add app="^Spotify$" manage=off
-yabai -m rule --add app="^Cloudflare WARP$" manage=off
-yabai -m rule --add app="^Messages$" manage=off
-yabai -m rule --add app="^Find My$" manage=off
-yabai -m rule --add app="^Calendar$" manage=off
-yabai -m rule --add app="^Karabiner-Elements$" manage=off
-yabai -m rule --add app="^Logi Options\\+$" manage=off
-yabai -m rule --add app="^AppCleaner$" manage=off
-yabai -m rule --add app="^Activity Monitor$" manage=off
-yabai -m rule --add app="^App Store$" manage=off
-yabai -m rule --add app="^Disk Utility$" manage=off
-yabai -m rule --add app="^Notes$" manage=off
+add_and_apply_rule "space-Alacritty" app="^Alacritty$" space=space-2
+add_and_apply_rule "space-Codex" app="^Codex$" space=space-2
+add_and_apply_rule "space-Slack" app="^Slack$" space=space-1
+add_and_apply_rule "space-Discord" app="^Discord$" space=space-1
+add_and_apply_rule "space-Spark" app="^Spark$" space=space-1
 
 # Re-apply layout when window/application visibility changes.
 yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
