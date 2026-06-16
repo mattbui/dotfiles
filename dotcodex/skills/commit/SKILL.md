@@ -22,5 +22,6 @@ Commit style:
 - Avoid generic scopes unless the repo uses them
 
 If `split` is absent, prefer a single focused commit unless the changes clearly require separation.
-If `push` is absent, stop and ask for confirmation before running `git add`, creating any commit, or pushing. If `push` is present, proceed to stage as needed and commit without re-confirmation, then run `git push` separately.
+If `push` is absent, stop and ask for confirmation before running `git add`, creating any commit, or pushing. If `push` is present, proceed to stage as needed, create the commit(s) without re-confirmation, and push.
+Always run `git push` separately from other commands; avoid combining it with `git add`, `git commit`, or other commands.
 Stop and ask before committing or pushing if conflicts exist, unsafe/sensitive files are involved, the target branch/remote is unclear, any operation would be destructive, or anything is unclear. Never force-push or do risky/destructive actions without explicit confirmation.
