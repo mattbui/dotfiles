@@ -39,7 +39,8 @@ AppCleaner
 Activity Monitor
 App Store
 Disk Utility
-Notes'
+Notes
+DockDoor'
 
 ensure_ignore_file() {
   mkdir -p "$ignore_state_dir" 2>/dev/null || return 1
@@ -122,6 +123,16 @@ apply_ignore_rule_live() {
   yabai -m rule --remove "$label" >/dev/null 2>&1 || :
   yabai -m rule --add label="$label" app="$regex" manage=off >/dev/null 2>&1 || return 0
   yabai -m rule --apply "$label" >/dev/null 2>&1 || :
+
+  # If this app is now ignored, make existing tiled windows float before the
+  # next layout apply so they are visually removed from the managed layout.
+  command -v jq >/dev/null 2>&1 || return 0
+  yabai -m query --windows 2>/dev/null |
+    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == false) | .id' |
+    while IFS= read -r id; do
+      [ -n "$id" ] || continue
+      yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
+    done
 }
 
 remove_ignore_rule_live() {
@@ -130,6 +141,17 @@ remove_ignore_rule_live() {
 
   label=$(ignore_rule_label "$app")
   yabai -m rule --remove "$label" >/dev/null 2>&1 || :
+
+  # If this app was unmanaged through manage=off, its existing windows may
+  # still be floating after the rule is removed. Turn float off before the next
+  # layout apply so yabai can include them again.
+  command -v jq >/dev/null 2>&1 || return 0
+  yabai -m query --windows 2>/dev/null |
+    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == true) | .id' |
+    while IFS= read -r id; do
+      [ -n "$id" ] || continue
+      yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
+    done
 }
 
 notify_ignore() {
