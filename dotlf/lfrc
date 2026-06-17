@@ -17,42 +17,74 @@ map . set hidden!
 map J :toggle; down
 map K :toggle; up
 
-cmd yank-path &{{
-	links=$(
-		first=1
-		printf '%s\n' "$fx" | while IFS= read -r file; do
-			label=${file##*/}
-			target=$file
-			if [ -d "$file" ]; then
-				target="$target/"
-			fi
-			label=$(printf '%s' "$label" | sed 's/]/\\]/g')
+cmd yank-abs-path &{{
+    paths=$(
+        first=1
+        printf '%s\n' "$fx" | while IFS= read -r file; do
+            target=$file
+            if [ -d "$file" ]; then
+                target="$target/"
+            fi
 
-			if [ "$first" -eq 1 ]; then
-				first=0
-			else
-				printf '\n'
-			fi
+            if [ "$first" -eq 1 ]; then
+                first=0
+            else
+                printf '\n'
+            fi
 
-			printf '[%s](%s)' "$label" "$target"
-		done
-	)
+            printf '%s' "$target"
+        done
+    )
 
-	if command -v pbcopy >/dev/null 2>&1; then
-		printf '%s' "$links" | pbcopy
-	elif command -v xclip >/dev/null 2>&1; then
-		printf '%s' "$links" | xclip -selection clipboard
-	else
-		lf -remote "send $id echoerr 'yank-path: pbcopy or xclip not found'"
-		exit 1
-	fi
+    if command -v pbcopy >/dev/null 2>&1; then
+        printf '%s' "$paths" | pbcopy
+    elif command -v xclip >/dev/null 2>&1; then
+        printf '%s' "$paths" | xclip -selection clipboard
+    else
+        lf -remote "send $id echoerr 'yank-path: pbcopy or xclip not found'"
+        exit 1
+    fi
 
-	lf -remote "send $id echo 'yanked path'"
+    lf -remote "send $id echo 'yanked path'"
+}}
+
+cmd yank-md-link &{{
+    links=$(
+        first=1
+        printf '%s\n' "$fx" | while IFS= read -r file; do
+            label=${file##*/}
+            target=$file
+            if [ -d "$file" ]; then
+                target="$target/"
+            fi
+            label=$(printf '%s' "$label" | sed 's/]/\\]/g')
+
+            if [ "$first" -eq 1 ]; then
+                first=0
+            else
+                printf '\n'
+            fi
+
+            printf '[%s](%s)' "$label" "$target"
+        done
+    )
+
+    if command -v pbcopy >/dev/null 2>&1; then
+        printf '%s' "$links" | pbcopy
+    elif command -v xclip >/dev/null 2>&1; then
+        printf '%s' "$links" | xclip -selection clipboard
+    else
+        lf -remote "send $id echoerr 'yank-link: pbcopy or xclip not found'"
+        exit 1
+    fi
+
+    lf -remote "send $id echo 'yanked link'"
 }}
 
 map y
 map yy copy
-map yp yank-path
+map yp yank-md-link
+map yP yank-abs-path
 
 cmd osOpen &open "$f"
 map o osOpen
@@ -64,55 +96,55 @@ cmd extract %atool -x "$f"
 map x extract
 
 cmd trash ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	space=$' '
-	tok_space=$'<SPACE>'
+    clear; tput cup $(($(tput lines)/3)); tput bold
+    set -f
+    space=$' '
+    tok_space=$'<SPACE>'
 
-	printf "%s\n\t" "$fx"
-	printf "Move to trash?[y/N] "
-	read ans
-	[ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
-	do
-		trash "$(echo $file | sed s/$tok_space/$space/g )"
-	done
+    printf "%s\n\t" "$fx"
+    printf "Move to trash?[y/N] "
+    read ans
+    [ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
+    do
+        trash "$(echo $file | sed s/$tok_space/$space/g )"
+    done
 }}
 map T trash
 
 # purge the unclean
 cmd remove ${{
-	clear; tput cup $(($(tput lines)/3)); tput bold
-	set -f
-	space=$' '
-	tok_space=$'<SPACE>'
+    clear; tput cup $(($(tput lines)/3)); tput bold
+    set -f
+    space=$' '
+    tok_space=$'<SPACE>'
 
-	printf "%s\n\t" "$fx"
-	printf "Delete?[y/N] "
-	read ans
-	[ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
-	do
-		rm -rf "$(echo $file | sed s/$tok_space/$space/g )"
-	done
+    printf "%s\n\t" "$fx"
+    printf "Delete?[y/N] "
+    read ans
+    [ $ans = "y" ] && for file in $(echo $fx | sed s/$space/$tok_space/g | tr '\n' ' ')
+    do
+        rm -rf "$(echo $file | sed s/$tok_space/$space/g )"
+    done
 }}
 map D remove
 
 cmd addDir %{{
-	printf "Directory name or path? "
-	read ans
-	mkdir -p $ans
+    printf "Directory name or path? "
+    read ans
+    mkdir -p $ans
 }}
 map A addDir
 
 cmd addFile %{{
-	printf "Filename? "
-	read ans
-	touch $ans
+    printf "Filename? "
+    read ans
+    touch $ans
 }}
 map a addFile
 
 # if currently in nvim (open via floaterm) -> use floaterm to open
 cmd openWithEditor ${{
-	[ -z $VIMRUNTIME ] && $EDITOR $f || floaterm $f
+    [ -z $VIMRUNTIME ] && $EDITOR $f || floaterm $f
 }}
 
 map e openWithEditor
