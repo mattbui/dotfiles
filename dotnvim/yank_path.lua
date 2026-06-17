@@ -43,6 +43,11 @@ local function yank_path(kind)
     return
   end
 
+  if kind == "absolute" then
+    copy(path)
+    return
+  end
+
   copy(markdown_link(path_label(path), path))
 end
 
