@@ -21,6 +21,8 @@ function ApplyCustomColors()
     source $HOME/.config/nvim/tokyo-night-storm-colors.vim
   endif
 
+  hi! link FloatBorder Normal
+
   hi link BufferCurrentMod BufferCurrent
   hi link BufferCurrentIcon BufferCurrent
   " hi link BufferVisibleMod BufferVisible

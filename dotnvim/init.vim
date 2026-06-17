@@ -1,7 +1,5 @@
 " General settings
-lua << EOF
-require('vim._core.ui2').enable({})
-EOF
+luafile $HOME/.config/nvim/ui2.lua
 source $HOME/.config/nvim/settings.vim
 source $HOME/.config/nvim/filetype.vim
 source $HOME/.config/nvim/mappings.vim
