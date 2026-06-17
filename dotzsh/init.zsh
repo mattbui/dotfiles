@@ -82,16 +82,18 @@ fi
 
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh  # load plugins
 
-# Force a steady beam cursor in interactive zsh prompts.
-_force_beam_cursor() {
-    printf '\e[6 q'
-}
-precmd_functions+=(_force_beam_cursor)
-preexec_functions+=(_force_beam_cursor)
-zle-line-init() { _force_beam_cursor }
-zle-keymap-select() { _force_beam_cursor }
-zle -N zle-line-init
-zle -N zle-keymap-select
+# Force a steady beam cursor in interactive zsh prompts, except in SSH sessions.
+if [[ -z ${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY} ]]; then
+    _force_beam_cursor() {
+        printf '\e[6 q'
+    }
+    precmd_functions+=(_force_beam_cursor)
+    preexec_functions+=(_force_beam_cursor)
+    zle-line-init() { _force_beam_cursor }
+    zle-keymap-select() { _force_beam_cursor }
+    zle -N zle-line-init
+    zle -N zle-keymap-select
+fi
 
 # Make Ctrl-U, including Alacritty's Cmd-Backspace mapping, delete only back to
 # the start of the line instead of killing the whole command line.
