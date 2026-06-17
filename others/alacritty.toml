@@ -208,6 +208,12 @@ chars = "\u001Bp"
 key = "P"
 mods = "Command"
 
+# Ctrl-Tab switches to the last tmux session.
+[[keyboard.bindings]]
+chars = "\u001B[9020u"
+key = "Tab"
+mods = "Control"
+
 # Command-D sends a tmux user key for revdiff popup.
 [[keyboard.bindings]]
 chars = "\u001B[9005u"
