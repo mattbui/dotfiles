@@ -202,11 +202,17 @@ chars = "\u001B[9019u"
 key = "Key9"
 mods = "Command"
 
-# Command-P sends Alt-P for tmux pane picker.
+# Command-P sends a tmux user key for choose-tree.
 [[keyboard.bindings]]
-chars = "\u001Bp"
+chars = "\u001B[9022u"
 key = "P"
 mods = "Command"
+
+# Command-Shift-P sends a tmux user key for session-only choose-tree.
+[[keyboard.bindings]]
+chars = "\u001B[9023u"
+key = "P"
+mods = "Command|Shift"
 
 # Ctrl-Tab / Ctrl-Shift-Tab cycle tmux sessions.
 [[keyboard.bindings]]
