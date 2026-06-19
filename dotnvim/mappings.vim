@@ -29,6 +29,10 @@ nnoremap <silent> yL :YankAbsolutePathLine<CR>
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
+" Commentary
+nmap <Leader>/ <Plug>CommentaryLine
+xmap <Leader>/ <Plug>Commentary
+
 " undo break points
 inoremap , ,<c-g>u
 inoremap . .<c-g>u
