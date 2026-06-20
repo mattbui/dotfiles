@@ -27,6 +27,7 @@ cmd + alt + ctrl - t : $HOME/.config/yabai/scripts/focus-app.sh Alacritty
 cmd + alt + ctrl - c : $HOME/.config/yabai/scripts/focus-app.sh Codex
 cmd + alt + ctrl - b : $HOME/.config/yabai/scripts/focus-app.sh Arc
 cmd + alt + ctrl - d : $HOME/.config/yabai/scripts/focus-app.sh Discord
+cmd + alt + ctrl - f : $HOME/.config/yabai/scripts/focus-app.sh FindMy
 cmd + alt + ctrl - m : $HOME/.config/yabai/scripts/focus-app.sh Messages
 
 # Toggle float modes.

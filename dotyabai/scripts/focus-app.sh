@@ -1,6 +1,22 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
+
+notify_error() {
+  local message="$1"
+  command -v osascript >/dev/null 2>&1 || return 0
+
+  osascript <<EOF >/dev/null 2>&1
+display notification "$(printf '%s' "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')" with title "yabai" subtitle "Focus App Error"
+EOF
+}
+
+on_error() {
+  local status=$?
+  notify_error "Failed to focus/open ${app_name:-unknown app} (exit $status)"
+}
+
+trap on_error ERR
 
 usage() {
   echo "Usage: $(basename "$0") <application-name>" >&2
@@ -56,7 +72,11 @@ window_json="$(
 
 if [[ -z "$window_json" ]]; then
   is_latest_focus_request || exit 0
-  open -a "$app_name"
+  if ! open_error=$(open -a "$app_name" 2>&1); then
+    printf '%s\n' "$open_error" >&2
+    notify_error "$open_error"
+    exit 1
+  fi
   exit 0
 fi
 
@@ -86,4 +106,5 @@ for _ in {1..10}; do
   sleep 0.05
 done
 
+notify_error "Timed out focusing $app_name"
 exit 1
