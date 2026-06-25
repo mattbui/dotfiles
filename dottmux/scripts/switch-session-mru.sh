@@ -11,86 +11,173 @@ set -euo pipefail
 # the order stable while cycling, like an app switcher.
 
 DIRECTION="${1:-next}"
-TIMEOUT_SECONDS="${SESSION_CYCLE_TIMEOUT:-1}"
+TIMEOUT_SECONDS="${SESSION_CYCLE_TIMEOUT:-0.6}"
+NAME_SEPARATOR=$'\037'
+
+join_words() {
+  local output=''
+  local item
+
+  for item in "$@"; do
+    if [ -n "$output" ]; then
+      output="$output $item"
+    else
+      output="$item"
+    fi
+  done
+
+  printf '%s' "$output"
+}
+
+join_names() {
+  local IFS="$NAME_SEPARATOR"
+  printf '%s' "$*"
+}
+
+format_title_indicator() {
+  local count="$1"
+  local index="$2"
+  local start="$3"
+  local visible_count
+  local offset
+  local item_index
+  local output=''
+  local name
+
+  # For one/two sessions, keep the left slot simple: just the selected session.
+  if [ "$count" -le 2 ]; then
+    printf '%s' "${names[$index]}"
+    return 0
+  fi
+
+  visible_count="$count"
+  if [ "$visible_count" -gt 5 ]; then
+    visible_count=5
+  fi
+
+  for ((offset = 0; offset < visible_count; offset += 1)); do
+    item_index=$(( (start + offset + count) % count ))
+    name="${names[$item_index]}"
+    [ -n "$name" ] || continue
+
+    if [ -n "$output" ]; then
+      output="$output | "
+    fi
+    if [ "$item_index" -eq "$index" ]; then
+      output="${output}*${name}"
+    else
+      output="${output}${name}"
+    fi
+  done
+
+  printf '%s' "$output"
+}
 
 current_id="$(tmux display-message -p '#{session_id}')"
-now="$(date +%s)"
-
-# Seed the current session timestamp so a brand-new tmux server has at least one
-# meaningful MRU entry before the first cycle list is built.
-if [ -z "$(tmux show-option -qv -t "$current_id" @last_access 2>/dev/null || true)" ]; then
-  tmux set-option -q -t "$current_id" @last_access "$now"
-fi
 
 # Existing cycle state. If @session_cycle_active is set and the current session
 # is still in the frozen list, this key press continues the same cycle.
 active="$(tmux show-option -gqv @session_cycle_active 2>/dev/null || true)"
 list="$(tmux show-option -gqv @session_cycle_list 2>/dev/null || true)"
+names_blob="$(tmux show-option -gqv @session_cycle_names 2>/dev/null || true)"
 index="$(tmux show-option -gqv @session_cycle_index 2>/dev/null || true)"
 view_start="$(tmux show-option -gqv @session_cycle_view_start 2>/dev/null || true)"
 new_cycle=0
+ids=()
+names=()
 
-session_exists() {
-  tmux has-session -t "$1" 2>/dev/null
-}
+if [ -n "$list" ]; then
+  read -r -a ids <<< "$list"
+fi
+if [ -n "$names_blob" ]; then
+  old_ifs="$IFS"
+  IFS="$NAME_SEPARATOR"
+  read -r -a names <<< "$names_blob"
+  IFS="$old_ifs"
+fi
 
 list_contains_current=0
-for id in $list; do
+for id in "${ids[@]}"; do
   if [ "$id" = "$current_id" ]; then
     list_contains_current=1
     break
   fi
 done
 
-if [ "$active" != "1" ] || [ -z "$list" ] || [ "$list_contains_current" != "1" ]; then
+if [ "$active" != "1" ] || [ "${#ids[@]}" -eq 0 ] || [ "$list_contains_current" != "1" ]; then
   new_cycle=1
+  ids=()
+  names=()
+
+  # Seed the current session timestamp only when a fresh cycle is built. This
+  # keeps a brand-new server sane without adding a set/show-option round-trip to
+  # every repeated Ctrl-Tab press.
+  if [ -z "$(tmux show-option -qv -t "$current_id" @last_access 2>/dev/null || true)" ]; then
+    tmux set-option -q -t "$current_id" @last_access "$(date +%s)"
+  fi
 
   # Start a new cycle by snapshotting sessions sorted by @last_access
   # descending. Missing timestamps sort oldest, and name is used as a stable
   # tie-breaker. The snapshot is intentionally frozen until the timeout ends.
-  list="$({
+  while IFS=$'\t' read -r id name; do
+    [ -n "$id" ] || continue
+    ids+=("$id")
+    names+=("$name")
+  done < <(
     tmux list-sessions -F '#{session_id}	#{session_name}	#{@last_access}' |
       awk -F '\t' '{ ts=$3; if (ts == "") ts=0; printf "%s\t%s\t%s\n", ts, $2, $1 }' |
       sort -t $'\t' -k1,1nr -k2,2 |
-      awk -F '\t' '{ print $3 }'
-  } | tr '\n' ' ' | sed 's/[[:space:]]*$//')"
+      awk -F '\t' '{ printf "%s\t%s\n", $3, $2 }'
+  )
 
   # Find the current session inside the fresh MRU snapshot.
   index=0
-  i=0
-  for id in $list; do
-    if [ "$id" = "$current_id" ]; then
+  for ((i = 0; i < ${#ids[@]}; i += 1)); do
+    if [ "${ids[$i]}" = "$current_id" ]; then
       index="$i"
       break
     fi
-    i=$((i + 1))
+  done
+elif [ "${#names[@]}" -ne "${#ids[@]}" ]; then
+  # Backward-compatible fallback for an active cycle created before the names
+  # sidecar existed, or after a manual option edit.
+  names=()
+  for id in "${ids[@]}"; do
+    names+=("$(tmux display-message -p -t "$id" '#{session_name}' 2>/dev/null || true)")
   done
 fi
 
 # Sessions may be closed while the cycle is active. Drop any stale session IDs
-# before calculating the next target.
-filtered=""
-for id in $list; do
-  if session_exists "$id"; then
-    filtered="$filtered $id"
-  fi
-done
-list="${filtered# }"
+# before calculating the next target. Use a single list-sessions call rather
+# than one has-session call per candidate.
+if [ "$new_cycle" != "1" ]; then
+  live_ids="$(tmux list-sessions -F '#{session_id}' 2>/dev/null || true)"
+  filtered_ids=()
+  filtered_names=()
+  for ((i = 0; i < ${#ids[@]}; i += 1)); do
+    case $'\n'"$live_ids"$'\n' in
+      *$'\n'"${ids[$i]}"$'\n'*)
+        filtered_ids+=("${ids[$i]}")
+        filtered_names+=("${names[$i]}")
+        ;;
+    esac
+  done
+  ids=("${filtered_ids[@]}")
+  names=("${filtered_names[@]}")
+fi
 
-count=$(wc -w <<< "$list" | tr -d ' ')
+count="${#ids[@]}"
 [ "$count" -gt 1 ] || exit 0
 
 # Re-find the current index in the filtered frozen list. This makes direction
 # changes and externally changed sessions behave sanely.
-i=0
 found=0
-for id in $list; do
-  if [ "$id" = "$current_id" ]; then
+for ((i = 0; i < count; i += 1)); do
+  if [ "${ids[$i]}" = "$current_id" ]; then
     index="$i"
     found=1
     break
   fi
-  i=$((i + 1))
 done
 [ "$found" = "1" ] || index=0
 
@@ -121,33 +208,29 @@ if [ "$count" -gt "$view_size" ]; then
   fi
 fi
 
-# Store all state needed by update-session-indicators.sh and by the next cycle
-# keypress. The token lets each timeout know whether it is still the newest one.
-target_id="$(awk -v n=$((index + 1)) '{ print $n }' <<< "$list")"
-target_name="$(tmux display-message -p -t "$target_id" '#{session_name}')"
-prev_index=$(( (index - 1 + count) % count ))
-next_index=$(( (index + 1) % count ))
-prev_id="$(awk -v n=$((prev_index + 1)) '{ print $n }' <<< "$list")"
-next_id="$(awk -v n=$((next_index + 1)) '{ print $n }' <<< "$list")"
-prev_name="$(tmux display-message -p -t "$prev_id" '#{session_name}')"
-next_name="$(tmux display-message -p -t "$next_id" '#{session_name}')"
-token="$(date +%s%N)"
+# Store all state needed by the next cycle keypress. The token lets each timeout
+# know whether it is still the newest one. Use $RANDOM because BSD date does not
+# support %N; `date +%s%N` can repeat for every press within the same second on
+# macOS.
+target_id="${ids[$index]}"
+list="$(join_words "${ids[@]}")"
+names_blob="$(join_names "${names[@]}")"
+title_indicator="$(format_title_indicator "$count" "$index" "$view_start")"
+token="$(date +%s)-$$-$RANDOM"
 
-tmux set-option -gq @session_cycle_active 1
-tmux set-option -gq @session_cycle_list "$list"
-tmux set-option -gq @session_cycle_index "$index"
-tmux set-option -gq @session_cycle_view_start "$view_start"
-tmux set-option -gq @session_cycle_token "$token"
-tmux set-option -gq @session_cycle_target "$target_id"
-tmux set-option -gq @session_cycle_target_name "$target_name"
-tmux set-option -gq @session_cycle_prev_name "$prev_name"
-tmux set-option -gq @session_cycle_next_name "$next_name"
-
-# Switch, then refresh indicators immediately so status reflects the new target
-# without waiting for status-interval.
-tmux switch-client -t "$target_id"
-"${HOME}/.config/tmux/scripts/update-session-indicators.sh" 2>/dev/null || true
-tmux refresh-client -S 2>/dev/null || true
+# Switch and refresh in one tmux round-trip. The status line reads the cached
+# title directly, so there is no separate update-session-indicators.sh call on
+# the hot path.
+tmux \
+  set-option -gq @session_cycle_active 1 \; \
+  set-option -gq @session_cycle_list "$list" \; \
+  set-option -gq @session_cycle_names "$names_blob" \; \
+  set-option -gq @session_cycle_index "$index" \; \
+  set-option -gq @session_cycle_view_start "$view_start" \; \
+  set-option -gq @session_cycle_token "$token" \; \
+  set-option -gq @session_title_indicator "$title_indicator" \; \
+  switch-client -t "$target_id" \; \
+  refresh-client -S
 
 # Start/reset the timeout. Every keypress writes a new token; older timers wake
 # up, see their token is stale, and exit. The newest timer finalizes the cycle:
@@ -158,15 +241,13 @@ tmux refresh-client -S 2>/dev/null || true
   [ "$current_token" = "$token" ] || exit 0
 
   final_id="$(tmux display-message -p '#{session_id}' 2>/dev/null || true)"
-  tmux set-option -gqu @session_cycle_active
-  tmux set-option -gqu @session_cycle_list
-  tmux set-option -gqu @session_cycle_index
-  tmux set-option -gqu @session_cycle_view_start
-  tmux set-option -gqu @session_cycle_token
-  tmux set-option -gqu @session_cycle_target
-  tmux set-option -gqu @session_cycle_target_name
-  tmux set-option -gqu @session_cycle_prev_name
-  tmux set-option -gqu @session_cycle_next_name
+  tmux \
+    set-option -gqu @session_cycle_active \; \
+    set-option -gqu @session_cycle_list \; \
+    set-option -gqu @session_cycle_names \; \
+    set-option -gqu @session_cycle_index \; \
+    set-option -gqu @session_cycle_view_start \; \
+    set-option -gqu @session_cycle_token
 
   if [ -n "$final_id" ]; then
     tmux set-option -q -t "$final_id" @last_access "$(date +%s)"
