@@ -36,6 +36,13 @@ set ignorecase smartcase       " Better search
 set noshowmode
 set nobackup nowritebackup
 set updatetime=300 timeoutlen=600
+
+augroup terminal_timeoutlen
+  autocmd!
+  autocmd TermEnter * set timeoutlen=150
+  autocmd TermLeave * set timeoutlen=600
+augroup END
+
 set shortmess+=c
 set clipboard+=unnamedplus
 
