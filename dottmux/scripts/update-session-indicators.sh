@@ -6,22 +6,19 @@ set -euo pipefail
 #     session name; while cycling, a small viewport over the frozen session list
 #     with the selected session marked as *name.
 #   @session_cycle_indicator - compact right-side hint showing where
-#     Ctrl-Shift-Tab / Ctrl-Tab will go: "← prev | next →".
+#     Ctrl-Tab will go: "next →".
 #
 # The status line reads these options directly instead of running #(...), so
 # status rendering stays cheap. Hooks and switch-session-mru.sh call this script
 # whenever the underlying session state changes.
 
 format_cycle_indicator() {
-  local prev="$1"
-  local next="$2"
+  local next="$1"
 
-  if [ -z "$prev$next" ]; then
+  if [ -z "$next" ]; then
     printf ''
-  elif [ "$prev" = "$next" ]; then
-    printf '%s →' "$next"
   else
-    printf '← %s | %s →' "$prev" "$next"
+    printf '%s →' "$next"
   fi
 }
 
@@ -110,26 +107,22 @@ if [ "$active" = "1" ]; then
   list="$(tmux show-option -gqv @session_cycle_list 2>/dev/null || true)"
   index="$(tmux show-option -gqv @session_cycle_index 2>/dev/null || true)"
   view_start="$(tmux show-option -gqv @session_cycle_view_start 2>/dev/null || true)"
-  prev="$(tmux show-option -gqv @session_cycle_prev_name 2>/dev/null || true)"
   next="$(tmux show-option -gqv @session_cycle_next_name 2>/dev/null || true)"
 
-  cycle_indicator="$(format_cycle_indicator "$prev" "$next")"
+  cycle_indicator="$(format_cycle_indicator "$next")"
   count=$(wc -w <<< "$list" | tr -d ' ')
   if [ "$count" -gt 2 ] && [[ "$index" =~ ^[0-9]+$ ]] && [[ "$view_start" =~ ^[0-9]+$ ]]; then
     title_indicator="$(format_session_list "$list" "$index" "$view_start")"
   fi
 elif [ -n "$current_id" ]; then
-  # Outside cycling, compute the compact prev/next hint from live MRU state.
+  # Outside cycling, compute the compact next-session hint from live MRU state.
   list="$(mru_list)"
   count=$(wc -w <<< "$list" | tr -d ' ')
   if [ "$count" -gt 1 ] && index="$(find_index "$list" "$current_id")"; then
-    prev_index=$(( (index - 1 + count) % count ))
     next_index=$(( (index + 1) % count ))
-    prev_id="$(awk -v n=$((prev_index + 1)) '{ print $n }' <<< "$list")"
     next_id="$(awk -v n=$((next_index + 1)) '{ print $n }' <<< "$list")"
-    prev_name="$(tmux display-message -p -t "$prev_id" '#{session_name}' 2>/dev/null || true)"
     next_name="$(tmux display-message -p -t "$next_id" '#{session_name}' 2>/dev/null || true)"
-    cycle_indicator="$(format_cycle_indicator "$prev_name" "$next_name")"
+    cycle_indicator="$(format_cycle_indicator "$next_name")"
   fi
 fi
 
