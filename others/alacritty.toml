@@ -307,10 +307,10 @@ TERM = "xterm-256color"
 size = 14.5
 
 [font.bold]
-style = "Light"
+style = "Medium"
 
 [font.bold_italic]
-style = "Light Italic"
+style = "Medium Italic"
 
 [font.italic]
 style = "Light Italic"
