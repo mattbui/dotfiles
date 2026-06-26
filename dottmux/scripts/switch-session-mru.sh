@@ -7,12 +7,42 @@ set -euo pipefail
 # script instead uses per-session @last_access timestamps maintained by
 # update-session-access.sh. When cycling starts, it snapshots that MRU order
 # into @session_cycle_list and keeps reusing the frozen list while the user
-# continues pressing Ctrl-Tab / Ctrl-Shift-Tab within TIMEOUT_SECONDS. This keeps
-# the order stable while cycling, like an app switcher.
+# continues holding Ctrl and pressing Ctrl-Tab / Ctrl-Shift-Tab. Karabiner sends
+# an explicit finalize key on Ctrl release; TIMEOUT_SECONDS is a fallback if that
+# release signal is missed. This keeps the order stable while cycling, like an
+# app switcher.
 
 DIRECTION="${1:-next}"
-TIMEOUT_SECONDS="${SESSION_CYCLE_TIMEOUT:-0.6}"
+TIMEOUT_SECONDS="${SESSION_CYCLE_TIMEOUT:-5}"
 NAME_SEPARATOR=$'\037'
+
+finalize_cycle() {
+  local active
+  local final_id
+
+  active="$(tmux show-option -gqv @session_cycle_active 2>/dev/null || true)"
+  [ "$active" = "1" ] || exit 0
+
+  final_id="$(tmux display-message -p '#{session_id}' 2>/dev/null || true)"
+  tmux \
+    set-option -gqu @session_cycle_active \; \
+    set-option -gqu @session_cycle_list \; \
+    set-option -gqu @session_cycle_names \; \
+    set-option -gqu @session_cycle_index \; \
+    set-option -gqu @session_cycle_view_start \; \
+    set-option -gqu @session_cycle_token
+
+  if [ -n "$final_id" ]; then
+    tmux set-option -q -t "$final_id" @last_access "$(date +%s)"
+  fi
+  "${HOME}/.config/tmux/scripts/update-session-indicators.sh" 2>/dev/null || true
+  tmux refresh-client -S 2>/dev/null || true
+}
+
+if [ "$DIRECTION" = "finalize" ]; then
+  finalize_cycle
+  exit 0
+fi
 
 join_words() {
   local output=''
@@ -240,18 +270,5 @@ tmux \
   current_token="$(tmux show-option -gqv @session_cycle_token 2>/dev/null || true)"
   [ "$current_token" = "$token" ] || exit 0
 
-  final_id="$(tmux display-message -p '#{session_id}' 2>/dev/null || true)"
-  tmux \
-    set-option -gqu @session_cycle_active \; \
-    set-option -gqu @session_cycle_list \; \
-    set-option -gqu @session_cycle_names \; \
-    set-option -gqu @session_cycle_index \; \
-    set-option -gqu @session_cycle_view_start \; \
-    set-option -gqu @session_cycle_token
-
-  if [ -n "$final_id" ]; then
-    tmux set-option -q -t "$final_id" @last_access "$(date +%s)"
-  fi
-  "${HOME}/.config/tmux/scripts/update-session-indicators.sh" 2>/dev/null || true
-  tmux refresh-client -S 2>/dev/null || true
+  finalize_cycle
 ) >/dev/null 2>&1 &

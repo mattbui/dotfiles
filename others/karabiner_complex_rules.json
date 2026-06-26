@@ -1,6 +1,175 @@
 {
   "rules": [
     {
+      "description": "Alacritty: tmux session switch Ctrl hold behavior",
+      "manipulators": [
+        {
+          "description": "Ctrl+Shift+Tab -> Ctrl+Shift+Tab and arm tmux session switch finalize",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^org\\.alacritty$"
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "tab",
+            "modifiers": {
+              "mandatory": [
+                "control",
+                "shift"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_session_switching",
+                "value": 1
+              }
+            },
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "control",
+                "shift"
+              ]
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Ctrl+Tab -> Ctrl+Tab and arm tmux session switch finalize",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^org\\.alacritty$"
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "tab",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "set_variable": {
+                "name": "tmux_session_switching",
+                "value": 1
+              }
+            },
+            {
+              "key_code": "tab",
+              "modifiers": [
+                "control"
+              ]
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Left Ctrl release sends F18 only after Ctrl-Tab session switching",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^org\\.alacritty$"
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "left_control",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "left_control",
+              "lazy": true
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "key_code": "f18",
+              "conditions": [
+                {
+                  "type": "variable_if",
+                  "name": "tmux_session_switching",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_session_switching",
+                "value": 0
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Right Ctrl release sends F18 only after Ctrl-Tab session switching",
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^org\\.alacritty$"
+              ]
+            }
+          ],
+          "from": {
+            "key_code": "right_control",
+            "modifiers": {
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "right_control",
+              "lazy": true
+            }
+          ],
+          "to_after_key_up": [
+            {
+              "key_code": "f18",
+              "conditions": [
+                {
+                  "type": "variable_if",
+                  "name": "tmux_session_switching",
+                  "value": 1
+                }
+              ]
+            },
+            {
+              "set_variable": {
+                "name": "tmux_session_switching",
+                "value": 0
+              }
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "Tab Mod-Tap (Tap: Tab, Hold: Option) with Ctrl+Tab exception",
       "manipulators": [
         {

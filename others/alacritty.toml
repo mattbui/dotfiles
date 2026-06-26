@@ -225,6 +225,11 @@ chars = "\u001B[9021u"
 key = "Tab"
 mods = "Control|Shift"
 
+# Karabiner sends F18 on Ctrl release after Ctrl-Tab session cycling.
+[[keyboard.bindings]]
+chars = "\u001B[9024u"
+key = "F18"
+
 # Command-D sends a tmux user key for revdiff popup.
 [[keyboard.bindings]]
 chars = "\u001B[9005u"
