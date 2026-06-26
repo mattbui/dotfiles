@@ -57,3 +57,7 @@ if [ -e "$CONFIGS/alacritty/alacritty.yml" ] || [ -L "$CONFIGS/alacritty/alacrit
   rm "$CONFIGS/alacritty/alacritty.yml"
 fi
 link_path "$DOTFILES/others/alacritty.toml" "$CONFIGS/alacritty/alacritty.toml"
+
+# Ghostty configs
+mkdir -p "$CONFIGS/ghostty"
+link_path "$DOTFILES/others/ghostty/config" "$CONFIGS/ghostty/config"

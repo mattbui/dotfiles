@@ -1,0 +1,14 @@
+theme = TokyoNight Storm
+font-family = JetBrainsMonoNL Nerd Font Mono
+font-family = JuliaMono
+font-style = SemiBold
+font-style-bold = Bold
+font-style-italic = SemiBold Italic
+font-style-bold-italic = Bold Italic
+font-size = 14
+font-feature = -calt
+window-padding-x = 8
+window-padding-y = 8
+window-padding-balance = true
+macos-titlebar-style = hidden
+confirm-close-surface = false
