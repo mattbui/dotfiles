@@ -57,9 +57,9 @@
   "git.removedSign.text": "┃",
   "git.topRemovedSign.text": "┃",
   "git.changeRemovedSign.text": "┃",
-  "diagnostic.hintSign": "❭",
-  "diagnostic.infoSign": "❭",
-  "diagnostic.errorSign": "❭",
-  "diagnostic.warningSign": "❭",
+  "diagnostic.hintSign": "?",
+  "diagnostic.infoSign": "i",
+  "diagnostic.errorSign": "x",
+  "diagnostic.warningSign": "!",
   "snippets.ultisnips.pythonPrompt": false
 }
