@@ -7,6 +7,11 @@ alias v=$VISUAL
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
 
+picommit() {
+    local args="$*"
+    pi --no-session "/commit${args:+ $args}"
+}
+
 alias rpush='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" --exclude ".git" --exclude ".venv" --exclude ".src" ./ $RSYNC_REMOTE'
 alias rpull='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" --exclude ".git" --exclude ".venv" --exclude ".src" $RSYNC_REMOTE ../'
 alias rstatus='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || (echo "PUSH CHANGES:" && rpush --delete -n && echo "PULL CHANGES:" && rpull --delete -n)'
