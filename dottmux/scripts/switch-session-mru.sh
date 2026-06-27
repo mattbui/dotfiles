@@ -40,6 +40,7 @@ finalize_cycle() {
 }
 
 if [ "$DIRECTION" = "finalize" ]; then
+  sleep 0.05
   finalize_cycle
   exit 0
 fi
