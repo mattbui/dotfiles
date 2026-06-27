@@ -61,7 +61,7 @@ let g:which_key_map.g = {
       \ 'D':    [':Git diff',                    'global diff'],
       \ 'B':    [':Git blame',                   'blame'],
       \ 'S':    [':G',                           'status'],
-      \ 'l':    [':Gclog',                       'log'],
+      \ 'l':    [':Gclog -50',                   'log'],
       \ 'j':    ['<Plug>(coc-git-nextchunk)',    'next chunk'],
       \ 'k':    ['<Plug>(coc-git-prevchunk)',    'previous chunk'],
       \ 'd':    ['<Plug>(coc-git-chunkinfo)',    'chunk diff'],
