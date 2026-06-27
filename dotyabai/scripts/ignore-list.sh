@@ -20,6 +20,7 @@ ignore_file="$ignore_state_dir/yabaiignore"
 
 ignore_defaults='System Settings
 Finder
+Ghostty
 Spark Desktop
 Raycast
 Raycast Beta
