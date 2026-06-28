@@ -69,15 +69,25 @@ keybind = super+d=text:\x1b[9005u
 
 # Tmux direct window selection
 # Send tmux User5..User13 for windows 1..9.
+# Bind both logical characters and physical digit keys to override Ghostty defaults.
 keybind = super+1=text:\x1b[9011u
+keybind = super+digit_1=text:\x1b[9011u
 keybind = super+2=text:\x1b[9012u
+keybind = super+digit_2=text:\x1b[9012u
 keybind = super+3=text:\x1b[9013u
+keybind = super+digit_3=text:\x1b[9013u
 keybind = super+4=text:\x1b[9014u
+keybind = super+digit_4=text:\x1b[9014u
 keybind = super+5=text:\x1b[9015u
+keybind = super+digit_5=text:\x1b[9015u
 keybind = super+6=text:\x1b[9016u
+keybind = super+digit_6=text:\x1b[9016u
 keybind = super+7=text:\x1b[9017u
+keybind = super+digit_7=text:\x1b[9017u
 keybind = super+8=text:\x1b[9018u
+keybind = super+digit_8=text:\x1b[9018u
 keybind = super+9=text:\x1b[9019u
+keybind = super+digit_9=text:\x1b[9019u
 
 # Tmux MRU session cycling
 # Send tmux User14/User15 for next/previous session.
