@@ -1,17 +1,144 @@
 theme = TokyoNight Storm
 font-family = JetBrainsMonoNL Nerd Font Mono
 font-family = JuliaMono
-font-style = Medium
-font-style-bold = Bold
-font-style-italic = Medium Italic
-font-style-bold-italic = Bold Italic
+font-style = Regular
+font-style-bold = SemiBold
+font-style-italic = Italic
+font-style-bold-italic = SemiBold Italic
 font-size = 14
 font-feature = -calt
 font-thicken = true
-font-thicken-strength = 64
+font-thicken-strength = 128
+bold-color = bright
 window-padding-x = 8
 window-padding-y = 8
 window-padding-balance = true
-scrollback-limit = 1000000
+scrollback-limit = 50000000
+selection-clear-on-copy = true
 macos-titlebar-style = hidden
 confirm-close-surface = false
+
+# Keybinds
+keybind = super+==increase_font_size:0.5
+keybind = super++=increase_font_size:0.5
+# Send Ctrl-_ / Ctrl-- (US, 0x1f) for terminal-app undo.
+keybind = super+z=text:\x1f
+keybind = super+shift+t=unbind
+keybind = super+shift+n=new_window
+# Terminal app CSI-u passthroughs
+# Send CSI-u Alt-Shift-M for pi model picker.
+keybind = super+shift+m=text:\x1b[109;4u
+# Send CSI-u Alt-Enter for terminal apps.
+keybind = super+enter=text:\x1b[13;3u
+# Send CSI-u Shift-Alt-Enter for pi follow-up messages.
+keybind = super+shift+enter=text:\x1b[13;4u
+
+# Splits
+keybind = super+ctrl+enter=toggle_split_zoom
+keybind = super+d=unbind
+keybind = super+shift+d=unbind
+keybind = super+shift+h=new_split:left
+keybind = super+shift+j=new_split:down
+keybind = super+shift+k=new_split:up
+keybind = super+shift+l=new_split:right
+
+# Split navigation
+keybind = super+[=unbind
+keybind = super+]=unbind
+keybind = super+alt+arrow_up=unbind
+keybind = super+alt+arrow_down=unbind
+keybind = super+alt+arrow_left=unbind
+keybind = super+alt+arrow_right=unbind
+keybind = super+ctrl+h=goto_split:left
+keybind = super+ctrl+j=goto_split:down
+keybind = super+ctrl+k=goto_split:up
+keybind = super+ctrl+l=goto_split:right
+
+# Tmux directional splits
+# F13 is sent by Karabiner when tapping cmd-h, so hold cmd-h can still hide apps.
+# Send tmux User0/User1/User2/User3 for split left/down/up/right.
+keybind = f13=text:\x1b[9001u
+keybind = super+j=text:\x1b[9002u
+keybind = super+k=text:\x1b[9003u
+keybind = super+l=text:\x1b[9004u
+
+# Tmux revdiff popup
+# Send tmux User4.
+keybind = super+d=text:\x1b[9005u
+
+# Tmux direct window selection
+# Send tmux User5..User13 for windows 1..9.
+keybind = super+1=text:\x1b[9011u
+keybind = super+2=text:\x1b[9012u
+keybind = super+3=text:\x1b[9013u
+keybind = super+4=text:\x1b[9014u
+keybind = super+5=text:\x1b[9015u
+keybind = super+6=text:\x1b[9016u
+keybind = super+7=text:\x1b[9017u
+keybind = super+8=text:\x1b[9018u
+keybind = super+9=text:\x1b[9019u
+
+# Tmux MRU session cycling
+# Send tmux User14/User15 for next/previous session.
+keybind = ctrl+tab=text:\x1b[9020u
+keybind = ctrl+shift+tab=text:\x1b[9021u
+# F18 is sent by Karabiner on Ctrl release after Ctrl-Tab session cycling.
+# Send tmux User18 to finalize session switch.
+keybind = f18=text:\x1b[9024u
+
+# Tmux choose-tree
+# Send tmux User16/User17 for window/session choose-tree.
+keybind = super+p=text:\x1b[9022u
+keybind = super+shift+p=text:\x1b[9023u
+
+# Tmux pane zoom
+# Send tmux User19.
+keybind = ctrl+enter=text:\x1b[9025u
+
+# Tmux session/window/pane actions
+# Send tmux User20/User21/User22 for session popup/kill pane/new window.
+keybind = super+n=text:\x1b[9026u
+keybind = super+w=text:\x1b[9027u
+keybind = super+t=text:\x1b[9028u
+
+# Ghostty actions moved away from tmux passthroughs
+keybind = super+shift+w=close_window
+keybind = super+ctrl+w=close_surface
+keybind = super+ctrl+p=toggle_command_palette
+
+# Vim mode
+keybind = super+alt+space=activate_key_table:vim
+keybind = vim/
+
+# Vim mode: line movement
+keybind = vim/j=scroll_page_lines:1
+keybind = vim/k=scroll_page_lines:-1
+
+# Vim mode: page movement
+keybind = vim/ctrl+d=scroll_page_down
+keybind = vim/ctrl+u=scroll_page_up
+
+# Vim mode: jump to top/bottom
+keybind = vim/g>g=scroll_to_top
+keybind = vim/shift+g=scroll_to_bottom
+
+# Vim mode: search
+keybind = vim/slash=start_search
+keybind = vim/n=navigate_search:next
+
+# Vim mode: copy mode / selection
+keybind = vim/y=copy_to_clipboard
+
+# Vim mode: command palette
+keybind = vim/shift+semicolon=toggle_command_palette
+
+# Vim mode: exit
+keybind = vim/escape=scroll_to_bottom
+keybind = chain=deactivate_key_table
+keybind = vim/q=scroll_to_bottom
+keybind = chain=deactivate_key_table
+keybind = vim/i=scroll_to_bottom
+keybind = chain=deactivate_key_table
+
+# Vim mode: catch unbound keys
+keybind = vim/catch_all=ignore
