@@ -2,10 +2,12 @@
 
 # Toggle float modes.
 # Usage:
-#   toggle-float.sh center      -> centered floating window, 80% tiling-area height, 120% tiling-area-height width
-#   toggle-float.sh fullscreen  -> centered floating window, 100% tiling-area width, 100% tiling-area height
+#   toggle-float.sh center [window-id] [toggle|ensure]      -> centered floating window, 80% tiling-area height, 120% tiling-area-height width
+#   toggle-float.sh fullscreen [window-id] [toggle|ensure]  -> centered floating window, 100% tiling-area width, 100% tiling-area height
 
 mode="${1:-center}"
+target_window="${2:-}"
+float_action="${3:-toggle}"
 height_ratio="0.80"
 width_height_ratio="1.20"
 fullscreen_ratio="1.00"
@@ -14,7 +16,8 @@ command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 command -v awk >/dev/null 2>&1 || exit 0
 
-state_dir="$HOME/.local/state/yabai"
+state_dir="${YABAI_STATE_DIR:-$HOME/.local/state/yabai}"
+
 # shellcheck source=/dev/null
 . "$(dirname "$0")/layout-state.sh"
 
@@ -22,10 +25,26 @@ case "$mode" in
   center|fullscreen) ;;
   *) exit 1 ;;
 esac
+case "$float_action" in
+  toggle|ensure) ;;
+  *) exit 1 ;;
+esac
 
-yabai -m window --toggle float
-
-window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
+if [ -n "$target_window" ]; then
+  window_json=$(yabai -m query --windows --window "$target_window" 2>/dev/null) || exit 0
+  is_floating_before=$(printf '%s' "$window_json" | jq -r '."is-floating"')
+  if [ "$float_action" = "toggle" ] || [ "$is_floating_before" != "true" ]; then
+    yabai -m window "$target_window" --toggle float || exit 0
+    window_json=$(yabai -m query --windows --window "$target_window" 2>/dev/null) || exit 0
+  fi
+else
+  window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
+  is_floating_before=$(printf '%s' "$window_json" | jq -r '."is-floating"')
+  if [ "$float_action" = "toggle" ] || [ "$is_floating_before" != "true" ]; then
+    yabai -m window --toggle float || exit 0
+    window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
+  fi
+fi
 [ -n "$window_json" ] || exit 0
 
 is_floating=$(printf '%s' "$window_json" | jq -r '."is-floating"')
@@ -130,16 +149,28 @@ fi
 # wide-solo padding, resizing to display width before moving can be clamped by
 # macOS/yabai at the current x position, leaving a right-side gap.
 if [ "$mode" = "fullscreen" ]; then
-  yabai -m window --move abs:"$x":"$y"
-  sleep 0.01  # wait for JankyBorders to render correctly
-  yabai -m window --resize abs:"$w":"$h"
-  yabai -m window --move abs:"$x":"$y"
+  if [ -n "$target_window" ]; then
+    yabai -m window "$target_window" --move abs:"$x":"$y"
+    sleep 0.01  # wait for JankyBorders to render correctly
+    yabai -m window "$target_window" --resize abs:"$w":"$h"
+    yabai -m window "$target_window" --move abs:"$x":"$y"
+  else
+    yabai -m window --move abs:"$x":"$y"
+    sleep 0.01  # wait for JankyBorders to render correctly
+    yabai -m window --resize abs:"$w":"$h"
+    yabai -m window --move abs:"$x":"$y"
+  fi
 else
   # Resize before move so JankyBorders receives the expensive size update before
   # the cheap move update. This avoids briefly showing an old-size border at the
   # final floated position.
-  yabai -m window --resize abs:"$w":"$h"
-  yabai -m window --move abs:"$x":"$y"
+  if [ -n "$target_window" ]; then
+    yabai -m window "$target_window" --resize abs:"$w":"$h"
+    yabai -m window "$target_window" --move abs:"$x":"$y"
+  else
+    yabai -m window --resize abs:"$w":"$h"
+    yabai -m window --move abs:"$x":"$y"
+  fi
 fi
 
 if [ "$mode" = "center" ]; then

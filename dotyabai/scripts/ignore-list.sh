@@ -121,18 +121,37 @@ apply_ignore_rule_live() {
   label=$(ignore_rule_label "$app")
   regex=$(ignore_app_regex "$app")
 
+  # Capture tiled windows before applying manage=off. After rule apply, yabai may
+  # already report these unmanaged windows as floating, which would make us skip
+  # centering them.
+  command -v jq >/dev/null 2>&1 || return 0
+  window_ids=$(yabai -m query --windows 2>/dev/null |
+    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == false) | .id')
+
   yabai -m rule --remove "$label" >/dev/null 2>&1 || :
   yabai -m rule --add label="$label" app="$regex" manage=off >/dev/null 2>&1 || return 0
   yabai -m rule --apply "$label" >/dev/null 2>&1 || :
 
-  # If this app is now ignored, make existing tiled windows float before the
-  # next layout apply so they are visually removed from the managed layout.
-  command -v jq >/dev/null 2>&1 || return 0
-  yabai -m query --windows 2>/dev/null |
-    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == false) | .id' |
+  # If this app is now ignored, make windows that were tiled before manage=off
+  # float before the next layout apply so they are visually removed from the
+  # managed layout. Center them using the regular float helper instead of
+  # leaving them at their tiled size/position.
+  script_dir=$(dirname "$0")
+  toggle_float_script=""
+  if [ -x "$script_dir/toggle-float.sh" ]; then
+    toggle_float_script="$script_dir/toggle-float.sh"
+  elif [ -x "$HOME/.config/yabai/scripts/toggle-float.sh" ]; then
+    toggle_float_script="$HOME/.config/yabai/scripts/toggle-float.sh"
+  fi
+
+  printf '%s\n' "$window_ids" |
     while IFS= read -r id; do
       [ -n "$id" ] || continue
-      yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
+      if [ -n "$toggle_float_script" ]; then
+        "$toggle_float_script" center "$id" ensure >/dev/null 2>&1 || :
+      else
+        yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
+      fi
     done
 }
 
@@ -147,8 +166,10 @@ remove_ignore_rule_live() {
   # still be floating after the rule is removed. Turn float off before the next
   # layout apply so yabai can include them again.
   command -v jq >/dev/null 2>&1 || return 0
-  yabai -m query --windows 2>/dev/null |
-    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == true) | .id' |
+  window_ids=$(yabai -m query --windows 2>/dev/null |
+    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == true) | .id')
+
+  printf '%s\n' "$window_ids" |
     while IFS= read -r id; do
       [ -n "$id" ] || continue
       yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
