@@ -2,7 +2,7 @@
 action = "ToggleViMode"
 key = "Space"
 mode = "~Search"
-mods = "Alt|Shift"
+mods = "Alt|Command"
 
 [[keyboard.bindings]]
 action = "ScrollToBottom"
@@ -120,9 +120,9 @@ chars = "\u0015"
 key = "Back"
 mods = "Command"
 
-# Command-N sends Alt-N for tmux session creation.
+# Command-N sends a tmux user key for tmux session creation.
 [[keyboard.bindings]]
-chars = "\u001Bn"
+chars = "\u001B[9026u"
 key = "N"
 mods = "Command"
 
@@ -132,9 +132,9 @@ action = "CreateNewWindow"
 key = "N"
 mods = "Command|Shift"
 
-# Command-W sends Alt-W for tmux window close.
+# Command-W sends a tmux user key for tmux pane/window close.
 [[keyboard.bindings]]
-chars = "\u001Bw"
+chars = "\u001B[9027u"
 key = "W"
 mods = "Command"
 
@@ -144,9 +144,9 @@ chars = "\u0011"
 key = "Q"
 mods = "Command"
 
-# Command-T sends Alt-T for tmux window creation.
+# Command-T sends a tmux user key for tmux window creation.
 [[keyboard.bindings]]
-chars = "\u001Bt"
+chars = "\u001B[9028u"
 key = "T"
 mods = "Command"
 
@@ -253,6 +253,12 @@ mods = "Control|Shift"
 key = "Enter"
 mods = "Shift"
 chars = "\u001b[13;2u"
+
+# Ctrl-Enter sends a tmux user key for pane zoom.
+[[keyboard.bindings]]
+chars = "\u001B[9025u"
+key = "Enter"
+mods = "Control"
 
 # Command-Enter sends CSI-u Alt-Enter for terminal apps like pi.
 [[keyboard.bindings]]
