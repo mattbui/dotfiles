@@ -1,3 +1,96 @@
+# Core terminal settings
+[env]
+TERM = "alacritty"
+TERM_APP_NAME = "Alacritty"
+
+[window]
+decorations = "buttonless"
+dynamic_padding = true
+option_as_alt = "Both"
+
+[window.dimensions]
+columns = 120
+lines = 30
+
+[window.padding]
+x = 8
+y = 8
+
+[font]
+size = 14.5
+
+[font.normal]
+family = "JetBrainsMonoNL Nerd Font Mono"
+style = "Light"
+
+[font.bold]
+style = "Medium"
+
+[font.italic]
+style = "Light Italic"
+
+[font.bold_italic]
+style = "Medium Italic"
+
+[font.offset]
+x = 0
+y = 0
+
+[scrolling]
+history = 10000
+multiplier = 5
+
+[cursor.style]
+blinking = "Off"
+shape = "Block"
+
+[cursor.vi_mode_style]
+shape = "Block"
+
+# Theme: Tokyo Night Storm
+[colors.primary]
+background = "#24283b"
+foreground = "#c0caf5"
+
+[colors.normal]
+black = "#1d202f"
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+magenta = "#bb9af7"
+red = "#f7768e"
+white = "#a9b1d6"
+yellow = "#e0af68"
+
+[colors.bright]
+black = "#414868"
+blue = "#7aa2f7"
+cyan = "#7dcfff"
+green = "#9ece6a"
+magenta = "#bb9af7"
+red = "#f7768e"
+white = "#c0caf5"
+yellow = "#e0af68"
+
+[[colors.indexed_colors]]
+color = "#ff9e64"
+index = 16
+
+[[colors.indexed_colors]]
+color = "#db4b4b"
+index = 17
+
+# URL hints
+[[hints.enabled]]
+command = "open"
+hyperlinks = true
+post_processing = true
+persist = false
+mouse = { enabled = true, mods = "Command|Shift" }
+binding = { key = "O", mods = "Command|Shift" }
+regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|codex://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+# Keyboard: Vi/search mode
 [[keyboard.bindings]]
 action = "ToggleViMode"
 key = "Space"
@@ -11,25 +104,17 @@ mode = "Vi|~Search"
 mods = "Alt|Shift"
 
 [[keyboard.bindings]]
-chars = "\u001B "
-key = "Space"
-mods = "Alt"
-
-[[hints.enabled]]
-command = "open"
-hyperlinks = true
-post_processing = true
-persist = false
-mouse = { enabled = true, mods = "Command|Shift" }
-binding = { key = "O", mods = "Command|Shift" }
-regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\\u0000-\\u001F\\u007F-\\u009F<>\"\\s{-}\\^⟨⟩`]+"
-
-[[keyboard.bindings]]
 action = "ToggleViMode"
 key = "Escape"
 mode = "Vi|~Search"
 
+# Keyboard: Option/Alt compatibility
 # \u001B is ESC; ESC plus a key is how terminals encode Alt-key chords.
+[[keyboard.bindings]]
+chars = "\u001B "
+key = "Space"
+mods = "Alt"
+
 [[keyboard.bindings]]
 chars = "\u001Bj"
 key = "J"
@@ -49,27 +134,6 @@ mods = "Alt"
 chars = "\u001Bl"
 key = "L"
 mods = "Alt"
-
-# Karabiner maps tapped Command-H to F13 so held Command-H can still hide apps.
-# Command/F13/J/K/L send tmux user-key sequences for directional splits.
-[[keyboard.bindings]]
-chars = "\u001B[9001u"
-key = "F13"
-
-[[keyboard.bindings]]
-chars = "\u001B[9002u"
-key = "J"
-mods = "Command"
-
-[[keyboard.bindings]]
-chars = "\u001B[9003u"
-key = "K"
-mods = "Command"
-
-[[keyboard.bindings]]
-chars = "\u001B[9004u"
-key = "L"
-mods = "Command"
 
 [[keyboard.bindings]]
 chars = "\u001Bq"
@@ -96,28 +160,32 @@ chars = "\u001Bf"
 key = "Right"
 mods = "Alt"
 
-# Ctrl-6 sends RS (Record Separator), ASCII 0x1E.
+# Keyboard: tmux panes/windows/sessions
+# Karabiner maps tapped Command-H to F13 so held Command-H can still hide apps.
+# Command/F13/J/K/L send tmux user-key sequences for directional splits.
 [[keyboard.bindings]]
-chars = "\u001E"
-key = "Key6"
-mods = "Control"
+chars = "\u001B[9001u"
+key = "F13"
 
-# Ctrl-Q sends DC1/XON, ASCII 0x11.
 [[keyboard.bindings]]
-chars = "\u0011"
-key = "Q"
-mods = "Control"
+chars = "\u001B[9002u"
+key = "J"
+mods = "Command"
 
-# Ctrl-W sends ETB, ASCII 0x17.
 [[keyboard.bindings]]
-chars = "\u0017"
-key = "Back"
-mods = "Alt"
+chars = "\u001B[9003u"
+key = "K"
+mods = "Command"
 
-# Ctrl-U sends NAK, ASCII 0x15.
 [[keyboard.bindings]]
-chars = "\u0015"
-key = "Back"
+chars = "\u001B[9004u"
+key = "L"
+mods = "Command"
+
+# Command-D sends a tmux user key for revdiff popup.
+[[keyboard.bindings]]
+chars = "\u001B[9005u"
+key = "D"
 mods = "Command"
 
 # Command-N sends a tmux user key for tmux session creation.
@@ -138,24 +206,47 @@ chars = "\u001B[9027u"
 key = "W"
 mods = "Command"
 
-# Ctrl-Q sends DC1/XON, ASCII 0x11.
-[[keyboard.bindings]]
-chars = "\u0011"
-key = "Q"
-mods = "Command"
-
 # Command-T sends a tmux user key for tmux window creation.
 [[keyboard.bindings]]
 chars = "\u001B[9028u"
 key = "T"
 mods = "Command"
 
-# Ctrl+- sends US (Unit Separator), ASCII 0x1F.
+# Command-P sends a tmux user key for choose-tree.
 [[keyboard.bindings]]
-chars = "\u001F"
-key = "Z"
+chars = "\u001B[9022u"
+key = "P"
 mods = "Command"
 
+# Command-Shift-P sends a tmux user key for session-only choose-tree.
+[[keyboard.bindings]]
+chars = "\u001B[9023u"
+key = "P"
+mods = "Command|Shift"
+
+# Ctrl-Tab / Ctrl-Shift-Tab cycle tmux sessions.
+[[keyboard.bindings]]
+chars = "\u001B[9020u"
+key = "Tab"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\u001B[9021u"
+key = "Tab"
+mods = "Control|Shift"
+
+# Karabiner sends F18 on Ctrl release after Ctrl-Tab session cycling.
+[[keyboard.bindings]]
+chars = "\u001B[9024u"
+key = "F18"
+
+# Ctrl-Enter sends a tmux user key for pane zoom.
+[[keyboard.bindings]]
+chars = "\u001B[9025u"
+key = "Enter"
+mods = "Control"
+
+# Keyboard: tmux direct window selection
 # Command-number sends tmux user-key sequences for direct window selection.
 [[keyboard.bindings]]
 chars = "\u001B[9011u"
@@ -202,40 +293,7 @@ chars = "\u001B[9019u"
 key = "Key9"
 mods = "Command"
 
-# Command-P sends a tmux user key for choose-tree.
-[[keyboard.bindings]]
-chars = "\u001B[9022u"
-key = "P"
-mods = "Command"
-
-# Command-Shift-P sends a tmux user key for session-only choose-tree.
-[[keyboard.bindings]]
-chars = "\u001B[9023u"
-key = "P"
-mods = "Command|Shift"
-
-# Ctrl-Tab / Ctrl-Shift-Tab cycle tmux sessions.
-[[keyboard.bindings]]
-chars = "\u001B[9020u"
-key = "Tab"
-mods = "Control"
-
-[[keyboard.bindings]]
-chars = "\u001B[9021u"
-key = "Tab"
-mods = "Control|Shift"
-
-# Karabiner sends F18 on Ctrl release after Ctrl-Tab session cycling.
-[[keyboard.bindings]]
-chars = "\u001B[9024u"
-key = "F18"
-
-# Command-D sends a tmux user key for revdiff popup.
-[[keyboard.bindings]]
-chars = "\u001B[9005u"
-key = "D"
-mods = "Command"
-
+# Keyboard: Pi/app-specific CSI-u sequences
 # Command-Shift-M sends CSI-u Alt-Shift-M for pi model picker.
 [[keyboard.bindings]]
 chars = "\u001B[109;4u"
@@ -250,15 +308,9 @@ mods = "Control|Shift"
 
 # Shift-Enter sends CSI-u Shift-Enter for terminal apps like pi.
 [[keyboard.bindings]]
+chars = "\u001b[13;2u"
 key = "Enter"
 mods = "Shift"
-chars = "\u001b[13;2u"
-
-# Ctrl-Enter sends a tmux user key for pane zoom.
-[[keyboard.bindings]]
-chars = "\u001B[9025u"
-key = "Enter"
-mods = "Control"
 
 # Command-Enter sends CSI-u Alt-Enter for terminal apps like pi.
 [[keyboard.bindings]]
@@ -272,83 +324,39 @@ chars = "\u001B[13;4u"
 key = "Enter"
 mods = "Command|Shift"
 
-[[colors.indexed_colors]]
-color = "#ff9e64"
-index = 16
+# Keyboard: control-character compatibility
+# Ctrl-6 sends RS (Record Separator), ASCII 0x1E.
+[[keyboard.bindings]]
+chars = "\u001E"
+key = "Key6"
+mods = "Control"
 
-[[colors.indexed_colors]]
-color = "#db4b4b"
-index = 17
+# Ctrl-Q sends DC1/XON, ASCII 0x11.
+[[keyboard.bindings]]
+chars = "\u0011"
+key = "Q"
+mods = "Control"
 
-[colors.bright]
-black = "#414868"
-blue = "#7aa2f7"
-cyan = "#7dcfff"
-green = "#9ece6a"
-magenta = "#bb9af7"
-red = "#f7768e"
-white = "#c0caf5"
-yellow = "#e0af68"
+# Alt-Backspace sends ETB/Ctrl-W, ASCII 0x17.
+[[keyboard.bindings]]
+chars = "\u0017"
+key = "Back"
+mods = "Alt"
 
-[colors.normal]
-black = "#1d202f"
-blue = "#7aa2f7"
-cyan = "#7dcfff"
-green = "#9ece6a"
-magenta = "#bb9af7"
-red = "#f7768e"
-white = "#a9b1d6"
-yellow = "#e0af68"
+# Command-Backspace sends NAK/Ctrl-U, ASCII 0x15.
+[[keyboard.bindings]]
+chars = "\u0015"
+key = "Back"
+mods = "Command"
 
-[colors.primary]
-background = "#24283b"
-foreground = "#c0caf5"
+# Command-Q sends DC1/XON, ASCII 0x11.
+[[keyboard.bindings]]
+chars = "\u0011"
+key = "Q"
+mods = "Command"
 
-[cursor.style]
-blinking = "Off"
-shape = "Block"
-
-[cursor.vi_mode_style]
-shape = "Block"
-
-[env]
-TERM = "alacritty"
-
-[font]
-size = 14.5
-
-[font.bold]
-style = "Medium"
-
-[font.bold_italic]
-style = "Medium Italic"
-
-[font.italic]
-style = "Light Italic"
-
-[font.normal]
-family = "JetBrainsMonoNL Nerd Font Mono"
-style = "Light"
-
-[font.offset]
-x = 0
-y = 0
-
-[scrolling]
-history = 10000
-multiplier = 5
-
-[window]
-decorations = "buttonless"
-dynamic_padding = true
-option_as_alt = "Both"
-
-[window.dimensions]
-columns = 120
-lines = 30
-
-[window.padding]
-x = 8
-y = 8
-
-[keyboard]
+# Command-Z sends US/Ctrl-_, ASCII 0x1F.
+[[keyboard.bindings]]
+chars = "\u001F"
+key = "Z"
+mods = "Command"
