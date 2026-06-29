@@ -24,6 +24,8 @@ keybind = super+==increase_font_size:0.5
 keybind = super++=increase_font_size:0.5
 # Send Ctrl-_ / Ctrl-- (US, 0x1f) for terminal-app undo.
 keybind = super+z=text:\x1f
+# Send Ctrl-X Ctrl-R for zsh redo.
+keybind = super+shift+z=text:\x18\x12
 keybind = super+shift+t=unbind
 keybind = super+shift+n=new_window
 # Terminal app CSI-u passthroughs

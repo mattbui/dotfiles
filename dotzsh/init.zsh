@@ -95,6 +95,18 @@ if [[ -z ${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY} ]]; then
     zle -N zle-keymap-select
 fi
 
+# Redo in the zsh command-line editor (Ctrl-X Ctrl-R, or Ctrl-X then r).
+# compinit/.zcompdump can rebind Ctrl-X Ctrl-R to _read_comp, so re-apply this
+# before each prompt.
+_bind_redo_keys() {
+    bindkey '^X^R' redo
+    bindkey '^Xr' redo
+    bindkey -M viins '^X^R' redo
+    bindkey -M viins '^Xr' redo
+}
+_bind_redo_keys
+precmd_functions+=(_bind_redo_keys)
+
 # Make Ctrl-U, including Alacritty's Cmd-Backspace mapping, delete only back to
 # the start of the line instead of killing the whole command line.
 bindkey '^U' backward-kill-line

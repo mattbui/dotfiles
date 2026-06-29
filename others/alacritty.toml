@@ -360,3 +360,9 @@ mods = "Command"
 chars = "\u001F"
 key = "Z"
 mods = "Command"
+
+# Command-Shift-Z sends Ctrl-X Ctrl-R for zsh redo.
+[[keyboard.bindings]]
+chars = "\u0018\u0012"
+key = "Z"
+mods = "Command|Shift"
