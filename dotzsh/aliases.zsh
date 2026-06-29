@@ -6,7 +6,7 @@ alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
-alias mkignore='ln -s ~/dotfiles/dotignore/.ignore_search .ignore'
+alias lnignore='ln -s ~/dotfiles/dotignore/.ignore_search .ignore'
 
 alias px='pi --no-session'
 
@@ -121,4 +121,3 @@ codex() {
     fi
     return $exit_code
 }
-
