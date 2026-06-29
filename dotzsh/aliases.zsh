@@ -6,15 +6,100 @@ alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
+alias mkignore='ln -s ~/dotfiles/dotignore/.ignore_search .ignore'
+
+alias px='pi --no-session'
 
 picommit() {
     local args="$*"
     pi --no-session "/commit${args:+ $args}"
 }
 
-alias rpush='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" --exclude ".git" --exclude ".venv" --exclude ".src" ./ $RSYNC_REMOTE'
-alias rpull='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || rsync -av --exclude "__pycache__" --exclude "Session.vim" --exclude ".undodir" --exclude ".git" --exclude ".venv" --exclude ".src" $RSYNC_REMOTE ../'
-alias rstatus='[ -z $RSYNC_REMOTE ] && echo "Missing environment variable \$RSYNC_REMOTE" || (echo "PUSH CHANGES:" && rpush --delete -n && echo "PULL CHANGES:" && rpull --delete -n)'
+# Gitignore-aware rsync experiment. Disabled for now because broad re-includes
+# like `+ *.png` / `+ *.jsonl` can make generated ignored files sync-managed
+# and interact dangerously with `--delete`.
+#
+# _rsync_filters=(
+#     --filter='- .git/***'
+#     --filter='+ *.csv'
+#     --filter='+ *.jsonl'
+#     --filter='+ *.png'
+#     --filter='+ .envrc'
+#     --filter='+ .ignore'
+#     --filter=".- $HOME/dotfiles/dotignore/.gitignore_global"
+#     --filter=':- .gitignore'
+# )
+#
+# rpush() {
+#     if [ -z "$RSYNC_REMOTE" ]; then
+#         echo "Missing environment variable \$RSYNC_REMOTE"
+#         return 1
+#     fi
+#
+#     rsync -av "${_rsync_filters[@]}" "$@" ./ "$RSYNC_REMOTE"
+# }
+#
+# rpull() {
+#     if [ -z "$RSYNC_REMOTE" ]; then
+#         echo "Missing environment variable \$RSYNC_REMOTE"
+#         return 1
+#     fi
+#
+#     rsync -av "${_rsync_filters[@]}" "$@" "$RSYNC_REMOTE" ../
+# }
+#
+# rstatus() {
+#     if [ -z "$RSYNC_REMOTE" ]; then
+#         echo "Missing environment variable \$RSYNC_REMOTE"
+#         return 1
+#     fi
+#
+#     echo "PUSH CHANGES:"
+#     rpush --delete -n
+#     echo "PULL CHANGES:"
+#     rpull --delete -n
+# }
+
+_rsync_excludes=(
+    --exclude "__pycache__"
+    --exclude "Session.vim"
+    --exclude ".DS_Store"
+    --exclude ".undodir"
+    --exclude ".git"
+    --exclude ".venv"
+    --exclude ".src"
+)
+
+rpush() {
+    if [ -z "$RSYNC_REMOTE" ]; then
+        echo "Missing environment variable \$RSYNC_REMOTE"
+        return 1
+    fi
+
+    rsync -av --progress "${_rsync_excludes[@]}" "$@" ./ "$RSYNC_REMOTE"
+}
+
+rpull() {
+    if [ -z "$RSYNC_REMOTE" ]; then
+        echo "Missing environment variable \$RSYNC_REMOTE"
+        return 1
+    fi
+
+    rsync -av --progress "${_rsync_excludes[@]}" "$@" "$RSYNC_REMOTE" ../
+}
+
+rstatus() {
+    if [ -z "$RSYNC_REMOTE" ]; then
+        echo "Missing environment variable \$RSYNC_REMOTE"
+        return 1
+    fi
+
+    echo "PUSH CHANGES:"
+    rpush --delete -n
+    echo
+    echo "PULL CHANGES:"
+    rpull --delete -n
+}
 
 alias ppip='python -m pip'
 alias pipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'

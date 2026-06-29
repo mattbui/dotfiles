@@ -1,0 +1,31 @@
+# fd/rg search ignore rules
+#
+# Use this as a local .ignore file when you want search tools to respect
+# .gitignore/.gitignore_global, while also excluding search noise and
+# including selected globally ignored paths.
+#
+# Example:
+#   ln -s ~/dotfiles/dotignore/.ignore_search .ignore
+
+!.src/
+!.src/*
+
+!.plans/
+!.plans/**
+
+!.handoff/
+!.handoff/**
+
+!draft*
+!draft*/**
+
+!.envrc
+!.ignore
+
+!*.csv
+!*.jsonl
+!*.png
+
+.src/*/*
+.git/
+.DS_Store

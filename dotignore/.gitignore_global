@@ -55,6 +55,7 @@ Session.vim
 
 ### Personal define ####
 draft*
+.ignore
 
 ### Direnv ###
 .envrc
@@ -158,6 +159,8 @@ pythonenv*
 
 # Local source code for exploration
 .src/
+.plans/
+.handoff/
 
 # Node
 node_modules/
