@@ -9,6 +9,8 @@ iframe.vimium-hud-frame {
   --vimium-accent: #bb9af7;
   --vimium-highlight: #7dcfff;
   --vimium-blue: #7aa2f7;
+  --vimium-blue0: #3d59a1;
+  --vimium-blue7: #394b70;
   --vimium-text: #c0caf5;
   --vimium-subtext: #737aa2;
   --vimium-surface1: #3b4261;
@@ -49,58 +51,68 @@ iframe.vimium-hud-frame {
 /* Vomnibar */
 
 #vomnibar {
-  background: var(--vimium-base);
-  color: var(--vimium-text);
-  border: 1px solid var(--vimium-surface0);
+  background: var(--vimium-text);
+  color: var(--vimium-base);
+  border: none;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 10px rgba(36, 40, 59, 0.16);
 }
 
 #vomnibar input {
-  color: var(--vimium-text);
-  background: var(--vimium-mantle);
+  color: var(--vimium-base);
+  background: var(--vimium-text);
   border: none;
   box-shadow: none;
-  caret-color: var(--vimium-accent);
+  caret-color: var(--vimium-base);
 }
 
 #vomnibar #vomnibar-search-area {
   border: none;
-  background: var(--vimium-mantle);
+  background: var(--vimium-text);
 }
 
 #vomnibar ul {
-  background: var(--vimium-base);
-  border-top: 1px solid var(--vimium-surface0);
+  background: var(--vimium-text);
+  border-top: 1px solid rgba(36, 40, 59, 0.16);
 }
 
 #vomnibar li {
-  color: var(--vimium-text);
-  border-bottom: 1px solid var(--vimium-surface0);
+  color: var(--vimium-base);
+  border-bottom: 1px solid rgba(36, 40, 59, 0.22);
 }
 
 #vomnibar li .source {
-  color: var(--vimium-subtext);
+  color: var(--vimium-surface1);
 }
 
 #vomnibar li em,
 #vomnibar li .title {
-  color: var(--vimium-text);
+  color: var(--vimium-base);
   font-weight: bold;
 }
 
 #vomnibar li .url {
-  color: var(--vimium-blue);
+  color: var(--vimium-blue0);
 }
 
 #vomnibar li .match,
 #vomnibar li .title .match {
-  color: var(--vimium-accent);
+  color: var(--vimium-blue7);
   font-weight: bold;
 }
 
 #vomnibar li.selected {
-  background-color: var(--vimium-surface0);
+  background-color: var(--vimium-blue7);
+  color: var(--vimium-text);
+}
+
+#vomnibar li.selected .source,
+#vomnibar li.selected em,
+#vomnibar li.selected .title,
+#vomnibar li.selected .url,
+#vomnibar li.selected .match,
+#vomnibar li.selected .title .match {
+  color: var(--vimium-text);
 }
 
 /* Search/find HUD */
