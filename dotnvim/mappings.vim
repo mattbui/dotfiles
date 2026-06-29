@@ -40,6 +40,15 @@ inoremap ! !<c-g>u
 inoremap ? ?<c-g>u
 inoremap : :<c-g>u
 
+inoremap <space> <space><c-g>u
+" if we want to preserve auto-pairs space behavior, use this instead:
+" inoremap <space> <c-]><c-r>=autopairsspace()<cr><c-g>u
+
+" break point for word delete and line delete
+inoremap <c-w> <c-g>u<c-w>
+inoremap <c-u> <c-g>u<c-u>
+
+
 " go back to past buffer
 nnoremap gb <C-o>
 " go forward buffer
