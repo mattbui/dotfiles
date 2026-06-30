@@ -91,8 +91,24 @@ map yP yank-abs-path
 cmd osOpen &open "$f"
 map o osOpen
 
-cmd quickLook &qlmanage -p "$f"
-map = quickLook
+cmd preview &{{
+    pid=$(qlmanage -p "$f" >/dev/null 2>&1 & echo $!)
+
+    osascript <<APPLESCRIPT >/dev/null 2>&1
+delay 0.1
+tell application "System Events"
+    set matchingProcesses to every process whose unix id is $pid
+    if (count of matchingProcesses) > 0 then
+        set p to item 1 of matchingProcesses
+        set frontmost of p to true
+        if (count of windows of p) > 0 then
+            perform action "AXRaise" of window 1 of p
+        end if
+    end if
+end tell
+APPLESCRIPT
+}}
+map <space> preview
 
 cmd extract %atool -x "$f"
 map x extract

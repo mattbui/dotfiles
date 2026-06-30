@@ -35,12 +35,15 @@ Messages
 Find My
 Calendar
 Karabiner-Elements
+Karabiner-EventViewer
 Logi Options+
 AppCleaner
 Activity Monitor
 App Store
 Disk Utility
 Notes
+Preview
+qlmanage
 DockDoor'
 
 ensure_ignore_file() {

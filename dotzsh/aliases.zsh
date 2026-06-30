@@ -10,6 +10,29 @@ alias lnignore='ln -s ~/dotfiles/dotignore/.ignore_search .ignore'
 
 alias px='pi --no-session'
 
+preview() {
+    if (( $# == 0 )); then
+        echo "usage: preview FILE..."
+        return 1
+    fi
+
+    local pid=$(qlmanage -p "$@" >/dev/null 2>&1 & echo $!)
+
+    osascript <<APPLESCRIPT >/dev/null
+delay 0.1
+tell application "System Events"
+    set matchingProcesses to every process whose unix id is $pid
+    if (count of matchingProcesses) > 0 then
+        set p to item 1 of matchingProcesses
+        set frontmost of p to true
+        if (count of windows of p) > 0 then
+            perform action "AXRaise" of window 1 of p
+        end if
+    end if
+end tell
+APPLESCRIPT
+}
+
 picommit() {
     local args="$*"
     pi --no-session "/commit${args:+ $args}"
