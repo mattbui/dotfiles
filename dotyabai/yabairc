@@ -59,10 +59,10 @@ add_and_apply_rule "space-Spark" app="^Spark$" space=space-1
 
 # Re-apply layout when window/application visibility changes.
 yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=application_hidden action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=application_hidden action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=application_visible action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts/focus-main.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
 yabai -m signal --add event=window_deminimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
 
 # Re-apply layout when focus moves to another space/display.
