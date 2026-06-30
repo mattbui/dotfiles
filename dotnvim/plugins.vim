@@ -37,8 +37,6 @@ call plug#begin(stdpath('data') . '/plugged')
     Plug 'junegunn/fzf.vim'
 
     " Tmux integration
-    " Plug 'edkolev/tmuxline.vim'
-    " Plug 'sainnhe/tmuxline.vim'  " enable true color for tmux line
     Plug 'christoomey/vim-tmux-navigator'
 
     " Coc plugin for intellisense
