@@ -14,6 +14,7 @@ picommit() {
     local args="$*"
     pi --no-session "/commit${args:+ $args}"
 }
+alias pc='picommit'
 
 _rsync_excludes=(
     --exclude "__pycache__"
