@@ -7,7 +7,7 @@ alt - j : yabai -m window --focus south || yabai -m window --focus stack.next ||
 alt - k : yabai -m window --focus north || yabai -m window --focus stack.prev || yabai -m window --focus stack.last
 
 # Yabai controls.
-cmd + alt + shift - r : yabai --restart-service
+cmd + alt + shift - r : $HOME/.config/yabai/scripts/restart-yabai.sh
 cmd + alt - r : $HOME/.config/yabai/scripts/label-spaces-displays.sh --notify
 cmd + alt - 0x2F : app=$(yabai -m query --windows --window | jq -r '.app // empty'); [ -n "$app" ] && $HOME/.config/yabai/scripts/ignore-list.sh toggle "$app"
 
