@@ -9,6 +9,11 @@ nnoremap <silent> <S-k> :bprevious<CR>
 " ctrl-w will close buffer
 nnoremap <silent> <C-w> :bw<CR>
 
+" Move Neovim's default diagnostic float mapping off ctrl-w d
+silent! nunmap <C-W>d
+silent! nunmap <C-W><C-D>
+nnoremap <silent> <Leader>d <Cmd>lua vim.diagnostic.open_float()<CR>
+
 " double shift-y to yank the whole file
 nnoremap <silent> YY :%y<CR>
 
