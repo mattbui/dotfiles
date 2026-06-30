@@ -1,5 +1,8 @@
 let g:lf_map_keys = 0
 let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
+" Mark lf instances launched by lf.vim/vim-floaterm so lfrc can preserve
+" editor-open behavior specific to Neovim floating terminals.
+let g:lf_command_override = 'env LF_NVIM_FLOATERM=1 lf'
 
 " Detect the lf instance launched through vim-floaterm. lf.vim sets the
 " floaterm title to 'lf', which lets us avoid touching other floaterms.

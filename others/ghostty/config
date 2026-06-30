@@ -109,10 +109,11 @@ keybind = super+shift+p=text:\x1b[9023u
 keybind = ctrl+enter=text:\x1b[9025u
 
 # Tmux session/window/pane actions
-# Send tmux User20/User21/User22 for session popup/kill pane/new window.
+# Send tmux User20/User21/User22/User23 for session popup/kill pane/new window/lf popup.
 keybind = super+n=text:\x1b[9026u
 keybind = super+w=text:\x1b[9027u
 keybind = super+t=text:\x1b[9028u
+keybind = super+o=text:\x1b[9029u
 
 # Ghostty actions moved away from tmux passthroughs
 keybind = super+shift+w=close_window

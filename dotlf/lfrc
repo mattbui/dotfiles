@@ -97,6 +97,56 @@ map = quickLook
 cmd extract %atool -x "$f"
 map x extract
 
+cmd tmuxNewWindow &{{
+    if [ -z "${TMUX:-}" ]; then
+        lf -remote "send $id echoerr 'tmux-window: not inside tmux'"
+        exit 1
+    fi
+
+    target_dir=$PWD
+    [ -d "$f" ] && target_dir=$f
+
+    if tmux new-window -c "$target_dir"; then
+        [ "${LF_TMUX_POPUP:-}" = "1" ] && lf -remote "send $id quit"
+    else
+        lf -remote "send $id echoerr 'failed to create tmux window'"
+        exit 1
+    fi
+}}
+
+cmd tmuxNewSession &{{
+    if [ -z "${TMUX:-}" ]; then
+        lf -remote "send $id echoerr 'tmux-session: not inside tmux'"
+        exit 1
+    fi
+
+    target_dir=$PWD
+    [ -d "$f" ] && target_dir=$f
+
+    base=${target_dir##*/}
+    [ -n "$base" ] || base=root
+    base=$(printf '%s' "$base" | tr ':' '_')
+
+    session_name=$base
+    index=1
+    while tmux has-session -t "=$session_name" 2>/dev/null; do
+        session_name="${base}(${index})"
+        index=$((index + 1))
+    done
+
+    if tmux new-session -d -s "$session_name" -c "$target_dir" && tmux switch-client -t "=$session_name"; then
+        [ "${LF_TMUX_POPUP:-}" = "1" ] && lf -remote "send $id quit"
+    else
+        lf -remote "send $id echoerr 'failed to create tmux session: $session_name'"
+        exit 1
+    fi
+}}
+
+# Override lf's default `t` tag-toggle mapping so `t` can prefix tmux actions.
+map t
+map tt tmuxNewWindow
+map tn tmuxNewSession
+
 cmd trash ${{
     clear; tput cup $(($(tput lines)/3)); tput bold
     set -f
@@ -144,9 +194,29 @@ cmd addFile %{{
 }}
 map a addFile
 
-# if currently in nvim (open via floaterm) -> use floaterm to open
 cmd openWithEditor ${{
-    [ -z $VIMRUNTIME ] && $EDITOR $f || floaterm $f
+    quote() {
+        printf '%s' "$1" | sed "s/'/'\\\\\\\\''/g; 1s/^/'/; \$s/\$/'/"
+    }
+
+    if [ -n "${LF_NVIM_FLOATERM:-}" ]; then
+        floaterm "$f"
+        exit
+    fi
+
+    if [ -z "${TMUX:-}" ]; then
+        ${EDITOR:-vi} "$f"
+        exit
+    fi
+
+    target=$(quote "$f")
+    shell=$(quote "${SHELL:-/bin/sh}")
+    if tmux new-window -c "$PWD" "${EDITOR:-vi} $target; exec $shell -l"; then
+        [ "${LF_TMUX_POPUP:-}" = "1" ] && lf -remote "send $id quit"
+    else
+        lf -remote "send $id echoerr 'failed to open editor in tmux window'"
+        exit 1
+    fi
 }}
 
 map e openWithEditor

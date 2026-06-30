@@ -212,6 +212,12 @@ chars = "\u001B[9028u"
 key = "T"
 mods = "Command"
 
+# Command-O sends a tmux user key for an lf popup.
+[[keyboard.bindings]]
+chars = "\u001B[9029u"
+key = "O"
+mods = "Command"
+
 # Command-P sends a tmux user key for choose-tree.
 [[keyboard.bindings]]
 chars = "\u001B[9022u"
