@@ -91,7 +91,7 @@ map yP yank-abs-path
 cmd osOpen &open "$f"
 map o osOpen
 
-cmd preview &{{
+cmd qlpreview &{{
     pid=$(qlmanage -p "$f" >/dev/null 2>&1 & echo $!)
 
     osascript <<APPLESCRIPT >/dev/null 2>&1
@@ -108,7 +108,7 @@ tell application "System Events"
 end tell
 APPLESCRIPT
 }}
-map <space> preview
+map <space> qlpreview
 
 cmd extract %atool -x "$f"
 map x extract
