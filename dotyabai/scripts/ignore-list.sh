@@ -44,7 +44,8 @@ Disk Utility
 Notes
 Preview
 qlmanage
-DockDoor'
+DockDoor
+Antinote'
 
 ensure_ignore_file() {
   mkdir -p "$ignore_state_dir" 2>/dev/null || return 1
