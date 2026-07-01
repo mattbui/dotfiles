@@ -3,7 +3,7 @@ if ! command -v fd &> /dev/null; then
   export FZF_DEFAULT_COMMAND='find * -type f'
   export PI_INLINE_FZF_COMMAND='find . \( -path "./.git" -o -path "./.src" -o -path "./.venv" -o -path "./.undodir*" -o -name ".DS_Store" \) -prune -o \( -type f -o -type d \) -print'
 else
-  export FZF_CTRL_T_COMMAND='fd --type f --hidden --follow'
+  export FZF_CTRL_T_COMMAND='fd --hidden --follow --type f --type d'
   export FZF_DEFAULT_COMMAND="$FZF_CTRL_T_COMMAND"
   export PI_INLINE_FZF_COMMAND='fd --hidden --follow --type f --type d'
 fi
@@ -42,7 +42,7 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 # --bind="tab:down,shift-tab:up,J:toggle+down,K:toggle+up"'
 
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
---bind="tab:down,shift-tab:up,>:select+down,<:deselect+up"'
+--bind="tab:down,shift-tab:up,shift-down:toggle+down,shift-up:toggle+up"'
 
 fcd() {
   local dir

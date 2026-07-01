@@ -16,8 +16,6 @@ map <enter> open
 map . set hidden!
 map J :toggle; down
 map K :toggle; up
-map <gt> :toggle; down
-map <lt> :toggle; up
 
 cmd yank-abs-path &{{
     paths=$(
