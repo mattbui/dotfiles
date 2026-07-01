@@ -11,6 +11,14 @@ add_and_apply_rule() {
   yabai -m rule --apply "$label"
 }
 
+add_signal() {
+  label="$1"
+  shift
+
+  yabai -m signal --remove "$label" >/dev/null 2>&1 || :
+  yabai -m signal --add label="$label" "$@"
+}
+
 # Apply manage=off rules before setting layout defaults so ignored windows are
 # excluded before yabai starts reconfiguring spaces on reload.
 # shellcheck source=/dev/null
@@ -58,26 +66,37 @@ add_and_apply_rule "space-Discord" app="^Discord$" space=space-1
 add_and_apply_rule "space-Spark" app="^Spark$" space=space-1
 
 # Re-apply layout when window/application visibility changes.
-yabai -m signal --add event=window_created action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=window_destroyed action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=application_hidden action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=application_visible action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=window_deminimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
+yabai_apply_layout="$HOME/.config/yabai/scripts/apply-layout.sh"
+add_signal "layout-window-created" event=window_created action="$yabai_apply_layout"
+add_signal "layout-window-destroyed" event=window_destroyed action="$yabai_apply_layout"
+add_signal "layout-application-hidden" event=application_hidden action="$yabai_apply_layout"
+add_signal "layout-application-visible" event=application_visible action="$yabai_apply_layout"
+add_signal "layout-window-minimized" event=window_minimized action="$yabai_apply_layout"
+add_signal "layout-window-deminimized" event=window_deminimized action="$yabai_apply_layout"
+
+# Restore focus when close/minimize/hide leaves macOS frontmost but no visible
+# yabai window is focused. Cmd-W for Notes/Messages/Finder is handled in skhdrc;
+# these signals cover mouse/menu closes and apps outside that skhd Cmd-W list.
+yabai_refocus="$HOME/.config/yabai/scripts/refocus.sh"
+add_signal "refocus-window-destroyed-active" event=window_destroyed active=yes action="$yabai_refocus window_destroyed"
+add_signal "refocus-window-minimized-active" event=window_minimized active=yes action="$yabai_refocus window_minimized"
+add_signal "refocus-application-hidden-active" event=application_hidden active=yes action="$yabai_refocus application_hidden"
 
 # Re-apply layout when focus moves to another space/display.
-yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/skip-focus.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/skip-focus.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai_skip_focus="$HOME/.config/yabai/scripts/skip-focus.sh"
+add_signal "layout-space-changed" event=space_changed action="$yabai_skip_focus; $yabai_apply_layout"
+add_signal "layout-display-changed" event=display_changed action="$yabai_skip_focus; $yabai_apply_layout"
 
 # Re-label spaces when the space set changes.
-yabai -m signal --add event=space_created action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
-yabai -m signal --add event=space_destroyed action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+yabai_label_spaces="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
+add_signal "label-space-created" event=space_created action="$yabai_label_spaces"
+add_signal "label-space-destroyed" event=space_destroyed action="$yabai_label_spaces"
 
 # Re-label displays/spaces when display topology changes.
-yabai -m signal --add event=display_added action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
-yabai -m signal --add event=display_removed action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
-yabai -m signal --add event=display_moved action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
-yabai -m signal --add event=display_resized action="$HOME/.config/yabai/scripts/label-spaces-displays.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+add_signal "label-display-added" event=display_added action="$yabai_label_spaces"
+add_signal "label-display-removed" event=display_removed action="$yabai_label_spaces"
+add_signal "label-display-moved" event=display_moved action="$yabai_label_spaces"
+add_signal "label-display-resized" event=display_resized action="$yabai_label_spaces; $yabai_apply_layout"
 
 $HOME/.config/yabai/scripts/apply-layout.sh
 

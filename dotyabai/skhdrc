@@ -1,5 +1,17 @@
 # skhd hotkeys for yabai
 
+# Some macOS apps can stay frontmost after Cmd-W with no visible focused yabai
+# window. `->` lets Cmd-W reach the app while refocus.sh restores focus if the
+# close event leaves focus stale. Notes needs this because it keeps an invisible
+# AX window; Messages/Finder also get this as a backup for inconsistent close
+# signal timing.
+cmd - w -> [
+  "notes"    : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
+  "messages" : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
+  "finder"   : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
+  *          ~
+]
+
 # Focus windows.
 # skip-focus mark enables the next yabai space/display-change hook to redirect
 # focus away from skip apps like Antinote; it is short-lived and consumed once.
