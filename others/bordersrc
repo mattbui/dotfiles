@@ -2,11 +2,12 @@
 
 options=(
 	style=round
-	width=3.0
+	width=4.0
 	hidpi=on
 	order=a
 	active_color=0xb3e2e2e3
 	inactive_color=0x00000000
+	blacklist="qlmanage,QuickLook,Antinote"
 )
 
 borders "${options[@]}"
