@@ -66,8 +66,8 @@ yabai -m signal --add event=window_minimized action="$HOME/.config/yabai/scripts
 yabai -m signal --add event=window_deminimized action="$HOME/.config/yabai/scripts/apply-layout.sh"
 
 # Re-apply layout when focus moves to another space/display.
-yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
-yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=space_changed action="$HOME/.config/yabai/scripts/skip-focus.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
+yabai -m signal --add event=display_changed action="$HOME/.config/yabai/scripts/skip-focus.sh; $HOME/.config/yabai/scripts/apply-layout.sh"
 
 # Re-label spaces when the space set changes.
 yabai -m signal --add event=space_created action="$HOME/.config/yabai/scripts/label-spaces-displays.sh"
