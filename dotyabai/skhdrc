@@ -9,6 +9,7 @@ cmd - w -> [
   "notes"    : $HOME/.config/yabai/scripts/refocus.sh
   "messages" : $HOME/.config/yabai/scripts/refocus.sh
   "finder"   : $HOME/.config/yabai/scripts/refocus.sh
+  "calendar" : $HOME/.config/yabai/scripts/refocus.sh
   *          ~
 ]
 
