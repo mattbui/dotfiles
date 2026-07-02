@@ -31,7 +31,10 @@ set mouse=a
 set splitbelow splitright      " Always split to right below
 set tabstop=4 shiftwidth=4
 set smarttab expandtab smartindent autoindent
-set laststatus=2 showtabline=2 " Always show tabline & statusline
+let g:popup_laststatus = 2
+let g:default_laststatus = 3
+let &laststatus = g:default_laststatus
+set showtabline=2 " Always show tabline & statusline
 set ignorecase smartcase       " Better search
 set noshowmode
 set nobackup nowritebackup
@@ -39,7 +42,7 @@ set updatetime=300 timeoutlen=600
 
 augroup terminal_timeoutlen
   autocmd!
-  autocmd TermEnter * set timeoutlen=150
+  autocmd TermEnter * set timeoutlen=200
   autocmd TermLeave * set timeoutlen=600
 augroup END
 

@@ -27,6 +27,7 @@ hi BufferInactiveSign guifg=#292e42 guibg=#292e42
 
 hi CursorLineNr guifg=#bb9af7 guibg=NONE
 hi SignColumn guifg=#3b4261 guibg=#24283b
+hi WinSeparator cterm=bold gui=bold guifg=#3B4261
 
 hi DiffAdd guifg=#73daca guibg=#2c3a44
 hi DiffChange guifg=#e0af68 guibg=#383545
@@ -54,17 +55,3 @@ hi diffOldFile guifg=#f7768e guibg=NONE
 hi diffFile guifg=#e0af68 guibg=NONE
 hi diffFileId guifg=#bb9af7 guibg=NONE
 hi gitconfigVariable guifg=#7dcfff guibg=NONE
-
-" hi SignColumn guifg=#3b4252 guibg=#2e3440
-" hi DiffAdd guifg=#a3be8c guibg=NONE
-" hi DiffChange guifg=#ebcb8b guibg=NONE
-" hi DiffDelete guifg=#bf616a guibg=NONE
-" hi DiffText guifg=#81a1c1 guibg=NONE
-" hi diffAdded guifg=#a3be8c guibg=#3b4252
-" hi diffChanged guifg=#ebcb8b guibg=#3b4252
-" hi diffRemoved guifg=#bf616a guibg=#3b4252
-" hi diffFileId guifg=#5e81ac guibg=NONE
-" hi diffFile guifg=#3b4048 guibg=NONE
-" hi diffNewFile guifg=#a3be8c guibg=NONE
-" hi diffOldFile guifg=#bf616a guibg=NONE
-" hi gitconfigVariable guifg=#8fbcbb guibg=NONE

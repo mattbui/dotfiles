@@ -1,13 +1,27 @@
 " Define a separator
 let g:which_key_sep = '→'
-" set timeoutlen=100
 
 let g:which_key_use_floating_win = 0
 let g:which_key_hspace = 10
 
-" Change the colors if you want
+
+function! s:which_key_enter() abort
+  let &laststatus = g:popup_laststatus
+  autocmd! WhichKeyAutocmd BufWinLeave <buffer>
+  autocmd WhichKeyAutocmd BufWinLeave <buffer> call <SID>which_key_leave()
+endfunction
+
+function! s:which_key_leave() abort
+  let &laststatus = g:default_laststatus
+endfunction
+
+augroup WhichKeyAutocmd
+  autocmd!
+  autocmd FileType which_key call <SID>which_key_enter()
+augroup END
+
 highlight default link WhichKey          Operator
-highlight default link WhichKeySeperator DiffAdded
+highlight default link WhichKeySeperator Comment
 highlight default link WhichKeyGroup     Identifier
 highlight default link WhichKeyDesc      Function
 

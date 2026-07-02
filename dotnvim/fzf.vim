@@ -1,5 +1,21 @@
 let g:fzf_layout = { 'window': { 'width': 0.6, 'height': 0.6 } }
 
+
+function! s:fzf_enter() abort
+  let &laststatus = g:popup_laststatus
+  autocmd! FzfAutocmd BufWinLeave <buffer>
+  autocmd FzfAutocmd BufWinLeave <buffer> call <SID>fzf_leave()
+endfunction
+
+function! s:fzf_leave() abort
+  let &laststatus = g:default_laststatus
+endfunction
+
+augroup FzfAutocmd
+  autocmd!
+  autocmd FileType fzf call <SID>fzf_enter()
+augroup END
+
 map <silent> <C-p> :Files<CR>
 
 " search global

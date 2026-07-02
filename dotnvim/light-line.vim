@@ -30,6 +30,12 @@ let g:lightline = {
       \           ['fileformat', 'fileencoding', 'filetype'],
       \           ]
       \ },
+      \ 'inactive': {
+      \   'left': [
+      \           ['mode', 'paste'],
+      \           ],
+      \   'right':[]
+      \ },
       \ 'enable': {
       \   'tabline': 0
       \ },
