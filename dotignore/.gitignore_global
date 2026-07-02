@@ -152,11 +152,6 @@ env.bak/
 venv.bak/
 pythonenv*
 
-# Data files
-*.csv
-*.jsonl
-*.png
-
 # Local source code for exploration
 .src/
 .plans/

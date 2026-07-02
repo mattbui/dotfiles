@@ -22,10 +22,6 @@
 !.envrc
 !.ignore
 
-!*.csv
-!*.jsonl
-!*.png
-
 .src/*/*
 .git/
 .DS_Store
