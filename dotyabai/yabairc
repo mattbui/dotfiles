@@ -78,9 +78,9 @@ add_signal "layout-window-deminimized" event=window_deminimized action="$yabai_a
 # yabai window is focused. Cmd-W for Notes/Messages/Finder is handled in skhdrc;
 # these signals cover mouse/menu closes and apps outside that skhd Cmd-W list.
 yabai_refocus="$HOME/.config/yabai/scripts/refocus.sh"
-add_signal "refocus-window-destroyed-active" event=window_destroyed active=yes action="$yabai_refocus window_destroyed"
-add_signal "refocus-window-minimized-active" event=window_minimized active=yes action="$yabai_refocus window_minimized"
-add_signal "refocus-application-hidden-active" event=application_hidden active=yes action="$yabai_refocus application_hidden"
+add_signal "refocus-window-destroyed-active" event=window_destroyed active=yes action="$yabai_refocus"
+add_signal "refocus-window-minimized-active" event=window_minimized active=yes action="$yabai_refocus"
+add_signal "refocus-application-hidden-active" event=application_hidden active=yes action="$yabai_refocus"
 
 # Re-apply layout when focus moves to another space/display.
 yabai_skip_focus="$HOME/.config/yabai/scripts/skip-focus.sh"

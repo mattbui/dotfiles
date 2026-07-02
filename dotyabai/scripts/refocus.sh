@@ -5,15 +5,8 @@
 set -u
 set -o pipefail
 
-event_name="${1:-unknown}"
-
 command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
-
-# skhd passthrough can start before the app handles Cmd-W.
-case "$event_name" in
-  hotkey_cmd_w) sleep 0.15 ;;
-esac
 
 macos_front_app() {
   command -v osascript >/dev/null 2>&1 || return 0

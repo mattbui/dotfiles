@@ -6,9 +6,9 @@
 # AX window; Messages/Finder also get this as a backup for inconsistent close
 # signal timing.
 cmd - w -> [
-  "notes"    : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
-  "messages" : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
-  "finder"   : $HOME/.config/yabai/scripts/refocus.sh hotkey_cmd_w
+  "notes"    : $HOME/.config/yabai/scripts/refocus.sh
+  "messages" : $HOME/.config/yabai/scripts/refocus.sh
+  "finder"   : $HOME/.config/yabai/scripts/refocus.sh
   *          ~
 ]
 
