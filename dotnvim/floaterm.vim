@@ -2,24 +2,9 @@ let g:floaterm_opener = 'edit'
 let g:floaterm_width = 0.8
 
 
-function! s:floaterm_enter() abort
-  if !s:is_current_floaterm_floating()
-    return
-  endif
-
-  let &laststatus = g:popup_laststatus
-  autocmd! FloatermAutocmd BufWinLeave <buffer>
-  autocmd FloatermAutocmd BufWinLeave <buffer> call <SID>floaterm_leave()
-endfunction
-
-function! s:floaterm_leave() abort
-  let &laststatus = g:default_laststatus
-endfunction
-
 augroup FloatermAutocmd
   autocmd!
-  autocmd FileType floaterm setlocal nonumber norelativenumber | call <SID>floaterm_enter()
-  autocmd BufWinEnter * if &filetype ==# 'floaterm' | call <SID>floaterm_enter() | endif
+  autocmd FileType floaterm setlocal nonumber norelativenumber
 augroup END
 
 function! s:is_current_floaterm_floating() abort
