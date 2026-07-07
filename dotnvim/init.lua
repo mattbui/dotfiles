@@ -1,3 +1,9 @@
+local config_dir = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p:h")
+
+local function source_config(name)
+  vim.cmd.source(config_dir .. "/" .. name)
+end
+
 -- General settings
 require("ui2")
 require("options")
@@ -16,12 +22,6 @@ require("plugins.autoformat")
 require("plugins.completion")
 require("commands.git")
 require("plugins.fff")
-
-local config_dir = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p:h")
-
-local function source_config(name)
-  vim.cmd.source(config_dir .. "/" .. name)
-end
 
 source_config("lf.vim")
 source_config("floaterm.vim")
