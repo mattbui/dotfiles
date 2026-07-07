@@ -1,4 +1,4 @@
-local commands = {}
+local M = {}
 
 local function truncate_diagnostic(diagnostic)
   local max_width = 50
@@ -9,44 +9,44 @@ local function truncate_diagnostic(diagnostic)
   return vim.fn.strcharpart(message, 0, max_width - 1) .. "…"
 end
 
-commands.virtual_text = {
+M.virtual_text = {
   format = truncate_diagnostic,
 }
 
-commands.virtual_text_enabled = false
-commands.inlay_hints_enabled = true
+M.virtual_text_enabled = false
+M.inlay_hints_enabled = true
 
-function commands.enable_virtual_text()
-  commands.virtual_text_enabled = true
-  vim.diagnostic.config({ virtual_text = commands.virtual_text })
+function M.enable_virtual_text()
+  M.virtual_text_enabled = true
+  vim.diagnostic.config({ virtual_text = M.virtual_text })
 end
 
-function commands.disable_virtual_text()
-  commands.virtual_text_enabled = false
+function M.disable_virtual_text()
+  M.virtual_text_enabled = false
   vim.diagnostic.config({ virtual_text = false })
 end
 
-function commands.toggle_virtual_text()
-  commands.virtual_text_enabled = not commands.virtual_text_enabled
-  vim.diagnostic.config({ virtual_text = commands.virtual_text_enabled and commands.virtual_text or false })
+function M.toggle_virtual_text()
+  M.virtual_text_enabled = not M.virtual_text_enabled
+  vim.diagnostic.config({ virtual_text = M.virtual_text_enabled and M.virtual_text or false })
 end
 
-function commands.enable_inlay_hints()
-  commands.inlay_hints_enabled = true
+function M.enable_inlay_hints()
+  M.inlay_hints_enabled = true
   vim.lsp.inlay_hint.enable(true)
 end
 
-function commands.disable_inlay_hints()
-  commands.inlay_hints_enabled = false
+function M.disable_inlay_hints()
+  M.inlay_hints_enabled = false
   vim.lsp.inlay_hint.enable(false)
 end
 
-function commands.toggle_inlay_hints()
-  commands.inlay_hints_enabled = not commands.inlay_hints_enabled
-  vim.lsp.inlay_hint.enable(commands.inlay_hints_enabled)
+function M.toggle_inlay_hints()
+  M.inlay_hints_enabled = not M.inlay_hints_enabled
+  vim.lsp.inlay_hint.enable(M.inlay_hints_enabled)
 end
 
-function commands.organize_imports()
+function M.organize_imports()
   if vim.bo.filetype == "python" then
     local file = vim.api.nvim_buf_get_name(0)
     if file == "" then
@@ -90,28 +90,28 @@ function commands.organize_imports()
   })
 end
 
-vim.api.nvim_create_user_command("LspVirtualTextEnable", commands.enable_virtual_text, {
+vim.api.nvim_create_user_command("LspVirtualTextEnable", M.enable_virtual_text, {
   desc = "Enable LSP diagnostic virtual text",
 })
-vim.api.nvim_create_user_command("LspVirtualTextDisable", commands.disable_virtual_text, {
+vim.api.nvim_create_user_command("LspVirtualTextDisable", M.disable_virtual_text, {
   desc = "Disable LSP diagnostic virtual text",
 })
-vim.api.nvim_create_user_command("LspVirtualTextToggle", commands.toggle_virtual_text, {
+vim.api.nvim_create_user_command("LspVirtualTextToggle", M.toggle_virtual_text, {
   desc = "Toggle LSP diagnostic virtual text",
 })
 
-vim.api.nvim_create_user_command("LspInlayHintsEnable", commands.enable_inlay_hints, {
+vim.api.nvim_create_user_command("LspInlayHintsEnable", M.enable_inlay_hints, {
   desc = "Enable LSP inlay hints",
 })
-vim.api.nvim_create_user_command("LspInlayHintsDisable", commands.disable_inlay_hints, {
+vim.api.nvim_create_user_command("LspInlayHintsDisable", M.disable_inlay_hints, {
   desc = "Disable LSP inlay hints",
 })
-vim.api.nvim_create_user_command("LspInlayHintsToggle", commands.toggle_inlay_hints, {
+vim.api.nvim_create_user_command("LspInlayHintsToggle", M.toggle_inlay_hints, {
   desc = "Toggle LSP inlay hints",
 })
 
-vim.api.nvim_create_user_command("SortImport", commands.organize_imports, {
+vim.api.nvim_create_user_command("SortImport", M.organize_imports, {
   desc = "Organize imports with LSP",
 })
 
-return commands
+return M

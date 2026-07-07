@@ -1,6 +1,6 @@
 local METHOD = "textDocument/documentSymbol"
 local PATH_SEPARATOR = "."
-local symbols = {}
+local M = {}
 
 local cache = {}
 local configured = false
@@ -275,7 +275,7 @@ local function current_from_symbols(symbol_list, line)
   return current
 end
 
-function symbols.current(opts)
+function M.current(opts)
   opts = opts or {}
   local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
 
@@ -299,12 +299,12 @@ function symbols.current(opts)
   return symbol
 end
 
-function symbols.current_name(opts)
+function M.current_name(opts)
   opts = opts or {}
 
   local symbol = opts.symbol
   if symbol == nil then
-    symbol = symbols.current(opts)
+    symbol = M.current(opts)
   end
 
   if symbol == nil then
@@ -323,24 +323,24 @@ function symbols.current_name(opts)
   }
 end
 
-function symbols.current_display(opts)
+function M.current_display(opts)
   opts = opts or {}
 
   local symbol = opts.symbol
   if symbol == nil then
-    symbol = symbols.current(opts)
+    symbol = M.current(opts)
   end
 
   if symbol == nil then
     return ""
   end
 
-  local name = symbols.current_name({ symbol = symbol })
+  local name = M.current_name({ symbol = symbol })
   local icon = kind_icons[symbol.scope_kind or symbol.kind] or ""
   return icon .. name
 end
 
-function symbols.setup()
+function M.setup()
   if configured then
     return
   end
@@ -363,4 +363,4 @@ function symbols.setup()
   })
 end
 
-return symbols
+return M

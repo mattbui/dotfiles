@@ -1,8 +1,8 @@
 local conform = require("conform")
 
-local autoformat = {}
+local M = {}
 
-autoformat.format_on_save = true
+M.format_on_save = true
 
 local function prefer_project_venv(name)
   return function(_, ctx)
@@ -31,7 +31,7 @@ conform.setup({
       command = prefer_project_venv("black"),
     },
   },
-  format_on_save = autoformat.format_on_save and {
+  format_on_save = M.format_on_save and {
     timeout_ms = 3000,
     lsp_format = "fallback",
   } or nil,
@@ -48,4 +48,4 @@ vim.api.nvim_create_user_command("Format", format, { desc = "Format current buff
 
 vim.keymap.set({ "n", "x" }, "<Leader>cf", format, { silent = true, desc = "Format" })
 
-return autoformat
+return M
