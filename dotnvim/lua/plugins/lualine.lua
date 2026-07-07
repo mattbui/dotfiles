@@ -16,12 +16,66 @@ local function paste()
   return ok_paste and is_paste and "PASTE" or ""
 end
 
-local function cursor_info()
-  return string.format("%d:%d | %d", vim.fn.col("."), vim.fn.line("."), vim.fn.line("$"))
+local function total_lines()
+  return string.format("%d", vim.fn.line("$"))
 end
 
-local function is_special_picker_buffer()
-  if vim.tbl_contains({ "fff_input", "fff_list", "fff_preview", "fff_file_info", "floaterm" }, vim.bo.filetype) then
+local function truncate_display(value, max_width, mode)
+  value = value or ""
+  if value == "" or vim.fn.strdisplaywidth(value) <= max_width then
+    return value
+  end
+
+  local ellipsis = "…"
+  local target_width = max_width - vim.fn.strdisplaywidth(ellipsis)
+  if target_width <= 0 then
+    return ellipsis
+  end
+
+  local result = ""
+
+  if mode == "start" then
+    for i = vim.fn.strchars(value) - 1, 0, -1 do
+      local next_result = vim.fn.strcharpart(value, i, 1) .. result
+      if vim.fn.strdisplaywidth(next_result) > target_width then
+        break
+      end
+      result = next_result
+    end
+
+    return ellipsis .. result
+  end
+
+  for i = 0, vim.fn.strchars(value) - 1 do
+    local next_result = result .. vim.fn.strcharpart(value, i, 1)
+    if vim.fn.strdisplaywidth(next_result) > target_width then
+      break
+    end
+    result = next_result
+  end
+
+  return result .. ellipsis
+end
+
+local function max_width(width)
+  return function(value)
+    return truncate_display(value, width)
+  end
+end
+
+local function should_hide_path()
+  local hidden_filetypes = {
+    "fff_input",
+    "fff_list",
+    "fff_preview",
+    "fff_file_info",
+    "floaterm",
+    "git",
+    "fugitive",
+    "qf",
+  }
+
+  if vim.tbl_contains(hidden_filetypes, vim.bo.filetype) then
     return true
   end
 
@@ -29,7 +83,7 @@ local function is_special_picker_buffer()
 end
 
 local function smart_path()
-  if is_special_picker_buffer() then
+  if should_hide_path() then
     return ""
   end
 
@@ -38,11 +92,12 @@ local function smart_path()
     path = "[No Name]"
   end
 
-  local threshold = math.max(20, math.floor(vim.api.nvim_win_get_width(0) * 0.35))
-  if vim.fn.strdisplaywidth(path) > threshold then
+  local max_path_width = 50
+  local shorten_threshold = math.min(max_path_width, math.max(40, math.floor(vim.api.nvim_win_get_width(0) * 0.3)))
+  if vim.fn.strdisplaywidth(path) > shorten_threshold then
     local parts = vim.split(path, "/", { plain = true })
     if #parts > 1 then
-      local parent_lengths = { 6, 4, 2, 1 }
+      local parent_lengths = { 6, 3, 2, 1 }
       local shortened = {}
       for i = 1, #parts - 1 do
         local distance_from_file = #parts - i
@@ -54,15 +109,13 @@ local function smart_path()
     end
   end
 
-  if vim.bo.filetype ~= "help" and vim.bo.readonly then
-    path = " " .. path
-  end
+  path = truncate_display(path, max_path_width, "start")
 
-  if vim.bo.modifiable and vim.bo.modified then
-    path = path .. " ●"
-  end
+  local prefix = vim.bo.filetype ~= "help" and vim.bo.readonly and " " or ""
+  local suffix = vim.bo.modifiable and vim.bo.modified and " ●" or ""
+  local path_width = max_path_width - vim.fn.strdisplaywidth(prefix) - vim.fn.strdisplaywidth(suffix)
 
-  return path
+  return prefix .. truncate_display(path, path_width, "start") .. suffix
 end
 
 local function conform_formatters()
@@ -118,9 +171,13 @@ lualine.setup({
       {
         "branch",
         icon = "",
+        fmt = max_width(24),
       },
       smart_path,
-      symbols.current_display,
+      {
+        symbols.current_display,
+        fmt = max_width(40),
+      },
     },
     lualine_c = {
       {
@@ -143,21 +200,18 @@ lualine.setup({
         colored = false,
       },
     },
-    lualine_y = { cursor_info },
-    lualine_z = {
+    lualine_y = {
+      total_lines,
       {
         "progress",
         fmt = vim.trim,
       },
     },
+    lualine_z = {
+      {
+        "location",
+        fmt = vim.trim,
+      },
+    },
   },
-  inactive_sections = {
-    lualine_a = { "mode" },
-    lualine_b = {},
-    lualine_c = {},
-    lualine_x = {},
-    lualine_y = {},
-    lualine_z = {},
-  },
-  tabline = {},
 })
