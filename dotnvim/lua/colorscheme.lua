@@ -13,14 +13,15 @@ local function link(group, target)
 end
 
 local function apply_tokyonight_storm()
-  hl("BufferCurrentSign", { fg = "#bb9af7", ctermfg = 110 })
-  hl("BufferCurrentTarget", { fg = "#bb9af7", ctermfg = 110 })
-  hl("BufferCurrentADDED", { fg = "#73daca" })
-  hl("BufferCurrentCHANGED", { fg = "#e0af68" })
-  hl("BufferCurrentDELETED", { fg = "#f7768e" })
+  hl("BufferCurrentSign", { fg = "#bb9af7", bg = "#24283b" })
+  hl("BufferCurrentSignRight", { fg = "#bb9af7", bg = "#24283b" })
+  hl("BufferCurrentTarget", { fg = "#bb9af7" })
+  hl("BufferCurrentADDED", { fg = "#73daca", bg = "#24283b" })
+  hl("BufferCurrentCHANGED", { fg = "#e0af68", bg = "#24283b" })
+  hl("BufferCurrentDELETED", { fg = "#f7768e", bg = "#24283b" })
   hl("BufferScrollArrow", { fg = "#7dcfff", bg = "#292e42" })
-  hl("BufferInactiveTarget", { fg = "#bb9af7", bg = "#3b4261", ctermfg = 110, ctermbg = 238 })
-  hl("BufferVisibleTarget", { fg = "#bb9af7", bg = "#3b4261", ctermfg = 110, ctermbg = 240 })
+  hl("BufferInactiveTarget", { fg = "#bb9af7", bg = "#3b4261" })
+  hl("BufferVisibleTarget", { fg = "#bb9af7", bg = "#3b4261" })
 
   hl("BufferVisible", { fg = "#636a8d", bg = "#292e42" })
   hl("BufferVisibleADDED", { fg = "#73daca", bg = "#292e42" })
@@ -76,24 +77,14 @@ local function apply_custom_colors()
   link("BlinkCmpDocBorder", "FloatBorder")
   link("BlinkCmpSignatureHelpBorder", "FloatBorder")
 
-  -- barbar bufferline highlight links.
-  link("BufferCurrentMod", "BufferCurrent")
-  link("BufferCurrentIcon", vim.bo.modified and "BufferCurrentMod" or "BufferCurrent")
-end
-
-local function update_buffer_current_icon()
-  -- Keep barbar's current-buffer icon highlight in sync with modified state.
-  link("BufferCurrentIcon", vim.bo.modified and "BufferCurrentMod" or "BufferCurrent")
+  pcall(function()
+    require("plugins.barbar").apply_highlights()
+  end)
 end
 
 api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
   group = api.nvim_create_augroup("dotfiles_colorscheme", { clear = true }),
   callback = apply_custom_colors,
-})
-
-api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWritePost", "FileWritePost", "BufEnter", "ColorScheme" }, {
-  group = api.nvim_create_augroup("dotfiles_bufferline_modified_icon", { clear = true }),
-  callback = update_buffer_current_icon,
 })
 
 pcall(function()

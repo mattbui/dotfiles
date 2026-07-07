@@ -26,7 +26,14 @@ end
 map("n", "<Leader>W", "<Cmd>BufferCloseAllButCurrent<CR>", "Close other tabs")
 map("n", "<Leader>Q", "<Cmd>q!<CR>", "Quit without save")
 map("n", "<Leader>S", '<Cmd>source $MYVIMRC | echo "Saved Vim Settings"<CR>', "Save settings")
+map("n", "<Leader>T", "<Cmd>BufferRestore<CR>", "Restore closed buffer")
 map("n", "<Leader>V", "<Cmd>e $MYVIMRC<CR>", "Vim settings")
+
+map("n", "<Leader>bp", "<Cmd>BufferTogglePermanent<CR>", "Toggle permanent")
+map("n", "<Leader>bw", "<Cmd>BufferClose<CR>", "Close current")
+map("n", "<Leader>bW", "<Cmd>BufferClosePreviews<CR>", "Close previews")
+map("n", "<Leader>bT", "<Cmd>BufferRestore<CR>", "Restore closed")
+map("n", "<Leader>bS", "<Cmd>BufferState<CR>", "Show state")
 
 map("n", "<Leader>gr", "<Cmd>Grefresh<CR>", "Refresh")
 map("n", "<Leader>gR", "<Cmd>Grh<CR>", "Reset")
@@ -85,6 +92,12 @@ wk.add({
   { "<Leader>8",   hidden = true },
   { "<Leader>9",   hidden = true },
   { "<Leader>a",   desc = "Align" },
+  { "<Leader>b",   group = "buffers" },
+  { "<Leader>bp",  desc = "Toggle permanent" },
+  { "<Leader>bS",  desc = "Show state" },
+  { "<Leader>bT",  desc = "Restore closed" },
+  { "<Leader>bw",  desc = "Close current" },
+  { "<Leader>bW",  desc = "Close previews" },
   { "<Leader>c",   group = "code-actions" },
   { "<Leader>ca",  desc = "Code action" },
   { "<Leader>cf",  desc = "Format",           mode = { "n", "x" } },

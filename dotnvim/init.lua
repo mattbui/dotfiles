@@ -11,6 +11,7 @@ require("filetypes")
 require("keymaps")
 require("autocmds")
 require("commands.yank_path")
+require("autobuffers")
 require("session")
 
 -- Plugins configs

@@ -4,7 +4,7 @@ local silent = { silent = true }
 -- Buffers
 map("n", "<S-j>", "<Cmd>bnext<CR>", silent)
 map("n", "<S-k>", "<Cmd>bprevious<CR>", silent)
-map("n", "<C-w>", "<Cmd>bw<CR>", silent)
+map("n", "<C-w>", "<Cmd>BufferClose<CR>", silent)
 map("n", "gb", "<C-o>", { desc = "Jump back" })
 map("n", "gt", "<C-i>")
 

@@ -36,6 +36,8 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
       return
     end
 
+    vim.cmd("argglobal")
+    vim.cmd("%argdelete")
     vim.cmd("mksession! " .. vim.fn.fnameescape(session_file))
   end,
 })
