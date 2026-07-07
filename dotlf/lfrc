@@ -15,7 +15,9 @@ map ~ cd ~
 map <enter> open
 map . set hidden!
 map J :toggle; down
+map <s-down> :toggle; down
 map K :toggle; up
+map <s-up> :toggle; up
 
 cmd yank-abs-path &{{
     paths=$(
@@ -195,16 +197,50 @@ cmd remove ${{
 map D remove
 
 cmd addDir %{{
+    quote() {
+        printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; 1s/^/"/; $s/$/"/'
+    }
+
+    select_created() {
+        unsetopt bg_nice 2>/dev/null || true
+
+        {
+            sleep 0.05
+            lf -remote "send $id select $(quote "$1")"
+        } >/dev/null 2>&1 &
+    }
+
     printf "Directory name or path? "
-    read ans
-    mkdir -p $ans
+    IFS= read -r ans
+    [ -n "$ans" ] || exit
+
+    if mkdir -p "$ans"; then
+        select_created "$ans"
+    fi
 }}
 map A addDir
 
 cmd addFile %{{
+    quote() {
+        printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g; 1s/^/"/; $s/$/"/'
+    }
+
+    select_created() {
+        unsetopt bg_nice 2>/dev/null || true
+
+        {
+            sleep 0.05
+            lf -remote "send $id select $(quote "$1")"
+        } >/dev/null 2>&1 &
+    }
+
     printf "Filename? "
-    read ans
-    touch $ans
+    IFS= read -r ans
+    [ -n "$ans" ] || exit
+
+    if touch "$ans"; then
+        select_created "$ans"
+    fi
 }}
 map a addFile
 
@@ -213,7 +249,7 @@ cmd openWithEditor ${{
         printf '%s' "$1" | sed "s/'/'\\\\\\\\''/g; 1s/^/'/; \$s/\$/'/"
     }
 
-    if [ -n "${LF_NVIM_FLOATERM:-}" ]; then
+    if [ -n "${FLOATERM:-}" ]; then
         floaterm "$f"
         exit
     fi
