@@ -105,7 +105,7 @@ local function mark_preview(bufnr)
 end
 
 local function promote(bufnr)
-  if not is_normal_file_buffer(bufnr) then
+  if not is_normal_file_buffer(bufnr) or permanent_buffers[bufnr] then
     return
   end
 
@@ -336,7 +336,7 @@ local function print_buffer_state()
   print(table.concat(lines, "\n"))
 end
 
-api.nvim_create_autocmd({ "BufAdd", "BufReadPost", "BufNewFile" }, {
+api.nvim_create_autocmd({ "BufAdd", "BufReadPost", "BufNewFile", "BufEnter" }, {
   group = autocmds,
   callback = function(event)
     mark_known_file(event.buf)
@@ -357,15 +357,6 @@ api.nvim_create_autocmd({ "BufWritePost", "BufFilePost" }, {
   group = autocmds,
   callback = function(event)
     mark_known_file(event.buf)
-  end,
-})
-
-api.nvim_create_autocmd("BufEnter", {
-  group = autocmds,
-  callback = function(event)
-    mark_preview(event.buf)
-    update_recency(event.buf)
-    schedule_cleanup_buffers()
   end,
 })
 
@@ -390,7 +381,7 @@ api.nvim_create_autocmd("OptionSet", {
 api.nvim_create_autocmd("TextChanged", {
   group = autocmds,
   callback = function(event)
-    if not permanent_buffers[event.buf] and is_valid_buffer(event.buf) and vim.bo[event.buf].modified then
+    if is_valid_buffer(event.buf) and vim.bo[event.buf].modified then
       promote(event.buf)
     end
   end,
