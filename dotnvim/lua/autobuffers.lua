@@ -387,6 +387,15 @@ api.nvim_create_autocmd("OptionSet", {
   end,
 })
 
+api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+  group = autocmds,
+  callback = function(event)
+    if is_valid_buffer(event.buf) and vim.bo[event.buf].modified then
+      promote(event.buf)
+    end
+  end,
+})
+
 api.nvim_create_autocmd("FocusGained", {
   group = autocmds,
   callback = cleanup_missing_file_buffers,
