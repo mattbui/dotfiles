@@ -19,6 +19,7 @@ wk.setup({
     spacing = 3,
   },
   win = {
+    no_overlap = false,
     border = "single",
   },
   triggers = {
