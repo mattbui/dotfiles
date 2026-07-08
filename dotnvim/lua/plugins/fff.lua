@@ -64,21 +64,6 @@ local function map_tmux_navigation(buf, filetype)
   end
 end
 
--- fff creates its picker buffers dynamically; add local compatibility mappings
--- after its FileType setup so they win over picker defaults.
-vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("dotfiles.fff.compat", { clear = true }),
-  pattern = { "fff_input", "fff_list", "fff_preview" },
-  callback = function(ev)
-    vim.schedule(function()
-      if vim.api.nvim_buf_is_valid(ev.buf) then
-        map_toggle_move(ev.buf, ev.match)
-        map_tmux_navigation(ev.buf, ev.match)
-      end
-    end)
-  end,
-})
-
 fff.setup({
   layout = {
     width = 0.8,
@@ -100,32 +85,20 @@ fff.setup({
   },
 })
 
-vim.api.nvim_create_user_command("Files", function(opts)
-  if opts.args ~= "" then
-    fff.find_files_in_dir(opts.args)
-    return
-  end
-
-  fff.find_files()
-end, {
-  bang = true,
-  nargs = "?",
-  complete = "dir",
-  desc = "Find files",
+-- fff creates its picker buffers dynamically; add local compatibility mappings
+-- after its FileType setup so they win over picker defaults.
+vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("dotfiles.fff.compat", { clear = true }),
+  pattern = { "fff_input", "fff_list", "fff_preview" },
+  callback = function(ev)
+    vim.schedule(function()
+      if vim.api.nvim_buf_is_valid(ev.buf) then
+        map_toggle_move(ev.buf, ev.match)
+        map_tmux_navigation(ev.buf, ev.match)
+      end
+    end)
+  end,
 })
 
-vim.api.nvim_create_user_command("Rg", function(opts)
-  if opts.args ~= "" then
-    fff.live_grep({ query = opts.args })
-    return
-  end
-
-  fff.live_grep()
-end, {
-  bang = true,
-  nargs = "*",
-  desc = "Live grep",
-})
-
-vim.keymap.set("n", "<C-p>", "<Cmd>Files<CR>", { silent = true, desc = "Find files" })
-vim.keymap.set("n", "<C-g>", "<Cmd>Rg<CR>", { silent = true, desc = "Live grep" })
+vim.keymap.set("n", "<C-p>", fff.find_files, { silent = true, desc = "Find files" })
+vim.keymap.set({ "n", "x" }, "<C-g>", fff.live_grep_under_cursor, { silent = true, desc = "Live grep selection" })
