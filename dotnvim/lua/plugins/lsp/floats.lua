@@ -73,21 +73,23 @@ local function track_diagnostic_float(win)
   })
 end
 
-function M.focus_current()
+function M.jump_to_float()
   local bufnr = vim.api.nvim_get_current_buf()
   local win = get_lsp_floating_preview(bufnr)
   if win then
     vim.api.nvim_set_current_win(win)
-    return
+    return true
   end
 
   for _, float_win in ipairs(vim.api.nvim_list_wins()) do
     local config = vim.api.nvim_win_get_config(float_win)
     if config.relative ~= "" and config.focusable ~= false then
       vim.api.nvim_set_current_win(float_win)
-      return
+      return true
     end
   end
+
+  return false
 end
 
 function M.open_diagnostic()
@@ -138,6 +140,14 @@ function M.show_documentation()
     close_events = close_events,
     focusable = false,
   })
+end
+
+function M.jump_or_hover()
+  if M.jump_to_float() then
+    return
+  end
+
+  M.show_documentation()
 end
 
 function M.close_current_or_fallback(key)

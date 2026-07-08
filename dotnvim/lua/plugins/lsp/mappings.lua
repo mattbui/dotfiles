@@ -39,8 +39,8 @@ pcall(vim.keymap.del, "n", "<C-W>d")
 pcall(vim.keymap.del, "n", "<C-W><C-D>")
 map("n", "<Esc>", floats.escape, vim.tbl_extend("force", silent, { desc = "Clear search or hide diagnostic" }))
 
-map("n", "<Leader>j", floats.focus_current, vim.tbl_extend("force", silent, { desc = "Focus floating window" }))
-map("n", "<Leader>k", floats.focus_current, vim.tbl_extend("force", silent, { desc = "Focus floating window" }))
+map("n", "<Leader>j", floats.jump_to_float, vim.tbl_extend("force", silent, { desc = "Jump to float" }))
+map("n", "<Leader>k", floats.jump_or_hover, vim.tbl_extend("force", silent, { desc = "Jump to float or hover" }))
 map("n", "gk", floats.show_documentation, vim.tbl_extend("force", silent, { desc = "Hover" }))
 map("n", "<Leader>d", floats.open_diagnostic, vim.tbl_extend("force", silent, { desc = "Show diagnostic" }))
 
