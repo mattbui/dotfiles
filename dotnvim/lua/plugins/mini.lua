@@ -76,6 +76,20 @@ MiniIndentScope.setup({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+  group = vim.api.nvim_create_augroup("MiniIndentscopePython", { clear = true }),
+  pattern = "python",
+  callback = function()
+    local config = vim.b.miniindentscope_config or {}
+    vim.b.miniindentscope_config = vim.tbl_deep_extend("force", config, {
+      options = {
+        -- Stop Python scopes before trailing blank lines at a dedent.
+        border = "top",
+      },
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MiniIndentscopeDisable", { clear = true }),
   pattern = {
     "help",
