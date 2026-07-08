@@ -30,13 +30,10 @@ vim.pack.add({
   gh('ptzz/lf.vim'),
   gh('voldikss/vim-floaterm'),
 
-  -- Small editing helpers.
-  gh('nvim-mini/mini.pairs'),
-  gh('nvim-mini/mini.align'),
-  gh('nvim-mini/mini.surround'),
+  -- Minimal editing helpers.
+  gh('nvim-mini/mini.nvim'),
 
   -- Indentation and scrolling.
-  gh('nvim-mini/mini.indentscope'),
   gh('lukas-reineke/indent-blankline.nvim'),
   gh('karb94/neoscroll.nvim'),
 
@@ -63,7 +60,7 @@ vim.pack.add({
   -- Notebook and REPL workflow.
   gh('jpalardy/vim-slime'),
   gh('hanschen/vim-ipython-cell'),
-  { src = gh('mattbui/jupytext.vim'), version = 'jupytext_opts' },
+  { src = gh('mattbui/jupytext.vim'),            version = 'jupytext_opts' },
 
   -- tmux navigation.
   gh('christoomey/vim-tmux-navigator'),
@@ -72,12 +69,3 @@ vim.pack.add({
   gh('folke/tokyonight.nvim'),
 
 })
-
-require("mini.pairs").setup()
-require("mini.align").setup({
-  mappings = {
-    start = "<Leader>a",
-    start_with_preview = "gA",
-  },
-})
-require("mini.surround").setup()

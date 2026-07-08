@@ -12,7 +12,6 @@ require("keymaps")
 require("autocmds")
 require("commands.yank_path")
 require("autobuffers")
-require("session")
 
 -- Plugins configs
 require("plugins")
@@ -30,7 +29,8 @@ source_config("ipynb.vim")
 
 require("plugins.barbar")
 require("plugins.which_key")
-require("plugins.indent")
+require("plugins.mini")
+require("plugins.indent-blankline")
 require("plugins.lualine")
 require("plugins.neoscroll")
 require("plugins.treesitter")
