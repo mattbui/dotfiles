@@ -270,7 +270,7 @@
       ]
     },
     {
-      "description": "Hold Command + H to Hide",
+      "description": "Hold Command + H to Hide otherwise trigger F13",
       "manipulators": [
         {
           "from": {
@@ -297,7 +297,29 @@
       ]
     },
     {
-      "description": "Quit application by holding command-q",
+      "description": "Hold Command + M to Minimize",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": ["command"],
+              "optional": ["caps_lock"]
+            }
+          },
+          "to_if_held_down": [
+            {
+              "key_code": "m",
+              "modifiers": ["left_command"],
+              "repeat": false
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "Hold Command + Q to Quit",
       "manipulators": [
         {
           "from": {
