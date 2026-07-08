@@ -82,6 +82,12 @@ fff.setup({
     preview_scroll_up = "<PageUp>",
     preview_scroll_down = "<PageDown>",
     send_to_quickfix = "<S-CR>",
+    toggle_select = false, -- this is already handled by <S-Up> and <S-Down>
+    cycle_grep_modes = { "<S-Right>", "<S-Left>" },
+    move_down = { "<Down>", "<Tab>" },
+    move_up = { "<Up>", "<S-Tab>" },
+    grep_jump_to_next_file = "<C-n>",
+    grep_jump_to_prev_file = "<C-p>",
   },
 })
 
@@ -102,4 +108,5 @@ vim.api.nvim_create_autocmd("FileType", {
 
 vim.keymap.set("n", "<C-p>", fff.find_files, { silent = true, desc = "Find files" })
 vim.keymap.set({ "n" }, "<C-f>", fff.live_grep, { silent = true, desc = "Live grep" })
+vim.keymap.set({ "x" }, "<C-f>", fff.live_grep_under_cursor, { silent = true, desc = "Live grep selection" })
 vim.keymap.set({ "n", "x" }, "<C-g>", fff.live_grep_under_cursor, { silent = true, desc = "Live grep selection" })
