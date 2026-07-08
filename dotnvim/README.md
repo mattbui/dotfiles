@@ -14,7 +14,7 @@ Local baseline recorded on 2026-07-04:
 - `lua/plugins/`: plugin configuration modules.
 - `lua/plugins/lsp/`: native LSP setup, diagnostics, mappings, and symbols.
 - `lua/commands/`: custom user commands.
-- `lf.vim`, `floaterm.vim`, `ipynb.vim`: remaining Vimscript integrations kept intentionally for now.
+- `lf.vim`, `floaterm.vim`: remaining Vimscript integrations kept intentionally for now.
 
 ## Plugin Management
 
