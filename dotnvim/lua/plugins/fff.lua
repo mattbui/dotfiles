@@ -107,6 +107,5 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.keymap.set("n", "<C-p>", fff.find_files, { silent = true, desc = "Find files" })
-vim.keymap.set({ "n" }, "<C-f>", fff.live_grep, { silent = true, desc = "Live grep" })
-vim.keymap.set({ "x" }, "<C-f>", fff.live_grep_under_cursor, { silent = true, desc = "Live grep selection" })
+vim.keymap.set({ "n", "x" }, "<C-f>", fff.live_grep, { silent = true, desc = "Live grep" })
 vim.keymap.set({ "n", "x" }, "<C-g>", fff.live_grep_under_cursor, { silent = true, desc = "Live grep selection" })
