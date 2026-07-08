@@ -25,8 +25,8 @@ require("plugins.fff")
 
 source_config("lf.vim")
 source_config("floaterm.vim")
-source_config("ipynb.vim")
 
+require("plugins.ipython")
 require("plugins.barbar")
 require("plugins.which_key")
 require("plugins.mini")
