@@ -32,9 +32,11 @@ require("plugins.barbar")
 require("plugins.which_key")
 require("plugins.mini")
 require("plugins.indent_blankline")
-require("plugins.lualine")
 require("plugins.neoscroll")
 require("plugins.treesitter")
 
 -- Theme configs
 require("colorscheme")
+
+-- Load after Tokyo Night sets the active palette.
+require("plugins.lualine")
