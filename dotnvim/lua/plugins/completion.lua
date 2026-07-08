@@ -50,6 +50,9 @@ cmp.setup({
       border = "single",
     },
   },
+  term = {
+    enabled = false,
+  },
   cmdline = {
     keymap = {
       preset = "none",
