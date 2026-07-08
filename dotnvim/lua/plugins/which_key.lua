@@ -14,8 +14,16 @@ wk.setup({
   icons = {
     mappings = false,
   },
+  layout = {
+    width = { min = 20, max = 28 },
+    spacing = 3,
+  },
+  win = {
+    border = "single",
+  },
   triggers = {
     { "<Leader>", mode = { "n", "x" } },
+    { "g",        mode = "n" },
   },
 })
 
@@ -80,7 +88,7 @@ map("n", "<Leader>iq", "<Cmd>SlimeSend1 exit<CR>", "Quit")
 map("n", "<Leader>ic", '<Cmd>SlimeSend0 "\\x03"<CR>', "Cancel")
 
 wk.add({
-  { "<Leader>/",   desc = "Comment",          mode = { "n", "x" } },
+  { "<Leader>/",   desc = "Comment",           mode = { "n", "x" } },
   { "<Leader>0",   hidden = true },
   { "<Leader>1",   hidden = true },
   { "<Leader>2",   hidden = true },
@@ -100,7 +108,7 @@ wk.add({
   { "<Leader>bW",  desc = "Close previews" },
   { "<Leader>c",   group = "code-actions" },
   { "<Leader>ca",  desc = "Code action" },
-  { "<Leader>cf",  desc = "Format",           mode = { "n", "x" } },
+  { "<Leader>cf",  desc = "Format",            mode = { "n", "x" } },
   { "<Leader>cn",  desc = "Quickfix next" },
   { "<Leader>cp",  desc = "Quickfix previous" },
   { "<Leader>cr",  desc = "Rename variable" },
@@ -125,8 +133,8 @@ wk.add({
   { "<Leader>gl",  desc = "Log" },
   { "<Leader>gL",  desc = "Pull" },
   { "<Leader>gr",  desc = "Refresh" },
-  { "<Leader>gs",  desc = "Stage hunk",       mode = { "n", "x" } },
-  { "<Leader>gu",  desc = "Reset hunk",       mode = { "n", "x" } },
+  { "<Leader>gs",  desc = "Stage hunk",        mode = { "n", "x" } },
+  { "<Leader>gu",  desc = "Reset hunk",        mode = { "n", "x" } },
   { "<Leader>i",   group = "IPython" },
   { "<Leader>j",   desc = "Focus float" },
   { "<Leader>k",   desc = "Focus float" },
@@ -153,4 +161,6 @@ wk.add({
   { "<Leader>wl",  desc = "Move right" },
   { "<Leader>wo",  desc = "Only current" },
   { "<Leader>wr",  desc = "Rotate down/right" },
+  { "g",           group = "goto" },
+  { "gO",          desc = "Document symbols" },
 })

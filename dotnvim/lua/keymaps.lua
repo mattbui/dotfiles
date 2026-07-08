@@ -26,8 +26,10 @@ map("n", "<Esc>", "<Cmd>nohlsearch<CR>", silent)
 map("n", "<C-c>", "<Cmd>nohlsearch<CR>", silent)
 
 -- Comments
-map("n", "<Leader>/", "gcc", { remap = true })
-map("x", "<Leader>/", "gc", { remap = true })
+map({ "n", "x" }, "<Leader>/", function()
+  local keys = require("vim._comment").operator()
+  return vim.fn.mode() == "n" and keys .. "_" or keys
+end, { expr = true, desc = "Comment" })
 
 -- Insert mode completion and undo breakpoints
 map("i", "<C-j>", "<C-n>")
@@ -41,24 +43,14 @@ map("i", "<Space>", "<Space><C-g>u")
 map("i", "<C-w>", "<C-g>u<C-w>")
 map("i", "<C-u>", "<C-g>u<C-u>")
 
--- Code block movement
-map("n", "gm", "]m", { silent = true, desc = "Next method" })
-map("n", "gM", "[m", { silent = true, desc = "Previous method" })
-map("n", "gl", "]]", { silent = true, desc = "Next section" })
-map("n", "gL", "[[", { silent = true, desc = "Previous section" })
-
 -- Editing
 map({ "i", "c" }, "jj", "<Esc>")
 map("v", "<", "<gv")
 map("v", ">", ">gv")
-map("i", "<C-e>", "<End>")
-map("i", "<C-a>", "<Home>")
-map("c", "<C-a>", "<Home>")
-map("c", "<C-e>", "<End>")
-map("i", "<M-b>", "<S-Left>")
-map("i", "<M-f>", "<S-Right>")
-map("c", "<M-b>", "<S-Left>")
-map("c", "<M-f>", "<S-Right>")
+map({ "i", "c" }, "<C-e>", "<End>")
+map({ "i", "c" }, "<C-a>", "<Home>")
+map({ "i", "c" }, "<M-b>", "<S-Left>")
+map({ "i", "c" }, "<M-f>", "<S-Right>")
 
 map("n", "<Leader>o", "o<Esc>")
 map("n", "<Leader>O", "O<Esc>")
