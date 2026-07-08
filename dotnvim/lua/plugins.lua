@@ -47,6 +47,7 @@ vim.pack.add({
   gh('saghen/blink.cmp'),
   gh('stevearc/conform.nvim'),
   { src = gh('nvim-treesitter/nvim-treesitter'), version = 'main' },
+  { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
 
   -- Picker.
   gh('dmtrKovalenko/fff.nvim'),
