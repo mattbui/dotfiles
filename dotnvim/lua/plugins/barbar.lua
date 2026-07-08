@@ -2,6 +2,8 @@ local api = vim.api
 local map = vim.keymap.set
 local silent = { silent = true }
 local M = {}
+local preview_button = "◌"
+local close_button = "✕"
 local pinned_icons_patched = false
 
 -- Copies one barbar highlight group into another and toggles italic.
@@ -41,8 +43,8 @@ function M.apply_highlights()
 end
 
 -- Barbar hides the filename/button behind pinned icon settings. This patch
--- keeps pinned buffers' button the same while still using barbar's pinned state
--- for ordering.
+-- keeps pinned buffers' button as close/modified while still using barbar's
+-- pinned state for ordering.
 local function patch_pinned_icons()
   local ok_buffer, buffer = pcall(require, "barbar.buffer")
   local ok_config, config = pcall(require, "barbar.config")
@@ -64,7 +66,7 @@ local function patch_pinned_icons()
 
     local patched = vim.tbl_deep_extend("force", {}, icons)
     patched.filename = true
-    patched.button = modified and activity_icons.modified.button or activity_icons.button
+    patched.button = modified and activity_icons.modified.button or close_button
     return patched
   end
 
@@ -88,7 +90,7 @@ require("barbar").setup({
   tabpages = false,
 
   icons = {
-    button = "⨉",
+    button = preview_button,
     scroll = {
       left = "",
       right = "",
