@@ -1,4 +1,5 @@
 local config_dir = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p:h")
+vim.g.python3_host_prog = vim.fs.joinpath(vim.fn.stdpath("data"), "python3", "bin", "python")
 
 local function source_config(name)
   vim.cmd.source(config_dir .. "/" .. name)
