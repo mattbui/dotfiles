@@ -387,10 +387,10 @@ api.nvim_create_autocmd("OptionSet", {
   end,
 })
 
-api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+api.nvim_create_autocmd("TextChanged", {
   group = autocmds,
   callback = function(event)
-    if is_valid_buffer(event.buf) and vim.bo[event.buf].modified then
+    if not permanent_buffers[event.buf] and is_valid_buffer(event.buf) and vim.bo[event.buf].modified then
       promote(event.buf)
     end
   end,
