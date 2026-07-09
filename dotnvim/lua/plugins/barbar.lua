@@ -35,6 +35,7 @@ function M.apply_highlights()
     local pin = base .. "Pin"
 
     style_like(base, base, true)
+    style_like(base .. "Index", base, false)
     style_like(pin, base, false)
     style_like(pin .. "Btn", pin, false)
     style_like(base .. "Mod", pin, false)
@@ -94,35 +95,31 @@ require("barbar").setup({
   tabpages = false,
 
   icons = {
+    buffer_index = "superscript",
     button = preview_button,
-    scroll = {
-      left = "",
-      right = "",
-    },
-
-    filetype = {
-      custom_colors = true,
-    },
-
+    scroll = { left = "", right = "" },
+    filetype = { custom_colors = true },
     gitsigns = {
       added = { enabled = true, icon = "+" },
       changed = { enabled = true, icon = "~" },
       deleted = { enabled = true, icon = "-" },
     },
-
-    pinned = {
-      button = false,
-      filename = true,
-    },
-
-    separator = {
-      left = "▎",
-    },
+    pinned = { button = false, filename = true },
+    current = { buffer_index = false },
+    separator = { left = "▎" },
   },
 
-  maximum_padding = 2,
-  minimum_padding = 2,
+  maximum_padding = 1,
+  minimum_padding = 1,
   no_name_title = "unnamed",
+  exclude_ft = {
+    "floaterm",
+    "fugitive",
+    "fugitiveblame",
+    "git",
+    "qf",
+    "help",
+  },
 })
 
 patch_pinned_icons()
