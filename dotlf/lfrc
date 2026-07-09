@@ -108,7 +108,7 @@ tell application "System Events"
 end tell
 APPLESCRIPT
 }}
-map <space> qlpreview
+map <c-y> qlpreview
 
 cmd extract %atool -x "$f"
 map x extract
