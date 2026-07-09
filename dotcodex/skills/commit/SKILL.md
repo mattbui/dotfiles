@@ -15,11 +15,12 @@ Without `staged`, inspect git status, staged changes, unstaged changes, untracke
 
 Commit style:
 
-- Use `type(scope): imperative lowercase subject`
+- Use `type(scope/subscope): imperative lowercase subject`
 - For large changes, include a concise multiline body with bullets to break down the changes
 - Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`
 - Use `deps` for dependency updates and `repo` only for repo-wide changes
 - Avoid generic scopes unless the repo uses them
+- `scope` and `subscope` are optional, use them to add useful context
 
 If `split` is absent, prefer a single focused commit unless the changes clearly require separation.
 If `push` is absent, stop and ask for confirmation before running `git add`, creating any commit, or pushing. If `push` is present, proceed to stage as needed, create the commit(s) without re-confirmation, and push.
