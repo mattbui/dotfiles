@@ -12,7 +12,7 @@ require('vim._core.ui2').enable({
       quickfix = 'msg',  -- Quickfix navigation message.
     },
     pager   = { height = 1 },
-    msg     = { height = 0.3, timeout = 2000 },
+    msg     = { height = 0.15, timeout = 4000 },
     dialog  = { height = 0.5 },
     cmd     = { height = 0.5 },
   },
