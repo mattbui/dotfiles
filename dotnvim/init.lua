@@ -20,11 +20,7 @@ require("plugins.gitsigns")
 require("plugins.lsp")
 require("plugins.autoformat")
 require("plugins.completion")
-require("plugins.fff")
-
-source_config("lf.vim")
-source_config("floaterm.vim")
-
+require("plugins.pickers")
 require("plugins.ipython")
 require("plugins.barbar")
 require("plugins.which_key")
@@ -32,6 +28,8 @@ require("plugins.mini")
 require("plugins.indent_blankline")
 require("plugins.neoscroll")
 require("plugins.treesitter")
+source_config("lf.vim")
+source_config("floaterm.vim")
 
 -- Theme configs
 require("colorscheme")
