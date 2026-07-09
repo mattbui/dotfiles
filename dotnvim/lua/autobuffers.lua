@@ -1,15 +1,15 @@
 -- Tracks normal file buffers as preview or permanent buffers.
 --
 -- New file buffers start as previews. Editing or toggling a buffer promotes it
--- to permanent. Cleanup closes old previews, excess permanent buffers, and known
--- file buffers whose files were deleted.
+-- to permanent. Cleanup hides old previews and excess permanent buffers, and
+-- closes known file buffers whose files were deleted.
 
 local api = vim.api
 
 local autocmds = api.nvim_create_augroup("dotfiles_buffers", { clear = true })
 
-local max_preview_batches = 1
-local max_permanent_buffers = 10
+local max_preview_batches = 2
+local max_permanent_buffers = 6
 
 local preview_buffers = {}
 local preview_batches = {}
@@ -42,8 +42,8 @@ local function can_close(bufnr)
   return is_normal_file_buffer(bufnr) and not vim.bo[bufnr].modified and not is_visible(bufnr)
 end
 
-local function can_close_preview(bufnr)
-  return is_normal_file_buffer(bufnr) and not vim.bo[bufnr].modified and bufnr ~= api.nvim_get_current_buf()
+local function can_unlist(bufnr)
+  return can_close(bufnr) and api.nvim_buf_is_loaded(bufnr)
 end
 
 local function mark_known_file(bufnr)
@@ -145,19 +145,44 @@ local function mark_startup_buffers_permanent()
   active_preview_batch = nil
 end
 
-local function forget_buffer(bufnr)
+local function forget_buffer_state(bufnr)
   preview_buffers[bufnr] = nil
   preview_batches[bufnr] = nil
   permanent_buffers[bufnr] = nil
-  known_file_buffers[bufnr] = nil
   recency[bufnr] = nil
   set_barbar_pinned(bufnr, false)
+end
+
+local function forget_buffer(bufnr)
+  forget_buffer_state(bufnr)
+  known_file_buffers[bufnr] = nil
 end
 
 local function delete_buffer(bufnr, opts)
   local ok = pcall(api.nvim_buf_delete, bufnr, opts or {})
   if ok or not api.nvim_buf_is_valid(bufnr) then
     forget_buffer(bufnr)
+  end
+end
+
+local function unlist_buffer(bufnr)
+  if not is_valid_buffer(bufnr) then
+    forget_buffer(bufnr)
+    return
+  end
+
+  forget_buffer_state(bufnr)
+
+  pcall(function()
+    vim.bo[bufnr].buflisted = false
+  end)
+end
+
+local function list_buffer(bufnr)
+  if is_normal_file_buffer(bufnr) then
+    pcall(function()
+      vim.bo[bufnr].buflisted = true
+    end)
   end
 end
 
@@ -215,8 +240,8 @@ local function cleanup_preview_batches()
   end
 
   for _, bufnr in ipairs(sorted_buffers(previews)) do
-    if batches_to_close[preview_batches[bufnr] or 0] and can_close_preview(bufnr) then
-      delete_buffer(bufnr)
+    if batches_to_close[preview_batches[bufnr] or 0] and can_unlist(bufnr) then
+      unlist_buffer(bufnr)
     end
   end
 end
@@ -242,8 +267,8 @@ local function enforce_permanent_limit()
       return
     end
 
-    if can_close(bufnr) then
-      delete_buffer(bufnr)
+    if can_unlist(bufnr) then
+      unlist_buffer(bufnr)
       overflow = overflow - 1
     end
   end
@@ -272,10 +297,10 @@ local function schedule_cleanup_buffers()
   end, 100)
 end
 
-local function close_preview_buffers()
+local function hide_preview_buffers()
   for bufnr in pairs(preview_buffers) do
-    if can_close_preview(bufnr) then
-      delete_buffer(bufnr)
+    if can_unlist(bufnr) then
+      unlist_buffer(bufnr)
     end
   end
 end
@@ -339,6 +364,7 @@ end
 api.nvim_create_autocmd({ "BufAdd", "BufReadPost", "BufNewFile", "BufEnter" }, {
   group = autocmds,
   callback = function(event)
+    list_buffer(event.buf)
     mark_known_file(event.buf)
     mark_preview(event.buf)
     update_recency(event.buf)
@@ -442,7 +468,8 @@ create_user_command("BufferTogglePermanent", function()
   end
 end)
 
-create_user_command("BufferClosePreviews", close_preview_buffers)
+pcall(api.nvim_del_user_command, "BufferClosePreviews")
+create_user_command("BufferHidePreviews", hide_preview_buffers)
 
 create_user_command("BufferState", print_buffer_state)
 
@@ -450,5 +477,5 @@ vim.keymap.set("n", "<Leader>p", "<Cmd>BufferPromote<CR>", { silent = true, desc
 vim.keymap.set("n", "<Leader>bp", "<Cmd>BufferPromote<CR>", { silent = true, desc = "Mark permanent" })
 vim.keymap.set("n", "<Leader>bm", "<Cmd>BufferMarkPreview<CR>", { silent = true, desc = "Mark preview" })
 vim.keymap.set("n", "<Leader>bt", "<Cmd>BufferTogglePermanent<CR>", { silent = true, desc = "Toggle permanent" })
-vim.keymap.set("n", "<Leader>bW", "<Cmd>BufferClosePreviews<CR>", { silent = true, desc = "Close previews" })
+vim.keymap.set("n", "<Leader>bH", "<Cmd>BufferHidePreviews<CR>", { silent = true, desc = "Hide previews" })
 vim.keymap.set("n", "<Leader>bS", "<Cmd>BufferState<CR>", { silent = true, desc = "Show state" })
