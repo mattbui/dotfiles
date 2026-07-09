@@ -11,17 +11,15 @@ require("options")
 require("filetypes")
 require("keymaps")
 require("autocmds")
-require("commands.yank_path")
+require("commands")
 require("autobuffers")
 
 -- Plugins configs
 require("plugins")
-require("commands.pack")
 require("plugins.gitsigns")
 require("plugins.lsp")
 require("plugins.autoformat")
 require("plugins.completion")
-require("commands.git")
 require("plugins.fff")
 
 source_config("lf.vim")
