@@ -79,17 +79,17 @@ map("n", "<S-j>", "<Cmd>BufferNext<CR>", silent)
 map("n", "<S-l>", "<Cmd>BufferMoveNext<CR>", silent)
 map("n", "<S-h>", "<Cmd>BufferMovePrevious<CR>", silent)
 map("n", "<C-w>", "<Cmd>BufferClose<CR>", silent)
-map("n", "<Leader>W", "<Cmd>BufferCloseAllButCurrent<CR>", { silent = true, desc = "Close other tabs" })
+map("n", "<Leader>W", "<Cmd>BufferCloseAllButCurrent<CR>", { silent = true, desc = "Close other buffers" })
 map("n", "<Leader>T", "<Cmd>BufferRestore<CR>", { silent = true, desc = "Restore closed buffer" })
 map("n", "<Leader>bw", "<Cmd>BufferClose<CR>", { silent = true, desc = "Close current" })
-map("n", "<Leader>bT", "<Cmd>BufferRestore<CR>", { silent = true, desc = "Restore closed" })
+map("n", "<Leader>br", "<Cmd>BufferRestore<CR>", { silent = true, desc = "Restore closed" })
+map("n", "<Leader>bp", "<Cmd>BufferPick<CR>", { silent = true, desc = "Pick buffer" })
 
 for i = 1, 9 do
   map("n", "<Leader>" .. i, "<Cmd>BufferGoto " .. i .. "<CR>", silent)
 end
 
 map("n", "<Leader>0", "<Cmd>BufferLast<CR>", silent)
-map("n", "<Leader>P", "<Cmd>BufferPick<CR>", { silent = true, desc = "Pick buffer" })
 
 require("barbar").setup({
   tabpages = false,

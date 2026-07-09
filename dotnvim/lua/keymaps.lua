@@ -84,8 +84,7 @@ map("n", "<C-q>", "<Cmd>q<CR>", silent)
 map("i", "<C-q>", "<Esc><Cmd>q<CR>", silent)
 map("t", "<C-q>", "<C-\\><C-n><Cmd>bw!<CR>", silent)
 map("n", "<Leader>Q", "<Cmd>q!<CR>", { silent = true, desc = "Quit without save" })
-map("n", "<Leader>S", '<Cmd>source $MYVIMRC | echo "Saved Vim Settings"<CR>', { silent = true, desc = "Save settings" })
-map("n", "<Leader>V", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settings" })
+map("n", "<Leader>,", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settings" })
 
 -- Quickfix
 map("n", "<Leader>cn", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
