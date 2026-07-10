@@ -202,25 +202,25 @@ local function current_buffer_dir_components(current_file)
   return path_components(parent_path(relative))
 end
 
-local function path_closeness(path, current_components)
+local function path_distance(path, current_components)
   local components = path_components(parent_path(path))
-  local score = 0
+  local shared_count = 0
 
   for index, component in ipairs(current_components) do
     if components[index] ~= component then
       break
     end
-    score = score + 1
+    shared_count = shared_count + 1
   end
 
-  return score
+  return #current_components + #components - 2 * shared_count
 end
 
 local function make_file_and_directory_rank(item, recent, current_components, current_path)
   local is_dir = item:sub(-1) == "/"
   local normalized_path = normalize_picker_path(item)
   return {
-    closeness = path_closeness(item, current_components),
+    distance = path_distance(item, current_components),
     is_current = normalized_path == current_path,
     is_dir = is_dir,
     recent = recent[normalized_path] or 0,
@@ -252,12 +252,12 @@ local function sort_file_and_directory_items(items, current_file)
       return left_rank.recent > right_rank.recent
     end
 
-    if left_rank.closeness ~= right_rank.closeness then
-      return left_rank.closeness > right_rank.closeness
+    if left_rank.distance ~= right_rank.distance then
+      return left_rank.distance < right_rank.distance
     end
 
     if left_rank.is_dir ~= right_rank.is_dir then
-      return not left_rank.is_dir
+      return left_rank.is_dir
     end
 
     return left < right
@@ -266,13 +266,21 @@ local function sort_file_and_directory_items(items, current_file)
   return items
 end
 
+local function make_file_and_directory_item(path)
+  return {
+    path = path,
+    text = trim_trailing_slash(path),
+  }
+end
+
 local function pick_files_and_directories()
   local current_file = vim.api.nvim_buf_get_name(0)
 
   pick.builtin.cli({
     command = { "fd", "--type", "f", "--type", "d", "--color", "never" },
     postprocess = function(items)
-      return sort_file_and_directory_items(items, current_file)
+      local sorted_items = sort_file_and_directory_items(items, current_file)
+      return vim.tbl_map(make_file_and_directory_item, sorted_items)
     end,
   }, {
     source = {
