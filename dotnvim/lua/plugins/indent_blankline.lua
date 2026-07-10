@@ -5,6 +5,7 @@ require("ibl").setup({
       "which_key",
       "fugitive",
       "man",
+      "checkhealth",
     },
     buftypes = {
       "terminal",

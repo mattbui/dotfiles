@@ -51,6 +51,9 @@ require("mini.notify").setup({
       return notif.msg
     end,
   },
+  lsp_progress = {
+    enable = false,
+  },
   window = {
     config = { title = "" },
   },
@@ -96,6 +99,7 @@ vim.api.nvim_create_autocmd("FileType", {
     "which_key",
     "fugitive",
     "man",
+    "checkhealth",
   },
   callback = function()
     vim.b.miniindentscope_disable = true
