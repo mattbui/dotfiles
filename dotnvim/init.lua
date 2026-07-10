@@ -34,5 +34,5 @@ source_config("floaterm.vim")
 -- Theme configs
 require("colorscheme")
 
--- Load after Tokyo Night sets the active palette.
+-- Load after tokyonight to set the correct style
 require("plugins.lualine")
