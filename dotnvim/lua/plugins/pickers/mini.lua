@@ -257,7 +257,7 @@ local function sort_file_and_directory_items(items, current_file)
     end
 
     if left_rank.is_dir ~= right_rank.is_dir then
-      return left_rank.is_dir
+      return not left_rank.is_dir
     end
 
     return left < right
