@@ -4,6 +4,7 @@ require('vim._core.ui2').enable({
   enable = true,
   msg = {
     targets = {
+      echo = 'msg',      -- nvim_echo() messages
       bufwrite = 'msg',  -- :write message.
       lua_print = 'msg', -- print() from :lua code.
       shell_ret = 'msg', -- :!cmd return code.
