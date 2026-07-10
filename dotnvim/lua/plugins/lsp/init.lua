@@ -13,26 +13,98 @@ vim.diagnostic.config({
   severity_sort = true,
 })
 
-vim.lsp.config("basedpyright", {
-  cmd = { "basedpyright-langserver", "--stdio" },
+-- Pyrefly supplements Pyright with fast completions and inlay hints while
+-- Pyright is still better at inferencing correct types, signature helps
+vim.lsp.config("pyright", {
+  cmd = { "pyright-langserver", "--stdio" },
   filetypes = { "python" },
-  root_markers = { "pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", ".git" },
+  root_markers = {
+    "pyrightconfig.json",
+    "pyproject.toml",
+    "setup.py",
+    "setup.cfg",
+    "requirements.txt",
+    ".git",
+  },
   settings = {
-    basedpyright = {
+    python = {
       analysis = {
+        autoImportCompletions = false,
         autoSearchPaths = true,
         diagnosticMode = "openFilesOnly",
-        typeCheckingMode = "standard",
-        useLibraryCodeForTypes = true,
+        typeCheckingMode = "basic",
+        useLibraryCodeForTypes = false,
       },
     },
   },
+  on_attach = function(client)
+    client.server_capabilities.inlayHintProvider = nil
+  end,
 })
 
-vim.lsp.config("ruff", {
-  cmd = { "ruff", "server" },
+-- Keep Pyrefly completion and inlay hints; Pyright handles the rest.
+vim.lsp.config("pyrefly", {
+  cmd = { "pyrefly", "lsp" },
   filetypes = { "python" },
-  root_markers = { "pyproject.toml", "ruff.toml", ".ruff.toml", ".git" },
+  root_markers = {
+    "pyrefly.toml",
+    "pyproject.toml",
+    "setup.py",
+    "setup.cfg",
+    "requirements.txt",
+    ".git",
+  },
+  init_options = {
+    pyrefly = {
+      disableTypeErrors = true,
+      analysis = {
+        autoImportCompletions = false,
+        inlayHints = {
+          callArgumentNames = "off",
+          functionReturnTypes = true,
+          pytestParameters = false,
+          variableTypes = true,
+        },
+      },
+      disabledLanguageServices = {
+        completion = false,
+        inlayHint = false,
+        callHierarchy = true,
+        codeAction = true,
+        codeLens = true,
+        definition = true,
+        declaration = true,
+        documentHighlight = true,
+        documentSymbol = true,
+        hover = true,
+        implementation = true,
+        rename = true,
+        references = true,
+        semanticTokens = true,
+        signatureHelp = true,
+        typeDefinition = true,
+        workspaceSymbol = true,
+      },
+    },
+  },
+  on_attach = function(client)
+    local capabilities = client.server_capabilities
+    capabilities.hoverProvider = false
+    capabilities.documentSymbolProvider = false
+    capabilities.workspaceSymbolProvider = false
+    capabilities.codeActionProvider = false
+    capabilities.definitionProvider = false
+    capabilities.declarationProvider = false
+    capabilities.typeDefinitionProvider = false
+    capabilities.referencesProvider = false
+    capabilities.documentHighlightProvider = false
+    capabilities.renameProvider = false
+    capabilities.codeLensProvider = nil
+    capabilities.semanticTokensProvider = nil
+    capabilities.signatureHelpProvider = nil
+    capabilities.implementationProvider = false
+    capabilities.callHierarchyProvider = false
+  end,
 })
 
 vim.lsp.config("ts_ls", {
@@ -63,7 +135,7 @@ vim.lsp.config("lua_ls", {
   },
 })
 
-vim.lsp.enable({ "basedpyright", "ruff", "ts_ls", "lua_ls" })
+vim.lsp.enable({ "pyright", "pyrefly", "ts_ls", "lua_ls" })
 
 symbols.setup()
 require("plugins.lsp.mappings")

@@ -24,6 +24,28 @@ cmp.setup({
   },
   sources = {
     default = { "lsp", "path", "buffer" },
+    providers = {
+      lsp = {
+        async = true,
+        fallbacks = {},
+        -- prioritize pyright's results over pyrefly, it have better type inference
+        transform_items = function(_, items)
+          for _, item in ipairs(items) do
+            if item.client_name == "pyright" then
+              item.score_offset = (item.score_offset or 0) + 2
+            end
+          end
+
+          return items
+        end,
+      },
+      buffer = {
+        opts = {
+          max_async_buffer_size = 500000,
+          max_total_buffer_size = 1000000,
+        },
+      },
+    },
   },
   fuzzy = {
     implementation = "prefer_rust",
