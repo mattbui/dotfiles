@@ -175,18 +175,11 @@ lualine.setup({
         fmt = max_width(24),
       },
       smart_path,
-      {
-        symbols.current_display,
-        fmt = max_width(40),
-      },
     },
     lualine_c = {
       {
-        "lsp_status",
-        fmt = vim.trim,
-        symbols = {
-          done = "",
-        },
+        symbols.current_display,
+        fmt = max_width(40),
       },
       {
         "diagnostics",
@@ -195,24 +188,20 @@ lualine.setup({
       },
     },
     lualine_x = {
-      conform_formatters,
       {
-        "filetype",
-        colored = false,
+        "lsp_status",
+        fmt = vim.trim,
+        symbols = { done = "", },
       },
+
+      conform_formatters,
     },
     lualine_y = {
-      total_lines,
-      {
-        "progress",
-        fmt = vim.trim,
-      },
+      { "filetype", colored = false, },
+      { "progress", fmt = vim.trim, },
     },
     lualine_z = {
-      {
-        "location",
-        fmt = vim.trim,
-      },
+      { "location", fmt = vim.trim, },
     },
   },
 })
