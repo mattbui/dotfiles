@@ -16,11 +16,7 @@ local function paste()
   return ok_paste and is_paste and "PASTE" or ""
 end
 
-local function total_lines()
-  return string.format("%d", vim.fn.line("$"))
-end
-
-local function truncate_display(value, max_width, mode)
+local function truncate_display(value, max_width, side)
   value = value or ""
   if value == "" or vim.fn.strdisplaywidth(value) <= max_width then
     return value
@@ -34,7 +30,7 @@ local function truncate_display(value, max_width, mode)
 
   local result = ""
 
-  if mode == "start" then
+  if side == "left" then
     for i = vim.fn.strchars(value) - 1, 0, -1 do
       local next_result = vim.fn.strcharpart(value, i, 1) .. result
       if vim.fn.strdisplaywidth(next_result) > target_width then
@@ -57,9 +53,18 @@ local function truncate_display(value, max_width, mode)
   return result .. ellipsis
 end
 
-local function max_width(width)
+local function truncate(width, side, opts)
+  opts = opts or {}
+
   return function(value)
-    return truncate_display(value, width)
+    value = value or ""
+    local prefix = opts.preserve_prefix and value:match("^%S+%s+") or ""
+    local prefix_width = vim.fn.strdisplaywidth(prefix)
+    if prefix_width >= width then
+      return truncate_display(prefix, width)
+    end
+
+    return prefix .. truncate_display(value:sub(#prefix + 1), width - prefix_width, side)
   end
 end
 
@@ -110,13 +115,13 @@ local function smart_path()
     end
   end
 
-  path = truncate_display(path, max_path_width, "start")
+  path = truncate_display(path, max_path_width, "left")
 
   local prefix = vim.bo.filetype ~= "help" and vim.bo.readonly and " " or ""
   local suffix = vim.bo.modifiable and vim.bo.modified and " ●" or ""
   local path_width = max_path_width - vim.fn.strdisplaywidth(prefix) - vim.fn.strdisplaywidth(suffix)
 
-  return prefix .. truncate_display(path, path_width, "start") .. suffix
+  return prefix .. truncate_display(path, path_width, "left") .. suffix
 end
 
 local function conform_formatters()
@@ -172,14 +177,14 @@ lualine.setup({
       {
         "branch",
         icon = "",
-        fmt = max_width(24),
+        fmt = truncate(24, "right"),
       },
       smart_path,
     },
     lualine_c = {
       {
         symbols.current_display,
-        fmt = max_width(40),
+        fmt = truncate(40, "left", { preserve_prefix = true }),
       },
       {
         "diagnostics",
