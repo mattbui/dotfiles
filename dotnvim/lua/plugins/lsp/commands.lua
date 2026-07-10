@@ -110,7 +110,7 @@ vim.api.nvim_create_user_command("LspInlayHintsToggle", M.toggle_inlay_hints, {
   desc = "Toggle LSP inlay hints",
 })
 
-vim.api.nvim_create_user_command("SortImport", M.organize_imports, {
+vim.api.nvim_create_user_command("LspOrganizeImports", M.organize_imports, {
   desc = "Organize imports with LSP",
 })
 

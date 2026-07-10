@@ -46,6 +46,6 @@ end
 
 vim.api.nvim_create_user_command("Format", format, { desc = "Format current buffer" })
 
-vim.keymap.set({ "n", "x" }, "<Leader>cf", format, { silent = true, desc = "Format" })
+vim.keymap.set({ "n", "x" }, "<Leader>lf", format, { silent = true, desc = "Format" })
 
 return M

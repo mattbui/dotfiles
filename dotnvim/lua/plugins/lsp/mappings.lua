@@ -56,10 +56,12 @@ map("n", "gp", function()
   vim.diagnostic.jump({ count = -1 })
 end, vim.tbl_extend("force", silent, { desc = "Previous diagnostic" }))
 
-map("n", "<Leader>cr", vim.lsp.buf.rename, vim.tbl_extend("force", silent, { desc = "Rename" }))
-map({ "n", "x" }, "<Leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", silent, { desc = "Code action" }))
+map("n", "<Leader>lr", vim.lsp.buf.rename, vim.tbl_extend("force", silent, { desc = "Rename" }))
+map({ "n", "x" }, "<Leader>la", vim.lsp.buf.code_action, vim.tbl_extend("force", silent, { desc = "Code action" }))
 
-map("n", "<Leader>cs", commands.organize_imports, vim.tbl_extend("force", silent, { desc = "Organize imports" }))
+map("n", "<Leader>lo", commands.organize_imports, vim.tbl_extend("force", silent, { desc = "Organize imports" }))
+map("n", "<Leader>lv", commands.toggle_virtual_text, vim.tbl_extend("force", silent, { desc = "Toggle virtual text" }))
+map("n", "<Leader>li", commands.toggle_inlay_hints, vim.tbl_extend("force", silent, { desc = "Toggle inlay hints" }))
 
 local highlight_group = vim.api.nvim_create_augroup("dotfiles_lsp_document_highlight", { clear = true })
 

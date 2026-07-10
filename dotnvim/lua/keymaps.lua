@@ -87,5 +87,7 @@ map("n", "<Leader>Q", "<Cmd>q!<CR>", { silent = true, desc = "Quit without save"
 map("n", "<Leader>,", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settings" })
 
 -- Quickfix
-map("n", "<Leader>cn", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
-map("n", "<Leader>cp", "<Cmd>cprevious<CR>", { silent = true, desc = "Quickfix previous" })
+map("n", "<PageDown>", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
+map("n", "<PageUp>", "<Cmd>cprevious<CR>", { silent = true, desc = "Quickfix previous" })
+map("n", "<S-PageDown>", "<Cmd>lnext<CR>", { silent = true, desc = "Location next" })
+map("n", "<S-PageUp>", "<Cmd>lprevious<CR>", { silent = true, desc = "Location previous" })

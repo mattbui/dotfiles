@@ -2,16 +2,16 @@ require("mini.pairs").setup()
 require("mini.ai").setup()
 require("mini.align").setup({
   mappings = {
-    start = "",
-    start_with_preview = "<Leader>a",
+    start = "<Leader>a",
+    start_with_preview = "<Leader>A",
   },
 })
 require("mini.surround").setup()
 require("mini.splitjoin").setup({
   mappings = {
-    toggle = "<Leader>ss",
-    split = "<Leader>sj",
-    join = "<Leader>sk",
+    toggle = "",
+    split = "sj",
+    join = "sk",
   },
 })
 

@@ -49,7 +49,7 @@ The formatter config lives in `lua/plugins/autoformat.lua`; format-on-save is co
 - Buffers: `lua/autobuffers.lua` keeps newly opened files as previews, promotes edited/toggled buffers to permanent, and trims old previews/permanent buffers.
 - Completion: `blink.cmp`.
 - LSP: native `vim.lsp.config()` and `vim.lsp.enable()`.
-- Formatting: `conform.nvim` through `:Format` and `<leader>cf`.
+- Formatting: `conform.nvim` through `:Format` and `<leader>lf`.
 - Git: Fugitive commands plus `gitsigns.nvim` hunk actions.
 - File manager and terminal: `lf.vim` and `vim-floaterm`.
 - UI: `lualine.nvim`, `barbar.nvim`, `which-key.nvim`, and `tokyonight.nvim`.

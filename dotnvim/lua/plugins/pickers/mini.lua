@@ -284,12 +284,19 @@ local function pick_files_and_directories()
 end
 
 vim.keymap.set("n", "<C-p>", pick_files_and_directories, { silent = true, desc = "Find files and directories" })
-vim.keymap.set("n", "<Leader>pd", function()
+
+vim.keymap.set("n", "<Leader>D", function()
+  MiniExtra.pickers.diagnostic({ scope = "current" })
+end, { silent = true, desc = "Pick document diagnostics" })
+
+vim.keymap.set("n", "<Leader>lD", function()
   MiniExtra.pickers.diagnostic({ scope = "all" })
-end, { silent = true, desc = "Pick diagnostics" })
-vim.keymap.set("n", "<Leader>ps", function()
+end, { silent = true, desc = "Pick all diagnostics" })
+
+vim.keymap.set("n", "<Leader>ls", function()
   MiniExtra.pickers.lsp({ scope = "document_symbol" })
 end, { silent = true, desc = "Pick document symbols" })
-vim.keymap.set("n", "<Leader>pS", function()
+
+vim.keymap.set("n", "<Leader>lS", function()
   MiniExtra.pickers.lsp({ scope = "workspace_symbol_live" })
 end, { silent = true, desc = "Pick workspace symbols" })
