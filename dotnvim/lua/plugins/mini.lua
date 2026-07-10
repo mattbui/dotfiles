@@ -2,8 +2,8 @@ require("mini.pairs").setup()
 require("mini.ai").setup()
 require("mini.align").setup({
   mappings = {
-    start = "<Leader>a",
-    start_with_preview = "<Leader>A",
+    start = "",
+    start_with_preview = "<Leader>a",
   },
 })
 require("mini.surround").setup()
