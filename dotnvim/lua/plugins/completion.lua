@@ -53,6 +53,7 @@ cmp.setup({
   completion = {
     menu = {
       border = "single",
+      scrollbar = false,
     },
     list = {
       selection = {
