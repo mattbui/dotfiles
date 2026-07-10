@@ -40,6 +40,7 @@ vim.opt.smartcase = true
 
 -- Files and persistence
 vim.opt.writebackup = false
+vim.opt.swapfile = false
 vim.opt.undodir = vim.fn.stdpath("data") .. "/undodir"
 vim.opt.undofile = true
 
