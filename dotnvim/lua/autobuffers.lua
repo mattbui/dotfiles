@@ -104,31 +104,6 @@ local function mark_preview(bufnr)
   set_barbar_pinned(bufnr, false)
 end
 
-local function promote(bufnr)
-  if not is_normal_file_buffer(bufnr) or permanent_buffers[bufnr] then
-    return
-  end
-
-  preview_buffers[bufnr] = nil
-  preview_batches[bufnr] = nil
-  permanent_buffers[bufnr] = true
-  update_recency(bufnr)
-  set_barbar_pinned(bufnr, true)
-end
-
-local function mark_current_preview()
-  local bufnr = api.nvim_get_current_buf()
-  if not is_normal_file_buffer(bufnr) then
-    return
-  end
-
-  permanent_buffers[bufnr] = nil
-  preview_buffers[bufnr] = true
-  preview_batches[bufnr] = preview_batches[bufnr] or current_preview_batch()
-  update_recency(bufnr)
-  set_barbar_pinned(bufnr, false)
-end
-
 local function mark_startup_buffers_permanent()
   for _, bufnr in ipairs(api.nvim_list_bufs()) do
     if is_normal_file_buffer(bufnr) then
@@ -295,6 +270,33 @@ local function schedule_cleanup_buffers()
     cleanup_pending = false
     cleanup_buffers()
   end, 100)
+end
+
+local function promote(bufnr)
+  if not is_normal_file_buffer(bufnr) or permanent_buffers[bufnr] then
+    return
+  end
+
+  preview_buffers[bufnr] = nil
+  preview_batches[bufnr] = nil
+  permanent_buffers[bufnr] = true
+  update_recency(bufnr)
+  set_barbar_pinned(bufnr, true)
+  schedule_cleanup_buffers()
+end
+
+local function mark_current_preview()
+  local bufnr = api.nvim_get_current_buf()
+  if not is_normal_file_buffer(bufnr) then
+    return
+  end
+
+  permanent_buffers[bufnr] = nil
+  preview_buffers[bufnr] = true
+  preview_batches[bufnr] = preview_batches[bufnr] or current_preview_batch()
+  update_recency(bufnr)
+  set_barbar_pinned(bufnr, false)
+  schedule_cleanup_buffers()
 end
 
 local function hide_preview_buffers()
