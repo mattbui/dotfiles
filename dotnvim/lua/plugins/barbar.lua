@@ -100,12 +100,19 @@ require("barbar").setup({
     scroll = { left = "", right = "" },
     filetype = { custom_colors = true },
     gitsigns = {
-      added = { enabled = true, icon = "+" },
-      changed = { enabled = true, icon = "~" },
-      deleted = { enabled = true, icon = "-" },
+      added = { enabled = false },
+      changed = { enabled = false },
+      deleted = { enabled = false },
     },
     pinned = { button = false, filename = true },
-    current = { buffer_index = false },
+    current = {
+      buffer_index = false,
+      gitsigns = {
+        added = { enabled = true, icon = "+" },
+        changed = { enabled = true, icon = "~" },
+        deleted = { enabled = true, icon = "-" },
+      },
+    },
     separator = { left = "▎" },
   },
 
