@@ -19,6 +19,9 @@ require('vim._core.ui2').enable({
   },
 })
 
+-- Render UI2's native showcmd events in a small statusline-adjacent float.
+require('float_showcmd').setup()
+
 -- Add border to msg, skip for now to avoid noise
 -- vim.api.nvim_create_autocmd('FileType', {
 --   pattern = 'msg',
