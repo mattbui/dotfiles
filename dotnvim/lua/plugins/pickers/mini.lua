@@ -94,6 +94,7 @@ pick.setup({
     stop = "<C-q>",
     toggle_info = "",
     toggle_preview = "<C-y>",
+    mark_all = "<S-CR>",
 
     escape_or_close_preview = {
       char = "<Esc>",
