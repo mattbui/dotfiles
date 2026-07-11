@@ -14,7 +14,6 @@ vim.opt.pumheight = 10
 vim.opt.cursorline = true
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5
-vim.opt.showtabline = 2
 vim.opt.showmode = false
 
 -- Indentation
