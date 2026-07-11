@@ -4,7 +4,8 @@ require('vim._core.ui2').enable({
   enable = true,
   msg = {
     targets = {
-      echo = 'msg',      -- nvim_echo() messages
+      echo = 'msg',      -- :echo message
+      echomsg = 'msg',   -- :echomsg message
       bufwrite = 'msg',  -- :write message.
       lua_print = 'msg', -- print() from :lua code.
       shell_ret = 'msg', -- :!cmd return code.
@@ -20,7 +21,10 @@ require('vim._core.ui2').enable({
 })
 
 -- Render UI2's native showcmd events in a small statusline-adjacent float.
-require('float_showcmd').setup()
+require("float_showcmd").setup({
+  timeout = 200,
+  repeat_interval = 50,
+})
 
 -- Add border to msg, skip for now to avoid noise
 -- vim.api.nvim_create_autocmd('FileType', {

@@ -5,43 +5,57 @@ local api = vim.api
 
 local M = {}
 local group = api.nvim_create_augroup("float_showcmd", { clear = true })
--- Reuse one hidden scratch buffer and float across updates.
-local buffer
-local window
-local scheduled = false
-local pending_text = ""
-local subscribed = false
--- Avoid flashing the float for basic cursor movement.
-local skipped = {
-  h = true,
-  j = true,
-  k = true,
-  l = true,
-  b = true,
-  w = true,
+local escape_text = "^["
+local defaults = {
+  repeat_interval = 50,
+  timeout = vim.o.timeoutlen,
+}
+local config = defaults
+local initialized = false
+
+local state = {
+  active_text = "",
+  display_text = "",
+  last_completed = {
+    text = "",
+    completed_at = 0,
+    count = 0,
+  },
+  hide_token = 0,
 }
 
-local function hide()
-  if window and api.nvim_win_is_valid(window) then
-    pcall(api.nvim_win_set_config, window, { hide = true })
+local float_view = {
+  buffer = nil,
+  window = nil,
+  render_scheduled = false,
+  render_token = 0,
+}
+
+local function now_ms()
+  return vim.uv.hrtime() / 1e6
+end
+
+local function hide_float()
+  if float_view.window and api.nvim_win_is_valid(float_view.window) then
+    pcall(api.nvim_win_set_config, float_view.window, { hide = true })
   end
 end
 
-local function ensure_buffer()
-  if buffer and api.nvim_buf_is_valid(buffer) then
-    return buffer
+---@return integer
+local function ensure_float_buffer()
+  if float_view.buffer and api.nvim_buf_is_valid(float_view.buffer) then
+    return float_view.buffer
   end
 
-  buffer = api.nvim_create_buf(false, true)
+  local buffer = api.nvim_create_buf(false, true)
+  float_view.buffer = buffer
   vim.bo[buffer].bufhidden = "hide"
   vim.bo[buffer].swapfile = false
 
   return buffer
 end
 
-local function window_config(width)
-  local target = api.nvim_get_current_win()
-
+local function make_float_window_config(width)
   -- Follow the global statusline as UI2 expands and collapses the cmdline.
   return {
     relative = "laststatus",
@@ -56,104 +70,244 @@ local function window_config(width)
     mouse = false,
     zindex = 60,
     hide = false,
-    win = target,
+    win = api.nvim_get_current_win(),
   }
 end
 
-local function render()
-  scheduled = false
+local function render_float()
+  float_view.render_scheduled = false
 
-  if pending_text == "" then
-    hide()
+  if state.display_text == "" then
+    hide_float()
     return
   end
 
-  local display = " " .. pending_text .. " "
-  local showcmd_buffer = ensure_buffer()
-  api.nvim_buf_set_lines(showcmd_buffer, 0, -1, false, { display })
+  local display = " " .. state.display_text .. " "
+  local buffer = ensure_float_buffer()
+  api.nvim_buf_set_lines(buffer, 0, -1, false, { display })
 
-  local config = window_config(vim.fn.strdisplaywidth(display))
-  if window and api.nvim_win_is_valid(window) then
-    api.nvim_win_set_config(window, config)
+  local win_config = make_float_window_config(vim.fn.strdisplaywidth(display))
+  if float_view.window and api.nvim_win_is_valid(float_view.window) then
+    api.nvim_win_set_config(float_view.window, win_config)
     return
   end
 
-  config.noautocmd = true
-  window = api.nvim_open_win(showcmd_buffer, false, config)
+  win_config.noautocmd = true
+  local window = api.nvim_open_win(buffer, false, win_config)
+  float_view.window = window
   vim.wo[window].winblend = 0
 end
 
-local function schedule_render()
-  if scheduled then
+local function schedule_float_render(delay)
+  if float_view.render_scheduled then
     return
   end
 
-  scheduled = true
-  vim.schedule(render)
+  float_view.render_scheduled = true
+  float_view.render_token = float_view.render_token + 1
+  local token = float_view.render_token
+  local render_callback = function()
+    if token == float_view.render_token then
+      render_float()
+    end
+  end
+
+  if delay and delay > 0 then
+    vim.defer_fn(render_callback, math.ceil(delay))
+  else
+    vim.schedule(render_callback)
+  end
 end
 
-local function showcmd_text(content)
+local function render_float_now()
+  -- Invalidate a delayed repeat render before painting newer state.
+  float_view.render_token = float_view.render_token + 1
+  float_view.render_scheduled = false
+
+  if vim.in_fast_event() then
+    schedule_float_render()
+  else
+    render_float()
+  end
+end
+
+local function update_display_text(text, delay)
+  if text == state.display_text then
+    return
+  end
+
+  state.display_text = text
+  if delay and delay > 0 then
+    schedule_float_render(delay)
+  else
+    render_float_now()
+  end
+end
+
+local function reset_repeat_state()
+  state.last_completed.text = ""
+  state.last_completed.completed_at = 0
+  state.last_completed.count = 0
+end
+
+local function is_repeat_candidate(text, timestamp)
+  return text == state.last_completed.text
+      and timestamp - state.last_completed.completed_at <= config.timeout
+end
+
+local function format_repeat_display(text, count)
+  return count > 1 and (text .. "×" .. count) or text
+end
+
+local function invalidate_hide_timer()
+  state.hide_token = state.hide_token + 1
+end
+
+local function schedule_float_hide()
+  invalidate_hide_timer()
+  local token = state.hide_token
+
+  vim.defer_fn(function()
+    if token ~= state.hide_token or state.active_text ~= "" then
+      return
+    end
+
+    reset_repeat_state()
+    update_display_text("")
+  end, config.timeout)
+end
+
+local function dismiss_float()
+  invalidate_hide_timer()
+  state.active_text = ""
+  reset_repeat_state()
+
+  -- Invalidate delayed rendering even if the float is already clear.
+  state.display_text = ""
+  render_float_now()
+end
+
+-- Escape cancels the current interaction and hides the float immediately.
+local function on_escape()
+  dismiss_float()
+end
+
+-- Non-empty text starts or updates the current showcmd interaction.
+local function on_text(text)
+  invalidate_hide_timer()
+  state.active_text = text
+
+  -- Matching text is only a repeat candidate. Neovim can also re-emit mapping
+  -- prefixes (the event sequence "y", "", "y"), so wait for the next clear event.
+  if is_repeat_candidate(text, now_ms()) then
+    return
+  end
+
+  update_display_text(text)
+end
+
+-- Empty msg (clear) finalizes the active text and starts its hide timeout.
+local function on_clear()
+  if state.active_text == "" then
+    return
+  end
+
+  -- A text event can't be considered as a repeat candidate or completed until it's followed by a clear event
+  local timestamp = now_ms()
+  local repeated = is_repeat_candidate(state.active_text, timestamp)
+  state.last_completed.count = repeated and state.last_completed.count + 1 or 1
+  state.last_completed.text = state.active_text
+  state.last_completed.completed_at = timestamp
+  state.active_text = ""
+
+  local display = format_repeat_display(state.last_completed.text, state.last_completed.count)
+  local delay = repeated and config.repeat_interval or nil
+  update_display_text(display, delay)
+  schedule_float_hide()
+end
+
+local function extract_showcmd_text(content)
   local parts = {}
   for _, chunk in ipairs(content or {}) do
     parts[#parts + 1] = chunk[2]
   end
-
   return table.concat(parts)
 end
 
-local function should_render(text)
-  return skipped[text] ~= true
-end
+local function dispatch_showcmd_event(content)
+  local text = extract_showcmd_text(content)
 
-local function update(text)
-  pending_text = text
-
-  -- Pending commands can block, so render immediately whenever it is safe.
-  if vim.in_fast_event() then
-    schedule_render()
+  -- showcmd renders Escape (and its Ctrl-[ equivalent) as a trailing ^[.
+  if text:sub(- #escape_text) == escape_text then
+    on_escape()
+  elseif text == "" then
+    on_clear()
   else
-    render()
+    on_text(text)
   end
 end
 
-function M.setup()
+local function patch_ui2_showcmd()
+  local messages = require("vim._core.ui2.messages")
+  local ui2_showcmd = messages.msg_showcmd
+
+  messages.msg_showcmd = function(content)
+    ui2_showcmd(content)
+    dispatch_showcmd_event(content)
+  end
+end
+
+local function patch_ui2_show_msg()
+  local messages = require("vim._core.ui2.messages")
+  local ui2_show_msg = messages.show_msg
+
+  messages.show_msg = function(target, ...)
+    ui2_show_msg(target, ...)
+
+    if target ~= "msg" then
+      dismiss_float()
+    end
+  end
+end
+
+local function patch_ui2_cmdline()
+  local cmdline = require("vim._core.ui2.cmdline")
+  local ui2_cmdline_show = cmdline.cmdline_show
+  local ui2_cmdline_hide = cmdline.cmdline_hide
+
+  -- Reposition after UI2 updates the command-line geometry.
+  cmdline.cmdline_show = function(...)
+    ui2_cmdline_show(...)
+    render_float_now()
+  end
+
+  cmdline.cmdline_hide = function(...)
+    ui2_cmdline_hide(...)
+    render_float_now()
+  end
+end
+
+function M.setup(opts)
+  config = vim.tbl_deep_extend("force", defaults, opts or {})
   vim.opt.showcmd = true
   vim.opt.showcmdloc = "last"
 
-  -- Extend UI2's native handlers while preserving their original behavior.
-  if not subscribed then
-    local messages = require("vim._core.ui2.messages")
-    local cmdline = require("vim._core.ui2.cmdline")
-    local original_showcmd = messages.msg_showcmd
-    local original_cmdline_show = cmdline.cmdline_show
-    local original_cmdline_hide = cmdline.cmdline_hide
-
-    messages.msg_showcmd = function(content)
-      original_showcmd(content)
-      local text = showcmd_text(content)
-      if should_render(text) then
-        update(text)
-      end
-    end
-
-    -- Reposition after UI2 updates the command-line geometry.
-    cmdline.cmdline_show = function(...)
-      original_cmdline_show(...)
-      render()
-    end
-
-    cmdline.cmdline_hide = function(...)
-      original_cmdline_hide(...)
-      render()
-    end
-
-    subscribed = true
+  if initialized then
+    return
   end
+
+  patch_ui2_showcmd()
+  patch_ui2_show_msg()
+  patch_ui2_cmdline()
 
   api.nvim_create_autocmd({ "TabEnter", "VimResized" }, {
     group = group,
-    callback = schedule_render,
+    callback = function()
+      schedule_float_render()
+    end,
   })
+
+  initialized = true
 end
 
 return M
