@@ -6,7 +6,18 @@ alias v=$VISUAL
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
-alias lnignore='ln -s ~/dotfiles/dotignore/.ignore_search .ignore'
+searchignore() {
+    if [[ -e .ignore || -L .ignore ]]; then
+        read -q 'REPLY?Remove existing .ignore? [y/N] ' || {
+            print
+            return 1
+        }
+        print
+        rm -f .ignore || return
+    fi
+
+    cp ~/dotfiles/dotignore/searchignore .ignore
+}
 
 alias px='pi --no-session'
 

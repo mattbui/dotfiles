@@ -9,18 +9,8 @@ vim.api.nvim_create_autocmd('PackChanged', {
     local spec = data.spec or {}
     local name, kind = spec.name, data.kind
     if name == 'fff.nvim' and (kind == 'install' or kind == 'update') then
-      -- Build the native backend so fff uses ripgrep instead of zlob.
-      local result = vim.system({
-        'cargo',
-        'build',
-        '--release',
-        '-p',
-        'fff-nvim',
-      }, { cwd = data.path }):wait()
-
-      if result.code ~= 0 then
-        error('failed to build fff.nvim native backend: ' .. (result.stderr or 'unknown error'))
-      end
+      if not data.active then vim.cmd.packadd('fff.nvim') end
+      require('fff.download').download_or_build_binary()
     end
   end,
 })
