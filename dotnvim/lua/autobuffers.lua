@@ -43,7 +43,7 @@ local function can_close(bufnr)
 end
 
 local function can_unlist(bufnr)
-  return can_close(bufnr) and api.nvim_buf_is_loaded(bufnr)
+  return can_close(bufnr) and vim.bo[bufnr].buflisted
 end
 
 local function mark_known_file(bufnr)
