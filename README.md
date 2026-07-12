@@ -1,94 +1,42 @@
 # dotfiles
 
-My dotfiles
+A macOS-focused setup for my personal machines. The Linux configuration is
+mainly there to keep remote servers familiar.
 
-<p align="center">
-  <img src="screenshot.png">
-</p>
+## Main setup
 
-Contents:
+- **Terminal:** Alacritty as the primary terminal, Ghostty as a backup, and tmux
+  for a consistent local and remote workflow.
+- **Editor and file manager:** Neovim and Yazi, connected through shared
+  shortcuts and tmux popups.
+- **Shell:** Zsh with small helpers and fuzzy-finding tools.
+- **Window management:** yabai and skhd, with JankyBorders for visual feedback.
 
-<!-- Table of contents GFM -->
+## Repository layout
 
-* [Intialization on a new machine](#intialization-on-a-new-machine)
-  - [Pre-requirements](#pre-requirements)
-  - [Magic command](#magic-command)
-* [TODO/Features](#todofeatures)
+- `dotzsh/` — shell configuration, aliases, and helper scripts.
+- `dottmux/` — tmux configuration, mappings, popups, and session scripts.
+- `dotnvim/` — Neovim configuration and plugin setup.
+- `dotyazi/` — Yazi keymaps, theme, plugins, and tmux helpers.
+- `dotyabai/` — yabai and skhd configuration.
+- `dotpi/` — Pi configuration, extensions, and themes.
+- `dotcodex/` — Codex skills and hooks.
+- `dotdirenv/`, `dotignore/`, and `dotrevdiff/` — supporting development-tool configuration.
+- `others/` — Alacritty, Ghostty, borders, and other application-specific files.
+- `init/` — package installation and symlink scripts.
 
-<!-- Table of contents -->
+More detail is available in the component READMEs under `dotnvim/`, `dotyazi/`,
+and `dotpi/`.
 
-## Intialization on a new machine
+## Setup
 
-### Pre-requirements
-
-- curl
-- wget
-- zsh
-- git
-
-### Magic command
+The initialization script clones the repository into `~/dotfiles`, links
+configurations, updates `.zshrc`, and installs platform-specific dependencies:
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/master/initialize.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/mattbui/dotfiles/main/initialize.sh)"
 ```
 
-## TODO/Features
-
-- [x] init:
-  - [x] configs:
-    - [x] zsh
-    - [x] git
-    - [x] nvim
-    - [x] tmux
-    - [x] fzf
-    - [x] lf
-    - [x] direnv
-  - [ ] setup scripts (support for homebrew, apt, apk, without package manager):
-    - [ ] zsh
-    - [ ] git
-    - [x] nvim
-    - [ ] tmux
-    - [x] fzf
-    - [x] lf
-    - [ ] fd
-    - [x] conda
-    - [x] direnv
-- [x] zsh:
-  - [x] antigen plugins manager
-  - [x] auto-complete
-  - [x] syntax highlight
-  - [x] vim mode
-  - [x] manpage
-- [x] nvim:
-  - [x] basic settings
-  - [x] basic key-maps
-  - [x] plugins manager
-  - [x] colorscheme
-  - [x] coc, code completion
-  - [x] file explorer
-    - [x] lf
-    - [x] coc-explorer
-  - [x] git:
-    - [x] fugitive
-    - [x] coc-git
-  - [x] startify
-  - [x] floatterm
-  - [x] ipynb integration
-  - [x] fzf integration
-- [x] tmux:
-  - [x] vim-like navigation
-  - [x] vim-like copy-mode
-  - [x] tmux-line
-- [x] fzf: basic configs
-  - [x] use fd as default command
-  - [x] open file (fo)
-  - [x] change directory (fcd)
-  - [x] alias finder with fzf (fa)
-  - [x] ctrl+f to change directory with fzf
-- [x] lf: basic configs
-  - [x] icons: nerd fonts
-  - [x] lfcd: map to ctr+o
-  - [x] trash
-  - [x] addDir, addFile
-  - [x] openWithEditor
-- [ ] things to try??
+These are personal setup scripts. Review them before running:
+`init/link.sh` replaces existing configuration targets with symlinks into this
+repository.
