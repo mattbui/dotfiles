@@ -3,7 +3,7 @@ local gh = function(repo)
 end
 
 vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('dotfiles.pack.fff', { clear = true }),
+  group = vim.api.nvim_create_augroup('config.pack.fff', { clear = true }),
   callback = function(ev)
     local data = ev.data or {}
     local spec = data.spec or {}

@@ -53,7 +53,7 @@ map("<Leader>iq", "<Cmd>SlimeSend1 exit<CR>", "Quit")
 map("<Leader>ic", '<Cmd>SlimeSend0 "\\x03"<CR>', "Cancel")
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("dotfiles_ipython", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.ipython", { clear = true }),
   pattern = "python",
   callback = set_buffer_mappings,
 })

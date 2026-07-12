@@ -95,7 +95,7 @@ fff.setup({
 -- fff creates its picker buffers dynamically; add local compatibility mappings
 -- after its FileType setup so they win over picker defaults.
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("dotfiles.fff.compat", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.fff.compat", { clear = true }),
   pattern = { "fff_input", "fff_list", "fff_preview" },
   callback = function(ev)
     vim.schedule(function()

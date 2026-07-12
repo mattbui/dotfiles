@@ -346,7 +346,7 @@ function M.setup()
   end
   configured = true
 
-  local group = vim.api.nvim_create_augroup("dotfiles_lsp_symbols", { clear = true })
+  local group = vim.api.nvim_create_augroup("config.lsp.symbols", { clear = true })
 
   vim.api.nvim_create_autocmd({ "LspAttach", "BufWritePost" }, {
     group = group,

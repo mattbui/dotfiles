@@ -37,7 +37,7 @@ api.nvim_create_autocmd("TermLeave", {
 })
 
 api.nvim_create_autocmd("FileType", {
-  group = api.nvim_create_augroup("dotfiles_formatoptions", { clear = true }),
+  group = api.nvim_create_augroup("config.formatoptions", { clear = true }),
   pattern = "*",
   callback = function()
     vim.opt_local.formatoptions:remove({ "c", "r", "o" })
@@ -52,7 +52,7 @@ api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-local autoclose = api.nvim_create_augroup("dotfiles_autoclose", { clear = true })
+local autoclose = api.nvim_create_augroup("config.buffers.autoclose", { clear = true })
 
 local function close_lonely_buffer(filetypes)
   api.nvim_create_autocmd("BufEnter", {

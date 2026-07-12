@@ -18,7 +18,7 @@ local function hide_and_navigate(direction)
 end
 
 vim.api.nvim_create_autocmd("FileType", {
-  group = vim.api.nvim_create_augroup("dotfiles_floaterm", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.floaterm", { clear = true }),
   pattern = "floaterm",
   callback = function(event)
     vim.wo.number = false

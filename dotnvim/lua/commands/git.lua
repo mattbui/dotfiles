@@ -88,7 +88,7 @@ vim.keymap.set("n", "<Leader>gS", "<Cmd>G<CR>", { silent = true, desc = "Status"
 vim.keymap.set("n", "<Leader>gl", "<Cmd>Gclog -50<CR>", { silent = true, desc = "Log" })
 
 vim.api.nvim_create_autocmd("BufEnter", {
-  group = vim.api.nvim_create_augroup("dotfiles_fugitive_reload", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.git.fugitive_reload", { clear = true }),
   callback = function()
     if not reload_fugitive then
       return

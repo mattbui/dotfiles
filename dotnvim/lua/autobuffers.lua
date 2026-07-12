@@ -6,7 +6,7 @@
 
 local api = vim.api
 
-local autocmds = api.nvim_create_augroup("dotfiles_buffers", { clear = true })
+local autocmds = api.nvim_create_augroup("config.buffers", { clear = true })
 
 local max_preview_batches = 2
 local max_permanent_buffers = 4

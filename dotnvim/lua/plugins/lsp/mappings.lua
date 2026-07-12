@@ -4,7 +4,7 @@ local commands = require("plugins.lsp.commands")
 local floats = require("plugins.lsp.floats")
 
 vim.api.nvim_create_autocmd("WinEnter", {
-  group = vim.api.nvim_create_augroup("dotfiles_float_close_keys", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.lsp.float_close_keys", { clear = true }),
   callback = function(event)
     local win = vim.api.nvim_get_current_win()
     local config = vim.api.nvim_win_get_config(win)
@@ -26,12 +26,12 @@ vim.api.nvim_create_autocmd("WinEnter", {
 })
 
 vim.api.nvim_create_autocmd("CursorHold", {
-  group = vim.api.nvim_create_augroup("dotfiles_diagnostic_hover", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.lsp.diagnostic_hover", { clear = true }),
   callback = floats.open_diagnostic_on_hold,
 })
 
 vim.api.nvim_create_autocmd("CursorMoved", {
-  group = vim.api.nvim_create_augroup("dotfiles_diagnostic_hover_suppression", { clear = true }),
+  group = vim.api.nvim_create_augroup("config.lsp.diagnostic_hover_suppression", { clear = true }),
   callback = floats.reset_diagnostic_hover_suppression,
 })
 
@@ -63,7 +63,7 @@ map("n", "<Leader>lo", commands.organize_imports, vim.tbl_extend("force", silent
 map("n", "<Leader>lv", commands.toggle_virtual_text, vim.tbl_extend("force", silent, { desc = "Toggle virtual text" }))
 map("n", "<Leader>li", commands.toggle_inlay_hints, vim.tbl_extend("force", silent, { desc = "Toggle inlay hints" }))
 
-local highlight_group = vim.api.nvim_create_augroup("dotfiles_lsp_document_highlight", { clear = true })
+local highlight_group = vim.api.nvim_create_augroup("config.lsp.document_highlight", { clear = true })
 
 vim.api.nvim_create_autocmd("LspAttach", {
   group = highlight_group,

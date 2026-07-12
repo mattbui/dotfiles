@@ -83,7 +83,7 @@ local function apply_custom_colors()
 end
 
 api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-  group = api.nvim_create_augroup("dotfiles_colorscheme", { clear = true }),
+  group = api.nvim_create_augroup("config.colorscheme", { clear = true }),
   callback = apply_custom_colors,
 })
 
