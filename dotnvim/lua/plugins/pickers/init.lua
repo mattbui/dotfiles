@@ -1,2 +1,2 @@
 require("plugins.pickers.fff")
-require("plugins.pickers.mini")
+require("plugins.pickers.snacks")

@@ -78,7 +78,9 @@ local function should_hide_path()
     "git",
     "fugitive",
     "qf",
-    "minipick",
+    "snacks_picker_input",
+    "snacks_picker_list",
+    "snacks_picker_preview",
     "yazi"
   }
 

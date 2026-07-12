@@ -44,4 +44,3 @@ vim.keymap.set("n", "<Leader>gu", gitsigns.reset_hunk, vim.tbl_extend("force", o
 vim.keymap.set("x", "<Leader>gu", function()
   gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
 end, vim.tbl_extend("force", opts, { desc = "Reset hunk" }))
-vim.keymap.set("n", "<Leader>gb", gitsigns.blame_line, vim.tbl_extend("force", opts, { desc = "Blame line" }))

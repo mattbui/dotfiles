@@ -42,6 +42,7 @@ vim.pack.add({
 
   -- Picker.
   gh('dmtrKovalenko/fff.nvim'),
+  gh('folke/snacks.nvim'),
 
   -- UI components.
   gh('kyazdani42/nvim-web-devicons'),

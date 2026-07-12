@@ -45,7 +45,8 @@ The formatter config lives in `lua/plugins/autoformat.lua`; format-on-save is co
 
 ## Main Workflows
 
-- File picker/search: `fff.nvim` through `<C-p>`, `<C-f>` and `<C-g>`.
+- File/content search: `fff.nvim` through `<C-p>`, `<C-f>`, `<C-g>` and the `<leader>f` find group.
+- Structured pickers: `snacks.nvim` for mixed file/directory search, diagnostics, LSP symbols, and Git branches.
 - Buffers: `lua/autobuffers.lua` keeps newly opened files as previews, promotes edited/toggled buffers to permanent, and trims old previews/permanent buffers.
 - Completion: `blink.cmp`.
 - LSP: native `vim.lsp.config()` and `vim.lsp.enable()`.
