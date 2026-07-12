@@ -72,20 +72,25 @@ snacks.setup({
     enabled = true,
     ui_select = false,
     layout = {
+      preset = "picker",
       cycle = false,
-      layout = {
-        box = "horizontal",
-        width = 0.8,
-        height = 0.6,
-        backdrop = false,
-        {
-          box = "vertical",
-          border = "single",
-          title = "{title} {live} {flags}",
-          { win = "input", height = 1,     border = "bottom" },
-          { win = "list",  border = "none" },
+    },
+    layouts = {
+      picker = {
+        layout = {
+          box = "horizontal",
+          width = 0.8,
+          height = 0.6,
+          backdrop = false,
+          {
+            box = "vertical",
+            border = "single",
+            title = "{title} {live} {flags}",
+            { win = "input", height = 1,     border = "bottom" },
+            { win = "list",  border = "none" },
+          },
+          { win = "preview", title = "{preview}", border = "single", width = 0.5 },
         },
-        { win = "preview", title = "{preview}", border = "single", width = 0.5 },
       },
     },
     actions = {
