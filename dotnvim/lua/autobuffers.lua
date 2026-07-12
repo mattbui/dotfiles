@@ -475,7 +475,7 @@ create_user_command("BufferHidePreviews", hide_preview_buffers)
 
 create_user_command("BufferState", print_buffer_state)
 
-vim.keymap.set("n", "<Leader>P", "<Cmd>BufferTogglePermanent<CR>",
+vim.keymap.set("n", "<Leader>p", "<Cmd>BufferTogglePermanent<CR>",
   { silent = true, desc = "Toggle permanent buffer" })
 vim.keymap.set("n", "<Leader>bP", "<Cmd>BufferPromote<CR>", { silent = true, desc = "Mark permanent" })
 vim.keymap.set("n", "<Leader>bm", "<Cmd>BufferMarkPreview<CR>", { silent = true, desc = "Mark preview" })
