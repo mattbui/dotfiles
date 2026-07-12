@@ -24,7 +24,7 @@ link_path "$DOTFILES/dottmux/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES/dottmux" "$CONFIGS/tmux"
 
 # Git configs
-link_path "$DOTFILES/dotignore/.gitignore_global" "$HOME/.gitignore_global"
+link_path "$DOTFILES/dotignore/globalgitignore" "$HOME/.globalgitignore"
 
 # Neovim configs
 link_path "$DOTFILES/dotnvim" "$CONFIGS/nvim"

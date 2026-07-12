@@ -1,0 +1,90 @@
+# fd/rg search ignore rules
+#
+# Use this as a local .ignore file to exclude search noise. The include rules
+# keep selected paths searchable when Git's global excludes file is also in
+# effect. Project .gitignore rules may still apply unless disabled explicitly.
+#
+# Example:
+#   ln -s ~/dotfiles/dotignore/searchignore .ignore
+
+# Include useful paths excluded by the global Git ignore file.
+!.src/
+!.src/*
+!.plans/
+!.plans/**
+!.handoff/
+!.handoff/**
+!draft*
+!draft*/**
+!.envrc
+!.ignore
+
+# Keep dependency repositories searchable, but skip their deeply nested files.
+.src/*/*
+
+# Version control and OS metadata
+.git/
+*~
+.fuse_hidden*
+.nfs*
+.directory
+.Trash-*/
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100/
+.fseventsd/
+.Spotlight-V100/
+.TemporaryItems/
+.Trashes/
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB/
+.AppleDesktop/
+Network Trash Folder/
+Temporary Items/
+.apdisk
+
+# Editor-generated state
+.history/
+Session.vim
+.undodir/
+
+# Python caches, environments, and generated output
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.hypothesis/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+pytestdebug.log
+.cache/
+*.egg-info/
+.eggs/
+.venv/
+*.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+pythonenv*/
+build/
+dist/
+docs/_build/
+doc/_build/
+.ipynb_checkpoints/
+
+# JavaScript dependencies
+node_modules/
