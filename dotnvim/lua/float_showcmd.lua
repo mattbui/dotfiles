@@ -6,49 +6,62 @@ local api = vim.api
 local M = {}
 local group = api.nvim_create_augroup("float_showcmd", { clear = true })
 local escape_text = "^["
-local defaults = {
-  repeat_interval = 50,
-  timeout = vim.o.timeoutlen,
-}
-local config = defaults
-local initialized = false
 
 local state = {
+  config = {
+    timeout = 200,
+    repeat_interval = 50,
+    window = {
+      relative = "laststatus",
+      anchor = "SW",
+      row = 0,
+      col = 0,
+      height = 1,
+      border = "single",
+      style = "minimal",
+      focusable = false,
+      mouse = false,
+      zindex = 60,
+    },
+  },
+
+  initialized = false,
   active_text = "",
-  display_text = "",
   last_completed = {
     text = "",
     completed_at = 0,
     count = 0,
   },
   hide_token = 0,
-}
 
-local float_view = {
-  buffer = nil,
-  window = nil,
-  render_scheduled = false,
-  render_token = 0,
+  view = {
+    buffer = nil,
+    window = nil,
+    text = "",
+    render_scheduled = false,
+    render_token = 0,
+  },
 }
+local view = state.view
 
 local function now_ms()
   return vim.uv.hrtime() / 1e6
 end
 
 local function hide_float()
-  if float_view.window and api.nvim_win_is_valid(float_view.window) then
-    pcall(api.nvim_win_set_config, float_view.window, { hide = true })
+  if view.window and api.nvim_win_is_valid(view.window) then
+    pcall(api.nvim_win_set_config, view.window, { hide = true })
   end
 end
 
 ---@return integer
 local function ensure_float_buffer()
-  if float_view.buffer and api.nvim_buf_is_valid(float_view.buffer) then
-    return float_view.buffer
+  if view.buffer and api.nvim_buf_is_valid(view.buffer) then
+    return view.buffer
   end
 
   local buffer = api.nvim_create_buf(false, true)
-  float_view.buffer = buffer
+  view.buffer = buffer
   vim.bo[buffer].bufhidden = "hide"
   vim.bo[buffer].swapfile = false
 
@@ -57,57 +70,47 @@ end
 
 local function make_float_window_config(width)
   -- Follow the global statusline as UI2 expands and collapses the cmdline.
-  return {
-    relative = "laststatus",
-    anchor = "SW",
-    row = 0,
-    col = 0,
+  return vim.tbl_extend("force", state.config.window, {
     width = width,
-    height = 1,
-    border = "single",
-    style = "minimal",
-    focusable = false,
-    mouse = false,
-    zindex = 60,
     hide = false,
     win = api.nvim_get_current_win(),
-  }
+  })
 end
 
 local function render_float()
-  float_view.render_scheduled = false
+  view.render_scheduled = false
 
-  if state.display_text == "" then
+  if view.text == "" then
     hide_float()
     return
   end
 
-  local display = " " .. state.display_text .. " "
+  local display = " " .. view.text .. " "
   local buffer = ensure_float_buffer()
   api.nvim_buf_set_lines(buffer, 0, -1, false, { display })
 
   local win_config = make_float_window_config(vim.fn.strdisplaywidth(display))
-  if float_view.window and api.nvim_win_is_valid(float_view.window) then
-    api.nvim_win_set_config(float_view.window, win_config)
+  if view.window and api.nvim_win_is_valid(view.window) then
+    api.nvim_win_set_config(view.window, win_config)
     return
   end
 
   win_config.noautocmd = true
   local window = api.nvim_open_win(buffer, false, win_config)
-  float_view.window = window
+  view.window = window
   vim.wo[window].winblend = 0
 end
 
 local function schedule_float_render(delay)
-  if float_view.render_scheduled then
+  if view.render_scheduled then
     return
   end
 
-  float_view.render_scheduled = true
-  float_view.render_token = float_view.render_token + 1
-  local token = float_view.render_token
+  view.render_scheduled = true
+  view.render_token = view.render_token + 1
+  local token = view.render_token
   local render_callback = function()
-    if token == float_view.render_token then
+    if token == view.render_token then
       render_float()
     end
   end
@@ -121,8 +124,8 @@ end
 
 local function render_float_now()
   -- Invalidate a delayed repeat render before painting newer state.
-  float_view.render_token = float_view.render_token + 1
-  float_view.render_scheduled = false
+  view.render_token = view.render_token + 1
+  view.render_scheduled = false
 
   if vim.in_fast_event() then
     schedule_float_render()
@@ -132,11 +135,11 @@ local function render_float_now()
 end
 
 local function update_display_text(text, delay)
-  if text == state.display_text then
+  if text == view.text then
     return
   end
 
-  state.display_text = text
+  view.text = text
   if delay and delay > 0 then
     schedule_float_render(delay)
   else
@@ -152,7 +155,7 @@ end
 
 local function is_repeat_candidate(text, timestamp)
   return text == state.last_completed.text
-      and timestamp - state.last_completed.completed_at <= config.timeout
+      and timestamp - state.last_completed.completed_at <= state.config.timeout
 end
 
 local function format_repeat_display(text, count)
@@ -174,7 +177,7 @@ local function schedule_float_hide()
 
     reset_repeat_state()
     update_display_text("")
-  end, config.timeout)
+  end, state.config.timeout)
 end
 
 local function dismiss_float()
@@ -183,7 +186,7 @@ local function dismiss_float()
   reset_repeat_state()
 
   -- Invalidate delayed rendering even if the float is already clear.
-  state.display_text = ""
+  view.text = ""
   render_float_now()
 end
 
@@ -221,7 +224,7 @@ local function on_clear()
   state.active_text = ""
 
   local display = format_repeat_display(state.last_completed.text, state.last_completed.count)
-  local delay = repeated and config.repeat_interval or nil
+  local delay = repeated and state.config.repeat_interval or nil
   update_display_text(display, delay)
   schedule_float_hide()
 end
@@ -288,11 +291,11 @@ local function patch_ui2_cmdline()
 end
 
 function M.setup(opts)
-  config = vim.tbl_deep_extend("force", defaults, opts or {})
+  state.config = vim.tbl_deep_extend("force", state.config, opts or {})
   vim.opt.showcmd = true
   vim.opt.showcmdloc = "last"
 
-  if initialized then
+  if state.initialized then
     return
   end
 
@@ -307,7 +310,7 @@ function M.setup(opts)
     end,
   })
 
-  initialized = true
+  state.initialized = true
 end
 
 return M
