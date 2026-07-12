@@ -4,7 +4,6 @@ then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 [ -z $(command -v zsh) ] && brew install zsh
-[ -z $(command -v lf) ] && brew install lf
 [ -z $(command -v yazi) ] && brew install yazi
 [ -z $(command -v 7zz) ] && brew install sevenzip
 [ -z $(command -v tmux) ] && brew install tmux

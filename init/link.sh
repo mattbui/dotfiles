@@ -29,9 +29,6 @@ link_path "$DOTFILES/dotignore/globalgitignore" "$HOME/.globalgitignore"
 # Neovim configs
 link_path "$DOTFILES/dotnvim" "$CONFIGS/nvim"
 
-# lf configs
-link_path "$DOTFILES/dotlf" "$CONFIGS/lf"
-
 # Yazi configs
 link_path "$DOTFILES/dotyazi" "$CONFIGS/yazi"
 

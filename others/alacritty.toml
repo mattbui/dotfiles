@@ -212,7 +212,7 @@ chars = "\u001B[9028u"
 key = "T"
 mods = "Command"
 
-# Command-O sends a tmux user key for an lf popup.
+# Command-O sends a tmux user key for a Yazi popup.
 [[keyboard.bindings]]
 chars = "\u001B[9029u"
 key = "O"

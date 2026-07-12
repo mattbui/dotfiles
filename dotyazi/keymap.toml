@@ -8,14 +8,14 @@ prepend_keymap = [
 	{ on = "~", run = "cd ~", desc = "Go home" },
 	{ on = ".", run = "hidden toggle", desc = "Toggle hidden files" },
 
-	# Select the hovered item and move, matching lf's J/K workflow.
+	# Select the hovered item and move with J/K.
 	{ on = "J", run = [ "toggle", "arrow next" ], desc = "Toggle selection and move down" },
 	{ on = "<S-Down>", run = [ "toggle", "arrow next" ], desc = "Toggle selection and move down" },
 	{ on = "K", run = [ "toggle", "arrow prev" ], desc = "Toggle selection and move up" },
 	{ on = "<S-Up>", run = [ "toggle", "arrow prev" ], desc = "Toggle selection and move up" },
 	{ on = "<Space>", run = "noop" },
 
-	# Turn y into an lf-style prefix while keeping Yazi's native operations.
+	# Use y as a prefix while keeping Yazi's native operations.
 	{ on = "y", run = "noop" },
 	{ on = [ "y", "y" ], run = "yank", desc = "Yank selected files" },
 	{ on = [ "y", "p" ], run = "plugin yank-md-link", desc = "Copy markdown links" },
@@ -24,7 +24,7 @@ prepend_keymap = [
 	{ on = [ "y", "f" ], run = [ "copy filename", "plugin notify-copy -- filename" ], desc = "Copy filenames" },
 	{ on = [ "y", "n" ], run = [ "copy name_without_ext", "plugin notify-copy -- name_without_ext" ], desc = "Copy filenames without extensions" },
 
-	# Use d as an lf-style file-operation prefix.
+	# Use d as a file-operation prefix.
 	{ on = "d", run = "noop" },
 	{ on = [ "d", "d" ], run = "yank --cut", desc = "Cut selected files" },
 	{ on = [ "d", "t" ], run = "remove", desc = "Move selected files to Trash" },

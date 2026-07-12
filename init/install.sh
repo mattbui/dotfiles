@@ -40,31 +40,6 @@ then
     curl -L git.io/antigen > $HOME/antigen.zsh  # antigen as zsh plugins manager
 fi
 
-if ! command -v lf &> /dev/null
-then
-    echo "INSTALLING LF"
-    latest_release=$(curl -L -s -H 'Accept: application/json' https://github.com/gokcehan/lf/releases/latest)
-    latest_version=$(echo $latest_release | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/')
-    case "$(uname -s)" in
-        Linux*)
-            case "$(uname -m)" in
-                x86_64) artifact_url="https://github.com/gokcehan/lf/releases/download/$latest_version/lf-linux-amd64.tar.gz";;
-                i686 | i386) artifact_url="https://github.com/gokcehan/lf/releases/download/$latest_version/lf-linux-386.tar.gz";;
-                *) echo "UNKNOWN:$(uname -a)";;
-            esac
-            ;;
-        Darwin*) artifact_url="https://github.com/gokcehan/lf/releases/download/$latest_version/lf-darwin-amd64.tar.gz";;
-        *) echo "UNKNOWN:$(uname -a)";;
-    esac
-
-    if [ ! -z $artifact_url ]; then
-        echo "INSTALLING LF from: $artifact_url"
-        wget -O $HOME/lf.tar.gz $artifact_url
-        tar xvf $HOME/lf.tar.gz -C $HOME/bin
-        chmod +x $HOME/bin/lf
-    fi
-fi
-
 if ! command -v direnv &> /dev/null
 then
     echo "INSTALLING DIRENV"

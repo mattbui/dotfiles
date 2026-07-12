@@ -8,7 +8,7 @@
 - `dotnvim/`: Neovim configuration.
 - `dotzsh/`: zsh configuration.
 - `dotyabai/`: yabai and skhd window-management configuration.
-- `dotlf/`: lf file-manager configuration.
+- `dotyazi/`: Yazi file-manager configuration.
 - `init/`: setup and install scripts.
 - `others/`: app-specific configs, themes, keyboard layouts, and miscellaneous assets.
 

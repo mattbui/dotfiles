@@ -54,7 +54,6 @@ for keymap in emacs viins; do
 done
 
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh  # my custom aliases
-[[ ! -f $HOME/.config/lf/lf_icons.sh ]] || source $HOME/.config/lf/lf_icons.sh  # specify icons of lf
 
 if [[ $(uname -s) == Linux* && -f "${HOME}/.config/zsh/start_ssh_agent.zsh" ]]; then
     source "${HOME}/.config/zsh/start_ssh_agent.zsh"
