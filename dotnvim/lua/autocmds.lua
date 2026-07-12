@@ -62,12 +62,22 @@ local function close_lonely_buffer(filetypes)
         return
       end
 
-      local filetype = vim.bo.filetype
-      if not filetypes[filetype] then
+      local bufnr = api.nvim_get_current_buf()
+      local command = filetypes[vim.bo[bufnr].filetype]
+      if not command then
         return
       end
 
-      vim.cmd(filetypes[filetype])
+      vim.schedule(function()
+        if not api.nvim_buf_is_valid(bufnr)
+          or api.nvim_get_current_buf() ~= bufnr
+          or vim.fn.winnr("$") ~= 1
+        then
+          return
+        end
+
+        vim.cmd(command)
+      end)
     end,
   })
 end
