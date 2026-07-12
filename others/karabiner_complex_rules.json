@@ -203,7 +203,7 @@
       ]
     },
     {
-      "description": "Shift + Esc → Tilde, Shift + Backtick → Triple Backtick",
+      "description": "Shift + Esc → Tilde, Command + Backtick → Triple Backtick",
       "manipulators": [
         {
           "description": "Shift + Esc → Tilde",
@@ -223,11 +223,11 @@
           "type": "basic"
         },
         {
-          "description": "Shift + Backtick → Triple Backtick",
+          "description": "Command + Backtick → Triple Backtick",
           "from": {
             "key_code": "grave_accent_and_tilde",
             "modifiers": {
-              "mandatory": ["shift"],
+              "mandatory": ["command"],
               "optional": ["any"]
             }
           },
