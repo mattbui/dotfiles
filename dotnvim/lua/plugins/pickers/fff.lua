@@ -86,8 +86,9 @@ fff.setup({
     cycle_grep_modes = { "<S-Right>", "<S-Left>" },
     move_down = { "<Down>", "<Tab>" },
     move_up = { "<Up>", "<S-Tab>" },
-    grep_jump_to_next_file = "<C-n>",
-    grep_jump_to_prev_file = "<C-p>",
+    grep_jump_to_next_file = { "<C-n>", "<A-Down>" },
+    grep_jump_to_prev_file = { "<C-p>", "<A-Up>" },
+    cycle_previous_query = "<C-Up>",
   },
 })
 
