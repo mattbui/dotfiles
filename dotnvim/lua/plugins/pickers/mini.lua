@@ -130,33 +130,6 @@ local function trim_trailing_slash(path)
   return path:gsub("/$", "")
 end
 
-local function choose_file_or_directory(item)
-  local path = type(item) == "table" and item.path or item
-  if type(path) ~= "string" then
-    return pick.default_choose(item)
-  end
-
-  local absolute_path = trim_trailing_slash(vim.fn.fnamemodify(path, ":p"))
-  if vim.fn.isdirectory(absolute_path) == 0 then
-    return pick.default_choose(item)
-  end
-
-  local state = pick.get_picker_state()
-  local target = state ~= nil and state.windows ~= nil and state.windows.target or nil
-  if target == nil or not vim.api.nvim_win_is_valid(target) then
-    return pick.default_choose(item)
-  end
-
-  if vim.fn.exists("*OpenLfIn") ~= 1 then
-    return pick.default_choose(item)
-  end
-
-  local edit_path = absolute_path .. "/"
-  vim.schedule(function()
-    vim.fn.OpenLfIn(edit_path, "edit")
-  end)
-end
-
 local function normalize_picker_path(path)
   return vim.fs.normalize(vim.fn.fnamemodify(path:gsub("/$", ""), ":p"))
 end
@@ -278,21 +251,21 @@ local function pick_files_and_directories()
   local current_file = vim.api.nvim_buf_get_name(0)
 
   pick.builtin.cli({
-    command = { "fd", "--type", "f", "--type", "d", "--color", "never" },
+    command = { "fd", "--hidden", "--type", "f", "--type", "d", "--color", "never" },
     postprocess = function(items)
       local sorted_items = sort_file_and_directory_items(items, current_file)
       return vim.tbl_map(make_file_and_directory_item, sorted_items)
     end,
   }, {
     source = {
-      choose = choose_file_or_directory,
       name = "Files and directories",
       show = show_with_icons,
     },
   })
 end
 
-vim.keymap.set("n", "<C-p>", pick_files_and_directories, { silent = true, desc = "Find files and directories" })
+-- vim.keymap.set("n", "<C-p>", pick_files_and_directories, { silent = true, desc = "Find files and directories" })
+vim.keymap.set("n", "<Leader>pd", pick_files_and_directories, { silent = true, desc = "Find directories and files" })
 
 vim.keymap.set("n", "<Leader>D", function()
   MiniExtra.pickers.diagnostic({ scope = "current" })
