@@ -1,0 +1,43 @@
+[mgr]
+prepend_keymap = [
+	# Extend Escape to also clear Yazi's internal yank/cut status.
+	{ on = "<Esc>", run = [ "escape", "unyank" ], desc = "Escape and clear yank/cut status" },
+	{ on = "<C-q>", run = "close", desc = "Close the current tab or quit" },
+	{ on = "<C-c>", run = "close", desc = "Close the current tab or quit" },
+
+	{ on = "~", run = "cd ~", desc = "Go home" },
+	{ on = ".", run = "hidden toggle", desc = "Toggle hidden files" },
+
+	# Select the hovered item and move, matching lf's J/K workflow.
+	{ on = "J", run = [ "toggle", "arrow next" ], desc = "Toggle selection and move down" },
+	{ on = "<S-Down>", run = [ "toggle", "arrow next" ], desc = "Toggle selection and move down" },
+	{ on = "K", run = [ "toggle", "arrow prev" ], desc = "Toggle selection and move up" },
+	{ on = "<S-Up>", run = [ "toggle", "arrow prev" ], desc = "Toggle selection and move up" },
+	{ on = "<Space>", run = "noop" },
+
+	# Turn y into an lf-style prefix while keeping Yazi's native operations.
+	{ on = "y", run = "noop" },
+	{ on = [ "y", "y" ], run = "yank", desc = "Yank selected files" },
+	{ on = [ "y", "p" ], run = "plugin yank-md-link", desc = "Copy markdown links" },
+	{ on = [ "y", "P" ], run = [ "copy path", "plugin notify-copy -- path" ], desc = "Copy absolute paths" },
+	{ on = [ "y", "d" ], run = [ "copy dirname", "plugin notify-copy -- dirname" ], desc = "Copy containing directory paths" },
+	{ on = [ "y", "f" ], run = [ "copy filename", "plugin notify-copy -- filename" ], desc = "Copy filenames" },
+	{ on = [ "y", "n" ], run = [ "copy name_without_ext", "plugin notify-copy -- name_without_ext" ], desc = "Copy filenames without extensions" },
+
+	# Use d as an lf-style file-operation prefix.
+	{ on = "d", run = "noop" },
+	{ on = [ "d", "d" ], run = "yank --cut", desc = "Cut selected files" },
+	{ on = [ "d", "t" ], run = "remove", desc = "Move selected files to Trash" },
+	{ on = [ "d", "D" ], run = "remove --permanently", desc = "Permanently delete selected files" },
+
+	{ on = "<Space>", run = "shell --orphan 'sh \"$HOME/.config/zsh/scripts/quick-look.sh\" %h'", desc = "Quick Look the hovered file" },
+	{ on = "<C-y>", run = "shell --orphan 'sh \"$HOME/.config/zsh/scripts/quick-look.sh\" %h'", desc = "Quick Look the hovered file" },
+
+	{ on = [ "T", "t" ], run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-window.sh\" %h'", desc = "Open a tmux window here" },
+	{ on = [ "T", "n" ], run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-session.sh\" %h'", desc = "Create and switch to a tmux session" },
+]
+
+[input]
+prepend_keymap = [
+	{ on = "<Esc>", run = "close", desc = "Cancel input" },
+]

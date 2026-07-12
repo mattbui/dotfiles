@@ -3,6 +3,7 @@
 # workaround when using e command inside floaterm/vim
 [ -z $VIMRUNTIME ] && alias e=$EDITOR || alias e=floaterm
 alias v=$VISUAL
+alias y='yazi'
 
 alias fa='alias | fzf'  # fuzzy find alias
 alias cheat='cht.sh'
@@ -21,27 +22,16 @@ searchignore() {
 
 alias px='pi --no-session'
 
+function ycd() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
+}
+
 preview() {
-    if (( $# == 0 )); then
-        echo "usage: preview FILE..."
-        return 1
-    fi
-
-    local pid=$(qlmanage -p "$@" >/dev/null 2>&1 & echo $!)
-
-    osascript <<APPLESCRIPT >/dev/null
-delay 0.1
-tell application "System Events"
-    set matchingProcesses to every process whose unix id is $pid
-    if (count of matchingProcesses) > 0 then
-        set p to item 1 of matchingProcesses
-        set frontmost of p to true
-        if (count of windows of p) > 0 then
-            perform action "AXRaise" of window 1 of p
-        end if
-    end if
-end tell
-APPLESCRIPT
+	"$HOME/.config/zsh/scripts/quick-look.sh" "$@"
 }
 
 picommit() {

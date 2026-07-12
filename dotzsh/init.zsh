@@ -48,7 +48,10 @@ export BAT_THEME='ansi-light'
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
-[[ ! -f $HOME/.config/lf/lfcd.sh ]] || source $HOME/.config/lf/lfcd.sh
+
+for keymap in emacs viins; do
+    bindkey -M "$keymap" -s '^o' 'ycd\n'
+done
 
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh  # my custom aliases
 [[ ! -f $HOME/.config/lf/lf_icons.sh ]] || source $HOME/.config/lf/lf_icons.sh  # specify icons of lf

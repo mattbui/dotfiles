@@ -1,0 +1,168 @@
+# Tokyo Night Storm for Yazi.
+# Source: https://github.com/folke/tokyonight.nvim/blob/main/extras/yazi/tokyonight_storm.toml
+# Updated for Yazi 26.5: indicator/body/url replace deprecated theme fields.
+
+[mgr]
+# NOTE: can be combined with tmTheme (sublime colorshceme file) for preview code highlight
+# syntect_theme = "path/to/tmTheme"
+
+cwd = { fg = "#a9b1d6", italic = true }
+
+# Find
+find_keyword  = { fg = "#1f2335", bg = "#ff9e64", bold = true }
+find_position = { fg = "#0db9d7", bg = "#22374b", bold = true }
+
+# Marker
+marker_copied   = { fg = "#9ece6a" }
+marker_cut      = { fg = "#f7768e" }
+marker_marked   = { fg = "#bb9af7" }
+marker_selected = { fg = "#7aa2f7" }
+marker_symbol   = "┃"
+
+# Count
+count_copied   = { fg = "#1f2335", bg = "#9ece6a" }
+count_cut      = { fg = "#1f2335", bg = "#f7768e" }
+count_selected = { fg = "#1f2335", bg = "#7aa2f7" }
+
+# Border
+border_symbol = "│"
+border_style  = { fg = "#565f89" }
+
+# Hovered
+[indicator]
+parent  = { reversed = true }
+current = { reversed = true }
+preview = { bg = "#292e42" }
+padding = { open = "█", close = "█" }
+
+# Tab
+[tabs]
+active   = { fg = "#1d202f", bg = "#7aa2f7" }
+inactive = { fg = "#7aa2f7", bg = "#3b4261" }
+
+[mode]
+normal_main = { fg = "#1d202f", bg = "#7aa2f7", bold = true }
+normal_alt  = { fg = "#7aa2f7", bg = "#3b4261" }
+
+select_main = { fg = "#1d202f", bg = "#bb9af7", bold = true }
+select_alt  = { fg = "#bb9af7", bg = "#3b4261" }
+
+unset_main  = { fg = "#1d202f", bg = "#9d7cd8", bold = true }
+unset_alt   = { fg = "#9d7cd8", bg = "#3b4261" }
+
+[status]
+overall   = { fg = "#c0caf5", bg = "#1f2335" }
+sep_left  = { open = "", close = " " }
+sep_right = { open = " ", close = "" }
+
+# Progress
+progress_label  = { fg = "#c0caf5", bold = true }
+progress_normal = { fg = "#3d59a1", bg = "#292e42" }
+progress_error  = { fg = "#db4b4b", bg = "#292e42" }
+
+# Permissions
+perm_type  = { fg = "#c0caf5" }
+perm_read  = { fg = "#c0caf5" }
+perm_write = { fg = "#c0caf5" }
+perm_exec  = { fg = "#c0caf5" }
+perm_sep   = { fg = "#c0caf5" }
+
+[pick]
+border   = { fg = "#565f89" }
+active   = { fg = "#c0caf5",  bg = "#2e3c64" }
+inactive = { fg = "#c0caf5" }
+
+# Input
+[input]
+border   = { fg = "#565f89" }
+title    = { fg = "#0db9d7" }
+value    = { fg = "#9d7cd8" }
+selected = { bg = "#2e3c64" }
+
+# Completion
+[cmp]
+border   = { fg = "#565f89" }
+active   = { fg = "#c0caf5", bg = "#363d59" }
+inactive = { fg = "#c0caf5" }
+
+icon_file    = ""
+icon_folder  = ""
+icon_command = ""
+
+# Tasks
+[tasks]
+border  = { fg = "#565f89" }
+title   = { fg = "#29a4bd" }
+hovered = { fg = "#c0caf5", bg = "#2e3c64" }
+
+# Which
+[which]
+cols            = 3
+mask            = { bg = "#1f2335" }
+cand            = { fg = "#7dcfff" }
+rest            = { fg = "#7aa2f7" }
+desc            = { fg = "#bb9af7" }
+separator       = " ➜ "
+separator_style = { fg = "#565f89" }
+
+# Confirm
+[confirm]
+border  = { fg = "#565f89" }
+title   = { fg = "#29a4bd" }
+body    = {}
+list    = {}
+btn_yes = { bg = "#2e3c64" }
+btn_no  = {}
+btn_labels = [ "  [y]es  ", "  (n)o  " ]
+
+# Spot
+[spot]
+border  = { fg = "#565f89" }
+title   = { fg = "#29a4bd" }
+
+# Notify
+[notify]
+title_info  = { fg = "#0db9d7" }
+title_warn  = { fg = "#e0af68" }
+title_error = { fg = "#db4b4b" }
+
+icon_error = ""
+icon_warn = ""
+icon_info = ""
+
+# Help
+[help]
+border  = { fg = "#565f89" }
+on      = { fg = "#9ece6a" }
+run     = { fg = "#bb9af7" }
+desc    = { fg = "#7dcfff" }
+hovered = { bg = "#292e42" }
+footer  = { fg = "#c0caf5", bg = "#24283b" }
+
+[filetype]
+
+rules = [
+	# Images
+	{ mime = "image/*", fg = "#e0af68" },
+
+	# Media
+	{ mime = "{audio,video}/*", fg = "#bb9af7" },
+
+	# Archives
+	{ mime = "application/*zip", fg = "#f7768e" },
+	{ mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#f7768e" },
+
+	# Documents
+	{ mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#7dcfff" },
+
+	# Empty files
+	# { mime = "inode/x-empty", fg = "#f7768e" },
+
+	# Special files
+	{ url = "*", is = "orphan", bg = "#f7768e" },
+	{ url = "*", is = "exec"  , fg = "#9ece6a" },
+
+	# Fallback
+	{ url = "*/", fg = "#7aa2f7" },
+	{ url = "*", fg = "#c0caf5" }
+]

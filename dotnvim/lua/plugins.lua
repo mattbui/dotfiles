@@ -17,7 +17,8 @@ vim.api.nvim_create_autocmd('PackChanged', {
 
 vim.pack.add({
   -- Terminal and file manager workflows.
-  gh('ptzz/lf.vim'),
+  gh('nvim-lua/plenary.nvim'),
+  gh('mikavilpas/yazi.nvim'),
   gh('voldikss/vim-floaterm'),
 
   -- Minimal editing helpers.
@@ -36,7 +37,7 @@ vim.pack.add({
   gh('saghen/blink.lib'),
   gh('saghen/blink.cmp'),
   gh('stevearc/conform.nvim'),
-  { src = gh('nvim-treesitter/nvim-treesitter'), version = 'main' },
+  { src = gh('nvim-treesitter/nvim-treesitter'),             version = 'main' },
   { src = gh('nvim-treesitter/nvim-treesitter-textobjects'), version = 'main' },
 
   -- Picker.
@@ -51,7 +52,7 @@ vim.pack.add({
   -- Notebook and REPL workflow.
   gh('jpalardy/vim-slime'),
   gh('hanschen/vim-ipython-cell'),
-  { src = gh('mattbui/jupytext.vim'),            version = 'jupytext_opts' },
+  { src = gh('mattbui/jupytext.vim'), version = 'jupytext_opts' },
 
   -- tmux navigation.
   gh('christoomey/vim-tmux-navigator'),

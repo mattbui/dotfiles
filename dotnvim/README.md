@@ -14,7 +14,7 @@ Local baseline recorded on 2026-07-04:
 - `lua/plugins/`: plugin configuration modules.
 - `lua/plugins/lsp/`: native LSP setup, diagnostics, mappings, and symbols.
 - `lua/commands/`: custom user commands.
-- `lf.vim`, `floaterm.vim`: remaining Vimscript integrations kept intentionally for now.
+- `floaterm.vim`: remaining Vimscript terminal integration kept intentionally for now.
 
 ## Plugin Management
 
@@ -45,11 +45,12 @@ The formatter config lives in `lua/plugins/autoformat.lua`; format-on-save is co
 
 ## Main Workflows
 
-- File picker: `fff.nvim` through `:Files`, `:Rg`, `<C-p>`, and `<C-g>`.
+- File picker/search: `fff.nvim` through `<C-p>`, `<C-f>` and `<C-g>`.
 - Buffers: `lua/autobuffers.lua` keeps newly opened files as previews, promotes edited/toggled buffers to permanent, and trims old previews/permanent buffers.
 - Completion: `blink.cmp`.
 - LSP: native `vim.lsp.config()` and `vim.lsp.enable()`.
 - Formatting: `conform.nvim` through `:Format` and `<leader>lf`.
 - Git: Fugitive commands plus `gitsigns.nvim` hunk actions.
-- File manager and terminal: `lf.vim` and `vim-floaterm`.
+- File manager: `yazi.nvim`
+- Floating terminal: `vim-floaterm`.
 - UI: `lualine.nvim`, `barbar.nvim`, `which-key.nvim`, and `tokyonight.nvim`.

@@ -16,6 +16,7 @@ require("autobuffers")
 
 -- Plugins configs
 require("plugins")
+require("plugins.yazi")
 require("plugins.gitsigns")
 require("plugins.lsp")
 require("plugins.autoformat")
@@ -28,7 +29,6 @@ require("plugins.mini")
 require("plugins.indent_blankline")
 require("plugins.neoscroll")
 require("plugins.treesitter")
-source_config("lf.vim")
 source_config("floaterm.vim")
 
 -- Theme configs

@@ -1,0 +1,19 @@
+# Keep this file small and let Yazi's native openers, previews, and file
+# operations provide the default behavior.
+
+[mgr]
+ratio = [ 1, 2, 2 ]
+linemode = "size"
+show_hidden = true
+show_symlink = true
+scrolloff = 5
+
+[input]
+find_origin = "bottom-left"
+find_offset = [ 0, -1, 50, 3 ]
+filter_origin = "bottom-left"
+filter_offset = [ 0, -1, 50, 3 ]
+shell_origin = "bottom-left"
+shell_offset = [ 0, -1, 50, 3 ]
+search_origin = "bottom-left"
+search_offset = [ 0, -1, 60, 3 ]

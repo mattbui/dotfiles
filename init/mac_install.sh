@@ -5,6 +5,8 @@ then
 fi
 [ -z $(command -v zsh) ] && brew install zsh
 [ -z $(command -v lf) ] && brew install lf
+[ -z $(command -v yazi) ] && brew install yazi
+[ -z $(command -v 7zz) ] && brew install sevenzip
 [ -z $(command -v tmux) ] && brew install tmux
 [ -z $(command -v nvim) ] && brew install nvim
 [ -z $(command -v direnv) ] && brew install direnv

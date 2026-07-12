@@ -78,7 +78,8 @@ local function should_hide_path()
     "git",
     "fugitive",
     "qf",
-    "minipick"
+    "minipick",
+    "yazi"
   }
 
   if vim.tbl_contains(hidden_filetypes, vim.bo.filetype) then

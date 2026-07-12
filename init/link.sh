@@ -32,6 +32,9 @@ link_path "$DOTFILES/dotnvim" "$CONFIGS/nvim"
 # lf configs
 link_path "$DOTFILES/dotlf" "$CONFIGS/lf"
 
+# Yazi configs
+link_path "$DOTFILES/dotyazi" "$CONFIGS/yazi"
+
 # direnv configs
 link_path "$DOTFILES/dotdirenv" "$CONFIGS/direnv"
 

@@ -33,10 +33,6 @@
       "src": "https://github.com/mattbui/jupytext.vim",
       "version": "'jupytext_opts'"
     },
-    "lf.vim": {
-      "rev": "80a2ef0b1632258c6f5bfce21524c3b3d949a774",
-      "src": "https://github.com/ptzz/lf.vim"
-    },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
@@ -67,6 +63,10 @@
       "rev": "dad71387de386a946b123079d0e53f23028f3abd",
       "src": "https://github.com/kyazdani42/nvim-web-devicons"
     },
+    "plenary.nvim": {
+      "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
     "tokyonight.nvim": {
       "rev": "cdc07ac78467a233fd62c493de29a17e0cf2b2b6",
       "src": "https://github.com/folke/tokyonight.nvim"
@@ -94,6 +94,10 @@
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",
       "src": "https://github.com/folke/which-key.nvim"
+    },
+    "yazi.nvim": {
+      "rev": "bba4c0579e4247729bf71b4104471eb131516922",
+      "src": "https://github.com/mikavilpas/yazi.nvim"
     }
   }
 }
