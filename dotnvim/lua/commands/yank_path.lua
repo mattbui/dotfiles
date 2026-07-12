@@ -16,10 +16,10 @@ local function current_path(kind)
   return path
 end
 
-local function copy(value)
+local function copy(value, kind, label)
   vim.fn.setreg('"', value)
   pcall(vim.fn.setreg, "+", value)
-  notify("Yanked " .. value)
+  notify(string.format("[%s] %s yanked", label, kind == "absolute" and "abspath" or "path"))
 end
 
 local function path_label(path, suffix)
@@ -46,11 +46,12 @@ local function yank_path(kind)
   end
 
   if kind == "absolute" then
-    copy(path)
+    copy(path, kind, path_label(path))
     return
   end
 
-  copy(markdown_link(path_label(path), path))
+  local label = path_label(path)
+  copy(markdown_link(label, path), kind, label)
 end
 
 local function yank_path_line(kind)
@@ -60,7 +61,8 @@ local function yank_path_line(kind)
   end
 
   local line = vim.fn.line(".")
-  copy(markdown_link(path_label(path, ":" .. line), string.format("%s:%d", path, line)))
+  local label = path_label(path, ":" .. line)
+  copy(markdown_link(label, string.format("%s:%d", path, line)), kind, label)
 end
 
 local function yank_path_range(kind, opts)
@@ -78,11 +80,13 @@ local function yank_path_range(kind, opts)
   local end_line = math.max(opts.line1, opts.line2)
 
   if start_line == end_line then
-    copy(markdown_link(path_label(path, ":" .. start_line), string.format("%s:%d", path, start_line)))
+    local label = path_label(path, ":" .. start_line)
+    copy(markdown_link(label, string.format("%s:%d", path, start_line)), kind, label)
     return
   end
 
-  copy(markdown_link(path_label(path, string.format(":%d-%d", start_line, end_line)), string.format("%s:%d-%d", path, start_line, end_line)))
+  local label = path_label(path, string.format(":%d-%d", start_line, end_line))
+  copy(markdown_link(label, string.format("%s:%d-%d", path, start_line, end_line)), kind, label)
 end
 
 local function yank_path_tag(kind)
@@ -106,11 +110,11 @@ local function yank_path_tag(kind)
   local start_line = named_symbol and named_symbol.start_line or symbol.start_line
 
   if start_line == nil then
-    copy(markdown_link(symbol_name, string.format("%s::%s", path, symbol_name)))
+    copy(markdown_link(symbol_name, string.format("%s::%s", path, symbol_name)), kind, symbol_name)
     return
   end
 
-  copy(markdown_link(symbol_name, string.format("%s:%d::%s", path, start_line, symbol_name)))
+  copy(markdown_link(symbol_name, string.format("%s:%d::%s", path, start_line, symbol_name)), kind, symbol_name)
 end
 
 vim.api.nvim_create_user_command("YankRelativePath", function()
