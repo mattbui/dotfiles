@@ -3,18 +3,9 @@ vim.o.cmdheight = 0
 require('vim._core.ui2').enable({
   enable = true,
   msg = {
-    targets = {
-      echo = 'msg',      -- :echo message
-      echomsg = 'msg',   -- :echomsg message
-      bufwrite = 'msg',  -- :write message.
-      lua_print = 'msg', -- print() from :lua code.
-      shell_ret = 'msg', -- :!cmd return code.
-      undo = 'msg',      -- :undo and :redo message.
-      wmsg = 'msg',      -- Warnings like search hit BOTTOM.
-      quickfix = 'msg',  -- Quickfix navigation message.
-    },
+    targets = 'msg',
     pager   = { height = 1 },
-    msg     = { height = 0.15, timeout = 4000 },
+    msg     = { height = 0.2, timeout = 4000 },
     dialog  = { height = 0.5 },
     cmd     = { height = 0.5 },
   },
