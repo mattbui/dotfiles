@@ -13,7 +13,7 @@ gitsigns.setup({
     border = "single",
     relative = "cursor",
     row = 1,
-    col = 1,
+    col = 0,
   },
 })
 
