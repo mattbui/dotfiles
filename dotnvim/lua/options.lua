@@ -11,6 +11,7 @@ vim.opt.list = true
 vim.opt.listchars:append({ eol = "⤦", trail = "·", precedes = "«", extends = "»", tab = "▸ " })
 vim.opt.wrap = false
 vim.opt.pumheight = 10
+vim.opt.winborder = "single"
 vim.opt.cursorline = true
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 5

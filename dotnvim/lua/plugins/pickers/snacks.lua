@@ -72,24 +72,14 @@ snacks.setup({
     enabled = true,
     ui_select = false,
     layout = {
-      preset = "picker",
+      preset = "default",
       cycle = false,
     },
     layouts = {
-      picker = {
+      default = {
         layout = {
-          box = "horizontal",
-          width = 0.8,
           height = 0.6,
           backdrop = false,
-          {
-            box = "vertical",
-            border = "single",
-            title = "{title} {live} {flags}",
-            { win = "input", height = 1,     border = "bottom" },
-            { win = "list",  border = "none" },
-          },
-          { win = "preview", title = "{preview}", border = "single", width = 0.5 },
         },
       },
     },
@@ -106,19 +96,15 @@ snacks.setup({
           input = {
             keys = {
               ["<C-a>"] = { "git_branch_add", mode = { "n", "i" }, desc = "New branch from HEAD" },
-              ["<C-n>"] = { "git_branch_from_selection", mode = { "n", "i" }, desc = "New branch from selected" },
-              ["<C-x>"] = false,
-              ["X"] = { "git_branch_del", mode = "n", desc = "Delete branch" },
-              ["D"] = { "git_branch_del", mode = "n", desc = "Delete branch" },
+              ["<C-b>"] = { "git_branch_from_selection", mode = { "n", "i" }, desc = "New branch from selected" },
+              ["<C-x>"] = { "git_branch_del", mode = { "n", "i" }, desc = "Delete branch" },
             },
           },
           list = {
             keys = {
               ["<C-a>"] = { "git_branch_add", mode = "n", desc = "New branch from HEAD" },
-              ["<C-n>"] = { "git_branch_from_selection", mode = "n", desc = "New branch from selected" },
-              ["<C-x>"] = false,
-              ["X"] = { "git_branch_del", mode = "n", desc = "Delete branch" },
-              ["D"] = { "git_branch_del", mode = "n", desc = "Delete branch" },
+              ["<C-b>"] = { "git_branch_from_selection", mode = "n", desc = "New branch from selected" },
+              ["<C-x>"] = { "git_branch_del", mode = "n", desc = "Delete branch" },
             },
           },
         },
