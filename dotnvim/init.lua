@@ -1,9 +1,4 @@
-local config_dir = vim.fn.fnamemodify(debug.getinfo(1, "S").source:sub(2), ":p:h")
 vim.g.python3_host_prog = vim.fs.joinpath(vim.fn.stdpath("data"), "python3", "bin", "python")
-
-local function source_config(name)
-  vim.cmd.source(config_dir .. "/" .. name)
-end
 
 -- General settings
 require("ui2")
@@ -29,7 +24,7 @@ require("plugins.mini")
 require("plugins.indent_blankline")
 require("plugins.neoscroll")
 require("plugins.treesitter")
-source_config("floaterm.vim")
+require("plugins.floaterm")
 
 -- Theme configs
 require("colorscheme")
