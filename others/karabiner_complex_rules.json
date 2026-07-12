@@ -203,7 +203,7 @@
       ]
     },
     {
-      "description": "Shift + Esc → Tilde, Command + Backtick → Triple Backtick + Enter",
+      "description": "Shift + Esc → Tilde, Command + Backtick → Triple Backtick, Command + Shift + Backtick → Triple Backtick + Shift + Enter",
       "manipulators": [
         {
           "description": "Shift + Esc → Tilde",
@@ -223,12 +223,32 @@
           "type": "basic"
         },
         {
-          "description": "Command + Backtick → Triple Backtick + Enter",
+          "description": "Command + Backtick → Triple Backtick",
           "from": {
             "key_code": "grave_accent_and_tilde",
             "modifiers": {
-              "mandatory": ["command"],
-              "optional": ["any"]
+              "mandatory": ["command"]
+            }
+          },
+          "to": [
+            {
+              "key_code": "grave_accent_and_tilde"
+            },
+            {
+              "key_code": "grave_accent_and_tilde"
+            },
+            {
+              "key_code": "grave_accent_and_tilde"
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Command + Shift + Backtick → Triple Backtick + Shift + Enter",
+          "from": {
+            "key_code": "grave_accent_and_tilde",
+            "modifiers": {
+              "mandatory": ["command", "shift"]
             }
           },
           "to": [
@@ -242,7 +262,8 @@
               "key_code": "grave_accent_and_tilde"
             },
             {
-              "key_code": "return_or_enter"
+              "key_code": "return_or_enter",
+              "modifiers": ["shift"]
             }
           ],
           "type": "basic"
