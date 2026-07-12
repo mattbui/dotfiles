@@ -19,7 +19,7 @@ gitsigns.setup({
 
 local opts = { silent = true }
 
-vim.keymap.set("n", "<Leader>gj", function()
+vim.keymap.set("n", "<Leader>gn", function()
   if vim.wo.diff then
     vim.cmd.normal({ "]c", bang = true })
     return
@@ -27,7 +27,7 @@ vim.keymap.set("n", "<Leader>gj", function()
   gitsigns.nav_hunk("next")
 end, vim.tbl_extend("force", opts, { desc = "Next hunk" }))
 
-vim.keymap.set("n", "<Leader>gk", function()
+vim.keymap.set("n", "<Leader>gp", function()
   if vim.wo.diff then
     vim.cmd.normal({ "[c", bang = true })
     return
