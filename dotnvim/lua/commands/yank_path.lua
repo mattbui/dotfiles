@@ -1,5 +1,8 @@
-local function notify(message, level)
-  vim.notify(message, level or vim.log.levels.INFO)
+local function echo(message, level)
+  local highlight = level == vim.log.levels.WARN and "WarningMsg" or "None"
+  local msg = type(message) == "table" and message or { { message, highlight } }
+  table.insert(msg, 1, { "(yankpath) ", "WarningMsg" })
+  vim.api.nvim_echo(msg, true, {})
 end
 
 local symbols = require("plugins.lsp.symbols")
@@ -9,17 +12,22 @@ local function current_path(kind)
   local path = vim.fn.expand(modifier)
 
   if path == nil or path == "" then
-    notify("No file path for current buffer", vim.log.levels.WARN)
+    echo("No file path for current buffer", vim.log.levels.WARN)
     return nil
   end
 
   return path
 end
 
-local function copy(value, kind, label)
+local function copy(value, kind, label, qualifier)
   vim.fn.setreg('"', value)
   pcall(vim.fn.setreg, "+", value)
-  notify(string.format("[%s] %s yanked", label, kind == "absolute" and "abspath" or "path"))
+  local path_kind = kind == "absolute" and "abspath" or "path"
+  local label_highlight = qualifier == "tag" and "Identifier" or "Directory"
+  echo({
+    { string.format("Yanked %s%s: ", qualifier and qualifier .. " " or "", path_kind), "None" },
+    { string.format("[%s]", label), label_highlight },
+  })
 end
 
 local function path_label(path, suffix)
@@ -62,12 +70,12 @@ local function yank_path_line(kind)
 
   local line = vim.fn.line(".")
   local label = path_label(path, ":" .. line)
-  copy(markdown_link(label, string.format("%s:%d", path, line)), kind, label)
+  copy(markdown_link(label, string.format("%s:%d", path, line)), kind, label, "line")
 end
 
 local function yank_path_range(kind, opts)
   if opts.range == 0 then
-    notify("Yank path range commands require a line range", vim.log.levels.WARN)
+    echo("Yank path range commands require a line range", vim.log.levels.WARN)
     return
   end
 
@@ -81,12 +89,12 @@ local function yank_path_range(kind, opts)
 
   if start_line == end_line then
     local label = path_label(path, ":" .. start_line)
-    copy(markdown_link(label, string.format("%s:%d", path, start_line)), kind, label)
+    copy(markdown_link(label, string.format("%s:%d", path, start_line)), kind, label, "line")
     return
   end
 
   local label = path_label(path, string.format(":%d-%d", start_line, end_line))
-  copy(markdown_link(label, string.format("%s:%d-%d", path, start_line, end_line)), kind, label)
+  copy(markdown_link(label, string.format("%s:%d-%d", path, start_line, end_line)), kind, label, "line")
 end
 
 local function yank_path_tag(kind)
@@ -97,24 +105,24 @@ local function yank_path_tag(kind)
 
   local symbol, err = symbols.current({ sync = true })
   if not symbol then
-    notify(err, vim.log.levels.WARN)
+    echo(err, vim.log.levels.WARN)
     return
   end
 
   local symbol_name, named_symbol = symbols.current_name({ symbol = symbol })
   if symbol_name == "" then
-    notify("No LSP class/method/function symbol for current cursor position", vim.log.levels.WARN)
+    echo("No LSP class/method/function symbol for current cursor position", vim.log.levels.WARN)
     return
   end
 
   local start_line = named_symbol and named_symbol.start_line or symbol.start_line
 
   if start_line == nil then
-    copy(markdown_link(symbol_name, string.format("%s::%s", path, symbol_name)), kind, symbol_name)
+    copy(markdown_link(symbol_name, string.format("%s::%s", path, symbol_name)), kind, symbol_name, "tag")
     return
   end
 
-  copy(markdown_link(symbol_name, string.format("%s:%d::%s", path, start_line, symbol_name)), kind, symbol_name)
+  copy(markdown_link(symbol_name, string.format("%s:%d::%s", path, start_line, symbol_name)), kind, symbol_name, "tag")
 end
 
 vim.api.nvim_create_user_command("YankRelativePath", function()
