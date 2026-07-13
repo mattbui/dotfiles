@@ -51,22 +51,18 @@ cmp.setup({
     implementation = "prefer_rust",
   },
   completion = {
-    menu = {
-      scrollbar = false,
-    },
+    menu = { scrollbar = false },
     list = {
-      selection = {
-        preselect = false,
-      },
+      selection = { preselect = false },
     },
     documentation = {
       auto_show = true,
-      window = {
-      },
+      window = { scrollbar = false },
     },
   },
   signature = {
     enabled = true,
+    window = { scrollbar = false },
   },
   term = {
     enabled = false,
