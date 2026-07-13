@@ -35,6 +35,10 @@ end, { expr = true, desc = "Comment" })
 map("i", "<C-j>", "<C-n>")
 map("i", "<C-k>", "<C-p>")
 
+-- Command-line history
+map("c", "<C-Up>", "<C-p>")
+map("c", "<C-Down>", "<C-n>")
+
 for _, key in ipairs({ ",", ".", "!", "?", ":" }) do
   map("i", key, key .. "<C-g>u")
 end
