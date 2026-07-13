@@ -94,6 +94,41 @@ query_candidate_windows() {
     jq --argjson ignored_apps "$ignored_apps_json" '[.[] | .app as $app | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false and (($ignored_apps | index($app)) | not))]'
 }
 
+is_in_stack() {
+  # True when the window is part of a stack region.
+  printf '%s' "$candidate_windows" |
+    jq -e --argjson window "$1" 'any(.[]; .id == $window and ."stack-index" > 0)' >/dev/null 2>&1
+}
+
+is_floating() {
+  # True when the window is floating.
+  yabai -m query --windows --window "$1" 2>/dev/null |
+    jq -e '."is-floating" == true' >/dev/null 2>&1
+}
+
+retile_window() {
+  retile_id="$1"
+
+  # Float and unfloat the window so yabai retiles it into its own BSP region.
+  # Guard each toggle because yabai has no explicit float on/off command.
+  is_floating "$retile_id" && return 1
+  yabai -m window "$retile_id" --toggle float 2>/dev/null || return 1
+  is_floating "$retile_id" || return 1
+
+  if ! yabai -m window "$retile_id" --toggle float 2>/dev/null; then
+    # Avoid leaving the window floating if retiling fails.
+    is_floating "$retile_id" && yabai -m window "$retile_id" --toggle float >/dev/null 2>&1 || :
+    return 1
+  fi
+
+  if is_floating "$retile_id"; then
+    yabai -m window "$retile_id" --toggle float >/dev/null 2>&1 || :
+    return 1
+  fi
+
+  return 0
+}
+
 apply_config_if_needed() {
   key="$1"
   desired="$2"
@@ -184,16 +219,35 @@ if [ "$is_wide" -eq 1 ]; then
       main_id="$saved_main_id"
     else
       main_id=$(printf '%s' "$candidate_windows" | jq -r 'sort_by(.frame.x) | last.id')
-      layout_state_update "$layout_state_file" main_id "$main_id" 2>/dev/null
     fi
 
-    # If the saved/promoted main is currently inside a stack, unstack it first.
-    # Otherwise stacking the old main into the left side can leave every window in one fullscreen stack.
-    main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
-    if [ -n "$main_stack_index" ] && [ "$main_stack_index" != "0" ]; then
-      if yabai -m window "$main_id" --warp east 2>/dev/null; then
+    # Check whether the main window is in a correct place or needs repositioning. Checking conditions:
+    # * not in a stack -> do nothing
+    #
+    # [stack A, B] | [main M] <- valid: M has its own leaf
+    #
+    # * still in a stack (likely due to the old main was closed/moved/etc or we promoted new main)
+    # -> extract it from that stack with either --warp or retile (float and unfloat) it.
+    #
+    # new main promoted: [stack A, B (main)] | [window C] <- warp: another BSP region exists
+    # old main closed: [root stack A, B (main)] <- retile: no BSP region exists to warp into
+    #
+    if is_in_stack "$main_id"; then
+      distinct_region_count=$(printf '%s' "$candidate_windows" | jq '[.[] | [.frame.x, .frame.y, .frame.w, .frame.h]] | unique | length')
+
+      if [ "$distinct_region_count" -gt 1 ]; then
+        yabai -m window "$main_id" --warp east 2>/dev/null || :
         candidate_windows=$(query_candidate_windows) || exit 0
       fi
+
+      if is_in_stack "$main_id"; then
+        retile_window "$main_id" || exit 0
+        candidate_windows=$(query_candidate_windows) || exit 0
+      fi
+
+      # Continue only if the main still exists and is no longer in a stack.
+      main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
+      [ "$main_stack_index" = "0" ] || exit 0
     fi
 
     # Prefer an existing stack member as the left anchor. A newly moved window
@@ -219,7 +273,7 @@ if [ "$is_wide" -eq 1 ]; then
         fi
       fi
 
-      # Treat the persisted split_ratio as the source of truth. On every
+      # Treat the saved split_ratio as the source of truth. On every
       # apply-layout run, infer the current left/main split from frames and
       # only call --ratio when it differs from the saved target beyond tolerance.
       main_w=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$main_id" '.[] | select(.id == $id) | .frame.w')
@@ -229,7 +283,12 @@ if [ "$is_wide" -eq 1 ]; then
         yabai -m window "$main_id" --ratio abs:"$target_split_ratio" 2>/dev/null
       fi
 
-      layout_state_update "$layout_state_file" mode wide-multi space_layout bsp main_id "$main_id" split_ratio "$target_split_ratio" solo_ratio "$saved_solo_ratio" gap "$wide_gap" padding_top "$wide_top_padding" padding_bottom "$wide_padding" padding_left "$wide_padding" padding_right "$wide_padding" window_placement first_child window_insertion_point first 2>/dev/null
+      # Save the layout state only if the main still exists and remains outside the stack.
+      candidate_windows=$(query_candidate_windows) || exit 0
+      main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
+      if [ "$main_stack_index" = "0" ]; then
+        layout_state_update "$layout_state_file" mode wide-multi space_layout bsp main_id "$main_id" split_ratio "$target_split_ratio" solo_ratio "$saved_solo_ratio" gap "$wide_gap" padding_top "$wide_top_padding" padding_bottom "$wide_padding" padding_left "$wide_padding" padding_right "$wide_padding" window_placement first_child window_insertion_point first 2>/dev/null
+      fi
     fi
   fi
 
