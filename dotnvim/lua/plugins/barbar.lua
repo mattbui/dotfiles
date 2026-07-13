@@ -1,47 +1,8 @@
-local api = vim.api
 local map = vim.keymap.set
 local silent = { silent = true }
-local M = {}
 local preview_button = "◌"
 local close_button = "✕"
 local pinned_icons_patched = false
-
--- Copies one barbar highlight group into another and toggles italic.
-local function style_like(group, target, italic)
-  local ok, attrs = pcall(api.nvim_get_hl, 0, { name = target, link = false })
-  if not ok then
-    attrs = {}
-  end
-
-  local highlight = vim.deepcopy(attrs)
-  ---@cast highlight vim.api.keyset.highlight
-  highlight.link = nil
-  highlight.cterm = nil
-  highlight.default = nil
-  if italic then
-    highlight.italic = true
-  else
-    highlight.italic = nil
-  end
-
-  api.nvim_set_hl(0, group, highlight)
-end
-
--- Applies autobuffer tab styling: preview groups are italic, while pinned and
--- modified groups copy the same colors with italic disabled.
-function M.apply_highlights()
-  for _, activity in ipairs({ "Current", "Visible", "Inactive", "Alternate" }) do
-    local base = "Buffer" .. activity
-    local pin = base .. "Pin"
-
-    style_like(base, base, true)
-    style_like(base .. "Index", base, false)
-    style_like(pin, base, false)
-    style_like(pin .. "Btn", pin, false)
-    style_like(base .. "Mod", pin, false)
-    style_like(base .. "ModBtn", pin .. "Btn", false)
-  end
-end
 
 -- Barbar hides the filename/button behind pinned icon settings. This patch
 -- keeps pinned buffers' button as close/modified while still using barbar's
@@ -91,7 +52,10 @@ end
 
 map("n", "<Leader>0", "<Cmd>BufferLast<CR>", silent)
 
-require("barbar").setup({
+---@type Barbar
+local barbar = require("barbar")
+
+barbar.setup({
   tabpages = false,
 
   icons = {
@@ -130,5 +94,3 @@ require("barbar").setup({
 })
 
 patch_pinned_icons()
-
-return M

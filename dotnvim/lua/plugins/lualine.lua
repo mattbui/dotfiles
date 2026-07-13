@@ -157,7 +157,7 @@ local function conform_formatters()
   return "󰷈 lsp" .. format_on_save
 end
 
-local lualine_theme = require("lualine.themes.tokyonight")
+local lualine_theme = require("lualine.themes.tokyonight-storm")
 local diagnostics = require("plugins.lsp.diagnostics")
 local symbols = require("plugins.lsp.symbols")
 
