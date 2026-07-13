@@ -4,9 +4,6 @@ local symbols = require("plugins.lsp.symbols")
 
 vim.diagnostic.config({
   virtual_text = commands.virtual_text_enabled and commands.virtual_text or false,
-  float = {
-    border = "single",
-  },
   signs = diagnostics.signs,
   underline = true,
   update_in_insert = false,

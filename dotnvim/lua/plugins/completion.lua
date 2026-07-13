@@ -52,7 +52,6 @@ cmp.setup({
   },
   completion = {
     menu = {
-      border = "single",
       scrollbar = false,
     },
     list = {
@@ -63,15 +62,11 @@ cmp.setup({
     documentation = {
       auto_show = true,
       window = {
-        border = "single",
       },
     },
   },
   signature = {
     enabled = true,
-    window = {
-      border = "single",
-    },
   },
   term = {
     enabled = false,

@@ -29,8 +29,8 @@ local function diagnostic_range_at_cursor(bufnr)
     local end_col = diagnostic.end_col or start_col + 1
 
     if
-      (lnum > start_lnum or (lnum == start_lnum and col >= start_col))
-      and (lnum < end_lnum or (lnum == end_lnum and col < end_col))
+        (lnum > start_lnum or (lnum == start_lnum and col >= start_col))
+        and (lnum < end_lnum or (lnum == end_lnum and col < end_col))
     then
       return {
         bufnr = bufnr,
@@ -53,7 +53,7 @@ local function cursor_in_range(range)
   local col = cursor[2]
 
   return (lnum > range.start_lnum or (lnum == range.start_lnum and col >= range.start_col))
-    and (lnum < range.end_lnum or (lnum == range.end_lnum and col < range.end_col))
+      and (lnum < range.end_lnum or (lnum == range.end_lnum and col < range.end_col))
 end
 
 local function track_diagnostic_float(win)
@@ -136,7 +136,6 @@ function M.show_documentation()
   end
 
   vim.lsp.buf.hover({
-    border = "single",
     close_events = close_events,
     focusable = false,
   })

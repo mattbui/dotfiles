@@ -17,7 +17,6 @@ local state = {
       row = 0,
       col = 0,
       height = 1,
-      border = "single",
       style = "minimal",
       focusable = false,
       mouse = false,

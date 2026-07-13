@@ -6,7 +6,6 @@ require("yazi").setup({
     width = 0.9,
     height = 0.6,
   },
-  yazi_floating_window_border = "single",
   highlight_hovered_buffers_in_same_directory = false,
   -- Preserve the mappings from ~/.config/yazi instead of intercepting
   -- keys such as Ctrl-Q, Ctrl-Y, and Tab inside the terminal buffer.

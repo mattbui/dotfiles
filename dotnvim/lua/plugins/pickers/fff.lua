@@ -71,7 +71,6 @@ fff.setup({
     prompt_position = "top",
     preview_position = "right",
     preview_size = 0.5,
-    border = "single",
   },
   preview = {
     enabled = true,

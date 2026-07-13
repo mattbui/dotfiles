@@ -10,7 +10,6 @@ gitsigns.setup({
     untracked = { text = "┆" },
   },
   preview_config = {
-    border = "single",
     relative = "cursor",
     row = 1,
     col = 0,

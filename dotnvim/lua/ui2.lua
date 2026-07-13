@@ -15,11 +15,11 @@ require('vim._core.ui2').enable({
 require("float_showcmd").setup()
 
 -- Add border to msg, skip for now to avoid noise
--- vim.api.nvim_create_autocmd('FileType', {
---   pattern = 'msg',
---   callback = function()
---     vim.api.nvim_win_set_config(0, {
---       border = 'single',
---     })
---   end,
--- })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'msg',
+  callback = function()
+    vim.api.nvim_win_set_config(0, {
+      border = 'none',
+    })
+  end,
+})
