@@ -74,6 +74,8 @@ vim.api.nvim_create_user_command("Grh", git_reset_head, {
   desc = "Reset HEAD by commit count",
 })
 
+vim.keymap.set("n", "<Leader>gg", "<Cmd>G<CR>", { silent = true, desc = "Summary" })
+vim.keymap.set("n", "<Leader>gS", "<Cmd>G<CR>", { silent = true, desc = "Summary" })
 vim.keymap.set("n", "<Leader>gr", "<Cmd>Grefresh<CR>", { silent = true, desc = "Refresh" })
 vim.keymap.set("n", "<Leader>gR", "<Cmd>Grh<CR>", { silent = true, desc = "Reset" })
 vim.keymap.set("n", "<Leader>gC", "<Cmd>Git commit<CR>", { silent = true, desc = "Commit" })
@@ -84,7 +86,6 @@ vim.keymap.set("n", "<Leader>gU", "<Cmd>Git reset %<CR>", { silent = true, desc 
 vim.keymap.set("n", "<Leader>gA", "<Cmd>Git add .<CR>", { silent = true, desc = "Add all" })
 vim.keymap.set("n", "<Leader>gD", "<Cmd>Git diff<CR>", { silent = true, desc = "Global diff" })
 vim.keymap.set("n", "<Leader>gB", "<Cmd>Git blame<CR>", { silent = true, desc = "Blame" })
-vim.keymap.set("n", "<Leader>gS", "<Cmd>G<CR>", { silent = true, desc = "Status" })
 vim.keymap.set("n", "<Leader>gl", "<Cmd>Gclog -50<CR>", { silent = true, desc = "Log" })
 
 vim.api.nvim_create_autocmd("BufEnter", {
