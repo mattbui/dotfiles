@@ -1,14 +1,13 @@
 vim.g.floaterm_opener = "edit"
-vim.g.floaterm_title = " Floaterm ($1/$2) "
+vim.g.floaterm_title = " Floaterm ($1/$2) | J/K: cycle | <c-n>: new | <c-t>: hide "
 vim.g.floaterm_width = 0.8
+vim.g.floaterm_height = 0.6
 
 local map = vim.keymap.set
 local floaterm_group = vim.api.nvim_create_augroup("config.floaterm", { clear = true })
 
 map("n", "<C-t>", "<Cmd>FloatermToggle<CR>", { silent = true, desc = "Toggle floating terminal" })
 map("t", "<C-t>", "<C-\\><C-n><Cmd>FloatermToggle<CR>", { silent = true, desc = "Toggle floating terminal" })
-map("t", "<C-n>", "<C-\\><C-n><Cmd>FloatermNew<CR>", { silent = true, desc = "New floating terminal" })
-map("t", "<M-Tab>", "<C-\\><C-n><Cmd>FloatermNext<CR>", { silent = true, desc = "Next floating terminal" })
 map("t", "<Esc><Esc>", "<C-\\><C-n>", { silent = true, desc = "Enter terminal normal mode" })
 
 local function hide_and_navigate(direction)
@@ -19,12 +18,36 @@ local function hide_and_navigate(direction)
   vim.cmd("TmuxNavigate" .. direction)
 end
 
+local function cycle_floaterm(command)
+  vim.cmd(command)
+  vim.cmd.stopinsert()
+end
+
 vim.api.nvim_create_autocmd("FileType", {
   group = floaterm_group,
   pattern = "floaterm",
   callback = function(event)
     vim.wo.number = false
     vim.wo.relativenumber = false
+
+    map("n", "J", function()
+      cycle_floaterm("FloatermNext")
+    end, { buffer = event.buf, silent = true, desc = "Next floating terminal", })
+
+    map("n", "K", function()
+      cycle_floaterm("FloatermPrev")
+    end, { buffer = event.buf, silent = true, desc = "Previous floating terminal", })
+
+    map("n", "<C-n>", "<Cmd>FloatermNew<CR>", {
+      buffer = event.buf,
+      silent = true,
+      desc = "New floating terminal",
+    })
+    map("t", "<C-n>", "<C-\\><C-n><Cmd>FloatermNew<CR>", {
+      buffer = event.buf,
+      silent = true,
+      desc = "New floating terminal",
+    })
 
     local function map_navigation(key, direction)
       map("n", key, function()
