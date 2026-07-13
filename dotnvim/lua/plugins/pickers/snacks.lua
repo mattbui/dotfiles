@@ -162,21 +162,25 @@ local function pick_files_and_directories(opts)
         end,
       }), ctx)
     end,
+    -- Open the current directory in Yazi; otherwise jump to selected files only.
     confirm = function(picker, item)
       if not item then
         return
       end
 
       if item.dir then
-        local cwd = snacks.picker.util.path(item)
-        picker:set_cwd(cwd)
-        picker.input:set("", "")
-        picker.list:set_target()
-        picker:find({ refresh = true })
+        local path = snacks.picker.util.path(item)
+        picker:close()
+        vim.schedule(function()
+          require("yazi").yazi(nil, path)
+        end)
         return
       end
 
-      snacks.picker.actions.jump(picker, item)
+      picker.list:set_selected(vim.tbl_filter(function(selected)
+        return not selected.dir
+      end, picker.list.selected))
+      picker:action("jump")
     end,
   })
 end
