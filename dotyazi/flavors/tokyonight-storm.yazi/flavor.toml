@@ -39,6 +39,8 @@ padding = { open = "█", close = "█" }
 [tabs]
 active   = { fg = "#1d202f", bg = "#7aa2f7" }
 inactive = { fg = "#7aa2f7", bg = "#3b4261" }
+sep_inner = { open = "█", close = "█" }
+sep_outer = { open = "█", close = "█" }
 
 [mode]
 normal_main = { fg = "#1d202f", bg = "#7aa2f7", bold = true }
