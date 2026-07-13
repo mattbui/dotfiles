@@ -17,7 +17,7 @@ marker_copied   = { fg = "#9ece6a" }
 marker_cut      = { fg = "#f7768e" }
 marker_marked   = { fg = "#bb9af7" }
 marker_selected = { fg = "#7aa2f7" }
-marker_symbol   = "┃"
+marker_symbol   = "🮉"
 
 # Count
 count_copied   = { fg = "#1f2335", bg = "#9ece6a" }
