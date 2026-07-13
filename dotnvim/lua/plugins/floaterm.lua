@@ -7,8 +7,6 @@ local map = vim.keymap.set
 local floaterm_group = vim.api.nvim_create_augroup("config.floaterm", { clear = true })
 
 map("n", "<C-t>", "<Cmd>FloatermToggle<CR>", { silent = true, desc = "Toggle floating terminal" })
-map("t", "<C-t>", "<C-\\><C-n><Cmd>FloatermToggle<CR>", { silent = true, desc = "Toggle floating terminal" })
-map("t", "<Esc><Esc>", "<C-\\><C-n>", { silent = true, desc = "Enter terminal normal mode" })
 
 local function hide_and_navigate(direction)
   local bufnr = vim.api.nvim_get_current_buf()
@@ -38,6 +36,15 @@ vim.api.nvim_create_autocmd("FileType", {
       cycle_floaterm("FloatermPrev")
     end, { buffer = event.buf, silent = true, desc = "Previous floating terminal", })
 
+    map("t", "<Esc><Esc>", "<C-\\><C-n>", {
+      silent = true,
+      desc = "Enter terminal normal mode"
+    })
+
+    map("t", "<C-t>", "<C-\\><C-n><Cmd>FloatermToggle<CR>", {
+      silent = true,
+      desc = "Toggle floating terminal"
+    })
     map("n", "<C-n>", "<Cmd>FloatermNew<CR>", {
       buffer = event.buf,
       silent = true,
