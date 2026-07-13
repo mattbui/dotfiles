@@ -40,28 +40,26 @@ local function git_branch_from_selection(picker, item)
 end
 
 local function picker_keys(modes)
-  local function action(name)
-    return { name, mode = modes }
-  end
-
   return {
-    ["<Tab>"] = action("list_down"),
-    ["<S-Tab>"] = action("list_up"),
-    ["<S-Down>"] = action("select_and_next"),
-    ["<S-Up>"] = action("select_and_prev"),
-    ["<S-CR>"] = action("qflist"),
-    ["<PageDown>"] = action("preview_scroll_down"),
-    ["<PageUp>"] = action("preview_scroll_up"),
-    ["<M-Down>"] = action("list_scroll_down"),
-    ["<M-Up>"] = action("list_scroll_up"),
-    ["<C-Up>"] = action("history_back"),
-    ["<C-Down>"] = action("history_forward"),
-    ["<Esc>"] = action("cancel"),
-    ["<C-q>"] = action("cancel"),
-    ["<C-h>"] = action("navigate_left"),
-    ["<C-j>"] = action("navigate_down"),
-    ["<C-k>"] = action("navigate_up"),
-    ["<C-l>"] = action("navigate_right"),
+    ["<Tab>"] = { "list_down", mode = modes },
+    ["<S-Tab>"] = { "list_up", mode = modes },
+    ["<S-Down>"] = { "select_and_next", mode = modes },
+    ["<S-Up>"] = { "select_and_prev", mode = modes },
+    ["J"] = { "select_and_next", mode = "n" },
+    ["K"] = { "select_and_prev", mode = "n" },
+    ["<S-CR>"] = { "qflist", mode = modes },
+    ["<PageDown>"] = { "preview_scroll_down", mode = modes },
+    ["<PageUp>"] = { "preview_scroll_up", mode = modes },
+    ["<M-Down>"] = { "list_scroll_down", mode = modes },
+    ["<M-Up>"] = { "list_scroll_up", mode = modes },
+    ["<C-Up>"] = { "history_back", mode = modes },
+    ["<C-Down>"] = { "history_forward", mode = modes },
+    ["<Esc>"] = { "cancel", mode = modes },
+    ["<C-q>"] = { "cancel", mode = modes },
+    ["<C-h>"] = { "navigate_left", mode = modes },
+    ["<C-j>"] = { "navigate_down", mode = modes },
+    ["<C-k>"] = { "navigate_up", mode = modes },
+    ["<C-l>"] = { "navigate_right", mode = modes },
     ["<C-u>"] = false,
     ["<C-d>"] = false,
   }

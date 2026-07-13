@@ -23,6 +23,14 @@ end
 local function map_toggle_move(buf, filetype)
   local modes = filetype == "fff_input" and { "n", "i" } or "n"
 
+  vim.keymap.set("n", "J", function()
+    toggle_and_move("move_down")
+  end, { buffer = buf, silent = true, desc = "Toggle selection and move down" })
+
+  vim.keymap.set("n", "K", function()
+    toggle_and_move("move_up")
+  end, { buffer = buf, silent = true, desc = "Toggle selection and move up" })
+
   vim.keymap.set(modes, "<S-Down>", function()
     toggle_and_move("move_down")
   end, { buffer = buf, silent = true, desc = "Toggle selection and move down" })
