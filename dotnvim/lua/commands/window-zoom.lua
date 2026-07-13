@@ -18,5 +18,4 @@ vim.api.nvim_create_user_command("WindowZoomToggle", window_zoom_toggle, {
   desc = "Maximize or restore the current split",
 })
 
-vim.keymap.set("n", "<Leader>wz", "<Cmd>WindowZoomToggle<CR>", { silent = true, desc = "Zoom current" })
-vim.keymap.set("n", "<Leader>Z", "<Cmd>WindowZoomToggle<CR>", { silent = true, desc = "Zoom current" })
+vim.keymap.set("n", "<Leader>z", "<Cmd>WindowZoomToggle<CR>", { silent = true, desc = "Zoom window" })
