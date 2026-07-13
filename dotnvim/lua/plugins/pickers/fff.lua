@@ -65,6 +65,7 @@ local function map_tmux_navigation(buf, filetype)
 end
 
 fff.setup({
+  lazy_sync = true,
   layout = {
     width = 0.8,
     height = 0.6,
