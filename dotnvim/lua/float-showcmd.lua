@@ -17,6 +17,7 @@ local state = {
       row = 0,
       col = 0,
       height = 1,
+      border = vim.o.winborder ~= "" and vim.o.winborder or "single",
       style = "minimal",
       focusable = false,
       mouse = false,

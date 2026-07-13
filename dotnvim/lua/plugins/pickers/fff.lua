@@ -77,6 +77,9 @@ fff.setup({
     enabled = true,
     line_numbers = true,
   },
+  hl = {
+    title = "FloatTitle",
+  },
   keymaps = {
     close = { "<Esc>", "<C-q>" },
     preview_scroll_up = "<PageUp>",

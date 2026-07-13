@@ -19,7 +19,7 @@ wk.setup({
     spacing = 3,
   },
   win = {
-    border = vim.o.winborder,
+    border = vim.o.winborder ~= "" and vim.o.winborder or "single",
     no_overlap = false,
   },
   triggers = {
