@@ -42,8 +42,9 @@ local function apply_tokyonight_storm()
   hl("BufferInactiveSign", { fg = "#292e42", bg = "#292e42" })
 
   hl("CursorLineNr", { fg = "#bb9af7" })
+  hl("FloatBorder", { fg = "#636a8d", bg = "#1f2335" })
   hl("SignColumn", { fg = "#3b4261", bg = "#24283b" })
-  hl("WinSeparator", { fg = "#3B4261", bold = true })
+  hl("WinSeparator", { fg = "#3b4261", bold = true })
 
   hl("DiffAdd", { fg = "#73daca", bg = "#2c3a44" })
   hl("DiffChange", { fg = "#e0af68", bg = "#383545" })
@@ -72,10 +73,10 @@ local function apply_custom_colors()
     apply_tokyonight_storm()
   end
 
-  link("FloatBorder", "Normal")
   link("BlinkCmpMenuBorder", "FloatBorder")
   link("BlinkCmpDocBorder", "FloatBorder")
   link("BlinkCmpSignatureHelpBorder", "FloatBorder")
+  link("SnacksPickerInputBorder", "FloatBorder")
 
   pcall(function()
     require("plugins.barbar").apply_highlights()

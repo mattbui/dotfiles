@@ -19,6 +19,7 @@ wk.setup({
     spacing = 3,
   },
   win = {
+    border = vim.o.winborder,
     no_overlap = false,
   },
   triggers = {

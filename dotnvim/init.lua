@@ -11,6 +11,9 @@ require("autobuffers")
 
 -- Plugins configs
 require("plugins")
+-- Load the colorscheme before plugins derive their highlights.
+require("colorscheme")
+
 require("plugins.yazi")
 require("plugins.gitsigns")
 require("plugins.lsp")
@@ -25,9 +28,4 @@ require("plugins.indent-blankline")
 require("plugins.neoscroll")
 require("plugins.treesitter")
 require("plugins.floaterm")
-
--- Theme configs
-require("colorscheme")
-
--- Load after tokyonight to set the correct style
 require("plugins.lualine")
