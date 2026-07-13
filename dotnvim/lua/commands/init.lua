@@ -1,4 +1,4 @@
 require("commands.pack")
 require("commands.git")
-require("commands.yank_path")
-require("commands.window_zoom")
+require("commands.yank-path")
+require("commands.window-zoom")

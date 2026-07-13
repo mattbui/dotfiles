@@ -1,7 +1,7 @@
 local function echo(message, level)
   local highlight = level == vim.log.levels.WARN and "WarningMsg" or "None"
   local msg = type(message) == "table" and message or { { message, highlight } }
-  table.insert(msg, 1, { "(yankpath) ", "WarningMsg" })
+  table.insert(msg, 1, { "(yank-path) ", "WarningMsg" })
   vim.api.nvim_echo(msg, true, {})
 end
 
@@ -26,7 +26,7 @@ local function copy(value, kind, label, qualifier)
   local label_highlight = qualifier == "tag" and "Identifier" or "Directory"
   echo({
     { string.format("Yanked %s%s: ", qualifier and qualifier .. " " or "", path_kind), "None" },
-    { string.format("[%s]", label), label_highlight },
+    { string.format("[%s]", label),                                                    label_highlight },
   })
 end
 
