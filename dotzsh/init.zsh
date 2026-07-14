@@ -33,22 +33,6 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 # bat flags
 export BAT_THEME='ansi-light'
 
-# Bind interup signal to ctrl+e in cmd mode
-# and change back to ctrl+c before command executed
-# this enable to bind ctrl+c to esc in zsh vim mode
-# _bind_intr_ce() {
-#     [[ -t 0 ]] && stty intr ^E
-# }
-# _bind_intr_cc() {
-#     [[ -t 0 ]] && stty intr ^C
-# }
-# autoload add-zsh-hook
-# add-zsh-hook precmd _bind_intr_ce
-# add-zsh-hook preexec _bind_intr_cc
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-[[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
-
 for keymap in emacs viins; do
     bindkey -M "$keymap" -s '^o' 'ycd\n'
 done
@@ -114,5 +98,14 @@ precmd_functions+=(_bind_redo_keys)
 bindkey '^U' backward-kill-line
 bindkey -M viins '^U' backward-kill-line
 
+# Load machine-local secrets kept outside the dotfiles repository.
+[[ -r "$HOME/.config/zsh-secrets.zsh" ]] && source "$HOME/.config/zsh-secrets.zsh"
+
 # To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
-[[ ! -f $HOME/.config/zsh/p10k.zsh ]] || source $HOME/.config/zsh/p10k.zsh
+[[ ! -f "$HOME/.config/zsh/p10k.zsh" ]] || source "$HOME/.config/zsh/p10k.zsh"
+
+source <(fzf --zsh)
+[[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
+
+eval "$(direnv hook zsh)"
+eval "$(zoxide init zsh)"

@@ -1,12 +1,12 @@
 # My aliases
 
-# workaround when using e command inside floaterm/vim
-[ -z $VIMRUNTIME ] && alias e=$EDITOR || alias e=floaterm
+alias e=$EDITOR
 alias v=$VISUAL
 alias y='yazi'
+alias cd='z'
+alias 'cd!'='builtin cd'
 
 alias fa='alias | fzf'  # fuzzy find alias
-alias cheat='cht.sh'
 searchignore() {
     if [[ -e .ignore || -L .ignore ]]; then
         read -q 'REPLY?Remove existing .ignore? [y/N] ' || {
@@ -33,12 +33,6 @@ function ycd() {
 preview() {
 	"$HOME/.config/zsh/scripts/quick-look.sh" "$@"
 }
-
-picommit() {
-    local args="$*"
-    pi --no-session "/commit${args:+ $args}"
-}
-alias pc='picommit'
 
 _rsync_excludes=(
     --exclude "__pycache__"
@@ -80,9 +74,6 @@ rstatus() {
     echo "PULL CHANGES:"
     rpull --delete -n
 }
-
-alias ppip='python -m pip'
-alias pipython='python -c "import IPython; IPython.terminal.ipapp.launch_new_instance()"'
 
 [ -z $(command -v brew) ] || alias ctags="`brew --prefix`/bin/ctags"
 
@@ -129,20 +120,6 @@ ssh() {
     if [[ -n "$TMUX_PANE" ]]; then
         tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
         tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
-    fi
-    return $exit_code
-}
-
-codex() {
-    if [[ -n "$TMUX_PANE" ]]; then
-        tmux set-option -p -t "$TMUX_PANE" @codex_session_active 1 2>/dev/null || true
-    fi
-
-    command codex "$@"
-    local exit_code=$?
-
-    if [[ -n "$TMUX_PANE" ]]; then
-        tmux set-option -p -u -t "$TMUX_PANE" @codex_session_active 2>/dev/null || true
     fi
     return $exit_code
 }
