@@ -16,6 +16,7 @@ mainly there to keep remote servers familiar.
 
 - `dotzsh/` — shell configuration, aliases, and helper scripts.
 - `dottmux/` — tmux configuration, mappings, popups, and session scripts.
+- `dotsesh/` — Sesh project and tmux-session manager configuration.
 - `dotnvim/` — Neovim configuration and plugin setup.
 - `dotyazi/` — Yazi keymaps, theme, plugins, and tmux helpers.
 - `dotyabai/` — yabai and skhd configuration.

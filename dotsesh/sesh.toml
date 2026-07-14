@@ -1,0 +1,7 @@
+#:schema https://github.com/joshmedeski/sesh/raw/v2.27.0/sesh.schema.json
+
+strict_mode = true
+
+# Session creation and closure also happen through native tmux and Yazi. Keep
+# caching disabled until all of those paths refresh Sesh's cache coherently.
+cache = false

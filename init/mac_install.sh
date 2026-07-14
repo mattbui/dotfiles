@@ -10,4 +10,6 @@ fi
 [ -z $(command -v nvim) ] && brew install nvim
 [ -z $(command -v direnv) ] && brew install direnv
 [ -z $(command -v fzf) ] && brew install fzf
+[ -z $(command -v zoxide) ] && brew install zoxide
+[ -z $(command -v sesh) ] && brew install sesh
 [ -z $(command -v ripgrep) ] && brew install ripgrep

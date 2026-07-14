@@ -23,6 +23,9 @@ link_path "$DOTFILES/dotzsh" "$CONFIGS/zsh"
 link_path "$DOTFILES/dottmux/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES/dottmux" "$CONFIGS/tmux"
 
+# Sesh configs
+link_path "$DOTFILES/dotsesh" "$CONFIGS/sesh"
+
 # Git configs
 link_path "$DOTFILES/dotignore/globalgitignore" "$HOME/.globalgitignore"
 
