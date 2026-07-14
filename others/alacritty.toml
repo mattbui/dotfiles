@@ -42,7 +42,7 @@ multiplier = 5
 
 [cursor.style]
 blinking = "Off"
-shape = "Block"
+shape = "Beam"
 
 [cursor.vi_mode_style]
 shape = "Block"

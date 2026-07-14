@@ -11,6 +11,7 @@ font-feature = -calt
 font-thicken = true
 font-thicken-strength = 128
 bold-color = bright
+cursor-style = bar
 window-padding-x = 8
 window-padding-y = 8
 window-padding-balance = true
