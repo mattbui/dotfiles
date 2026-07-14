@@ -76,6 +76,7 @@ snacks.setup({
     layouts = {
       default = {
         layout = {
+          width = 0.8,
           height = 0.6,
           backdrop = false,
         },
