@@ -17,7 +17,7 @@ window-padding-balance = true
 scrollback-limit = 50000000
 selection-clear-on-copy = true
 macos-titlebar-style = hidden
-confirm-close-surface = false
+confirm-close-surface = true
 
 # Keybinds
 keybind = super+==increase_font_size:0.5
@@ -102,7 +102,7 @@ keybind = f18=text:\x1b[9024u
 # Tmux choose-tree
 # Send tmux User16/User17 for window/session choose-tree.
 keybind = super+p=text:\x1b[9022u
-keybind = super+shift+p=text:\x1b[9023u
+keybind = super+s=text:\x1b[9023u
 
 # Tmux pane zoom
 # Send tmux User19.
@@ -116,9 +116,9 @@ keybind = super+t=text:\x1b[9028u
 keybind = super+o=text:\x1b[9029u
 
 # Ghostty actions moved away from tmux passthroughs
-keybind = super+shift+w=close_window
-keybind = super+ctrl+w=close_surface
-keybind = super+ctrl+p=toggle_command_palette
+keybind = super+alt+w=close_window
+keybind = super+shift+w=close_surface
+keybind = super+ctrl+w=unbind
 
 # Vim mode
 keybind = super+alt+space=activate_key_table:vim

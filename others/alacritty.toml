@@ -224,11 +224,11 @@ chars = "\u001B[9022u"
 key = "P"
 mods = "Command"
 
-# Command-Shift-P sends a tmux user key for session-only choose-tree.
+# Command-S sends a tmux user key for session-only choose-tree.
 [[keyboard.bindings]]
 chars = "\u001B[9023u"
-key = "P"
-mods = "Command|Shift"
+key = "S"
+mods = "Command"
 
 # Ctrl-Tab / Ctrl-Shift-Tab cycle tmux sessions.
 [[keyboard.bindings]]
