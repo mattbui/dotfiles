@@ -70,12 +70,20 @@ vim.api.nvim_create_user_command("TSInstallDefaults", function()
   treesitter.install(ensure_installed)
 end, {})
 
+local indent_enabled = {
+  python = true,
+}
+
 local function start_treesitter(buffer)
   if not vim.api.nvim_buf_is_loaded(buffer) or vim.bo[buffer].filetype == "" then
     return
   end
 
-  pcall(vim.treesitter.start, buffer)
+  local ok = pcall(vim.treesitter.start, buffer)
+
+  if ok and indent_enabled[vim.bo[buffer].filetype] then
+    vim.bo[buffer].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end
 end
 
 vim.api.nvim_create_autocmd("FileType", {
