@@ -11,18 +11,33 @@ if ! command -v fzf-tmux >/dev/null 2>&1; then
   exit 1
 fi
 
-selection="$({
+result="$({
   sesh list --icons --hide-duplicates --hide-attached |
     fzf-tmux -p 70%,50% \
       --ansi \
+      --expect=ctrl-t \
       --height=100% \
       --reverse \
       --border 'sharp' \
       --border-label ' sesh ' \
-      --prompt '⚡' \
+      --header '↵ open session  ^p sesh  ^f directories  ^t new window' \
+      --prompt '📺 ' \
+      --bind 'ctrl-p:change-prompt(📺 )+reload(sesh list --icons --hide-duplicates --hide-attached)' \
+      --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~ | sed "s/^/ /")' \
       --preview-window 'right:55%,border-sharp' \
       --preview 'sesh preview {}'
 })" || exit 0
 
-[ -n "$selection" ] || exit 0
-sesh connect "$selection"
+[ -n "$result" ] || exit 0
+
+if [[ "$result" == ctrl-t$'\n'* ]]; then
+  selection="${result#*$'\n'}"
+  if [[ "$selection" != " "* ]]; then
+    tmux display-message "Select a directory entry to create a window"
+    exit 0
+  fi
+  sesh window "${selection# }"
+  exit 0
+fi
+
+sesh connect "$result"

@@ -105,10 +105,9 @@ keybind = ctrl+shift+tab=text:\x1b[9021u
 # Send tmux User18 to finalize session switch.
 keybind = f18=text:\x1b[9024u
 
-# Tmux choose-tree
-# Send tmux User16/User17 for window/session choose-tree.
+# Sesh project/session picker
+# Send tmux User16 from Command-P.
 keybind = super+p=text:\x1b[9022u
-keybind = super+s=text:\x1b[9023u
 
 # Tmux pane zoom
 # Send tmux User19.
