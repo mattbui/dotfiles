@@ -141,8 +141,10 @@ apply_ignore_rule_live() {
   # managed layout. Center them using the regular float helper instead of
   # leaving them at their tiled size/position.
   script_dir=$(dirname "$0")
-  toggle_float_script=""
-  if [ -x "$script_dir/toggle-float.sh" ]; then
+  toggle_float_script="${YABAI_TOGGLE_FLOAT_SCRIPT:-}"
+  if [ -n "$toggle_float_script" ] && [ -x "$toggle_float_script" ]; then
+    :
+  elif [ -x "$script_dir/toggle-float.sh" ]; then
     toggle_float_script="$script_dir/toggle-float.sh"
   elif [ -x "$HOME/.config/yabai/scripts/toggle-float.sh" ]; then
     toggle_float_script="$HOME/.config/yabai/scripts/toggle-float.sh"
@@ -192,7 +194,10 @@ EOF
 
 run_apply_layout() {
   script_dir=$(dirname "$0")
-  if [ -x "$script_dir/apply-layout.sh" ]; then
+  apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-}"
+  if [ -n "$apply_layout_script" ] && [ -x "$apply_layout_script" ]; then
+    "$apply_layout_script" >/dev/null 2>&1 &
+  elif [ -x "$script_dir/apply-layout.sh" ]; then
     "$script_dir/apply-layout.sh" >/dev/null 2>&1 &
   elif [ -x "$HOME/.config/yabai/scripts/apply-layout.sh" ]; then
     "$HOME/.config/yabai/scripts/apply-layout.sh" >/dev/null 2>&1 &

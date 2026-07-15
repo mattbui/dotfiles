@@ -16,7 +16,8 @@ command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 command -v awk >/dev/null 2>&1 || exit 0
 
-state_dir="${YABAI_STATE_DIR:-$HOME/.local/state/yabai}"
+state_dir="${YABAI_LAYOUT_STATE_DIR:-${YABAI_STATE_DIR:-$HOME/.local/state/yabai}}"
+apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-$HOME/.config/yabai/scripts/apply-layout.sh}"
 
 # shellcheck source=/dev/null
 . "$(dirname "$0")/layout-state.sh"
@@ -49,7 +50,7 @@ fi
 
 is_floating=$(printf '%s' "$window_json" | jq -r '."is-floating"')
 if [ "$is_floating" != "true" ]; then
-  $HOME/.config/yabai/scripts/apply-layout.sh
+  "$apply_layout_script"
   exit 0
 fi
 
@@ -102,13 +103,17 @@ sp_right=$(layout_state_get "$layout_state_file" padding_right "")
 [ -n "$sp_left" ] || sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
 [ -n "$sp_right" ] || sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
 
-# In wide-solo mode, left/right padding is intentionally large to center the
-# single tiled window. For floating fullscreen, use the regular edge padding
-# instead so the window can occupy the full usable display width.
+# In centered wide modes, left/right padding is intentionally large. For a
+# floating fullscreen window, use regular edge padding instead so it can occupy
+# the full usable display width.
 layout_mode=$(layout_state_get "$layout_state_file" mode "")
-if [ "$mode" = "fullscreen" ] && [ "$layout_mode" = "wide-solo" ]; then
-  sp_left="$sp_bottom"
-  sp_right="$sp_bottom"
+if [ "$mode" = "fullscreen" ]; then
+  case "$layout_mode" in
+    wide-solo|wide-center-stack)
+      sp_left="$sp_bottom"
+      sp_right="$sp_bottom"
+      ;;
+  esac
 fi
 
 read -r dx dy dw dh <<EOF
@@ -174,5 +179,5 @@ else
 fi
 
 if [ "$mode" = "center" ]; then
-  $HOME/.config/yabai/scripts/apply-layout.sh
+  "$apply_layout_script"
 fi

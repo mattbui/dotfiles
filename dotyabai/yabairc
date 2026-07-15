@@ -30,11 +30,11 @@ list_ignore | while IFS= read -r app; do
   add_and_apply_rule "$label" app="$regex" manage=off
 done
 
-# Core layout defaults. scripts/apply-layout.sh will apply display-aware overrides.
+# Core defaults. scripts/apply-layout.sh applies display-aware overrides.
 yabai -m config \
   layout                       bsp \
   split_type                   auto \
-  split_ratio                  0.45 \
+  split_ratio                  0.50 \
   auto_balance                 off \
   window_placement             second_child \
   window_insertion_point       focused \
@@ -98,6 +98,6 @@ add_signal "label-display-removed" event=display_removed action="$yabai_label_sp
 add_signal "label-display-moved" event=display_moved action="$yabai_label_spaces"
 add_signal "label-display-resized" event=display_resized action="$yabai_label_spaces; $yabai_apply_layout"
 
-$HOME/.config/yabai/scripts/apply-layout.sh
+$yabai_apply_layout
 
 printf '%s\n' "yabai config loaded"

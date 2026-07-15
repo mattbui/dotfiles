@@ -1,40 +1,171 @@
 #!/usr/bin/env sh
 
-# Display-aware layout:
-# - wide displays (aspect >= 2.0): BSP, 12 padding (6 top), 10 gap
-#   - one managed window: centered at 65% width
-#   - multiple managed windows: 40/60 vertical split, saved main on right, others stacked left
-# - normal displays: stack, 8 padding (6 top), 8 gap
+# Reconcile the current space with the display-aware layout.
+# Usage: apply-layout.sh [reset|check|dry-run]
 
-wide_threshold="2.0"
-wide_solo_ratio="0.65"
-wide_split_ratio="0.4"
-wide_ratio_tolerance="0.01"
-wide_top_padding="6"
-wide_padding="12"
-wide_gap="10"
-normal_top_padding="6"
-normal_padding="8"
-normal_gap="8"
-state_dir="$HOME/.local/state/yabai"
-reset_layout=0
-
-case "${1:-}" in
-  reset|--reset|force|--force) reset_layout=1 ;;
+action="${1:-apply}"
+case "$action" in
+  apply|reset|check|dry-run) ;;
+  --reset|force|--force) action="reset" ;;
+  *) exit 1 ;;
 esac
 
-mkdir -p "$state_dir" 2>/dev/null
+# shellcheck source=/dev/null
+. "$(dirname "$0")/layout-lib.sh"
 
-lock_dir="$state_dir/layout.lock"
-pending_file="$state_dir/layout.pending"
+layout_require_commands || exit 0
+layout_load_space || exit 0
+layout_load_display || exit 0
+
+candidate_windows=$(layout_query_candidates) || exit 0
+candidate_count=$(layout_candidate_count "$candidate_windows")
+region_count=$(layout_region_count "$candidate_windows")
+wide_layout=$(layout_read_preference)
+
+saved_solo_ratio=$(layout_state_get "$layout_state_file" solo_ratio "$layout_wide_solo_ratio")
+if [ "$action" = "reset" ] || ! valid_ratio "$saved_solo_ratio"; then
+  saved_solo_ratio="$layout_wide_solo_ratio"
+fi
+
+saved_split_ratio=$(layout_state_get "$layout_state_file" split_ratio "$layout_wide_split_ratio")
+if [ "$action" = "reset" ] || ! valid_ratio "$saved_split_ratio"; then
+  saved_split_ratio="$layout_wide_split_ratio"
+fi
+
+layout_evaluate() {
+  if [ "$layout_is_wide" -eq 0 ]; then
+    desired_mode="normal"
+  elif [ "$candidate_count" -le 1 ]; then
+    desired_mode="wide-solo"
+  elif [ "$wide_layout" = "center-stack" ]; then
+    desired_mode="wide-center-stack"
+  else
+    desired_mode="wide-two-stack"
+  fi
+
+  compliant=false
+  case "$desired_mode" in
+    normal)
+      [ "$layout_space_type" = "stack" ] && compliant=true
+      ;;
+    wide-solo|wide-center-stack)
+      [ "$layout_space_type" = "bsp" ] && [ "$region_count" -le 1 ] && compliant=true
+      ;;
+    wide-two-stack)
+      layout_valid_two_stack "$candidate_windows" && compliant=true
+      ;;
+  esac
+
+  [ "$compliant" = true ]
+}
+
+layout_print_machine_summary() {
+  printf 'space=%s display=%s desired=%s preference=%s windows=%s regions=%s compliant=%s\n' \
+    "$layout_space_index" "$layout_space_display" "$desired_mode" "$wide_layout" \
+    "$candidate_count" "$region_count" "$compliant"
+}
+
+layout_mode_label() {
+  case "$desired_mode" in
+    normal) printf 'Normal stack' ;;
+    wide-solo) printf 'Centered solo' ;;
+    wide-center-stack) printf 'Centered stack' ;;
+    wide-two-stack) printf 'Two stacks' ;;
+  esac
+}
+
+layout_status_space_label() {
+  if [ -n "$layout_space_label" ]; then
+    printf '%s (%s)' "$layout_space_label" "$layout_space_index"
+  else
+    printf '%s' "$layout_space_index"
+  fi
+}
+
+layout_window_summary() {
+  if [ "$desired_mode" = "wide-two-stack" ] && layout_valid_two_stack "$candidate_windows"; then
+    left_key=$(layout_left_region_key "$candidate_windows")
+    right_key=$(layout_right_region_key "$candidate_windows")
+    left_count=$(layout_candidate_count "$(layout_windows_in_frame "$candidate_windows" "$left_key")")
+    right_count=$(layout_candidate_count "$(layout_windows_in_frame "$candidate_windows" "$right_key")")
+    printf 'Left: %s · Right: %s' "$left_count" "$right_count"
+  else
+    printf 'Tiled: %s' "$candidate_count"
+  fi
+}
+
+layout_active_ratio() {
+  case "$desired_mode" in
+    wide-two-stack) printf '%s' "$saved_split_ratio" ;;
+    wide-solo|wide-center-stack) printf '%s' "$saved_solo_ratio" ;;
+  esac
+}
+
+layout_notify_check() {
+  command -v osascript >/dev/null 2>&1 || return 0
+
+  osascript \
+    -e 'on run argv' \
+    -e 'display notification (item 1 of argv) with title "yabai" subtitle (item 2 of argv)' \
+    -e 'end run' \
+    "$1" "$2" >/dev/null 2>&1
+}
+
+layout_report_check() {
+  mode_label=$(layout_mode_label)
+  space_label=$(layout_status_space_label)
+  window_summary=$(layout_window_summary)
+  active_ratio=$(layout_active_ratio)
+
+  if [ "$compliant" = true ]; then
+    status_label="Layout OK"
+    notification_status="$status_label"
+  else
+    status_label="Repair needed"
+    notification_status="$status_label · try ⌥R"
+  fi
+
+  if [ -n "$active_ratio" ]; then
+    report=$(printf 'Space: %s · Display %s\nLayout: %s · Tree %s · Preference %s\nWindows: %s\nRatio: %s\nStatus: %s' \
+      "$space_label" "$layout_space_display" "$mode_label" "$layout_space_type" \
+      "$wide_layout" "$window_summary" "$active_ratio" "$status_label")
+    notification_message="$window_summary · Ratio: $active_ratio · $notification_status"
+  else
+    report=$(printf 'Space: %s · Display %s\nLayout: %s · Tree %s · Preference %s\nWindows: %s\nStatus: %s' \
+      "$space_label" "$layout_space_display" "$mode_label" "$layout_space_type" \
+      "$wide_layout" "$window_summary" "$status_label")
+    notification_message="$window_summary · $notification_status"
+  fi
+
+  notification_space="${layout_space_label:-$layout_space_index}"
+  printf '%s\n' "$report"
+  layout_notify_check "$notification_message" "Space: $notification_space · $mode_label"
+}
+
+if [ "$action" = "check" ]; then
+  layout_evaluate
+  check_status=$?
+  layout_report_check
+  exit "$check_status"
+elif [ "$action" = "dry-run" ]; then
+  if layout_evaluate; then
+    layout_print_machine_summary
+    printf '%s\n' 'action=none'
+  else
+    layout_print_machine_summary
+    printf '%s\n' 'action=reconcile'
+  fi
+  exit 0
+fi
+
+mkdir -p "$layout_state_root" 2>/dev/null || exit 0
+lock_dir="$layout_state_root/layout.lock"
+pending_file="$layout_state_root/layout.pending"
 if ! mkdir "$lock_dir" 2>/dev/null; then
   : >"$pending_file" 2>/dev/null
   exit 0
 fi
 
-# If another signal arrives while layout is running, mark one pending rerun.
-# Releasing the lock also runs that latest request once, avoiding both
-# overlapping layout mutations and dropped fast space/window events.
 release_layout_lock() {
   status=$?
   trap - EXIT INT TERM
@@ -47,258 +178,194 @@ release_layout_lock() {
 }
 trap release_layout_lock EXIT INT TERM
 
-require() {
-  command -v "$1" >/dev/null 2>&1 || exit 0
+layout_save_state() {
+  mode="$1"
+  side_left="$2"
+  side_right="$3"
+  saved_solo_ratio="$4"
+  saved_split_ratio="$5"
+
+  layout_state_update "$layout_state_file" \
+    mode "$mode" \
+    wide_layout "$wide_layout" \
+    solo_ratio "$saved_solo_ratio" \
+    split_ratio "$saved_split_ratio" \
+    gap "$layout_wide_gap" \
+    padding_top "$layout_wide_top_padding" \
+    padding_bottom "$layout_wide_padding" \
+    padding_left "$side_left" \
+    padding_right "$side_right" \
+    window_placement first_child \
+    window_insertion_point first 2>/dev/null
 }
 
-require yabai
-require jq
-require awk
+layout_collapse_to_center() {
+  windows="$1"
+  preferred_id=$(layout_preferred_visible_id "$windows")
+  [ -n "$preferred_id" ] || return 1
 
-# shellcheck source=/dev/null
-. "$(dirname "$0")/layout-state.sh"
-# shellcheck source=/dev/null
-. "$(dirname "$0")/ignore-list.sh"
+  anchor_id=$(layout_stable_id_except "$windows" "$preferred_id")
+  [ -n "$anchor_id" ] || return 0
 
-ignored_apps_json=$(list_ignore 2>/dev/null | jq -R . | jq -s .)
+  stack_ids=$(layout_ids_except "$windows" "$anchor_id" "$preferred_id")
+  if [ -n "$stack_ids" ]; then
+    for id in $stack_ids; do
+      yabai -m window "$anchor_id" --stack "$id" 2>/dev/null || return 1
+    done
+  fi
 
-space_json=$(yabai -m query --spaces --space 2>/dev/null) || exit 0
-space_index=$(printf '%s' "$space_json" | jq -r '.index')
-space_id=$(printf '%s' "$space_json" | jq -r '.id')
-space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
-space_type=$(printf '%s' "$space_json" | jq -r '.type')
-space_display=$(printf '%s' "$space_json" | jq -r '.display')
-[ -n "$space_index" ] && [ "$space_index" != "null" ] || exit 0
-[ -n "$space_display" ] && [ "$space_display" != "null" ] || exit 0
-
-# Refresh space labels if missing; fall back to space id for state.
-if [ -z "$space_label" ] || [ "$space_label" = "null" ]; then
-  "$(dirname "$0")/label-spaces-displays.sh" >/dev/null 2>&1
-  space_json=$(yabai -m query --spaces --space "$space_index" 2>/dev/null) || exit 0
-  space_label=$(printf '%s' "$space_json" | jq -r '.label // empty')
-  space_type=$(printf '%s' "$space_json" | jq -r '.type')
-fi
-
-if [ -n "$space_label" ] && [ "$space_label" != "null" ]; then
-  layout_state_file=$(layout_state_file_for_space_label "$space_label")
-else
-  layout_state_file=$(layout_state_file_for_space_label "id-$space_id")
-fi
-
-query_candidate_windows() {
-  # Only layout visible, managed candidate windows.
-  # Ignore floating windows, minimized windows, hidden windows, and apps listed
-  # in ~/.local/state/yabai/yabaiignore because they should not influence the
-  # main/stack layout decisions.
-  yabai -m query --windows --space "$space_index" 2>/dev/null |
-    jq --argjson ignored_apps "$ignored_apps_json" '[.[] | .app as $app | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false and (($ignored_apps | index($app)) | not))]'
+  if [ "$preferred_id" != "$anchor_id" ]; then
+    yabai -m window "$anchor_id" --stack "$preferred_id" 2>/dev/null || return 1
+  fi
 }
 
-is_in_stack() {
-  # True when the window is part of a stack region.
-  printf '%s' "$candidate_windows" |
-    jq -e --argjson window "$1" 'any(.[]; .id == $window and ."stack-index" > 0)' >/dev/null 2>&1
-}
+layout_extract_visible_right() {
+  windows="$1"
+  preferred_id=$(layout_preferred_visible_id "$windows")
+  [ -n "$preferred_id" ] || return 1
 
-is_floating() {
-  # True when the window is floating.
-  yabai -m query --windows --window "$1" 2>/dev/null |
-    jq -e '."is-floating" == true' >/dev/null 2>&1
-}
+  anchor_id=$(layout_stable_id_except "$windows" "$preferred_id")
+  [ -n "$anchor_id" ] || return 1
 
-retile_window() {
-  retile_id="$1"
-
-  # Float and unfloat the window so yabai retiles it into its own BSP region.
-  # Guard each toggle because yabai has no explicit float on/off command.
-  is_floating "$retile_id" && return 1
-  yabai -m window "$retile_id" --toggle float 2>/dev/null || return 1
-  is_floating "$retile_id" || return 1
-
-  if ! yabai -m window "$retile_id" --toggle float 2>/dev/null; then
-    # Avoid leaving the window floating if retiling fails.
-    is_floating "$retile_id" && yabai -m window "$retile_id" --toggle float >/dev/null 2>&1 || :
+  # The insertion marker belongs to the root leaf, not only to anchor_id. When
+  # preferred_id is temporarily floated out, yabai transfers the marker to the
+  # surviving stack member. Re-tiling preferred_id then creates it directly as
+  # the right child and consumes the marker.
+  yabai -m window "$anchor_id" --insert east 2>/dev/null || return 1
+  yabai -m window "$preferred_id" --toggle float 2>/dev/null || return 1
+  if ! yabai -m query --windows --window "$preferred_id" 2>/dev/null |
+    jq -e '."is-floating" == true' >/dev/null 2>&1; then
+    # The window did not leave the stack, so clear the unused insertion marker.
+    yabai -m window "$anchor_id" --insert east >/dev/null 2>&1 || :
     return 1
   fi
 
-  if is_floating "$retile_id"; then
-    yabai -m window "$retile_id" --toggle float >/dev/null 2>&1 || :
+  if ! yabai -m window "$preferred_id" --toggle float 2>/dev/null; then
+    yabai -m window "$preferred_id" --toggle float >/dev/null 2>&1 || return 1
+  fi
+
+  if yabai -m query --windows --window "$preferred_id" 2>/dev/null |
+    jq -e '."is-floating" == true' >/dev/null 2>&1; then
+    yabai -m window "$preferred_id" --toggle float >/dev/null 2>&1 || return 1
+  fi
+
+  if yabai -m query --windows --window "$preferred_id" 2>/dev/null |
+    jq -e '."is-floating" == true' >/dev/null 2>&1; then
     return 1
+  fi
+
+  # A pre-existing manual east marker would have made --insert east toggle it
+  # off. Verify the result and correct the side without retaining marker state.
+  updated_windows=$(layout_query_candidates) || return 1
+  preferred_side=$(layout_side_for_id "$updated_windows" "$preferred_id")
+  if [ "$preferred_side" = left ]; then
+    yabai -m window "$preferred_id" --swap east 2>/dev/null || return 1
+  fi
+}
+
+layout_reconcile_two_stack() {
+  windows="$1"
+  regions=$(layout_region_count "$windows")
+  x_regions=$(layout_distinct_x_count "$windows")
+
+  if [ "$regions" -eq 1 ] || [ "$x_regions" -lt 2 ]; then
+    layout_extract_visible_right "$windows" || return 1
+    return 0
+  fi
+
+  if [ "$regions" -eq 2 ] && [ "$x_regions" -eq 2 ]; then
+    return 0
+  fi
+
+  right_key=$(layout_right_region_key "$windows")
+  anchor_id=$(layout_anchor_id_excluding_frame "$windows" "$right_key")
+  [ -n "$anchor_id" ] || return 1
+  anchor_key=$(layout_frame_key_for_id "$windows" "$anchor_id")
+
+  stack_ids=$(layout_ids_outside_frames "$windows" "$anchor_key" "$right_key")
+  if [ -n "$stack_ids" ]; then
+    for id in $stack_ids; do
+      yabai -m window "$anchor_id" --stack "$id" 2>/dev/null || return 1
+    done
   fi
 
   return 0
 }
 
-apply_config_if_needed() {
-  key="$1"
-  desired="$2"
-  current=$(yabai -m config --space "$space_index" "$key" 2>/dev/null || printf '')
+if [ "$layout_is_wide" -eq 0 ]; then
+  layout_apply_space_settings stack second_child focused \
+    "$layout_normal_gap" "$layout_normal_top_padding" \
+    "$layout_normal_padding" "$layout_normal_padding" \
+    "$layout_normal_padding" || exit 0
 
-  if [ "$current" != "$desired" ]; then
-    yabai -m config --space "$space_index" "$key" "$desired"
-  fi
-}
-
-apply_space_settings() {
-  mode="$1"
-  space_layout="$2"
-  placement="$3"
-  insertion_point="$4"
-  gap="$5"
-  top="$6"
-  bottom="$7"
-  left="$8"
-  right="$9"
-
-  if [ "$space_type" != "$space_layout" ]; then
-    if yabai -m space "$space_index" --layout "$space_layout"; then
-      space_type="$space_layout"
-    fi
-  fi
-
-  apply_config_if_needed window_placement "$placement"
-  apply_config_if_needed window_insertion_point "$insertion_point"
-  apply_config_if_needed window_gap "$gap"
-  apply_config_if_needed top_padding "$top"
-  apply_config_if_needed bottom_padding "$bottom"
-  apply_config_if_needed left_padding "$left"
-  apply_config_if_needed right_padding "$right"
-
-}
-
-display_json=$(yabai -m query --displays --display "$space_display" 2>/dev/null) || exit 0
-[ -n "$display_json" ] || exit 0
-
-display_w=$(printf '%s' "$display_json" | jq -r '.frame.w')
-display_h=$(printf '%s' "$display_json" | jq -r '.frame.h')
-is_wide=$(awk "BEGIN { print (($display_w / $display_h) >= $wide_threshold) ? 1 : 0 }")
-
-# layout for wide screens
-if [ "$is_wide" -eq 1 ]; then
-  candidate_windows=$(query_candidate_windows) || exit 0
-  candidate_count=$(printf '%s' "$candidate_windows" | jq 'length')
-
-  # with one window, put it in the middle with large padding on both sides
-  if [ "$candidate_count" -le 1 ]; then
-    if [ "$candidate_count" -eq 1 ]; then
-      only_id=$(printf '%s' "$candidate_windows" | jq -r '.[0].id')
-      layout_state_update "$layout_state_file" main_id "$only_id" 2>/dev/null
-    fi
-
-    # Apply solo padding even when the query briefly returns 0 managed windows during space switches.
-    saved_solo_ratio=$(layout_state_get "$layout_state_file" solo_ratio "$wide_solo_ratio")
-    if [ "$reset_layout" -eq 1 ] || ! valid_ratio "$saved_solo_ratio"; then
-      saved_solo_ratio="$wide_solo_ratio"
-    fi
-    side_padding=$(awk "BEGIN { printf \"%d\", ($display_w * (1 - $saved_solo_ratio) / 2) }")
-    apply_space_settings "wide-solo" bsp first_child first "$wide_gap" "$wide_top_padding" "$wide_padding" "$side_padding" "$side_padding"
-    saved_split_ratio=$(layout_state_get "$layout_state_file" split_ratio "$wide_split_ratio")
-    valid_ratio "$saved_split_ratio" || saved_split_ratio="$wide_split_ratio"
-    layout_state_update "$layout_state_file" mode wide-solo space_layout bsp solo_ratio "$saved_solo_ratio" split_ratio "$saved_split_ratio" gap "$wide_gap" padding_top "$wide_top_padding" padding_bottom "$wide_padding" padding_left "$side_padding" padding_right "$side_padding" window_placement first_child window_insertion_point first 2>/dev/null
-
-  # with multiple windows, put one main window on the right, all other windows stack on the left
-  elif [ "$candidate_count" -gt 1 ]; then
-    apply_space_settings "wide-multi" bsp first_child first "$wide_gap" "$wide_top_padding" "$wide_padding" "$wide_padding" "$wide_padding"
-
-    candidate_windows=$(query_candidate_windows) || exit 0
-
-    target_split_ratio=$(layout_state_get "$layout_state_file" split_ratio "$wide_split_ratio")
-    if [ "$reset_layout" -eq 1 ] || ! valid_ratio "$target_split_ratio"; then
-      target_split_ratio="$wide_split_ratio"
-    fi
-    saved_solo_ratio=$(layout_state_get "$layout_state_file" solo_ratio "$wide_solo_ratio")
-    valid_ratio "$saved_solo_ratio" || saved_solo_ratio="$wide_solo_ratio"
-
-    # Keep split type local to this space; split_ratio is global-only in yabai.
-    yabai -m config --space "$space_index" split_type vertical
-    yabai -m config split_ratio "$target_split_ratio"
-
-    saved_main_id=$(layout_state_get "$layout_state_file" main_id "")
-
-    if [ -n "$saved_main_id" ] && printf '%s' "$candidate_windows" | jq -e --argjson id "$saved_main_id" 'any(.[]; .id == $id)' >/dev/null 2>&1; then
-      main_id="$saved_main_id"
-    else
-      main_id=$(printf '%s' "$candidate_windows" | jq -r 'sort_by(.frame.x) | last.id')
-    fi
-
-    # Check whether the main window is in a correct place or needs repositioning. Checking conditions:
-    # * not in a stack -> do nothing
-    #
-    # [stack A, B] | [main M] <- valid: M has its own leaf
-    #
-    # * still in a stack (likely due to the old main was closed/moved/etc or we promoted new main)
-    # -> extract it from that stack with either --warp or retile (float and unfloat) it.
-    #
-    # new main promoted: [stack A, B (main)] | [window C] <- warp: another BSP region exists
-    # old main closed: [root stack A, B (main)] <- retile: no BSP region exists to warp into
-    #
-    if is_in_stack "$main_id"; then
-      distinct_region_count=$(printf '%s' "$candidate_windows" | jq '[.[] | [.frame.x, .frame.y, .frame.w, .frame.h]] | unique | length')
-
-      if [ "$distinct_region_count" -gt 1 ]; then
-        yabai -m window "$main_id" --warp east 2>/dev/null || :
-        candidate_windows=$(query_candidate_windows) || exit 0
-      fi
-
-      if is_in_stack "$main_id"; then
-        retile_window "$main_id" || exit 0
-        candidate_windows=$(query_candidate_windows) || exit 0
-      fi
-
-      # Continue only if the main still exists and is no longer in a stack.
-      main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
-      [ "$main_stack_index" = "0" ] || exit 0
-    fi
-
-    # Prefer an existing stack member as the left anchor. A newly moved window
-    # can briefly be the leftmost unstacked pane; choosing it as anchor would
-    # leave the existing stack separate because stacked windows are skipped below.
-    anchor_id=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '([.[] | select(.id != $main and ."stack-index" > 0)] | sort_by(.frame.x) | first.id) // ([.[] | select(.id != $main)] | sort_by(.frame.x) | first.id) // empty')
-    if [ -n "$main_id" ] && [ -n "$anchor_id" ] && [ "$main_id" != "$anchor_id" ]; then
-      # Stack every non-main, non-anchor, currently unstacked window onto the left anchor.
-      stack_ids=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" --argjson anchor "$anchor_id" '.[] | select(.id != $main and .id != $anchor and ."stack-index" == 0) | .id')
-      if [ -n "$stack_ids" ]; then
-        for id in $stack_ids; do
-          yabai -m window "$anchor_id" --stack "$id" 2>/dev/null
-        done
-        candidate_windows=$(query_candidate_windows) || exit 0
-      fi
-
-      main_x=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$main_id" '.[] | select(.id == $id) | .frame.x')
-      anchor_x=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$anchor_id" '.[] | select(.id == $id) | .frame.x')
-
-      if [ -n "$main_x" ] && [ -n "$anchor_x" ] && awk "BEGIN { exit !($main_x < $anchor_x) }"; then
-        if yabai -m window "$main_id" --swap east 2>/dev/null; then
-          candidate_windows=$(query_candidate_windows) || exit 0
-        fi
-      fi
-
-      # Treat the saved split_ratio as the source of truth. On every
-      # apply-layout run, infer the current left/main split from frames and
-      # only call --ratio when it differs from the saved target beyond tolerance.
-      main_w=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$main_id" '.[] | select(.id == $id) | .frame.w')
-      anchor_w=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$anchor_id" '.[] | select(.id == $id) | .frame.w')
-
-      if [ -z "$main_w" ] || [ -z "$anchor_w" ] || ! awk "BEGIN { sum = $anchor_w + $main_w; if (sum <= 0) exit 1; d = ($anchor_w / sum) - $target_split_ratio; if (d < 0) d = -d; exit !(d <= $wide_ratio_tolerance) }"; then
-        yabai -m window "$main_id" --ratio abs:"$target_split_ratio" 2>/dev/null
-      fi
-
-      # Save the layout state only if the main still exists and remains outside the stack.
-      candidate_windows=$(query_candidate_windows) || exit 0
-      main_stack_index=$(printf '%s' "$candidate_windows" | jq -r --argjson main "$main_id" '.[] | select(.id == $main) | ."stack-index"')
-      if [ "$main_stack_index" = "0" ]; then
-        layout_state_update "$layout_state_file" mode wide-multi space_layout bsp main_id "$main_id" split_ratio "$target_split_ratio" solo_ratio "$saved_solo_ratio" gap "$wide_gap" padding_top "$wide_top_padding" padding_bottom "$wide_padding" padding_left "$wide_padding" padding_right "$wide_padding" window_placement first_child window_insertion_point first 2>/dev/null
-      fi
-    fi
-  fi
-
-# layout for standard screens
-else
-  apply_space_settings "normal" stack second_child focused "$normal_gap" "$normal_top_padding" "$normal_padding" "$normal_padding" "$normal_padding"
-  saved_split_ratio=$(layout_state_get "$layout_state_file" split_ratio "$wide_split_ratio")
-  valid_ratio "$saved_split_ratio" || saved_split_ratio="$wide_split_ratio"
-  saved_solo_ratio=$(layout_state_get "$layout_state_file" solo_ratio "$wide_solo_ratio")
-  valid_ratio "$saved_solo_ratio" || saved_solo_ratio="$wide_solo_ratio"
-  saved_main_id=$(layout_state_get "$layout_state_file" main_id "")
-  layout_state_update "$layout_state_file" mode normal space_layout stack main_id "$saved_main_id" split_ratio "$saved_split_ratio" solo_ratio "$saved_solo_ratio" gap "$normal_gap" padding_top "$normal_top_padding" padding_bottom "$normal_padding" padding_left "$normal_padding" padding_right "$normal_padding" window_placement second_child window_insertion_point focused 2>/dev/null
+  layout_state_update "$layout_state_file" \
+    mode normal \
+    wide_layout "$wide_layout" \
+    solo_ratio "$saved_solo_ratio" \
+    split_ratio "$saved_split_ratio" \
+    gap "$layout_normal_gap" \
+    padding_top "$layout_normal_top_padding" \
+    padding_bottom "$layout_normal_padding" \
+    padding_left "$layout_normal_padding" \
+    padding_right "$layout_normal_padding" \
+    window_placement second_child \
+    window_insertion_point focused 2>/dev/null
+  exit 0
 fi
+
+# These values are global in yabai even when config is called with --space.
+# Set them before any structural operation so arrivals naturally appear in the
+# first leaf as its first child.
+layout_apply_config_if_needed window_placement first_child || exit 0
+layout_apply_config_if_needed window_insertion_point first || exit 0
+yabai -m config --space "$layout_space_index" split_type vertical || exit 0
+yabai -m config split_ratio "$saved_split_ratio" || exit 0
+
+if [ "$candidate_count" -le 1 ]; then
+  side_padding=$(layout_side_padding "$saved_solo_ratio")
+  layout_apply_space_settings bsp first_child first \
+    "$layout_wide_gap" "$layout_wide_top_padding" \
+    "$layout_wide_padding" "$side_padding" "$side_padding" || exit 0
+  layout_save_state wide-solo "$side_padding" "$side_padding" \
+    "$saved_solo_ratio" "$saved_split_ratio"
+  exit 0
+fi
+
+if [ "$wide_layout" = "center-stack" ]; then
+  layout_collapse_to_center "$candidate_windows" || exit 0
+  side_padding=$(layout_side_padding "$saved_solo_ratio")
+  layout_apply_space_settings bsp first_child first \
+    "$layout_wide_gap" "$layout_wide_top_padding" \
+    "$layout_wide_padding" "$side_padding" "$side_padding" || exit 0
+  layout_save_state wide-center-stack "$side_padding" "$side_padding" \
+    "$saved_solo_ratio" "$saved_split_ratio"
+  exit 0
+fi
+
+layout_apply_space_settings bsp first_child first \
+  "$layout_wide_gap" "$layout_wide_top_padding" \
+  "$layout_wide_padding" "$layout_wide_padding" \
+  "$layout_wide_padding" || exit 0
+
+candidate_windows=$(layout_query_candidates) || exit 0
+layout_reconcile_two_stack "$candidate_windows" || exit 0
+candidate_windows=$(layout_query_candidates) || exit 0
+layout_valid_two_stack "$candidate_windows" || exit 0
+
+right_key=$(layout_right_region_key "$candidate_windows")
+right_id=$(layout_visible_id_in_frame "$candidate_windows" "$right_key")
+[ -n "$right_id" ] || exit 0
+
+left_key=$(layout_left_region_key "$candidate_windows")
+left_id=$(layout_visible_id_in_frame "$candidate_windows" "$left_key")
+[ -n "$left_id" ] || exit 0
+
+left_w=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$left_id" '.[] | select(.id == $id) | .frame.w')
+right_w=$(printf '%s' "$candidate_windows" | jq -r --argjson id "$right_id" '.[] | select(.id == $id) | .frame.w')
+
+if ! awk "BEGIN { sum = $left_w + $right_w; if (sum <= 0) exit 1; d = ($left_w / sum) - $saved_split_ratio; if (d < 0) d = -d; exit !(d <= $layout_ratio_tolerance) }"; then
+  yabai -m window "$right_id" --ratio abs:"$saved_split_ratio" 2>/dev/null || exit 0
+fi
+
+layout_save_state wide-two-stack "$layout_wide_padding" \
+  "$layout_wide_padding" "$saved_solo_ratio" "$saved_split_ratio"
