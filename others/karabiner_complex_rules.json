@@ -203,7 +203,7 @@
       ]
     },
     {
-      "description": "Shift + Esc → Tilde, Command + Backtick → Triple Backtick, Command + Shift + Backtick → Triple Backtick + Shift + Enter",
+      "description": "Shift + Esc → ~, Command + Backtick → ```, Command + Shift + Backtick → \\n```\\n",
       "manipulators": [
         {
           "description": "Shift + Esc → Tilde",
@@ -252,6 +252,10 @@
             }
           },
           "to": [
+            {
+              "key_code": "return_or_enter",
+              "modifiers": ["shift"]
+            },
             {
               "key_code": "grave_accent_and_tilde"
             },
