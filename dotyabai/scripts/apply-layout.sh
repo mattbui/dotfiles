@@ -119,10 +119,10 @@ layout_report_check() {
 
   if [ "$compliant" = true ]; then
     status_label="Layout OK"
-    notification_status="$status_label"
+    notification_status="✓ Ready"
   else
     status_label="Repair needed"
-    notification_status="$status_label · try ⌥R"
+    notification_status="⚠ Repair with ⌥R"
   fi
 
   if [ -n "$active_ratio" ]; then
