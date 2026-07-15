@@ -27,6 +27,11 @@ keybind = super++=increase_font_size:0.5
 keybind = super+z=text:\x1f
 # Send Ctrl-X Ctrl-R for zsh redo.
 keybind = super+shift+z=text:\x18\x12
+# Send Esc-b/Esc-f for backward/forward word movement.
+keybind = alt+arrow_left=text:\x1bb
+keybind = alt+arrow_right=text:\x1bf
+# Send Ctrl-W for backward word deletion.
+keybind = alt+backspace=text:\x17
 keybind = super+shift+t=unbind
 keybind = super+shift+n=new_window
 # Terminal app CSI-u passthroughs
