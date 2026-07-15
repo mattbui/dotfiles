@@ -17,9 +17,10 @@ selection="$({
       --ansi \
       --height=100% \
       --reverse \
+      --border 'sharp' \
       --border-label ' sesh ' \
       --prompt '⚡' \
-      --preview-window 'right:55%' \
+      --preview-window 'right:55%,border-sharp' \
       --preview 'sesh preview {}'
 })" || exit 0
 

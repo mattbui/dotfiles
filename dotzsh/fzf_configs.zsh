@@ -14,7 +14,11 @@ fi
 
 export FZF_COMPLETION_TRIGGER='~~'
 
-export FZF_DEFAULT_OPTS="--color=dark --border --height 40% --reverse --info=inline"
+export FZF_DEFAULT_OPTS="--color=dark --border=sharp --height 40% --reverse --info=inline"
+
+export FZF_CTRL_T_OPTS="
+  --preview 'if [ -d {} ]; then tree -C -L 1 --dirsfirst {}; elif grep -Iq . {} 2>/dev/null; then bat --style=numbers --color=always --line-range :500 {}; fi'
+  --preview-window 'right:55%,border-sharp'"
 
 # TokyoNight Storm colors
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'

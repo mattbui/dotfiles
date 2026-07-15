@@ -5,3 +5,6 @@ strict_mode = true
 # Session creation and closure also happen through native tmux and Yazi. Keep
 # caching disabled until all of those paths refresh Sesh's cache coherently.
 cache = false
+
+[default_session]
+preview_command = "tree -C -L 1 --dirsfirst {}"

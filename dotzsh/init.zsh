@@ -31,7 +31,7 @@ autoload -U compinit && compinit
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=246,underline'
 
 # bat flags
-export BAT_THEME='ansi-light'
+export BAT_THEME='ansi'
 
 for keymap in emacs viins; do
     bindkey -M "$keymap" -s '^o' 'ycd\n'
