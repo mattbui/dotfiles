@@ -79,7 +79,7 @@ fff.setup({
     height = 0.6,
     prompt_position = "top",
     preview_position = "right",
-    preview_size = 0.5,
+    preview_size = 0.55,
   },
   preview = {
     enabled = true,

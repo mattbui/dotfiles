@@ -1,5 +1,5 @@
 vim.g.floaterm_opener = "edit"
-vim.g.floaterm_title = " Floaterm ($1/$2) | J/K: cycle | ^n: new | ^t: hide "
+vim.g.floaterm_title = " Floaterm ($1/$2) · J/K: cycle · ^n: new · ^t: hide "
 vim.g.floaterm_width = 0.8
 vim.g.floaterm_height = 0.6
 
