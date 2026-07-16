@@ -14,7 +14,7 @@ fi
 
 export FZF_COMPLETION_TRIGGER='~~'
 
-export FZF_DEFAULT_OPTS="--color=dark --border=sharp --height 40% --reverse --info=inline"
+export FZF_DEFAULT_OPTS="--color=dark --border=sharp --border-label-pos=2 --height 40% --reverse --info=inline"
 
 export FZF_CTRL_T_OPTS="
   --preview 'if [ -d {} ]; then tree -C -L 1 --dirsfirst {}; elif grep -Iq . {} 2>/dev/null; then bat --style=numbers --color=always --line-range :500 {}; fi'
@@ -24,8 +24,8 @@ export FZF_CTRL_T_OPTS="
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
     --color=fg:#c0caf5,bg:#24283b,hl:#565f89:regular
     --color=fg+:#7aa2f7:regular,bg+:#3b4261,hl+:#bb9af7:regular
-    --color=query:#c0caf5:regular,info:#7dcfff,border:#565f89,prompt:#bb9af7
-    --color=pointer:#bb9af7,marker:#bb9af7,spinner:#e0af68,header:#565f89'
+    --color=query:#c0caf5:regular,info:#7dcfff,border:#565f89,label:#565f89:regular
+    --color=pointer:#bb9af7,marker:#bb9af7,spinner:#e0af68,header:#565f89,prompt:#bb9af7'
 
 # custom keybindings
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
