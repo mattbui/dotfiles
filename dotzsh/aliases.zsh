@@ -21,6 +21,8 @@ searchignore() {
 }
 
 alias px='pi --no-session'
+alias cx='codex'
+alias ce='codex -c ephemeral=true'
 
 function ycd() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
