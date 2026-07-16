@@ -18,7 +18,11 @@ export PATH=$HOME/bin:/usr/local/bin:$PATH
 export LANG=en_US.UTF-8
 
 # Preferred editor for local and remote sessions
-export VISUAL='nvim'
+if command -v nvim > /dev/null 2>&1; then
+    export VISUAL='nvim'
+else
+    export VISUAL='vim'
+fi
 export EDITOR=$VISUAL
 
 export MANPAGER='cat'
