@@ -11,8 +11,8 @@ require('vim._core.ui2').enable({
   },
 })
 
--- Render UI2's native showcmd events in a small statusline-adjacent float.
-require("float-showcmd").setup()
+-- Render UI2's native showcmd events and macro recording keys in one float.
+require("float-keys").setup()
 
 -- Add border to msg, skip for now to avoid noise
 vim.api.nvim_create_autocmd('FileType', {
