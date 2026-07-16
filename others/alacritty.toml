@@ -19,18 +19,20 @@ y = 8
 [font]
 size = 14.5
 
+# use `defaults write -g AppleFontSmoothing -int 0`
+# to fix the thick rendering in Alacritty
 [font.normal]
 family = "JetBrainsMonoNL Nerd Font Propo"
-style = "Light"
+style = "Medium"
 
 [font.bold]
-style = "SemiBold"
+style = "Bold"
 
 [font.italic]
-style = "Light Italic"
+style = "Medium Italic"
 
 [font.bold_italic]
-style = "SemiBold Italic"
+style = "Bold Italic"
 
 [font.offset]
 x = 0
