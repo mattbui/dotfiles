@@ -22,7 +22,7 @@ searchignore() {
 
 alias px='pi --no-session'
 alias cx='codex'
-alias ce='codex -c ephemeral=true'
+alias ce='codex -m gpt-5.6-sol -c model_reasoning_effort=low -c service_tier=fast -c ephemeral=true'
 
 function ycd() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
