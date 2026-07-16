@@ -20,17 +20,17 @@ y = 8
 size = 14.5
 
 [font.normal]
-family = "JetBrainsMonoNL Nerd Font Mono"
+family = "JetBrainsMonoNL Nerd Font Propo"
 style = "Light"
 
 [font.bold]
-style = "Medium"
+style = "SemiBold"
 
 [font.italic]
 style = "Light Italic"
 
 [font.bold_italic]
-style = "Medium Italic"
+style = "SemiBold Italic"
 
 [font.offset]
 x = 0
