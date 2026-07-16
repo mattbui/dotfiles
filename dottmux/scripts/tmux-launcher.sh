@@ -114,8 +114,7 @@ result="$({
       --height=100% \
       --reverse \
       --border 'sharp' \
-      --border-label ' tmux launcher ' \
-      --header '↵ new window  ^n new session  ^a all  ^f directories  ^s ssh' \
+      --border-label ' tmux launcher · ↵: new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
       --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~ | sed "s/^/ /")' \
