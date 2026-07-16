@@ -3,12 +3,19 @@ local gh = function(repo)
 end
 
 vim.api.nvim_create_autocmd('PackChanged', {
-  group = vim.api.nvim_create_augroup('config.pack.fff', { clear = true }),
+  group = vim.api.nvim_create_augroup('config.pack.hooks', { clear = true }),
   callback = function(ev)
     local name, kind = ev.data.spec.name, ev.data.kind
-    if name == 'fff.nvim' and (kind == 'install' or kind == 'update') then
+    local changed = kind == 'install' or kind == 'update'
+
+    if name == 'fff.nvim' and changed then
       if not ev.data.active then vim.cmd.packadd('fff.nvim') end
       require('fff.download').download_or_build_binary()
+    end
+
+    if name == 'nvim-treesitter' and changed then
+      if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+      vim.cmd.TSUpdate()
     end
   end,
 })
