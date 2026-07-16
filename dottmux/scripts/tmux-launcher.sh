@@ -36,6 +36,23 @@ list_ssh_hosts() {
   ' "${HOME}/.ssh/config"
 }
 
+list_directories() {
+  local root
+  local roots=("${HOME}")
+
+  for root in \
+    "${HOME}/glimpse" \
+    "${HOME}/Documents" \
+    "${HOME}/Pictures" \
+    "${HOME}/Downloads" \
+    "${HOME}/.config"; do
+    [ -d "$root" ] && roots+=("$root")
+  done
+
+  fd --hidden --max-depth 1 --type directory \
+    . "${roots[@]}" | sed -e 's:/$::' -e "s/^/$directory_icon /"
+}
+
 list_all() {
   sesh list --icons --hide-duplicates --hide-attached
   list_ssh_hosts
@@ -44,6 +61,10 @@ list_all() {
 case "${1:-}" in
   --list-all)
     list_all
+    exit 0
+    ;;
+  --list-directories)
+    list_directories
     exit 0
     ;;
   --list-ssh-hosts)
@@ -117,7 +138,7 @@ result="$({
       --border-label ' tmux launcher · ↵: new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
-      --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~ | sed "s/^/ /")' \
+      --bind 'ctrl-f:change-prompt(🔎 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
       --bind 'ctrl-s:change-prompt(🖥️  )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-ssh-hosts)' \
       --preview-window 'right:55%,border-sharp' \
       --preview 'sesh preview {}'
