@@ -39,6 +39,61 @@ local function git_branch_from_selection(picker, item)
   end)
 end
 
+local function git_discard(picker)
+  local items = picker:selected({ fallback = true })
+  if #items == 0 then
+    return
+  end
+
+  local tracked = {}
+  local untracked = {}
+  local files = {}
+  for _, item in ipairs(items) do
+    if not item.status or not item.file then
+      snacks.notify.warn("Can't discard this change", { title = "Snacks Picker" })
+      return
+    end
+
+    files[#files + 1] = snacks.picker.util.path(item)
+    local target = item.status == "??" and untracked or tracked
+    target[#target + 1] = item.file
+  end
+
+  local msg
+  if #items == 1 and #untracked == 1 then
+    msg = ("Delete untracked `%s`?"):format(files[1])
+  elseif #untracked > 0 then
+    local noun = #untracked == 1 and "file" or "files"
+    msg = ("Discard %d files, delete %d untracked %s?"):format(#items, #untracked, noun)
+  else
+    msg = #items == 1 and ("Discard `%s`?"):format(files[1]) or ("Discard %d files?"):format(#items)
+  end
+
+  snacks.picker.util.confirm(msg, function()
+    local commands = {}
+    if #tracked > 0 then
+      commands[#commands + 1] = vim.list_extend({ "git", "restore", "--" }, tracked)
+    end
+    if #untracked > 0 then
+      commands[#commands + 1] = vim.list_extend({ "git", "clean", "-f", "--" }, untracked)
+    end
+
+    local done = 0
+    for _, command in ipairs(commands) do
+      snacks.picker.util.cmd(command, function()
+        done = done + 1
+        if done == #commands then
+          vim.schedule(function()
+            picker:refresh()
+            vim.cmd.startinsert()
+            vim.cmd.checktime()
+          end)
+        end
+      end, { cwd = items[1].cwd })
+    end
+  end)
+end
+
 local function picker_keys(modes)
   return {
     ["<Tab>"] = { "list_down", mode = modes },
@@ -67,6 +122,7 @@ end
 
 snacks.setup({
   picker = {
+    prompt = "🍿 ",
     enabled = true,
     ui_select = false,
     layout = {
@@ -75,6 +131,13 @@ snacks.setup({
     },
     layouts = {
       default = {
+        config = function(layout)
+          -- input/list window
+          layout.layout[1].title_pos = "left"
+          -- preview window
+          layout.layout[2].title_pos = "left"
+          layout.layout[2].width = 0.55
+        end,
         layout = {
           width = 0.8,
           height = 0.6,
@@ -84,13 +147,32 @@ snacks.setup({
     },
     actions = {
       git_branch_from_selection = git_branch_from_selection,
+      git_discard = git_discard,
       navigate_left = tmux_navigate("Left"),
       navigate_down = tmux_navigate("Down"),
       navigate_up = tmux_navigate("Up"),
       navigate_right = tmux_navigate("Right"),
     },
     sources = {
+      git_status = {
+        title = "Git Status · ^s stage/unstage · ^x discard",
+        win = {
+          input = {
+            keys = {
+              ["<C-s>"] = { "git_stage", mode = { "n", "i" }, desc = "Stage/unstage" },
+              ["<C-x>"] = { "git_discard", mode = { "n", "i" }, nowait = true, desc = "Discard changes" },
+            },
+          },
+          list = {
+            keys = {
+              ["<C-s>"] = { "git_stage", mode = "n", desc = "Stage/unstage" },
+              ["<C-x>"] = { "git_discard", mode = "n", nowait = true, desc = "Discard changes" },
+            },
+          },
+        },
+      },
       git_branches = {
+        title = "Git Branches · ^a new@HEAD · ^b new@selected · ^x delete",
         win = {
           input = {
             keys = {
@@ -208,3 +290,7 @@ end, { silent = true, desc = "Workspace symbols" })
 vim.keymap.set("n", "<Leader>gb", function()
   snacks.picker.git_branches()
 end, { silent = true, desc = "Branch" })
+
+vim.keymap.set("n", "<Leader>gf", function()
+  snacks.picker.git_status()
+end, { silent = true, desc = "Dirty files" })
