@@ -89,6 +89,33 @@ list_all() {
   list_ssh_hosts
 }
 
+preview_selection() {
+  local selection="$1"
+  local host
+
+  if [[ "$selection" == "$ssh_icon "* ]]; then
+    host="${selection#"$ssh_icon "}"
+    ssh -G "$host" 2>/dev/null |
+      awk '
+        /^hostname /     { hostname = $0 }
+        /^port /         { port = $0 }
+        /^user /         { user = $0 }
+        /^proxyjump /    { proxyjump = $0 }
+        /^identityfile / { identityfiles = identityfiles $0 ORS }
+        END {
+          if (hostname != "") print hostname
+          if (port != "") print port
+          if (user != "") print user
+          if (proxyjump != "") print proxyjump
+          printf "%s", identityfiles
+        }
+      '
+    return
+  fi
+
+  sesh preview "$selection"
+}
+
 case "${1:-}" in
   --ssh-pane)
     [[ "$#" -eq 2 ]] || exit 2
@@ -104,6 +131,11 @@ case "${1:-}" in
     ;;
   --list-ssh-hosts)
     list_ssh_hosts
+    exit 0
+    ;;
+  --preview)
+    [[ "$#" -eq 2 ]] || exit 2
+    preview_selection "$2"
     exit 0
     ;;
 esac
@@ -166,14 +198,14 @@ result="$({
       --ansi \
       --expect=ctrl-n \
       --height=100% \
-      --border 'sharp' \
-      --border-label-pos=2 \
-      --border-label ' tmux launcher · ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
+      --border=none \
+      --input-label ' tmux launcher ' \
+      --list-label ' ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
       --bind 'ctrl-f:change-prompt(🔎 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
       --bind 'ctrl-s:change-prompt(🖥️  )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-ssh-hosts)' \
-      --preview 'sesh preview {}'
+      --preview '"$HOME/.config/tmux/scripts/tmux-launcher.sh" --preview {}'
 })" || exit 0
 
 [ -n "$result" ] || exit 0

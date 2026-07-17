@@ -12,11 +12,11 @@ if command -v rg &> /dev/null; then
   export PI_FZF_RG_COMMAND='rg --column --line-number --no-heading --color=never --hidden --follow "^"'
 fi
 
-export FZF_COMPLETION_TRIGGER='~~'
-
 export FZF_DEFAULT_OPTS="
-    --color=dark --input-border=sharp --list-border=sharp --height 40% --reverse --info=inline
-    --preview-window 'right:55%,border-sharp'
+    --color=dark --input-border=sharp --list-border=sharp --header-border=sharp
+    --list-label-pos=2 --input-label-pos=2 --preview-label-pos=2
+    --preview-label=' pgup/pgdn: scroll preview '
+    --height 50% --reverse --info=inline-right --preview-window 'right:55%,border-sharp'
 "
 
 # TokyoNight Storm colors
@@ -33,39 +33,75 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
     --bind=page-up:preview-half-page-up,page-down:preview-half-page-down
     --bind=alt-up:half-page-up,alt-down:half-page-down'
 
+# file widget
 export FZF_CTRL_T_OPTS="
   --preview '
     if [ -d {} ]; then
-      tree -C -L 1 --dirsfirst {}
-    elif grep -Iq . {} 2>/dev/null; then
+      command -v tree >/dev/null 2>&1 && tree -C -L 1 --dirsfirst {}
+    elif command -v bat >/dev/null 2>&1 && grep -Iq . {} 2>/dev/null; then
       bat --style=numbers --color=always --line-range :500 {}
     fi
   '
 "
 
-fcd() {
-  local dir
-  if ! command -v fd &> /dev/null; then
-    dir=$(find ${1:-.} -path '*/\.*' -prune \
-                    -o -type d -print 2> /dev/null | fzf +m) &&
-    cd "$dir"
-  else
-    dir=$(fd --type d --hidden --follow 2> /dev/null | fzf +m) &&
-    cd "$dir"
-  fi
-}
+# cd widget
+export FZF_ALT_C_OPTS="
+  --preview '
+    command -v tree >/dev/null 2>&1 && tree -C -L 1 --dirsfirst {}
+  '
+"
 
-fo() {
-  IFS=$'\n' out=("$(fzf-tmux --query="$1" --exit-0 --expect=ctrl-o,ctrl-e)")
-  key=$(head -1 <<< "$out")
-  file=$(head -2 <<< "$out" | tail -1)
-  if [ -n "$file" ]; then
-    # if in vim, open it with floaterm command
-    [ "$key" = ctrl-o ] && open "$file" || [ -z $VIMRUNTIME ] && $EDITOR  "$file" || floaterm "$file"
-  fi
+# command history widget
+export FZF_CTRL_R_OPTS="
+  --list-label-pos=2
+  --list-label ' ^y: copy to clipboard '
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+  --preview '
+    if command -v bat >/dev/null 2>&1; then
+      printf \"%s\\n\" {2..} |
+        bat --language=sh --style=plain --color=always --paging=never
+    else
+      printf \"%s\\n\" {2..}
+    fi
+  '
+  --preview-window 'down:35%,wrap,border-top'
+"
+
+export FZF_COMPLETION_TRIGGER='@'
+
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf --preview 'command -v tree >/dev/null 2>&1 && tree -C -L 1 --dirsfirst {}' "$@" ;;
+    export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
+    ssh)          fzf --preview '
+                    ssh -G {} 2>/dev/null |
+                      awk "
+                        /^hostname /     { hostname = \$0 }
+                        /^port /         { port = \$0 }
+                        /^user /         { user = \$0 }
+                        /^proxyjump /    { proxyjump = \$0 }
+                        /^identityfile / { identityfiles = identityfiles \$0 ORS }
+                        END {
+                          if (hostname != \"\") print hostname
+                          if (port != \"\") print port
+                          if (user != \"\") print user
+                          if (proxyjump != \"\") print proxyjump
+                          printf \"%s\", identityfiles
+                        }
+                      "
+                  ' "$@" ;;
+    *)            fzf --preview '
+                    if command -v bat >/dev/null 2>&1 && grep -Iq . {} 2>/dev/null; then
+                      bat --style=numbers --color=always --line-range :500 {}
+                    fi
+                  ' "$@" ;;
+  esac
 }
 
 for keymap in emacs viins; do
-  bindkey -M "$keymap" -s '^g' 'fcd\n' # go to directory with ctrl+g
-  bindkey -M "$keymap" '^f' fzf-file-widget # ctrl+f for file
+  bindkey -M "$keymap" '^g' fzf-cd-widget
+  bindkey -M "$keymap" '^f' fzf-file-widget
 done
