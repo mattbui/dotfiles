@@ -79,6 +79,8 @@ rstatus() {
 
 [ -z $(command -v brew) ] || alias ctags="`brew --prefix`/bin/ctags"
 
+# Show the resolved SSH host in the tmux pane title, use a block cursor during
+# SSH, then clear the pane metadata and restore to beam cursor when the connection ends.
 ssh() {
     local title
     local exit_code

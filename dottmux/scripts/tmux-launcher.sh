@@ -2,7 +2,12 @@
 set -euo pipefail
 
 directory_icon=""
-ssh_icon="󰒋"
+ssh_icon=""
+launcher_path="${BASH_SOURCE[0]}"
+
+if [[ "$launcher_path" != /* ]]; then
+  launcher_path="${PWD}/${launcher_path}"
+fi
 
 report_error() {
   local status="$?"
@@ -14,6 +19,32 @@ report_error() {
 }
 
 trap report_error ERR
+
+# Mirror aliases.zsh's ssh() behavior for launcher panes by setting the tmux
+# pane title metadata, using a block cursor during SSH, then restoring to beam cursor.
+run_ssh_pane() {
+  local host="$1"
+  local shell="${SHELL:-/bin/zsh}"
+
+  if [[ -n "${TMUX_PANE:-}" ]]; then
+    tmux set-option -p -t "$TMUX_PANE" @ssh_session_active 1
+    tmux set-option -p -t "$TMUX_PANE" @ssh_session_name "$host"
+  fi
+
+  printf '\e[2 q'
+  printf 'Connecting to %s...\n' "$host"
+  if command ssh "$host"; then
+    :
+  fi
+  printf '\e[6 q'
+
+  if [[ -n "${TMUX_PANE:-}" ]]; then
+    tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
+    tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
+  fi
+
+  exec "$shell" -l
+}
 
 list_ssh_hosts() {
   [ -r "${HOME}/.ssh/config" ] || return 0
@@ -59,6 +90,10 @@ list_all() {
 }
 
 case "${1:-}" in
+  --ssh-pane)
+    [[ "$#" -eq 2 ]] || exit 2
+    run_ssh_pane "$2"
+    ;;
   --list-all)
     list_all
     exit 0
@@ -87,44 +122,42 @@ origin_pane="${TMUX_PANE:-}"
 origin_session="$(tmux display-message -p -t "$origin_pane" '#{session_name}')"
 origin_path="$(tmux display-message -p -t "$origin_pane" '#{pane_current_path}')"
 
-ssh_command() {
+ssh_pane_command() {
   local host="$1"
-  printf 'ssh %q' "$host"
+  printf '%q --ssh-pane %q' "$launcher_path" "$host"
 }
 
 ssh_session_name() {
   local host="$1"
-  printf 'ssh-%s' "${host//[^[:alnum:]_-]/_}"
+  printf '@%s' "${host//[^[:alnum:]_-]/_}"
 }
 
 open_ssh_session() {
   local host="$1"
   local session
-  local command
+  local pane_command
 
   session="$(ssh_session_name "$host")"
+  pane_command="$(ssh_pane_command "$host")"
+
   if tmux has-session -t "=$session" 2>/dev/null; then
+    tmux set-option -t "=$session:" default-command "$pane_command"
     tmux switch-client -t "=$session"
     return 0
   fi
 
-  command="$(ssh_command "$host")"
-  tmux new-session -d -s "$session" -c "$origin_path"
-  tmux send-keys -t "${session}:" "$command" Enter
+  tmux new-session -d -s "$session" -c "$origin_path" "$pane_command"
+  tmux set-option -t "=$session:" default-command "$pane_command"
   tmux switch-client -t "=$session"
 }
 
 open_ssh_window() {
   local host="$1"
-  local command
-  local pane_id
+  local pane_command
 
-  command="$(ssh_command "$host")"
-  pane_id="$(
-    tmux new-window -P -F '#{pane_id}' -t "${origin_session}:" \
-      -c "$origin_path" -n "$host"
-  )"
-  tmux send-keys -t "$pane_id" "$command" Enter
+  pane_command="$(ssh_pane_command "$host")"
+  tmux new-window -t "${origin_session}:" -c "$origin_path" -n "$host" \
+    "$pane_command"
 }
 
 result="$({
