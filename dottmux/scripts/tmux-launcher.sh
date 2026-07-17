@@ -162,18 +162,17 @@ open_ssh_window() {
 
 result="$({
   list_all |
-    fzf-tmux -p 70%,50% \
+    fzf-tmux -p 80%,60% \
       --ansi \
       --expect=ctrl-n \
       --height=100% \
-      --reverse \
       --border 'sharp' \
+      --border-label-pos=2 \
       --border-label ' tmux launcher · ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
       --bind 'ctrl-f:change-prompt(🔎 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
       --bind 'ctrl-s:change-prompt(🖥️  )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-ssh-hosts)' \
-      --preview-window 'right:55%,border-sharp' \
       --preview 'sesh preview {}'
 })" || exit 0
 

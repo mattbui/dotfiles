@@ -14,11 +14,10 @@ fi
 
 export FZF_COMPLETION_TRIGGER='~~'
 
-export FZF_DEFAULT_OPTS="--color=dark --border=sharp --border-label-pos=2 --height 40% --reverse --info=inline"
-
-export FZF_CTRL_T_OPTS="
-  --preview 'if [ -d {} ]; then tree -C -L 1 --dirsfirst {}; elif grep -Iq . {} 2>/dev/null; then bat --style=numbers --color=always --line-range :500 {}; fi'
-  --preview-window 'right:55%,border-sharp'"
+export FZF_DEFAULT_OPTS="
+    --color=dark --input-border=sharp --list-border=sharp --height 40% --reverse --info=inline
+    --preview-window 'right:55%,border-sharp'
+"
 
 # TokyoNight Storm colors
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
@@ -29,7 +28,20 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 
 # custom keybindings
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
---bind="tab:down,shift-tab:up,shift-down:toggle+down,shift-up:toggle+up"'
+    --bind=tab:down,shift-tab:up
+    --bind=shift-down:toggle+down,shift-up:toggle+up
+    --bind=page-up:preview-half-page-up,page-down:preview-half-page-down
+    --bind=alt-up:half-page-up,alt-down:half-page-down'
+
+export FZF_CTRL_T_OPTS="
+  --preview '
+    if [ -d {} ]; then
+      tree -C -L 1 --dirsfirst {}
+    elif grep -Iq . {} 2>/dev/null; then
+      bat --style=numbers --color=always --line-range :500 {}
+    fi
+  '
+"
 
 fcd() {
   local dir
