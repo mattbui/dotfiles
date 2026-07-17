@@ -21,7 +21,7 @@ count_cut      = { fg = "#1f2335", bg = "#f7768e" }
 count_selected = { fg = "#1f2335", bg = "#7aa2f7" }
 
 # Border
-border_style = { fg = "#565f89" }
+border_style = { fg = "#636a8d" }
 
 # Hovered
 [indicator]
@@ -60,26 +60,26 @@ perm_exec  = { fg = "#c0caf5" }
 perm_sep   = { fg = "#c0caf5" }
 
 [pick]
-border   = { fg = "#565f89" }
+border   = { fg = "#636a8d" }
 active   = { fg = "#c0caf5",  bg = "#2e3c64" }
 inactive = { fg = "#c0caf5" }
 
 # Input
 [input]
-border   = { fg = "#565f89" }
+border   = { fg = "#636a8d" }
 title    = { fg = "#0db9d7" }
 value    = { fg = "#9d7cd8" }
 selected = { bg = "#2e3c64" }
 
 # Completion
 [cmp]
-border   = { fg = "#565f89" }
+border   = { fg = "#636a8d" }
 active   = { fg = "#c0caf5", bg = "#363d59" }
 inactive = { fg = "#c0caf5" }
 
 # Tasks
 [tasks]
-border  = { fg = "#565f89" }
+border  = { fg = "#636a8d" }
 title   = { fg = "#29a4bd" }
 hovered = { fg = "#c0caf5", bg = "#2e3c64" }
 
@@ -89,17 +89,17 @@ mask            = { bg = "#1f2335" }
 cand            = { fg = "#7dcfff" }
 rest            = { fg = "#7aa2f7" }
 desc            = { fg = "#bb9af7" }
-separator_style = { fg = "#565f89" }
+separator_style = { fg = "#636a8d" }
 
 # Confirm
 [confirm]
-border  = { fg = "#565f89" }
+border  = { fg = "#636a8d" }
 title   = { fg = "#29a4bd" }
 btn_yes = { bg = "#2e3c64" }
 
 # Spot
 [spot]
-border  = { fg = "#565f89" }
+border  = { fg = "#636a8d" }
 title   = { fg = "#29a4bd" }
 
 # Notify
@@ -119,7 +119,7 @@ updated   = { fg = "#f7768e", bold = true }
 
 # Help
 [help]
-border  = { fg = "#565f89" }
+border  = { fg = "#636a8d" }
 chord   = { fg = "#9ece6a" }
 action  = { fg = "#7dcfff" }
 hovered = { bg = "#292e42" }
