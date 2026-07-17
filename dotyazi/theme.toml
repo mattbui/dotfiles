@@ -1,3 +1,45 @@
 [flavor]
 dark = "tokyonight-storm"
 light = "tokyonight-storm"
+
+[mgr]
+marker_symbol = "🮉"
+border_symbol = "│"
+
+[indicator]
+padding = { open = "█", close = "█" }
+
+[tabs]
+sep_inner = { open = "█", close = "█" }
+sep_outer = { open = "█", close = "█" }
+
+[status]
+sep_left  = { open = "", close = " " }
+sep_right = { open = " ", close = "" }
+
+[cmp]
+icon_file    = ""
+icon_folder  = ""
+icon_command = ""
+
+[which]
+cols      = 3
+separator = " ➜ "
+
+[confirm]
+btn_labels = [ "  [y]es  ", "  (n)o  " ]
+
+[notify]
+icon_error = " "
+icon_warn  = " "
+icon_info  = " "
+
+[git]
+unknown_sign   = ""
+modified_sign  = "!"
+added_sign     = "+"
+untracked_sign = "?"
+ignored_sign   = "·"
+deleted_sign   = "-"
+updated_sign   = "~"
+clean_sign     = ""
