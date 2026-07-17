@@ -8,6 +8,8 @@ function M:setup(opts)
 	local border_type = opts.type or ui.Border.PLAIN
 	local title = opts.title or "Yazi"
 	local old_build = Root.build
+	local tmux = os.getenv("TMUX")
+	local tmux_hint = tmux and tmux ~= "" and " · T: new tmux window · S: new tmux session" or ""
 
 	local function title_widget(area)
 		if title == "" or area.w <= 2 or area.h == 0 then
@@ -15,7 +17,7 @@ function M:setup(opts)
 		end
 
 		local max = area.w - 2
-		local prefix = " " .. title .. ": "
+		local prefix = " " .. title .. tmux_hint .. " · "
 		local suffix = " "
 		local path_max = math.max(0, max - ui.Line(prefix .. suffix):width())
 		local cwd = ya.readable_path(tostring(cx.active.current.cwd))

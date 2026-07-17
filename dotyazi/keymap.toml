@@ -10,10 +10,11 @@ prepend_keymap = [
 	{ on = ".", run = "hidden toggle", desc = "Toggle hidden files" },
 
 	{ on = "~", run = "cd ~", desc = "Go home" },
-	{ on = "@", run = "cd $NVIM_CWD", desc = "Go to project root" },
-	{ on = [ "g", "r" ], run = "cd $NVIM_CWD", desc = "Go to project root" },
+	{ on = "@", run = "cd $YAZI_START_DIR", desc = "Go to start directory" },
+	{ on = [ "g", "r" ], run = "cd $YAZI_START_DIR", desc = "Go to start directory" },
 	{ on = [ "g", "?" ], run = "help", desc = "Open help" },
 	{ on = "<C-p>", run = "plugin fzf", desc = "Jump to a file or directory" },
+	{ on = "<C-g>", run = "search --via=rg", desc = "Search files by content via ripgrep" },
 
 	# Move without wrapping at the first or last item.
 	{ on = "j", run = "arrow 1", desc = "Next file" },
@@ -45,8 +46,8 @@ prepend_keymap = [
 	{ on = "<Space>", run = "shell --orphan 'sh \"$HOME/.config/zsh/scripts/quick-look.sh\" %h'", desc = "Quick Look the hovered file" },
 	{ on = "<C-y>", run = "shell --orphan 'sh \"$HOME/.config/zsh/scripts/quick-look.sh\" %h'", desc = "Quick Look the hovered file" },
 
-	{ on = [ "T", "t" ], run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-window.sh\" %h'", desc = "Open a tmux window here" },
-	{ on = [ "T", "n" ], run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-session.sh\" %h'", desc = "Create and switch to a tmux session" },
+	{ on = "T", run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-window.sh\" %h'", desc = "Open a tmux window here" },
+	{ on = "S", run = "shell --orphan 'sh \"$HOME/.config/yazi/scripts/tmux-new-session.sh\" %h'", desc = "Create and switch to a tmux session" },
 ]
 
 [input]

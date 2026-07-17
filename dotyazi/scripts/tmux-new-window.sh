@@ -6,6 +6,12 @@ if [ -z "${TMUX:-}" ]; then
 fi
 
 target_dir=${1:-$PWD}
+if [ ! -d "$target_dir" ]; then
+	case $target_dir in
+		*/*) target_dir=${target_dir%/*}; [ -n "$target_dir" ] || target_dir=/ ;;
+		*) target_dir=$PWD ;;
+	esac
+fi
 [ -d "$target_dir" ] || target_dir=$PWD
 
 tmux new-window -c "$target_dir" || exit 1

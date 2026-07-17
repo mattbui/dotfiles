@@ -2,7 +2,6 @@
 
 alias e=$EDITOR
 alias v=$VISUAL
-alias y='yazi'
 alias cd='z'
 alias 'cd!'='builtin cd'
 
@@ -24,9 +23,13 @@ alias px='pi --no-session'
 alias cx='codex'
 alias ce='codex -m gpt-5.6-sol -c model_reasoning_effort=low -c service_tier=fast -c ephemeral=true'
 
+function y() {
+	YAZI_START_DIR="$PWD" command yazi "$@"
+}
+
 function ycd() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-	command yazi "$@" --cwd-file="$tmp"
+	YAZI_START_DIR="$PWD" command yazi "$@" --cwd-file="$tmp"
 	IFS= read -r -d '' cwd < "$tmp"
 	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd"
 	command rm -f -- "$tmp"
