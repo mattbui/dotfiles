@@ -48,8 +48,8 @@ function M:entry()
 
   ya.clipboard(table.concat(links, "\n"))
   ya.notify {
-    title = "Yank link",
-    content = string.format("Copied %d markdown link%s", #links, #links == 1 and "" or "s"),
+    title = " Yank link ",
+    content = string.format("Yanked %d markdown link%s", #links, #links == 1 and "" or "s"),
     timeout = 3,
   }
 end
