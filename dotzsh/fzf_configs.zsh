@@ -35,6 +35,7 @@ export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
 
 # file widget
 export FZF_CTRL_T_OPTS="
+  --input-label ' Files '
   --preview '
     if [ -d {} ]; then
       command -v tree >/dev/null 2>&1 && tree -C -L 1 --dirsfirst {}
@@ -46,6 +47,7 @@ export FZF_CTRL_T_OPTS="
 
 # cd widget
 export FZF_ALT_C_OPTS="
+  --input-label ' Change directory '
   --preview '
     command -v tree >/dev/null 2>&1 && tree -C -L 1 --dirsfirst {}
   '
@@ -53,18 +55,9 @@ export FZF_ALT_C_OPTS="
 
 # command history widget
 export FZF_CTRL_R_OPTS="
-  --list-label-pos=2
+  --input-label ' Command history '
   --list-label ' ^y: copy to clipboard '
   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-  --preview '
-    if command -v bat >/dev/null 2>&1; then
-      printf \"%s\\n\" {2..} |
-        bat --language=sh --style=plain --color=always --paging=never
-    else
-      printf \"%s\\n\" {2..}
-    fi
-  '
-  --preview-window 'down:35%,wrap,border-top'
 "
 
 export FZF_COMPLETION_TRIGGER='@'
