@@ -199,7 +199,7 @@ result="$({
       --expect=ctrl-n \
       --height=100% \
       --border=none \
-      --input-label ' tmux launcher ' \
+      --input-label ' Tmux launcher ' \
       --list-label ' ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \

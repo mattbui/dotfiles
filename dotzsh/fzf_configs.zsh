@@ -15,7 +15,7 @@ fi
 export FZF_DEFAULT_OPTS="
     --color=dark --input-border=sharp --list-border=sharp --header-border=sharp
     --list-label-pos=2 --input-label-pos=2 --preview-label-pos=2
-    --preview-label=' pgup/pgdn: scroll preview '
+    --preview-label=' PgUp/PgDn: scroll preview '
     --height 50% --reverse --info=inline-right --preview-window 'right:55%,border-sharp'
 "
 
