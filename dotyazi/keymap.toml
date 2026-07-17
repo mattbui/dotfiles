@@ -9,6 +9,8 @@ prepend_keymap = [
 	{ on = "c", run = "plugin smart-clear -- visual select", desc = "Clear selections" },
 	{ on = ".", run = "hidden toggle", desc = "Toggle hidden files" },
 
+	{ on = "~", run = "cd ~", desc = "Go home" },
+	{ on = "@", run = "cd $NVIM_CWD", desc = "Go to project root" },
 	{ on = [ "g", "r" ], run = "cd $NVIM_CWD", desc = "Go to project root" },
 	{ on = [ "g", "?" ], run = "help", desc = "Open help" },
 	{ on = "<C-p>", run = "plugin fzf", desc = "Jump to a file or directory" },
