@@ -28,7 +28,7 @@ local function set_indent(filetypes, size, extra)
   })
 end
 
-set_indent({ "html", "yaml", "json", "lua", "markdown" }, 2)
+set_indent({ "html", "yaml", "json", "lua", "markdown", "zsh", "bash", "sh" }, 2)
 set_indent("typescript", 2, function()
   vim.bo.expandtab = true
   vim.bo.softtabstop = 2
