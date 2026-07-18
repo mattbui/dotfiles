@@ -135,7 +135,7 @@ local function conform_formatters()
 
   local format_on_save = ""
   local ok_autoformat, autoformat = pcall(require, "plugins.autoformat")
-  if ok_autoformat and autoformat.format_on_save then
+  if ok_autoformat and autoformat.is_enabled() then
     format_on_save = " 󰁨"
   end
 

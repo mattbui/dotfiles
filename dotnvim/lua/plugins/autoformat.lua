@@ -2,7 +2,16 @@ local conform = require("conform")
 
 local M = {}
 
-M.format_on_save = true
+M.format_on_save = false
+
+function M.is_enabled(bufnr)
+  bufnr = bufnr or 0
+  local buffer_setting = vim.b[bufnr].format_on_save
+  if buffer_setting ~= nil then
+    return buffer_setting
+  end
+  return M.format_on_save
+end
 
 local function prefer_project_venv(name)
   return function(_, ctx)
@@ -31,10 +40,15 @@ conform.setup({
       command = prefer_project_venv("black"),
     },
   },
-  format_on_save = M.format_on_save and {
-    timeout_ms = 3000,
-    lsp_format = "fallback",
-  } or nil,
+  format_on_save = function(bufnr)
+    if not M.is_enabled(bufnr) then
+      return nil
+    end
+    return {
+      timeout_ms = 3000,
+      lsp_format = "fallback",
+    }
+  end,
 })
 
 local function format()
@@ -45,6 +59,19 @@ local function format()
 end
 
 vim.api.nvim_create_user_command("Format", format, { desc = "Format current buffer" })
+
+local function set_format_on_save(enabled)
+  vim.b.format_on_save = enabled
+  vim.notify("Autoformat on save " .. (enabled and "enabled" or "disabled"))
+end
+
+vim.api.nvim_create_user_command("AutoFormatEnable", function()
+  set_format_on_save(true)
+end, { desc = "Enable autoformat on save for current buffer" })
+
+vim.api.nvim_create_user_command("AutoFormatDisable", function()
+  set_format_on_save(false)
+end, { desc = "Disable autoformat on save for current buffer" })
 
 vim.keymap.set({ "n", "x" }, "<Leader>lf", format, { silent = true, desc = "Format" })
 
