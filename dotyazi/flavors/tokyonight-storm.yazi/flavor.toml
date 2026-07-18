@@ -115,7 +115,7 @@ added     = { fg = "#71D6C7" }
 untracked = { fg = "#7aa2f7" }
 ignored   = { fg = "#565f89" }
 deleted   = { fg = "#f7768e" }
-updated   = { fg = "#f7768e", bold = true }
+updated   = { fg = "#f7768e" }
 
 # Help
 [help]
