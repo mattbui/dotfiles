@@ -21,7 +21,20 @@ searchignore() {
 
 alias px='pi --no-session'
 alias cx='codex'
-alias ce='codex -m gpt-5.6-sol -c model_reasoning_effort=low -c service_tier=fast -c ephemeral=true'
+cxp() {
+  local prompt='$commit push'
+
+  if (( $# )); then
+    prompt+=" ${(j: :)@}"
+  fi
+
+  command codex exec \
+    --ephemeral \
+    -m gpt-5.6-sol \
+    -c model_reasoning_effort=low \
+    -c service_tier=fast \
+    -- "$prompt"
+}
 
 function y() {
 	YAZI_START_DIR="$PWD" command yazi "$@"
