@@ -111,8 +111,8 @@ title_error = { fg = "#db4b4b" }
 # Git
 [git]
 modified  = { fg = "#e0af68" }
-added     = { fg = "#71D6C7" }
-untracked = { fg = "#7aa2f7" }
+added     = { fg = "#71d6c7" }
+untracked = { fg = "#7dcfff" }
 ignored   = { fg = "#565f89" }
 deleted   = { fg = "#f7768e" }
 updated   = { fg = "#f7768e" }
