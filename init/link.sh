@@ -24,7 +24,8 @@ link_path "$DOTFILES/dottmux/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES/dottmux" "$CONFIGS/tmux"
 
 # Sesh configs
-link_path "$DOTFILES/dotsesh" "$CONFIGS/sesh"
+mkdir -p "$CONFIGS/sesh"
+link_path "$DOTFILES/others/sesh.toml" "$CONFIGS/sesh/sesh.toml"
 
 # Git configs
 link_path "$DOTFILES/dotignore/globalgitignore" "$HOME/.globalgitignore"
@@ -34,9 +35,6 @@ link_path "$DOTFILES/dotnvim" "$CONFIGS/nvim"
 
 # Yazi configs
 link_path "$DOTFILES/dotyazi" "$CONFIGS/yazi"
-
-# direnv configs
-link_path "$DOTFILES/dotdirenv" "$CONFIGS/direnv"
 
 # revdiff configs
 link_path "$DOTFILES/dotrevdiff" "$CONFIGS/revdiff"
@@ -56,11 +54,8 @@ link_path "$DOTFILES/others/bordersrc" "$CONFIGS/borders/bordersrc"
 
 # Alacritty configs
 mkdir -p "$CONFIGS/alacritty"
-if [ -e "$CONFIGS/alacritty/alacritty.yml" ] || [ -L "$CONFIGS/alacritty/alacritty.yml" ]; then
-  rm "$CONFIGS/alacritty/alacritty.yml"
-fi
 link_path "$DOTFILES/others/alacritty.toml" "$CONFIGS/alacritty/alacritty.toml"
 
 # Ghostty configs
 mkdir -p "$CONFIGS/ghostty"
-link_path "$DOTFILES/others/ghostty/config" "$CONFIGS/ghostty/config"
+link_path "$DOTFILES/others/ghostty.config" "$CONFIGS/ghostty/config"
