@@ -1,13 +1,12 @@
 theme = TokyoNight Storm
 env = TERM_APP_NAME=Ghostty
-font-family = IosevkaTerm Nerd Font Mono
+font-family = JetBrainsMonoNL Nerd Font Propo
 font-family = JuliaMono
 font-style = Regular
 font-style-bold = SemiBold
 font-style-italic = Italic
 font-style-bold-italic = SemiBold Italic
-font-size = 15
-font-feature = -calt
+font-size = 14
 font-thicken = true
 font-thicken-strength = 96
 bold-color = bright
@@ -22,23 +21,30 @@ confirm-close-surface = true
 
 # Keybinds
 keybind = super+==increase_font_size:0.5
-keybind = super++=increase_font_size:0.5
+keybind = super+-=decrease_font_size:0.5
+
 # Send Ctrl-_ / Ctrl-- (US, 0x1f) for terminal-app undo.
 keybind = super+z=text:\x1f
+
 # Send Ctrl-X Ctrl-R for zsh redo.
 keybind = super+shift+z=text:\x18\x12
+
 # Send Esc-b/Esc-f for backward/forward word movement.
 keybind = alt+arrow_left=text:\x1bb
 keybind = alt+arrow_right=text:\x1bf
+
 # Send Ctrl-W for backward word deletion.
 keybind = alt+backspace=text:\x17
 keybind = super+shift+t=unbind
 keybind = super+shift+n=new_window
+
 # Terminal app CSI-u passthroughs
 # Send CSI-u Alt-Shift-M for pi model picker.
 keybind = super+shift+m=text:\x1b[109;4u
+
 # Send CSI-u Alt-Enter for terminal apps.
 keybind = super+enter=text:\x1b[13;3u
+
 # Send CSI-u Shift-Alt-Enter for pi follow-up messages.
 keybind = super+shift+enter=text:\x1b[13;4u
 
@@ -147,6 +153,7 @@ keybind = vim/n=navigate_search:next
 
 # Vim mode: copy mode / selection
 keybind = vim/y=copy_to_clipboard
+keybind = vim/super+c=copy_to_clipboard
 
 # Vim mode: command palette
 keybind = vim/shift+semicolon=toggle_command_palette
