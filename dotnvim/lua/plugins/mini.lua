@@ -59,20 +59,6 @@ vim.api.nvim_create_user_command("MiniSessionEnable", function()
   MiniSessions.write()
 end, { desc = "Enable a local Mini session" })
 
-require("mini.notify").setup({
-  content = {
-    format = function(notif)
-      return notif.msg
-    end,
-  },
-  lsp_progress = {
-    enable = false,
-  },
-  window = {
-    config = { title = "" },
-  },
-})
-
 local MiniIndentScope = require("mini.indentscope")
 
 MiniIndentScope.setup({
