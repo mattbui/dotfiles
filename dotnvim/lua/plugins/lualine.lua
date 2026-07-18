@@ -101,28 +101,25 @@ local function smart_path()
     path = "[No Name]"
   end
 
-  local max_path_width = 50
-  local shorten_threshold = math.min(max_path_width, math.max(40, math.floor(vim.api.nvim_win_get_width(0) * 0.3)))
-  if vim.fn.strdisplaywidth(path) > shorten_threshold then
-    local parts = vim.split(path, "/", { plain = true })
-    if #parts > 1 then
-      local parent_lengths = { 6, 3, 2, 1 }
-      local shortened = {}
-      for i = 1, #parts - 1 do
-        local distance_from_file = #parts - i
-        local length_index = math.min(distance_from_file, #parent_lengths)
-        table.insert(shortened, vim.fn.strcharpart(parts[i], 0, parent_lengths[length_index]))
-      end
-      table.insert(shortened, parts[#parts])
-      path = table.concat(shortened, "/")
-    end
-  end
-
-  path = truncate_display(path, max_path_width, "left")
-
   local prefix = vim.bo.filetype ~= "help" and vim.bo.readonly and " " or ""
   local suffix = vim.bo.modifiable and vim.bo.modified and " ●" or ""
-  local path_width = max_path_width - vim.fn.strdisplaywidth(prefix) - vim.fn.strdisplaywidth(suffix)
+  local max_path_width = 50
+  local shorten_threshold = math.min(max_path_width, math.max(30, math.floor(vim.o.columns * 0.3)))
+  local path_width = shorten_threshold - vim.fn.strdisplaywidth(prefix) - vim.fn.strdisplaywidth(suffix)
+
+  if vim.fn.strdisplaywidth(path) > path_width then
+    local parts = vim.split(path, "/", { plain = true })
+    if #parts > 1 then
+      for i = 1, #parts - 1 do
+        local length = vim.startswith(parts[i], ".") and 2 or 1
+        parts[i] = vim.fn.strcharpart(parts[i], 0, length)
+        path = table.concat(parts, "/")
+        if vim.fn.strdisplaywidth(path) <= path_width then
+          break
+        end
+      end
+    end
+  end
 
   return prefix .. truncate_display(path, path_width, "left") .. suffix
 end
