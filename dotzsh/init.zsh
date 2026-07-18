@@ -1,13 +1,6 @@
 # GPG_TTY variable for gpg signing commit
 export GPG_TTY=$(tty)
 
-# Enable Powerlevel10k instant prompt. Should stay close to the top of $HOME/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -105,11 +98,9 @@ bindkey -M viins '^U' backward-kill-line
 # Load machine-local secrets kept outside the dotfiles repository.
 [[ -r "$HOME/.config/zsh-secrets.zsh" ]] && source "$HOME/.config/zsh-secrets.zsh"
 
-# To customize prompt, run `p10k configure` or edit `~/.config/zsh/p10k.zsh`.
-[[ ! -f "$HOME/.config/zsh/p10k.zsh" ]] || source "$HOME/.config/zsh/p10k.zsh"
-
 source <(fzf --zsh)
 [[ ! -f $HOME/.config/zsh/fzf_configs.zsh ]] || source $HOME/.config/zsh/fzf_configs.zsh
 
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
+eval "$(starship init zsh)"

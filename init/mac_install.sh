@@ -13,3 +13,4 @@ fi
 [ -z $(command -v zoxide) ] && brew install zoxide
 [ -z $(command -v sesh) ] && brew install sesh
 [ -z $(command -v ripgrep) ] && brew install ripgrep
+[ -z $(command -v starship) ] && brew install starship

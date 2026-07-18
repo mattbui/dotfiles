@@ -19,6 +19,9 @@ link_path() {
 # Zsh configs
 link_path "$DOTFILES/dotzsh" "$CONFIGS/zsh"
 
+# Starship config
+link_path "$DOTFILES/others/starship.toml" "$CONFIGS/starship.toml"
+
 # Tmux configs
 link_path "$DOTFILES/dottmux/.tmux.conf" "$HOME/.tmux.conf"
 link_path "$DOTFILES/dottmux" "$CONFIGS/tmux"

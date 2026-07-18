@@ -1,0 +1,72 @@
+"$schema" = "https://starship.rs/config-schema.json"
+
+format = """
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$fill\
+($username$hostname )\
+$python\
+$jobs\
+$cmd_duration\
+$line_break\
+$character"""
+
+[character]
+success_symbol = "[→](green)"
+error_symbol = "[→](red)"
+vimcmd_symbol = "[←](green)"
+vimcmd_visual_symbol = "[←](yellow)"
+vimcmd_replace_symbol = "[←](purple)"
+vimcmd_replace_one_symbol = "[←](purple)"
+
+[username]
+format = "[$user]($style)"
+style_user = "yellow"
+style_root = "red"
+
+[hostname]
+format = "[@$hostname]($style)"
+style = "green dimmed"
+
+[directory]
+style = "blue"
+read_only = " 󰌾"
+fish_style_pwd_dir_length = 1
+
+[git_branch]
+symbol = " "
+style = "purple"
+
+[git_state]
+style = "yellow"
+
+[git_status]
+style = "red"
+format = "([$all_status$ahead_behind]($style))"
+conflicted = "[=${count}](red) "
+ahead = "[⇡${count}](green) "
+behind = "[⇣${count}](yellow) "
+diverged = "[⇡${ahead_count}](green)[⇣${behind_count}](yellow) "
+untracked = "[?${count}](cyan) "
+stashed = '[*${count}](purple) '
+modified = "[!${count}](yellow) "
+staged = "[+${count}](green) "
+renamed = "[~${count}](yellow) "
+deleted = "[-${count}](red) "
+
+[python]
+symbol = " "
+style = "yellow"
+generic_venv_names = [".venv", "venv"]
+
+[jobs]
+style = "blue"
+
+[cmd_duration]
+style = "white dimmed"
+
+[fill]
+symbol = " "
+style = ""

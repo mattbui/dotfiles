@@ -12,8 +12,5 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle z-shell/F-Sy-H --branch=main
 
-# Load the theme.
-antigen theme romkatv/powerlevel10k
-
 # Tell Antigen that you're done.
 antigen apply

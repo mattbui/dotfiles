@@ -9,21 +9,20 @@ mainly there to keep remote servers familiar.
   for a consistent local and remote workflow.
 - **Editor and file manager:** Neovim and Yazi, connected through shared
   shortcuts and tmux popups.
-- **Shell:** Zsh with small helpers and fuzzy-finding tools.
+- **Shell:** zsh with starship prompt, zoxide, fzf and other utilities.
 - **Window management:** yabai and skhd, with JankyBorders for visual feedback.
 
 ## Repository layout
 
 - `dotzsh/` — shell configuration, aliases, and helper scripts.
 - `dottmux/` — tmux configuration, mappings, popups, and session scripts.
-- `dotsesh/` — Sesh project and tmux-session manager configuration.
 - `dotnvim/` — Neovim configuration and plugin setup.
 - `dotyazi/` — Yazi keymaps, theme, plugins, and tmux helpers.
 - `dotyabai/` — yabai and skhd configuration.
 - `dotpi/` — Pi configuration, extensions, and themes.
 - `dotcodex/` — Codex skills and hooks.
-- `dotdirenv/`, `dotignore/`, and `dotrevdiff/` — supporting development-tool configuration.
-- `others/` — Alacritty, Ghostty, borders, and other application-specific files.
+- `dotignore/` and `dotrevdiff/` — supporting development-tool configuration.
+- `others/` — Alacritty, Ghostty, sesh, starship prompt and other application-specific files.
 - `init/` — package installation and symlink scripts.
 
 More detail is available in the component READMEs under `dotnvim/`, `dotyazi/`,
