@@ -266,9 +266,117 @@ local function pick_files_and_directories(opts)
   })
 end
 
+local function pick_config_files()
+  local home = vim.fs.normalize(assert(vim.uv.os_homedir(), "Could not resolve home directory"))
+  local config_home = vim.fs.normalize(vim.env.XDG_CONFIG_HOME or (home .. "/.config"))
+
+  snacks.picker.pick({
+    title = "Config files",
+    cwd = "/",
+    format = "file",
+    preview = "file",
+    finder = function(_, ctx)
+      local proc = require("snacks.picker.source.proc")
+      local seen = {}
+
+      local function source(args)
+        return proc.proc(ctx:opts({
+          cmd = "fd",
+          args = args,
+          cwd = home,
+          transform = function(item)
+            if item.text == "" then
+              return false
+            end
+
+            local path = vim.fs.normalize(item.text)
+            if seen[path] then
+              return false
+            end
+            seen[path] = true
+
+            if vim.startswith(path, home .. "/") then
+              local relative = path:sub(#home + 2)
+              item.text = relative
+              item.file = relative
+              item.cwd = home
+            else
+              item.text = path
+              item.file = path
+              item.cwd = nil
+            end
+          end,
+        }), ctx)
+      end
+
+      local config_files = source({
+        "--hidden",
+        "--no-require-git",
+        "--follow",
+        "--type",
+        "f",
+        "--color",
+        "never",
+        "--exclude",
+        ".git",
+        "--exclude",
+        "*backup*",
+        ".",
+        config_home,
+      })
+
+      local named_args = {
+        "--hidden",
+        "--no-require-git",
+        "--follow",
+        "--type",
+        "f",
+        "--max-depth",
+        "4",
+        "--color",
+        "never",
+        "--exclude",
+        ".git",
+        "--exclude",
+        ".cache",
+        "--exclude",
+        ".Trash",
+        "--exclude",
+        "Library",
+        "--exclude",
+        "node_modules",
+        "--exclude",
+        "*backup*",
+      }
+
+      -- Exclude config dir if it's within home
+      if vim.startswith(config_home, home .. "/") then
+        vim.list_extend(named_args, { "--exclude", config_home:sub(#home + 2) })
+      end
+
+      vim.list_extend(named_args, {
+        "^(?:config(?:\\.(?:ya?ml|toml|json))?|.*rc)$",
+        home,
+      })
+
+      local named_configs = source(named_args)
+
+      return function(cb)
+        named_configs(cb)
+        config_files(cb)
+      end
+    end,
+  })
+end
+
 vim.keymap.set("n", "<Leader>fd", pick_files_and_directories, {
   silent = true,
   desc = "Find files and directories",
+})
+
+vim.keymap.set("n", "<Leader>fc", pick_config_files, {
+  silent = true,
+  desc = "Find config files",
 })
 
 vim.keymap.set("n", "<Leader>ld", function()
