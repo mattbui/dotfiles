@@ -30,7 +30,7 @@ cxp() {
 
   command codex exec \
     --ephemeral \
-    -m gpt-5.6-sol \
+    -m gpt-5.6-luna \
     -c model_reasoning_effort=low \
     -c service_tier=fast \
     -- "$prompt"
