@@ -29,7 +29,11 @@ local function do_bufread_for_restored_buffers()
   end
 end
 
-require("mini.sessions").setup({
+local MiniSessions = require("mini.sessions")
+
+vim.opt.sessionoptions:append("globals")
+
+MiniSessions.setup({
   autoread = true,
   autowrite = true,
   hooks = {
@@ -37,13 +41,23 @@ require("mini.sessions").setup({
       write = function()
         vim.cmd("argglobal")
         vim.cmd("%argdelete")
+        vim.api.nvim_exec_autocmds("User", { pattern = "SessionSavePre" })
       end,
     },
     post = {
-      read = do_bufread_for_restored_buffers,
+      read = function()
+        do_bufread_for_restored_buffers()
+        vim.schedule(function()
+          require("autobuffers").mark_restored_buffers_permanent()
+        end)
+      end,
     },
   },
 })
+
+vim.api.nvim_create_user_command("MiniSessionEnable", function()
+  MiniSessions.write()
+end, { desc = "Enable a local Mini session" })
 
 require("mini.notify").setup({
   content = {

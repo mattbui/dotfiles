@@ -5,6 +5,7 @@
 -- closes known file buffers whose files were deleted.
 
 local api = vim.api
+local M = {}
 
 local autocmds = api.nvim_create_augroup("config.buffers", { clear = true })
 
@@ -118,6 +119,10 @@ local function mark_startup_buffers_permanent()
 
   startup_complete = true
   active_preview_batch = nil
+end
+
+function M.mark_restored_buffers_permanent()
+  mark_startup_buffers_permanent()
 end
 
 local function forget_buffer_state(bufnr)
@@ -377,7 +382,11 @@ api.nvim_create_autocmd({ "BufAdd", "BufReadPost", "BufNewFile", "BufEnter" }, {
 api.nvim_create_autocmd("VimEnter", {
   group = autocmds,
   callback = function()
-    vim.schedule(mark_startup_buffers_permanent)
+    vim.schedule(function()
+      if vim.v.this_session == "" then
+        mark_startup_buffers_permanent()
+      end
+    end)
   end,
 })
 
@@ -482,3 +491,5 @@ vim.keymap.set("n", "<Leader>bm", "<Cmd>BufferMarkPreview<CR>", { silent = true,
 vim.keymap.set("n", "<Leader>bt", "<Cmd>BufferTogglePermanent<CR>", { silent = true, desc = "Toggle permanent" })
 vim.keymap.set("n", "<Leader>bH", "<Cmd>BufferHidePreviews<CR>", { silent = true, desc = "Hide previews" })
 vim.keymap.set("n", "<Leader>bS", "<Cmd>BufferState<CR>", { silent = true, desc = "Show state" })
+
+return M
