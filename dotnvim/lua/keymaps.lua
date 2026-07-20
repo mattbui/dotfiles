@@ -5,8 +5,10 @@ local silent = { silent = true }
 map("n", "<S-j>", "<Cmd>bnext<CR>", silent)
 map("n", "<S-k>", "<Cmd>bprevious<CR>", silent)
 map("n", "<C-w>", "<Cmd>BufferClose<CR>", silent)
-map("n", "gb", "<C-o>", { desc = "Jump back" })
-map("n", "gt", "<C-i>")
+-- map("n", "gt", "<C-i>", { desc = "Jump forward" })
+-- map("n", "gb", "<C-o>", { desc = "Jump back" })
+map("n", "<Tab>", "<C-i>", { desc = "Jump forward" })
+map("n", "<S-Tab>", "<C-o>", { desc = "Jump back" })
 
 -- Yank helpers
 map("n", "YY", "<Cmd>%y<CR>", silent)
