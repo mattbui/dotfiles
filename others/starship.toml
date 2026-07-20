@@ -24,12 +24,12 @@ vimcmd_replace_one_symbol = "[←](purple)"
 
 [username]
 format = "[$user]($style)"
-style_user = "yellow"
+style_user = "cyan"
 style_root = "red"
 
 [hostname]
 format = "[@$hostname]($style)"
-style = "green dimmed"
+style = "white dimmed"
 
 [directory]
 style = "blue"
@@ -65,8 +65,8 @@ renamed = "[~${count}](yellow) "
 deleted = "[-${count}](red) "
 
 [aws]
-format = "on [$symbol($profile )($region )($duration )]($style)"
-symbol = "󰸏 "
+format = "on [($profile )($region )($duration )]($style)"
+symbol = ""
 style = "yellow"
 
 [bun]
