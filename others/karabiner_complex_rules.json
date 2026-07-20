@@ -511,7 +511,7 @@
           "description": "SpaceFN + s → Command + Option + Control + s",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -534,7 +534,7 @@
           "description": "SpaceFN + t → Command + Option + Control + t",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -557,7 +557,7 @@
           "description": "SpaceFN + c → Command + Option + Control + c",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -580,7 +580,7 @@
           "description": "SpaceFN + b → Command + Option + Control + b",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -603,7 +603,7 @@
           "description": "SpaceFN + d → Command + Option + Control + d",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -626,7 +626,7 @@
           "description": "SpaceFN + m → Command + Option + Control + m",
           "conditions": [
             {
-              "name": "spacefn",
+              "name": "spacefn_hyper",
               "type": "variable_if",
               "value": 1
             }
@@ -666,10 +666,24 @@
               }
             }
           ],
+          "to_if_held_down": [
+            {
+              "set_variable": {
+                "name": "spacefn_hyper",
+                "value": 1
+              }
+            }
+          ],
           "to_after_key_up": [
             {
               "set_variable": {
                 "name": "spacefn",
+                "value": 0
+              }
+            },
+            {
+              "set_variable": {
+                "name": "spacefn_hyper",
                 "value": 0
               }
             }
@@ -679,6 +693,9 @@
               "key_code": "spacebar"
             }
           ],
+          "parameters": {
+            "basic.to_if_held_down_threshold_milliseconds": 300
+          },
           "type": "basic"
         },
         {
