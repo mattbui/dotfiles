@@ -1,5 +1,16 @@
 require("mini.pairs").setup()
-require("mini.ai").setup({ n_lines = 1000 })
+
+require("mini.ai").setup({
+  n_lines = 1000,
+  mappings = {
+    -- don't need these, also avoid override neovim >= 0.12's default an/in behavior
+    around_next = "",
+    inside_next = "",
+    around_last = "",
+    inside_last = "",
+  }
+
+})
 require("mini.align").setup({
   mappings = {
     start = "",
