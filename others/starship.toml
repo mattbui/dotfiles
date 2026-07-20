@@ -24,7 +24,7 @@ vimcmd_replace_one_symbol = "[←](purple)"
 
 [username]
 format = "[$user]($style)"
-style_user = "cyan"
+style_user = "white dimmed"
 style_root = "red"
 
 [hostname]
