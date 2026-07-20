@@ -20,8 +20,13 @@ count_copied   = { fg = "#1f2335", bg = "#9ece6a" }
 count_cut      = { fg = "#1f2335", bg = "#f7768e" }
 count_selected = { fg = "#1f2335", bg = "#7aa2f7" }
 
-# Border
+# Manager border
 border_style = { fg = "#636a8d" }
+
+# Outer border
+[outer-border]
+border = { fg = "#636a8d" }
+title  = { fg = "#7dcfff" }
 
 # Hovered
 [indicator]

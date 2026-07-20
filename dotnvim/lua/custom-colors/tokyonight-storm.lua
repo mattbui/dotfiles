@@ -8,7 +8,7 @@ function M.setup()
   -- system UI colors
   hl("CursorLineNr", { fg = "#bb9af7" })
   hl("FloatBorder", { fg = "#636a8d", bg = "#1f2335" })
-  hl("FloatTitle", { fg = "#636a8d", bg = "#1f2335" })
+  hl("FloatTitle", { fg = "#7dcfff", bg = "#1f2335" })
   hl("SignColumn", { fg = "#3b4261", bg = "#24283b" })
   hl("WinSeparator", { fg = "#3b4261", bold = true })
 

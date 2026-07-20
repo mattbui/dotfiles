@@ -20,6 +20,8 @@ function M.apply()
   link("BlinkCmpDocBorder", "FloatBorder")
   link("BlinkCmpSignatureHelpBorder", "FloatBorder")
   link("SnacksPickerInputBorder", "FloatBorder")
+  link("Floaterm", "NormalFloat")
+  link("YaziFloat", "NormalFloat")
 
   require("custom-colors.barbar").setup()
 end
