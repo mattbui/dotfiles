@@ -91,7 +91,10 @@ MiniIndentScope.setup({
 
 vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MiniIndentscopePython", { clear = true }),
-  pattern = "python",
+  pattern = {
+    "python",
+    "yaml",
+  },
   callback = function()
     local config = vim.b.miniindentscope_config or {}
     vim.b.miniindentscope_config = vim.tbl_deep_extend("force", config, {
