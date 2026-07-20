@@ -2,6 +2,7 @@
 
 format = """
 $directory\
+${custom.agent_worktree}\
 $git_branch\
 $git_commit\
 $git_state\
@@ -36,7 +37,7 @@ style = "blue"
 read_only = " 󰌾"
 
 [git_branch]
-symbol = " "
+symbol = " "
 style = "purple"
 only_attached = true
 
@@ -100,3 +101,46 @@ style = "white dimmed"
 [fill]
 symbol = " "
 style = ""
+
+[custom.agent_worktree]
+command = '''
+root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+git_dir=$(git rev-parse --git-dir 2>/dev/null) || exit 0
+common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
+test "$git_dir" = "$common_dir" && exit 0
+
+case "$common_dir" in
+  */.git)
+    project_dir=${common_dir%/.git}
+    project=${project_dir##*/}
+    ;;
+  */.bare)
+    project_dir=${common_dir%/.bare}
+    project=${project_dir##*/}
+    ;;
+  *)
+    project=${common_dir##*/}
+    project=${project%.git}
+    ;;
+esac
+
+case "$root" in
+  "$HOME"/.codex/worktrees/*/*) agent=codex ;;
+  */.claude/worktrees/*) agent=claude ;;
+  *) agent= ;;
+esac
+
+if test -n "$agent" && test -n "$project"; then
+  printf '%s/%s' "$agent" "$project"
+elif test -n "$agent"; then
+  printf '%s' "$agent"
+elif test -n "$project"; then
+  printf '%s' "$project"
+fi
+'''
+when = true
+require_repo = true
+format = '([$symbol$output]($style) )'
+symbol = "󰃻 "
+style = "cyan dimmed"
+shell = ["sh"]
