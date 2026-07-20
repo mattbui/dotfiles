@@ -64,6 +64,11 @@ staged = "[+${count}](green) "
 renamed = "[~${count}](yellow) "
 deleted = "[-${count}](red) "
 
+[aws]
+format = "on [$symbol($profile )($region )($duration )]($style)"
+symbol = "󰸏 "
+style = "yellow"
+
 [bun]
 symbol = " "
 style = "red"
