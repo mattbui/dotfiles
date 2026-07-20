@@ -3,14 +3,15 @@
 format = """
 $directory\
 $git_branch\
+$git_commit\
 $git_state\
 $git_status\
 $fill\
 ($username$hostname )\
-$python\
-$jobs\
+$all\
 $cmd_duration\
 $line_break\
+$jobs\
 $character"""
 
 [character]
@@ -33,11 +34,18 @@ style = "green dimmed"
 [directory]
 style = "blue"
 read_only = " 󰌾"
-fish_style_pwd_dir_length = 1
 
 [git_branch]
 symbol = " "
 style = "purple"
+only_attached = true
+
+[git_commit]
+format = "on [ $hash$tag]($style) "
+style = "purple"
+only_detached = true
+tag_disabled = false
+tag_symbol = "  "
 
 [git_state]
 style = "yellow"
@@ -56,9 +64,26 @@ staged = "[+${count}](green) "
 renamed = "[~${count}](yellow) "
 deleted = "[-${count}](red) "
 
+[bun]
+symbol = " "
+style = "red"
+
+[deno]
+symbol = " "
+style = "green"
+
+[nodejs]
+symbol = " "
+style = "green"
+not_capable_style = "red"
+
+[package]
+symbol = "󰏗 "
+style = "yellow"
+
 [python]
 symbol = " "
-style = "yellow"
+style = "blue"
 generic_venv_names = [".venv", "venv"]
 
 [jobs]
