@@ -450,7 +450,7 @@
       ]
     },
     {
-      "description": "SpaceFN + Ctrl + HJKL → Option + Arrow Keys",
+      "description": "SpaceFN + Ctrl + H/L → Option + Left/Right",
       "manipulators": [
         {
           "description": "SpaceFN + Ctrl + h → Option + Left Arrow",
@@ -471,54 +471,6 @@
           "to": [
             {
               "key_code": "left_arrow",
-              "modifiers": ["option"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + Ctrl + j → Option + Down Arrow",
-          "conditions": [
-            {
-              "name": "spacefn",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "j",
-            "modifiers": {
-              "mandatory": ["control"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "down_arrow",
-              "modifiers": ["option"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + Ctrl + k → Option + Up Arrow",
-          "conditions": [
-            {
-              "name": "spacefn",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "k",
-            "modifiers": {
-              "mandatory": ["control"],
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "up_arrow",
               "modifiers": ["option"]
             }
           ],
@@ -740,7 +692,7 @@
             }
           ],
           "parameters": {
-            "basic.to_if_held_down_threshold_milliseconds": 300
+            "basic.to_if_held_down_threshold_milliseconds": 200
           },
           "type": "basic"
         },
