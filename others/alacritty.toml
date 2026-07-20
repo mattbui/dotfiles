@@ -25,6 +25,7 @@ size = 13
 # use `defaults write -g AppleFontSmoothing -int 0/1/2/3` (all apps)
 # or `defaults write org.alacritty AppleFontSmoothing -int 0/1/2/3`
 # to adjust the thick rendering in Alacritty
+# https://github.com/alacritty/alacritty/pull/6186
 # current font style are adjusted for `0`
 [font.normal]
 family = "JetBrainsMonoNL Nerd Font Propo"
