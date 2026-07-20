@@ -17,22 +17,27 @@ x = 8
 y = 8
 
 [font]
-size = 14.5
+# 34 inch 2k monitor
+# size = 14.5
+# Built-in display
+size = 13
 
-# use `defaults write -g AppleFontSmoothing -int 0`
-# to fix the thick rendering in Alacritty
+# use `defaults write -g AppleFontSmoothing -int 0/1/2/3` (all apps)
+# or `defaults write org.alacritty AppleFontSmoothing -int 0/1/2/3`
+# to adjust the thick rendering in Alacritty
+# current font style are adjusted for `0`
 [font.normal]
 family = "JetBrainsMonoNL Nerd Font Propo"
-style = "Medium"
+style = "Regular"
 
 [font.bold]
-style = "Bold"
+style = "SemiBold"
 
 [font.italic]
-style = "Medium Italic"
+style = "Italic"
 
 [font.bold_italic]
-style = "Bold Italic"
+style = "SemiBold Italic"
 
 [font.offset]
 x = 0
