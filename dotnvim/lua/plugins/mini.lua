@@ -67,10 +67,10 @@ MiniIndentScope.setup({
     delay = 0,
   },
   mappings = {
-    object_scope = "is",
-    object_scope_with_border = "as",
-    goto_bottom = "gs",
-    goto_top = "gS",
+    object_scope = "ii",
+    object_scope_with_border = "ai",
+    goto_bottom = "gi",
+    goto_top = "gI",
   },
   options = {
     try_as_border = false,

@@ -41,12 +41,10 @@ map("n", "<Esc>", floats.escape, vim.tbl_extend("force", silent, { desc = "Clear
 
 map("n", "<Leader>j", floats.jump_to_float, vim.tbl_extend("force", silent, { desc = "Jump to float" }))
 map("n", "<Leader>k", floats.jump_or_hover, vim.tbl_extend("force", silent, { desc = "Jump to float or hover" }))
-map("n", "gk", floats.show_documentation, vim.tbl_extend("force", silent, { desc = "Hover" }))
 map("n", "<Leader>d", floats.open_diagnostic, vim.tbl_extend("force", silent, { desc = "Show diagnostic" }))
+map("n", "gk", floats.show_documentation, vim.tbl_extend("force", silent, { desc = "Hover" }))
 
 map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", silent, { desc = "Definition" }))
-map("n", "gy", vim.lsp.buf.type_definition, vim.tbl_extend("force", silent, { desc = "Type definition" }))
-map("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", silent, { desc = "Implementation" }))
 map("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", silent, { desc = "References" }))
 map("n", "gn", function()
   vim.diagnostic.jump({ count = 1 })
@@ -59,9 +57,11 @@ end, vim.tbl_extend("force", silent, { desc = "Previous diagnostic" }))
 map("n", "<Leader>lr", vim.lsp.buf.rename, vim.tbl_extend("force", silent, { desc = "Rename" }))
 map({ "n", "x" }, "<Leader>la", vim.lsp.buf.code_action, vim.tbl_extend("force", silent, { desc = "Code action" }))
 
+map("n", "<Leader>lt", vim.lsp.buf.type_definition, vim.tbl_extend("force", silent, { desc = "Type definition" }))
+map("n", "<Leader>li", vim.lsp.buf.implementation, vim.tbl_extend("force", silent, { desc = "Implementation" }))
 map("n", "<Leader>lo", commands.organize_imports, vim.tbl_extend("force", silent, { desc = "Organize imports" }))
 map("n", "<Leader>lv", commands.toggle_virtual_text, vim.tbl_extend("force", silent, { desc = "Toggle virtual text" }))
-map("n", "<Leader>li", commands.toggle_inlay_hints, vim.tbl_extend("force", silent, { desc = "Toggle inlay hints" }))
+map("n", "<Leader>lh", commands.toggle_inlay_hints, vim.tbl_extend("force", silent, { desc = "Toggle inlay hints" }))
 
 local highlight_group = vim.api.nvim_create_augroup("config.lsp.document_highlight", { clear = true })
 
