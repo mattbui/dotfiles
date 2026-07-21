@@ -1,5 +1,8 @@
 "$schema" = "https://starship.rs/config-schema.json"
 
+# cmd-footer already handle dynamically adding newline before the prompt, check init.zsh
+add_newline = false
+
 format = """
 $directory\
 ${custom.agent_worktree}\
@@ -10,18 +13,32 @@ $git_status\
 $fill\
 ($username$hostname )\
 $all\
-$cmd_duration\
 $line_break\
 $jobs\
 $character"""
 
+[profiles]
+# this will be rendered as part of the previous command output to show:
+# status, completion time, and optionally duration
+cmd-footer = "${env_var.STARSHIP_CMD_OK}${env_var.STARSHIP_CMD_ERR}$cmd_duration"
+
+[env_var.STARSHIP_CMD_OK]
+format = "[✓](green) at [$env_value]($style)"
+style = "white dimmed"
+
+[env_var.STARSHIP_CMD_ERR]
+format = "[✗](red) at [$env_value]($style)"
+style = "white dimmed"
+
+[cmd_duration]
+min_time = 2000
+format = " · took [$duration]($style)"
+style = "white dimmed"
+
 [character]
-success_symbol = "[→](green)"
-error_symbol = "[→](red)"
-vimcmd_symbol = "[←](green)"
-vimcmd_visual_symbol = "[←](yellow)"
-vimcmd_replace_symbol = "[←](purple)"
-vimcmd_replace_one_symbol = "[←](purple)"
+success_symbol = "[→](purple)"
+error_symbol = "[→](purple)"
+vimcmd_symbol = "[←](yellow)"
 
 [username]
 format = "[$user]($style)"
@@ -94,9 +111,6 @@ generic_venv_names = [".venv", "venv"]
 
 [jobs]
 style = "blue"
-
-[cmd_duration]
-style = "white dimmed"
 
 [fill]
 symbol = " "

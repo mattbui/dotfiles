@@ -104,3 +104,76 @@ source <(fzf --zsh)
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 eval "$(starship init zsh)"
+
+# Replace fixed STARSHIP_JOBS_COUNT with background jobs count so job counts updated whenever new prompt render.
+PROMPT=${PROMPT/'$STARSHIP_JOBS_COUNT'/'${#jobstates[*]}'}
+# Detect background job notification based on job count change and add a blank line to separate it from the prompt.
+PROMPT=${PROMPT/#'$('/'$(if (( ${#jobstates[*]} != STARSHIP_JOBS_COUNT )); then printf "\n"; fi; '}
+
+# After both substitutions above, the generated prompt roughly becomes:
+# PROMPT='$(if (( ${#jobstates[*]} != STARSHIP_JOBS_COUNT )); then
+#     printf "\n"
+# fi
+#
+# starship prompt ... --jobs="${#jobstates[*]}")'
+
+# Render a footer when a command finish to show its status, completion time, and optionally duration.
+# this uses status and duration from starship and renders them with precmd hooks.
+# The footer is rendered as part of the new prompt.
+
+# Skip the command footer when it's a clear command.
+_starship_cmd_start() {
+    local -a command_words
+    local command_name token
+    command_words=(${(z)2})
+    command_name=${command_words[1]:t}
+
+    unset _STARSHIP_SKIP_CMD_FOOTER
+
+    for token in "${command_words[@]}"; do
+        case $token in
+            '&&'|'||'|';'|'&'|'&!'|'&|'|'|'|'|&') return 0 ;;
+        esac
+    done
+
+    case $command_name in
+        clear|reset)
+            _STARSHIP_SKIP_CMD_FOOTER=1
+            ;;
+        tput)
+            if [[ $command_words[2] == clear || $command_words[2] == reset ]]; then
+                _STARSHIP_SKIP_CMD_FOOTER=1
+            fi
+            ;;
+    esac
+}
+add-zsh-hook preexec _starship_cmd_start
+
+_starship_cmd_end() {
+    if (( ${+_STARSHIP_SKIP_CMD_FOOTER} )); then
+        unset STARSHIP_DURATION STARSHIP_CMD_OK STARSHIP_CMD_ERR
+    elif (( ${+STARSHIP_DURATION} )); then
+        local cmd_duration=$STARSHIP_DURATION
+        local cmd_end footer
+        strftime -s cmd_end '%H:%M:%S'
+
+        if (( STARSHIP_CMD_STATUS == 0 )); then
+            export STARSHIP_CMD_OK=$cmd_end
+            unset STARSHIP_CMD_ERR
+        else
+            export STARSHIP_CMD_ERR=$cmd_end
+            unset STARSHIP_CMD_OK
+        fi
+
+        footer=$(starship prompt --profile cmd-footer --cmd-duration "$cmd_duration")
+        print -Pn -- "$footer"
+        printf '\n\n'
+
+        unset STARSHIP_DURATION STARSHIP_CMD_OK STARSHIP_CMD_ERR
+    else
+        unset STARSHIP_CMD_OK STARSHIP_CMD_ERR
+    fi
+
+    unset _STARSHIP_SKIP_CMD_FOOTER
+}
+add-zsh-hook precmd _starship_cmd_end
