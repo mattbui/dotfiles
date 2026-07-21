@@ -121,6 +121,11 @@ command = '''
 root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 git_dir=$(git rev-parse --git-dir 2>/dev/null) || exit 0
 common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
+
+# Normalize relative and absolute paths before checking for a linked worktree.
+git_dir=$(CDPATH= cd "$git_dir" 2>/dev/null && pwd -P) || exit 0
+common_dir=$(CDPATH= cd "$common_dir" 2>/dev/null && pwd -P) || exit 0
+
 test "$git_dir" = "$common_dir" && exit 0
 
 case "$common_dir" in
