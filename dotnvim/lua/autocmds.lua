@@ -52,41 +52,45 @@ api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
-local autoclose = api.nvim_create_augroup("config.buffers.autoclose", { clear = true })
+-- put quickfix selection to the the nearest entry to the current cursor when possible
+api.nvim_create_autocmd("BufWinEnter", {
+  group = api.nvim_create_augroup("quickfix_nearest_entry", { clear = true }),
+  pattern = "quickfix",
+  desc = "Select quickfix entry nearest to the cursor",
+  callback = function()
+    local wininfo = vim.fn.getwininfo(api.nvim_get_current_win())[1]
+    if not wininfo or wininfo.quickfix ~= 1 or wininfo.loclist == 1 then
+      return
+    end
 
-local function close_lonely_buffer(filetypes)
-  api.nvim_create_autocmd("BufEnter", {
-    group = autoclose,
-    callback = function()
-      if vim.fn.winnr("$") ~= 1 then
-        return
-      end
+    local previous_win = vim.fn.win_getid(vim.fn.winnr("#"))
+    if previous_win == 0 or not api.nvim_win_is_valid(previous_win) then
+      return
+    end
 
-      local bufnr = api.nvim_get_current_buf()
-      local command = filetypes[vim.bo[bufnr].filetype]
-      if not command then
-        return
-      end
+    local source_buf = api.nvim_win_get_buf(previous_win)
+    local source_line = api.nvim_win_get_cursor(previous_win)[1]
+    local items = vim.fn.getqflist({ items = 0 }).items
+    local closest_idx
+    local closest_distance = math.huge
 
-      vim.schedule(function()
-        if not api.nvim_buf_is_valid(bufnr)
-          or api.nvim_get_current_buf() ~= bufnr
-          or vim.fn.winnr("$") ~= 1
-        then
-          return
+    for idx, item in ipairs(items) do
+      if item.bufnr == source_buf then
+        local distance = math.abs(item.lnum - source_line)
+        if distance < closest_distance then
+          closest_idx = idx
+          closest_distance = distance
         end
+      end
+    end
 
-        vim.cmd(command)
+    if closest_idx then
+      local qf_id = vim.fn.getqflist({ id = 0 }).id
+      vim.schedule(function()
+        if vim.fn.getqflist({ id = 0 }).id == qf_id then
+          vim.fn.setqflist({}, "a", { id = qf_id, idx = closest_idx })
+        end
       end)
-    end,
-  })
-end
-
-close_lonely_buffer({
-  floaterm = "bdelete!",
-  fugitive = "bdelete",
-  fugitiveblame = "bdelete",
-  git = "bdelete",
-  qf = "bdelete",
-  help = "bdelete",
+    end
+  end,
 })

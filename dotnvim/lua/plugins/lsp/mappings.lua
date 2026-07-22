@@ -57,6 +57,10 @@ end, vim.tbl_extend("force", silent, { desc = "Previous diagnostic" }))
 map("n", "<Leader>lr", vim.lsp.buf.rename, vim.tbl_extend("force", silent, { desc = "Rename" }))
 map({ "n", "x" }, "<Leader>la", vim.lsp.buf.code_action, vim.tbl_extend("force", silent, { desc = "Code action" }))
 
+map("n", "<Leader>lq", function()
+  vim.diagnostic.setqflist({ open = true })
+end, { desc = "Diagnostics quickfix" })
+
 map("n", "<Leader>lt", vim.lsp.buf.type_definition, vim.tbl_extend("force", silent, { desc = "Type definition" }))
 map("n", "<Leader>li", vim.lsp.buf.implementation, vim.tbl_extend("force", silent, { desc = "Implementation" }))
 map("n", "<Leader>lo", commands.organize_imports, vim.tbl_extend("force", silent, { desc = "Organize imports" }))

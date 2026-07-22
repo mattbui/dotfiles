@@ -5,8 +5,6 @@ local silent = { silent = true }
 map("n", "<S-j>", "<Cmd>bnext<CR>", silent)
 map("n", "<S-k>", "<Cmd>bprevious<CR>", silent)
 map("n", "<C-w>", "<Cmd>BufferClose<CR>", silent)
--- map("n", "gt", "<C-i>", { desc = "Jump forward" })
--- map("n", "gb", "<C-o>", { desc = "Jump back" })
 map("n", "<Tab>", "<C-i>", { desc = "Jump forward" })
 map("n", "<S-Tab>", "<C-o>", { desc = "Jump back" })
 
@@ -95,5 +93,5 @@ map("n", "<Leader>,", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settin
 -- Quickfix
 map("n", "<PageDown>", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
 map("n", "<PageUp>", "<Cmd>cprevious<CR>", { silent = true, desc = "Quickfix previous" })
-map("n", "<S-PageDown>", "<Cmd>lnext<CR>", { silent = true, desc = "Location next" })
-map("n", "<S-PageUp>", "<Cmd>lprevious<CR>", { silent = true, desc = "Location previous" })
+map("n", "<S-PageDown>", "<Cmd>5cnext<CR>", { silent = true, desc = "Quickfix next x5" })
+map("n", "<S-PageUp>", "<Cmd>5cprevious<CR>", { silent = true, desc = "Quickfix previous x5" })
