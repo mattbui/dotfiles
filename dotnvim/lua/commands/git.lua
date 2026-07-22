@@ -1,5 +1,3 @@
-local reload_fugitive = false
-
 local function fugitive_head()
   local ok, head = pcall(vim.fn.FugitiveHead)
   if not ok then
@@ -24,7 +22,6 @@ local function git_commit()
   end
 
   vim.cmd("FloatermNew! --autoclose=2 git commit -m " .. vim.fn.shellescape(message) .. " && exit")
-  reload_fugitive = true
 end
 
 local function git_refresh()
@@ -90,12 +87,10 @@ vim.keymap.set("n", "<Leader>gl", "<Cmd>Gclog -50<CR>", { silent = true, desc = 
 
 vim.api.nvim_create_autocmd("BufEnter", {
   group = vim.api.nvim_create_augroup("config.git.fugitive_reload", { clear = true }),
-  callback = function()
-    if not reload_fugitive then
-      return
+  callback = function(args)
+    local filetype = vim.bo[args.buf].filetype
+    if filetype == "fugitive" or filetype == "fugitiveblame" then
+      reload_fugitive_status()
     end
-
-    reload_fugitive_status()
-    reload_fugitive = false
   end,
 })
