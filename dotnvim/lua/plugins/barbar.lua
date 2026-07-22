@@ -90,6 +90,10 @@ barbar.setup({
     "git",
     "qf",
     "help",
+    "man",
+    "checkhealth",
+    "vim-pack-list",
+    "nvim-pack"
   },
 })
 

@@ -74,14 +74,19 @@ local function should_hide_path()
     "fff_list",
     "fff_preview",
     "fff_file_info",
-    "floaterm",
-    "git",
-    "fugitive",
-    "qf",
     "snacks_picker_input",
     "snacks_picker_list",
     "snacks_picker_preview",
-    "yazi"
+    "floaterm",
+    "git",
+    "fugitive",
+    "fugitiveblame",
+    "qf",
+    "yazi",
+    "man",
+    "checkhealth",
+    "vim-pack-list",
+    "nvim-pack"
   }
 
   if vim.tbl_contains(hidden_filetypes, vim.bo.filetype) then
