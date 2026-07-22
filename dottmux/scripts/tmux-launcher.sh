@@ -92,6 +92,7 @@ list_all() {
 preview_selection() {
   local selection="$1"
   local host
+  local session_name="${selection#* }"
 
   if [[ "$selection" == "$ssh_icon "* ]]; then
     host="${selection#"$ssh_icon "}"
@@ -110,6 +111,12 @@ preview_selection() {
           printf "%s", identityfiles
         }
       '
+    return
+  fi
+
+  # A leading @ is parsed as a tmux session ID unless exact-name matching is used.
+  if [[ "$session_name" == @* ]] && tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux capture-pane -e -p -t "=$session_name:"
     return
   fi
 
@@ -162,6 +169,19 @@ ssh_pane_command() {
 ssh_session_name() {
   local host="$1"
   printf '@%s' "${host//[^[:alnum:]_-]/_}"
+}
+
+connect_session() {
+  local selection="$1"
+  local session_name="${selection#* }"
+
+  # A leading @ is parsed as a tmux session ID unless exact-name matching is used.
+  if [[ "$session_name" == @* ]] && tmux has-session -t "=$session_name" 2>/dev/null; then
+    tmux switch-client -t "=$session_name"
+    return
+  fi
+
+  sesh connect "$selection"
 }
 
 open_ssh_session() {
@@ -224,7 +244,7 @@ if [[ "$key" == ctrl-n ]]; then
     open_ssh_session "${selection#"$ssh_icon "}"
     exit 0
   fi
-  sesh connect "$selection"
+  connect_session "$selection"
   exit 0
 fi
 
@@ -238,4 +258,4 @@ if [[ "$selection" == "$directory_icon "* ]]; then
   exit 0
 fi
 
-sesh connect "$selection"
+connect_session "$selection"
