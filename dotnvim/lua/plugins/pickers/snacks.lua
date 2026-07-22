@@ -140,7 +140,7 @@ snacks.setup({
         end,
         layout = {
           width = 0.8,
-          height = 0.6,
+          height = 0.7,
           backdrop = false,
         },
       },

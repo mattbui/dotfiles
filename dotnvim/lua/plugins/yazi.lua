@@ -14,7 +14,7 @@ require("yazi").setup({
   open_for_directories = true,
   floating_window_scaling_factor = {
     width = 0.9,
-    height = 0.6,
+    height = 0.7,
   },
   yazi_floating_window_border = "none",
   highlight_hovered_buffers_in_same_directory = false,

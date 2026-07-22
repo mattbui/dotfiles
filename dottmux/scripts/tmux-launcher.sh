@@ -194,7 +194,7 @@ open_ssh_window() {
 
 result="$({
   list_all |
-    fzf-tmux -p 80%,60% \
+    fzf-tmux -p 80%,70% \
       --ansi \
       --expect=ctrl-n \
       --height=100% \

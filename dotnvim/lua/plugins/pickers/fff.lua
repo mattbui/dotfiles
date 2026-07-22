@@ -76,7 +76,7 @@ fff.setup({
   lazy_sync = true,
   layout = {
     width = 0.8,
-    height = 0.6,
+    height = 0.7,
     prompt_position = "top",
     preview_position = "right",
     preview_size = 0.55,
