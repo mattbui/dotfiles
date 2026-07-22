@@ -13,8 +13,6 @@ local dismissible_filetypes = {
 }
 
 local normal_state_var = "smart_quit_normal_state"
-local quit_confirmation_timeout_ms = require("vim._core.ui2").cfg.msg.msg.timeout
-local quit_confirmation_deadline_ms = 0
 
 local function is_dismissible_buffer(bufnr)
   return api.nvim_buf_is_valid(bufnr) and dismissible_filetypes[vim.bo[bufnr].filetype] == true
@@ -50,23 +48,24 @@ local function quit_or_confirm()
       and vim.fn.tabpagenr("$") == 1
 
   if not would_quit_neovim then
-    quit_confirmation_deadline_ms = 0
     vim.cmd.quit()
     return
   end
 
-  local now = vim.uv.now()
-  if quit_confirmation_deadline_ms > now then
-    quit_confirmation_deadline_ms = 0
-    vim.cmd.quit()
-    return
-  end
-
-  quit_confirmation_deadline_ms = now + quit_confirmation_timeout_ms
-  api.nvim_echo({
-    { "(smart-quit)", "WarningMsg" },
-    { " Press <C-q> again to quit Neovim" },
-  }, false, {})
+  vim.ui.select({ "yes", "no" }, {
+    prompt = "Quit Neovim?",
+    snacks = {
+      layout = {
+        preset = "select",
+        hidden = { "input", "preview" },
+        layout = { width = 40, min_width = 40 },
+      },
+    },
+  }, function(choice)
+    if choice == "yes" then
+      vim.cmd.quit()
+    end
+  end)
 end
 
 local function remember_normal_window(winid)
@@ -170,8 +169,6 @@ local function smart_quit()
     quit_or_confirm()
     return
   end
-
-  quit_confirmation_deadline_ms = 0
 
   local anchor = find_anchor(tabpage, dismissible_windows, normal_windows)
   if not anchor then

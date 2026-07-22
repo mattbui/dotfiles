@@ -124,7 +124,7 @@ snacks.setup({
   picker = {
     prompt = "🍿 ",
     enabled = true,
-    ui_select = false,
+    ui_select = true,
     layout = {
       preset = "default",
       cycle = false,
