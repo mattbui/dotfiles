@@ -88,9 +88,10 @@ map("n", "_", "<Cmd>resize -2<CR>", silent)
 -- Save and quit
 map("n", "<C-s>", "<Cmd>w<CR>", silent)
 map("i", "<C-s>", "<Esc><Cmd>w<CR>", silent)
-map("n", "<C-q>", "<Cmd>q<CR>", silent)
-map("i", "<C-q>", "<Esc><Cmd>q<CR>", silent)
+map("n", "<C-q>", "<Cmd>SmartQuit<CR>", silent)
+map("i", "<C-q>", "<Esc><Cmd>SmartQuit<CR>", silent)
 map("t", "<C-q>", "<C-\\><C-n><Cmd>bw!<CR>", silent)
+map("n", "<Leader>bW", "<Cmd>bw!<CR>", { silent = true, desc = "Force close" })
 map("n", "<Leader>Q", "<Cmd>q!<CR>", { silent = true, desc = "Quit without save" })
 map("n", "<Leader>,", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settings" })
 
