@@ -58,6 +58,10 @@ map({ "i", "c" }, "<M-f>", "<S-Right>")
 
 map("n", "<Leader>o", "o<Esc>", { desc = "Insert line below" })
 map("n", "<Leader>O", "O<Esc>", { desc = "Insert line above" })
+map("n", "<S-Down>", "<Cmd>move .+1<CR>==", { silent = true, desc = "Move line down" })
+map("n", "<S-Up>", "<Cmd>move .-2<CR>==", { silent = true, desc = "Move line up" })
+map("x", "<S-Down>", ":move '>+1<CR>gv=gv", { silent = true, desc = "Move selection down" })
+map("x", "<S-Up>", ":move '<-2<CR>gv=gv", { silent = true, desc = "Move selection up" })
 
 -- Windows
 map("n", "<Leader>H", "<Cmd>leftabove vsplit<CR>", { silent = true, desc = "Split left" })
