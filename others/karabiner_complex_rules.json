@@ -450,6 +450,92 @@
       ]
     },
     {
+      "description": "Double Shift → Hyper Key hold (2 s)",
+      "manipulators": [
+        {
+          "description": "Left Shift + Right Shift → sticky Command + Option + Control",
+          "from": {
+            "simultaneous": [
+              {
+                "key_code": "left_shift"
+              },
+              {
+                "key_code": "right_shift"
+              }
+            ],
+            "simultaneous_options": {
+              "detect_key_down_uninterruptedly": true,
+              "key_up_when": "any"
+            },
+            "modifiers": {
+              "mandatory": []
+            }
+          },
+          "to": [
+            {
+              "sticky_modifier": {
+                "left_command": "on"
+              }
+            },
+            {
+              "sticky_modifier": {
+                "left_option": "on"
+              }
+            },
+            {
+              "sticky_modifier": {
+                "left_control": "on"
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "double_shift_hyper",
+                "text": "✦ Hyper Key\n\nActive · press a key"
+              }
+            }
+          ],
+          "to_delayed_action": {
+            "to_if_invoked": [
+              {
+                "sticky_modifier": {
+                  "left_command": "off"
+                }
+              },
+              {
+                "sticky_modifier": {
+                  "left_option": "off"
+                }
+              },
+              {
+                "sticky_modifier": {
+                  "left_control": "off"
+                }
+              },
+              {
+                "set_notification_message": {
+                  "id": "double_shift_hyper",
+                  "text": ""
+                }
+              }
+            ],
+            "to_if_canceled": [
+              {
+                "set_notification_message": {
+                  "id": "double_shift_hyper",
+                  "text": ""
+                }
+              }
+            ]
+          },
+          "parameters": {
+            "basic.simultaneous_threshold_milliseconds": 600,
+            "basic.to_delayed_action_delay_milliseconds": 2000
+          },
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "SpaceFN + Ctrl + H/L → Option + Left/Right",
       "manipulators": [
         {
