@@ -453,25 +453,14 @@
       "description": "Double Shift → Hyper Key hold (2 s)",
       "manipulators": [
         {
-          "description": "Left Shift + Right Shift → sticky Command + Option + Control",
+          "description": "Tap Right Shift while holding Left Shift → Hyper Key hold",
           "from": {
-            "simultaneous": [
-              {
-                "key_code": "left_shift"
-              },
-              {
-                "key_code": "right_shift"
-              }
-            ],
-            "simultaneous_options": {
-              "detect_key_down_uninterruptedly": true,
-              "key_up_when": "any"
-            },
+            "key_code": "right_shift",
             "modifiers": {
-              "mandatory": []
+              "mandatory": ["left_shift"]
             }
           },
-          "to": [
+          "to_if_alone": [
             {
               "sticky_modifier": {
                 "left_command": "on"
@@ -528,7 +517,6 @@
             ]
           },
           "parameters": {
-            "basic.simultaneous_threshold_milliseconds": 600,
             "basic.to_delayed_action_delay_milliseconds": 2000
           },
           "type": "basic"
