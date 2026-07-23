@@ -4,7 +4,7 @@
       "description": "Alacritty/Ghostty: tmux session switch Ctrl hold behavior",
       "manipulators": [
         {
-          "description": "Ctrl+Shift+Tab -> Ctrl+Shift+Tab and arm tmux session switch finalize",
+          "description": "Ctrl+Shift+Tab → Ctrl+Shift+Tab and arm tmux session switch finalize",
           "conditions": [
             {
               "type": "frontmost_application_if",
@@ -36,7 +36,7 @@
           "type": "basic"
         },
         {
-          "description": "Ctrl+Tab -> Ctrl+Tab and arm tmux session switch finalize",
+          "description": "Ctrl+Tab → Ctrl+Tab and arm tmux session switch finalize",
           "conditions": [
             {
               "type": "frontmost_application_if",
@@ -156,27 +156,10 @@
       ]
     },
     {
-      "description": "Tab Mod-Tap (Tap: Tab, Hold: Option) with Ctrl+Tab exception",
+      "description": "Tab → Option (mod-tap)",
       "manipulators": [
         {
-          "description": "Ctrl+Tab -> Ctrl+Tab (exception)",
-          "from": {
-            "key_code": "tab",
-            "modifiers": {
-              "mandatory": ["control"],
-              "optional": ["shift"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "tab",
-              "modifiers": ["control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "Tab -> Option (mod-tap)",
+          "description": "Tab → Option (mod-tap)",
           "from": {
             "key_code": "tab",
             "modifiers": {
@@ -185,7 +168,8 @@
           },
           "to": [
             {
-              "key_code": "left_option"
+              "key_code": "left_option",
+              "lazy": true
             }
           ],
           "to_if_alone": [
@@ -193,17 +177,12 @@
               "key_code": "tab"
             }
           ],
-          "to_if_held_down": [
-            {
-              "key_code": "left_option"
-            }
-          ],
           "type": "basic"
         }
       ]
     },
     {
-      "description": "Shift + Esc → ~, Command + Backtick/Esc → ```, Command + Shift + Backtick/Esc → ```\\n",
+      "description": "Esc/Backtick shortcuts",
       "manipulators": [
         {
           "description": "Command + Shift + Esc → Triple Backtick + Shift + Enter",
@@ -411,7 +390,7 @@
       ]
     },
     {
-      "description": "Ctrl + Left/Right Arrow → Option + Left/Right Arrow",
+      "description": "Ctrl + Left/Right → Option + Left/Right",
       "manipulators": [
         {
           "description": "Ctrl + Left Arrow → Option + Left Arrow",
@@ -577,176 +556,10 @@
       ]
     },
     {
-      "description": "SpaceFN -> Hyperkey mappings",
-      "manipulators": [
-        {
-          "description": "SpaceFN + s → Command + Option + Control + s",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "s",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "s",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + t → Command + Option + Control + t",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "t",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "t",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + c → Command + Option + Control + c",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "c",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "c",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + b → Command + Option + Control + b",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "b",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "b",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + d → Command + Option + Control + d",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "d",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "d",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + m → Command + Option + Control + m",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "m",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "m",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        },
-        {
-          "description": "SpaceFN + f → Command + Option + Control + f",
-          "conditions": [
-            {
-              "name": "spacefn_hyper",
-              "type": "variable_if",
-              "value": 1
-            }
-          ],
-          "from": {
-            "key_code": "f",
-            "modifiers": {
-              "optional": ["any"]
-            }
-          },
-          "to": [
-            {
-              "key_code": "f",
-              "modifiers": ["left_command", "left_option", "left_control"]
-            }
-          ],
-          "type": "basic"
-        }
-      ]
-    },
-    {
       "description": "SpaceFN Layer",
       "manipulators": [
         {
-          "description": "Spacebar -> SpaceFN",
+          "description": "Spacebar → SpaceFN",
           "from": {
             "key_code": "spacebar",
             "modifiers": {
@@ -757,29 +570,8 @@
             {
               "set_variable": {
                 "name": "spacefn",
-                "value": 1
-              }
-            }
-          ],
-          "to_if_held_down": [
-            {
-              "set_variable": {
-                "name": "spacefn_hyper",
-                "value": 1
-              }
-            }
-          ],
-          "to_after_key_up": [
-            {
-              "set_variable": {
-                "name": "spacefn",
-                "value": 0
-              }
-            },
-            {
-              "set_variable": {
-                "name": "spacefn_hyper",
-                "value": 0
+                "value": 1,
+                "key_up_value": 0
               }
             }
           ],
@@ -788,9 +580,6 @@
               "key_code": "spacebar"
             }
           ],
-          "parameters": {
-            "basic.to_if_held_down_threshold_milliseconds": 200
-          },
           "type": "basic"
         },
         {
@@ -898,8 +687,7 @@
           },
           "to": [
             {
-              "key_code": "f4",
-              "modifiers": ["fn"]
+              "key_code": "f4"
             }
           ],
           "type": "basic"
