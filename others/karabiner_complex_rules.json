@@ -479,7 +479,7 @@
             {
               "set_notification_message": {
                 "id": "double_shift_hyper",
-                "text": "✦ Hyper Key\n\nActive · press a key"
+                "text": "✦ Hyper Key\n\nB · Arc\nC · ChatGPT\nD · Discord\nF · Find My\nM · Messages\nS · Slack\nT · Alacritty\n⇧T · Ghostty"
               }
             }
           ],
