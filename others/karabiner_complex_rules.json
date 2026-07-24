@@ -499,6 +499,39 @@
             "basic.to_delayed_action_delay_milliseconds": 2000
           },
           "type": "basic"
+        },
+        {
+          "description": "Hyper Key + Esc → cancel",
+          "from": {
+            "key_code": "escape",
+            "modifiers": {
+              "mandatory": ["command", "option", "control"]
+            }
+          },
+          "to": [
+            {
+              "sticky_modifier": {
+                "left_command": "off"
+              }
+            },
+            {
+              "sticky_modifier": {
+                "left_option": "off"
+              }
+            },
+            {
+              "sticky_modifier": {
+                "left_control": "off"
+              }
+            },
+            {
+              "set_notification_message": {
+                "id": "double_shift_hyper",
+                "text": ""
+              }
+            }
+          ],
+          "type": "basic"
         }
       ]
     },
