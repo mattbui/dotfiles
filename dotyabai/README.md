@@ -163,8 +163,8 @@ two-stack mode.
 
 ## Moving between spaces
 
-Use `command-option-h/l` for the previous/next space, or
-`command-option-1..9` for a labeled destination.
+Use `command-option-h/l` for the previous/next space or
+`command-option-1..4` for a labeled display.
 
 The move wrapper prepares the destination's insertion policy before moving the
 window:
@@ -195,16 +195,16 @@ lazily the next time it becomes active.
 | --- | --- |
 | `option-shift-h/l` | Move the focused tiled window to the left/right stack |
 | `command-option-h/l` | Move the focused window to the previous/next space and follow it |
-| `command-option-1..9` | Move the focused window to `space-1..9` and follow it |
+| `command-option-1..4` | Move the focused window to `display-1..4` and follow it |
 
-### Focusing spaces
+### Focusing displays and spaces
 
-Spaces are labeled from left to right across displays, then by Mission Control
-index.
+Displays are labeled from left to right. Spaces are labeled from left to right
+across displays, then by Mission Control index.
 
 | Shortcut | Action |
 | --- | --- |
-| `option-1..9` | Focus `space-1..9` |
+| `option-1..4` | Focus `display-1..4` |
 | `control-1..9` | Focus `space-1..9` using the alternate binding |
 
 ### Layout, resize, and float
