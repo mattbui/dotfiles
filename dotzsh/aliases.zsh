@@ -6,6 +6,20 @@ alias cd='z'
 alias 'cd!'='builtin cd'
 
 alias fa='alias | fzf'  # fuzzy find alias
+tmux() {
+    # Use native tmux resolution inside tmux or when no socket was configured.
+    if [[ -n ${TMUX:-} || -z ${TMUX_SOCKET:-} ]]; then
+        command tmux "$@"
+    else
+        command tmux -L "$TMUX_SOCKET" "$@"
+    fi
+}
+
+alias ta='tmux attach -t'
+alias tad='tmux attach -d -t'
+alias ts='tmux new-session -s'
+alias tl='tmux list-sessions'
+
 searchignore() {
     if [[ -e .ignore || -L .ignore ]]; then
         read -q 'REPLY?Remove existing .ignore? [y/N] ' || {
