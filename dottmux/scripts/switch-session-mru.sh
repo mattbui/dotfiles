@@ -1,275 +1,386 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
 
-# Cycle tmux sessions in MRU order.
-#
-# Normal tmux `switch-client -n/-p` uses tmux's internal session order. This
-# script instead uses per-session @last_access timestamps maintained by
-# update-session-access.sh. When cycling starts, it snapshots that MRU order
-# into @session_cycle_list and keeps reusing the frozen list while the user
-# continues holding Ctrl and pressing Ctrl-Tab / Ctrl-Shift-Tab. Karabiner sends
-# an explicit finalize key on Ctrl release; TIMEOUT_SECONDS is a fallback if that
-# release signal is missed. This keeps the order stable while cycling, like an
-# app switcher.
+# Maintain one server-wide session MRU and one delayed switch preview.
+# The newest client preview replaces any older one without switching it.
+# Release or inactivity timeout commits the selected session.
 
-DIRECTION="${1:-next}"
-TIMEOUT_SECONDS="${SESSION_CYCLE_TIMEOUT:-5}"
-NAME_SEPARATOR=$'\037'
+ACTION="${1:-}"
+LOCK_NAME="session-switcher"
+TIMEOUT_SECONDS=5
+VIEWPORT_SIZE=5
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+LOCK_HELD=0
 
-finalize_cycle() {
-  local active
-  local final_id
+usage() {
+  printf 'usage: %s record CLIENT_NAME | next|prev CLIENT_NAME CLIENT_PID SESSION_ID | release CLIENT_NAME CLIENT_PID | timeout CLIENT_NAME CLIENT_PID TOKEN\n' "$0" >&2
+  exit 2
+}
 
-  active="$(tmux show-option -gqv @session_cycle_active 2>/dev/null || true)"
-  [ "$active" = "1" ] || exit 0
-
-  final_id="$(tmux display-message -p '#{session_id}' 2>/dev/null || true)"
-  tmux \
-    set-option -gqu @session_cycle_active \; \
-    set-option -gqu @session_cycle_list \; \
-    set-option -gqu @session_cycle_names \; \
-    set-option -gqu @session_cycle_index \; \
-    set-option -gqu @session_cycle_view_start \; \
-    set-option -gqu @session_cycle_token
-
-  if [ -n "$final_id" ]; then
-    tmux set-option -q -t "$final_id" @last_access "$(date +%s)"
+release_lock() {
+  if [ "$LOCK_HELD" = "1" ]; then
+    LOCK_HELD=0
+    tmux wait-for -U "$LOCK_NAME" >/dev/null 2>&1 || true
   fi
-  "${HOME}/.config/tmux/scripts/update-session-indicators.sh" 2>/dev/null || true
-  tmux refresh-client -S 2>/dev/null || true
 }
 
-if [ "$DIRECTION" = "finalize" ]; then
-  sleep 0.05
-  finalize_cycle
-  exit 0
-fi
-
-join_words() {
-  local output=''
-  local item
-
-  for item in "$@"; do
-    if [ -n "$output" ]; then
-      output="$output $item"
-    else
-      output="$item"
-    fi
-  done
-
-  printf '%s' "$output"
+acquire_lock() {
+  tmux wait-for -L "$LOCK_NAME"
+  LOCK_HELD=1
+  trap release_lock EXIT HUP INT TERM
 }
 
-join_names() {
-  local IFS="$NAME_SEPARATOR"
+read_option() {
+  tmux show-option -gqv "$1" 2>/dev/null || true
+}
+
+join_session_ids() {
+  local IFS=' '
   printf '%s' "$*"
 }
 
-format_title_indicator() {
-  local count="$1"
-  local index="$2"
-  local start="$3"
-  local visible_count
-  local offset
-  local item_index
-  local output=''
-  local name
-
-  # For one/two sessions, keep the left slot simple: just the selected session.
-  if [ "$count" -le 2 ]; then
-    printf '%s' "${names[$index]}"
-    return 0
-  fi
-
-  visible_count="$count"
-  if [ "$visible_count" -gt 5 ]; then
-    visible_count=5
-  fi
-
-  for ((offset = 0; offset < visible_count; offset += 1)); do
-    item_index=$(( (start + offset + count) % count ))
-    name="${names[$item_index]}"
-    [ -n "$name" ] || continue
-
-    if [ -n "$output" ]; then
-      output="$output | "
-    fi
-    if [ "$item_index" -eq "$index" ]; then
-      output="${output}*${name}"
-    else
-      output="${output}${name}"
-    fi
-  done
-
-  printf '%s' "$output"
+shell_quote() {
+  local value="$1"
+  value="${value//\'/\'\\\'\'}"
+  printf "'%s'" "$value"
 }
 
-current_id="$(tmux display-message -p '#{session_id}')"
+load_live_sessions() {
+  local id name
 
-# Existing cycle state. If @session_cycle_active is set and the current session
-# is still in the frozen list, this key press continues the same cycle.
-active="$(tmux show-option -gqv @session_cycle_active 2>/dev/null || true)"
-list="$(tmux show-option -gqv @session_cycle_list 2>/dev/null || true)"
-names_blob="$(tmux show-option -gqv @session_cycle_names 2>/dev/null || true)"
-index="$(tmux show-option -gqv @session_cycle_index 2>/dev/null || true)"
-view_start="$(tmux show-option -gqv @session_cycle_view_start 2>/dev/null || true)"
-new_cycle=0
-ids=()
-names=()
-
-if [ -n "$list" ]; then
-  read -r -a ids <<< "$list"
-fi
-if [ -n "$names_blob" ]; then
-  old_ifs="$IFS"
-  IFS="$NAME_SEPARATOR"
-  read -r -a names <<< "$names_blob"
-  IFS="$old_ifs"
-fi
-
-list_contains_current=0
-for id in "${ids[@]}"; do
-  if [ "$id" = "$current_id" ]; then
-    list_contains_current=1
-    break
-  fi
-done
-
-if [ "$active" != "1" ] || [ "${#ids[@]}" -eq 0 ] || [ "$list_contains_current" != "1" ]; then
-  new_cycle=1
-  ids=()
-  names=()
-
-  # Seed the current session timestamp only when a fresh cycle is built. This
-  # keeps a brand-new server sane without adding a set/show-option round-trip to
-  # every repeated Ctrl-Tab press.
-  if [ -z "$(tmux show-option -qv -t "$current_id" @last_access 2>/dev/null || true)" ]; then
-    tmux set-option -q -t "$current_id" @last_access "$(date +%s)"
-  fi
-
-  # Start a new cycle by snapshotting sessions sorted by @last_access
-  # descending. Missing timestamps sort oldest, and name is used as a stable
-  # tie-breaker. The snapshot is intentionally frozen until the timeout ends.
+  live_session_ids=()
+  live_session_names=()
   while IFS=$'\t' read -r id name; do
-    [ -n "$id" ] || continue
-    ids+=("$id")
-    names+=("$name")
-  done < <(
-    tmux list-sessions -F '#{session_id}	#{session_name}	#{@last_access}' |
-      awk -F '\t' '{ ts=$3; if (ts == "") ts=0; printf "%s\t%s\t%s\n", ts, $2, $1 }' |
-      sort -t $'\t' -k1,1nr -k2,2 |
-      awk -F '\t' '{ printf "%s\t%s\n", $3, $2 }'
-  )
+    [[ "$id" =~ ^\$[0-9]+$ ]] || continue
+    live_session_ids+=("$id")
+    live_session_names+=("$name")
+  done < <(tmux list-sessions -F $'#{session_id}\t#{session_name}' 2>/dev/null || true)
+}
 
-  # Find the current session inside the fresh MRU snapshot.
-  index=0
-  for ((i = 0; i < ${#ids[@]}; i += 1)); do
-    if [ "${ids[$i]}" = "$current_id" ]; then
-      index="$i"
-      break
+is_live_session() {
+  local session_id="$1" live_session_id
+
+  for live_session_id in "${live_session_ids[@]}"; do
+    if [ "$live_session_id" = "$session_id" ]; then
+      return 0
     fi
   done
-elif [ "${#names[@]}" -ne "${#ids[@]}" ]; then
-  # Backward-compatible fallback for an active cycle created before the names
-  # sidecar existed, or after a manual option edit.
-  names=()
-  for id in "${ids[@]}"; do
-    names+=("$(tmux display-message -p -t "$id" '#{session_name}' 2>/dev/null || true)")
+  return 1
+}
+
+lookup_session_name() {
+  local session_id="$1" i
+
+  resolved_session_name=''
+  for ((i = 0; i < ${#live_session_ids[@]}; i += 1)); do
+    if [ "${live_session_ids[$i]}" = "$session_id" ]; then
+      resolved_session_name="${live_session_names[$i]}"
+      return 0
+    fi
   done
-fi
+  return 1
+}
 
-# Sessions may be closed while the cycle is active. Drop any stale session IDs
-# before calculating the next target. Use a single list-sessions call rather
-# than one has-session call per candidate.
-if [ "$new_cycle" != "1" ]; then
-  live_ids="$(tmux list-sessions -F '#{session_id}' 2>/dev/null || true)"
-  filtered_ids=()
-  filtered_names=()
-  for ((i = 0; i < ${#ids[@]}; i += 1)); do
-    case $'\n'"$live_ids"$'\n' in
-      *$'\n'"${ids[$i]}"$'\n'*)
-        filtered_ids+=("${ids[$i]}")
-        filtered_names+=("${names[$i]}")
-        ;;
-    esac
+array_contains() {
+  local wanted="$1"
+  shift
+  local item
+
+  for item in "$@"; do
+    [ "$item" = "$wanted" ] && return 0
   done
-  ids=("${filtered_ids[@]}")
-  names=("${filtered_names[@]}")
-fi
+  return 1
+}
 
-count="${#ids[@]}"
-[ "$count" -gt 1 ] || exit 0
+promote_session_in_mru() {
+  local recent_session_id="$1" stored_mru session_id
+  local stored_session_ids=()
 
-# Re-find the current index in the filtered frozen list. This makes direction
-# changes and externally changed sessions behave sanely.
-found=0
-for ((i = 0; i < count; i += 1)); do
-  if [ "${ids[$i]}" = "$current_id" ]; then
-    index="$i"
-    found=1
-    break
+  mru_session_ids=()
+  stored_mru="$(read_option @session_mru)"
+  if [ -n "$stored_mru" ]; then
+    read -r -a stored_session_ids <<< "$stored_mru"
   fi
-done
-[ "$found" = "1" ] || index=0
 
-# The expanded title indicator shows a scrolling viewport over the frozen list.
-# A new cycle starts the viewport at the original session. Subsequent keypresses
-# only move the selected index until it leaves the viewport, then the viewport
-# scrolls just enough to include it.
-view_size=5
-if [ "$count" -lt "$view_size" ]; then
-  view_size="$count"
-fi
-if [ "$new_cycle" = "1" ] || ! [[ "$view_start" =~ ^[0-9]+$ ]]; then
-  view_start="$index"
-fi
+  if [[ "$recent_session_id" =~ ^\$[0-9]+$ ]] &&
+     is_live_session "$recent_session_id"; then
+    mru_session_ids+=("$recent_session_id")
+  fi
 
-case "$DIRECTION" in
-  next) index=$(( (index + 1) % count )) ;;
-  prev|previous) index=$(( (index - 1 + count) % count )) ;;
-  *) echo "usage: $0 next|prev" >&2; exit 2 ;;
+  for session_id in "${stored_session_ids[@]}"; do
+    [[ "$session_id" =~ ^\$[0-9]+$ ]] || continue
+    is_live_session "$session_id" || continue
+    array_contains "$session_id" "${mru_session_ids[@]}" && continue
+    mru_session_ids+=("$session_id")
+  done
+
+  for session_id in "${live_session_ids[@]}"; do
+    array_contains "$session_id" "${mru_session_ids[@]}" && continue
+    mru_session_ids+=("$session_id")
+  done
+
+  tmux set-option -gq @session_mru \
+    "$(join_session_ids "${mru_session_ids[@]}")"
+}
+
+resolve_client_session_id() {
+  local required_client_name="$1" required_client_pid="$2"
+  local client_name client_pid session_id
+
+  resolved_session_id=''
+  while IFS=$'\t' read -r client_name client_pid session_id; do
+    if [ "$client_name" = "$required_client_name" ] &&
+       { [ -z "$required_client_pid" ] ||
+         [ "$client_pid" = "$required_client_pid" ]; }; then
+      resolved_session_id="$session_id"
+      return 0
+    fi
+  done < <(tmux list-clients -F $'#{client_name}\t#{client_pid}\t#{session_id}' 2>/dev/null || true)
+  return 1
+}
+
+clear_preview() {
+  tmux \
+    set-option -gqu @session_switcher_client_pid \; \
+    set-option -gqu @session_switcher_state \; \
+    set-option -gqu @session_switcher_view
+}
+
+publish_preview() {
+  local client_pid="$1" serialized_state="$2" preview_text="$3"
+
+  tmux \
+    set-option -gqu @session_switcher_client_pid \; \
+    set-option -gq @session_switcher_state "$serialized_state" \; \
+    set-option -gq @session_switcher_view "$preview_text" \; \
+    set-option -gq @session_switcher_client_pid "$client_pid"
+}
+
+read_preview_state() {
+  local serialized_state
+
+  preview_token=''
+  selected_index=''
+  view_start=''
+  frozen_session_ids=''
+  serialized_state="$(read_option @session_switcher_state)"
+  if [ -n "$serialized_state" ]; then
+    read -r preview_token selected_index view_start frozen_session_ids \
+      <<< "$serialized_state"
+  fi
+}
+
+render_preview() {
+  local count="${#preview_session_ids[@]}"
+  local visible_count="$count"
+  local end i
+
+  if [ "$visible_count" -gt "$VIEWPORT_SIZE" ]; then
+    visible_count="$VIEWPORT_SIZE"
+  fi
+  end=$((view_start + visible_count))
+  preview_text=''
+
+  for ((i = view_start; i < end; i += 1)); do
+    lookup_session_name "${preview_session_ids[$i]}" || return 1
+    if [ -n "$preview_text" ]; then
+      preview_text="$preview_text | "
+    fi
+    if [ "$i" -eq "$selected_index" ]; then
+      preview_text="${preview_text}*${resolved_session_name}"
+    else
+      preview_text="${preview_text}${resolved_session_name}"
+    fi
+  done
+}
+
+update_viewport() {
+  local direction="$1" count="$2" index="$3" max_start
+
+  if [ "$count" -le "$VIEWPORT_SIZE" ]; then
+    view_start=0
+    return
+  fi
+
+  max_start=$((count - VIEWPORT_SIZE))
+
+  if [ "$direction" = "next" ]; then
+    if [ "$index" -eq 0 ]; then
+      view_start=0
+    elif [ "$index" -lt "$view_start" ] ||
+         [ "$index" -ge $((view_start + VIEWPORT_SIZE - 1)) ]; then
+      view_start=$((index - VIEWPORT_SIZE + 2))
+    fi
+  else
+    if [ "$index" -eq $((count - 1)) ]; then
+      view_start="$max_start"
+    elif [ "$index" -gt $((view_start + VIEWPORT_SIZE - 1)) ]; then
+      view_start=$((index - VIEWPORT_SIZE + 1))
+    elif [ "$index" -le "$view_start" ]; then
+      view_start=$((index - 1))
+    fi
+  fi
+
+  if [ "$view_start" -lt 0 ]; then
+    view_start=0
+  elif [ "$view_start" -gt "$max_start" ]; then
+    view_start="$max_start"
+  fi
+}
+
+schedule_timeout() {
+  local client_name="$1" client_pid="$2" preview_token="$3" command
+
+  command="$(shell_quote "$SCRIPT_PATH") timeout \
+$(shell_quote "$client_name") $(shell_quote "$client_pid") $(shell_quote "$preview_token")"
+  tmux run-shell -b -d "$TIMEOUT_SECONDS" "$command"
+}
+
+record_client_session() {
+  local client_name="$1"
+
+  [ -n "$client_name" ] || return
+  acquire_lock
+  load_live_sessions
+  resolve_client_session_id "$client_name" '' || return
+  promote_session_in_mru "$resolved_session_id"
+}
+
+navigate() {
+  local direction="$1" client_name="$2" client_pid="$3"
+  local captured_session_id="$4"
+  local preview_client_pid frozen_session_ids preview_token preview_text
+  local preview_session_ids=()
+  local serialized_state
+  local continuing=0
+  local count index
+
+  [[ "$client_pid" =~ ^[0-9]+$ ]] || return
+  [[ "$captured_session_id" =~ ^\$[0-9]+$ ]] || return
+
+  acquire_lock
+  load_live_sessions
+
+  preview_client_pid="$(read_option @session_switcher_client_pid)"
+  read_preview_state
+
+  if [ "$preview_client_pid" = "$client_pid" ] &&
+     [ -n "$frozen_session_ids" ] &&
+     [[ "$selected_index" =~ ^[0-9]+$ ]] &&
+     [[ "$view_start" =~ ^[0-9]+$ ]] &&
+     [ -n "$preview_token" ]; then
+    read -r -a preview_session_ids <<< "$frozen_session_ids"
+    count="${#preview_session_ids[@]}"
+    if [ "$count" -ge 2 ] &&
+       [ "$selected_index" -lt "$count" ] &&
+       [ "${preview_session_ids[0]-}" = "$captured_session_id" ]; then
+      continuing=1
+    fi
+  fi
+
+  if [ "$continuing" != "1" ]; then
+    clear_preview
+    resolve_client_session_id "$client_name" "$client_pid" || return
+    [ "$resolved_session_id" = "$captured_session_id" ] || return
+    is_live_session "$captured_session_id" || return
+    promote_session_in_mru "$captured_session_id"
+    preview_session_ids=("${mru_session_ids[@]}")
+    count="${#preview_session_ids[@]}"
+    if [ "$count" -lt 2 ]; then
+      return
+    fi
+    selected_index=0
+    if [ "$direction" = "next" ]; then
+      view_start=0
+    else
+      view_start=$((count > VIEWPORT_SIZE ? count - VIEWPORT_SIZE : 0))
+    fi
+  fi
+
+  count="${#preview_session_ids[@]}"
+  index="$selected_index"
+
+  if [ "$direction" = "next" ]; then
+    index=$(( (index + 1) % count ))
+  else
+    index=$(( (index - 1 + count) % count ))
+  fi
+  selected_index="$index"
+  update_viewport "$direction" "$count" "$index"
+  render_preview || {
+    clear_preview
+    return
+  }
+  preview_token="$(date +%s)-$$-$RANDOM"
+  serialized_state="$preview_token $selected_index $view_start \
+$(join_session_ids "${preview_session_ids[@]}")"
+
+  publish_preview "$client_pid" "$serialized_state" "$preview_text"
+
+  schedule_timeout "$client_name" "$client_pid" "$preview_token" || clear_preview
+}
+
+finalize() {
+  local client_name="$1" client_pid="$2" expected_token="$3"
+  local preview_client_pid frozen_session_ids selected_index preview_token
+  local preview_session_ids=()
+  local origin_id selected_id
+
+  [[ "$client_pid" =~ ^[0-9]+$ ]] || return
+  [ -n "$expected_token" ] || return
+
+  acquire_lock
+  preview_client_pid="$(read_option @session_switcher_client_pid)"
+  read_preview_state
+
+  if [ "$preview_client_pid" != "$client_pid" ] ||
+     [ "$preview_token" != "$expected_token" ] ||
+     [ -z "$frozen_session_ids" ]; then
+    return
+  fi
+
+  read -r -a preview_session_ids <<< "$frozen_session_ids"
+  origin_id="${preview_session_ids[0]-}"
+  if ! [[ "$selected_index" =~ ^[0-9]+$ ]] ||
+     [ "$selected_index" -ge "${#preview_session_ids[@]}" ]; then
+    clear_preview
+    return
+  fi
+  selected_id="${preview_session_ids[$selected_index]}"
+  load_live_sessions
+
+  if ! [[ "$origin_id" =~ ^\$[0-9]+$ ]] ||
+     ! [[ "$selected_id" =~ ^\$[0-9]+$ ]] ||
+     ! is_live_session "$origin_id" ||
+     ! is_live_session "$selected_id" ||
+     ! resolve_client_session_id "$client_name" "$client_pid" ||
+     [ "$resolved_session_id" != "$origin_id" ]; then
+    clear_preview
+    return
+  fi
+
+  clear_preview
+  tmux switch-client -c "$client_name" -t "$selected_id"
+}
+
+case "$ACTION:$#" in
+  record:2)
+    record_client_session "$2"
+    ;;
+  next:4|prev:4)
+    navigate "$ACTION" "$2" "$3" "$4"
+    ;;
+  release:3)
+    read_preview_state
+    expected_token="$preview_token"
+    [ -n "$expected_token" ] || exit 0
+    sleep 0.05
+    finalize "$2" "$3" "$expected_token"
+    ;;
+  timeout:4)
+    finalize "$2" "$3" "$4"
+    ;;
+  *)
+    usage
+    ;;
 esac
-
-if [ "$count" -gt "$view_size" ]; then
-  view_end=$((view_start + view_size - 1))
-  if [ "$index" -lt "$view_start" ]; then
-    view_start="$index"
-  elif [ "$index" -gt "$view_end" ]; then
-    view_start=$((index - view_size + 1))
-  fi
-fi
-
-# Store all state needed by the next cycle keypress. The token lets each timeout
-# know whether it is still the newest one. Use $RANDOM because BSD date does not
-# support %N; `date +%s%N` can repeat for every press within the same second on
-# macOS.
-target_id="${ids[$index]}"
-list="$(join_words "${ids[@]}")"
-names_blob="$(join_names "${names[@]}")"
-title_indicator="$(format_title_indicator "$count" "$index" "$view_start")"
-token="$(date +%s)-$$-$RANDOM"
-
-# Switch and refresh in one tmux round-trip. The status line reads the cached
-# title directly, so there is no separate update-session-indicators.sh call on
-# the hot path.
-tmux \
-  set-option -gq @session_cycle_active 1 \; \
-  set-option -gq @session_cycle_list "$list" \; \
-  set-option -gq @session_cycle_names "$names_blob" \; \
-  set-option -gq @session_cycle_index "$index" \; \
-  set-option -gq @session_cycle_view_start "$view_start" \; \
-  set-option -gq @session_cycle_token "$token" \; \
-  set-option -gq @session_title_indicator "$title_indicator" \; \
-  switch-client -t "$target_id" \; \
-  refresh-client -S
-
-# Start/reset the timeout. Every keypress writes a new token; older timers wake
-# up, see their token is stale, and exit. The newest timer finalizes the cycle:
-# clear frozen state, mark the final session as recently accessed, and redraw.
-(
-  sleep "$TIMEOUT_SECONDS"
-  current_token="$(tmux show-option -gqv @session_cycle_token 2>/dev/null || true)"
-  [ "$current_token" = "$token" ] || exit 0
-
-  finalize_cycle
-) >/dev/null 2>&1 &
