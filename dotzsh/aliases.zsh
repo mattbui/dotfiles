@@ -19,6 +19,9 @@ alias ta='tmux attach -t'
 alias tad='tmux attach -d -t'
 alias ts='tmux new-session -s'
 alias tl='tmux list-sessions'
+tp() {
+    "$HOME/.config/tmux/scripts/tmux-launcher.sh" "$@"
+}
 
 searchignore() {
     if [[ -e .ignore || -L .ignore ]]; then

@@ -4,17 +4,35 @@ set -euo pipefail
 directory_icon=""
 ssh_icon=""
 launcher_path="${BASH_SOURCE[0]}"
+inside_tmux=false
 
 if [[ "$launcher_path" != /* ]]; then
   launcher_path="${PWD}/${launcher_path}"
 fi
+
+if [[ -n "${TMUX:-}" ]]; then
+  inside_tmux=true
+fi
+
+tmux_command() {
+  if $inside_tmux || [[ -z "${TMUX_SOCKET:-}" ]]; then
+    command tmux "$@"
+  else
+    command tmux -L "$TMUX_SOCKET" "$@"
+  fi
+}
 
 report_error() {
   local status="$?"
   local line="${BASH_LINENO[0]:-unknown}"
 
   trap - ERR
-  tmux display-message "tmux launcher failed at line $line (status $status)" 2>/dev/null || true
+  if $inside_tmux; then
+    tmux_command display-message \
+      "tmux launcher failed at line $line (status $status)" 2>/dev/null || true
+  else
+    printf 'tmux launcher failed at line %s (status %s)\n' "$line" "$status" >&2
+  fi
   exit "$status"
 }
 
@@ -27,8 +45,8 @@ run_ssh_pane() {
   local shell="${SHELL:-/bin/zsh}"
 
   if [[ -n "${TMUX_PANE:-}" ]]; then
-    tmux set-option -p -t "$TMUX_PANE" @ssh_session_active 1
-    tmux set-option -p -t "$TMUX_PANE" @ssh_session_name "$host"
+    tmux_command set-option -p -t "$TMUX_PANE" @ssh_session_active 1
+    tmux_command set-option -p -t "$TMUX_PANE" @ssh_session_name "$host"
   fi
 
   printf '\e[2 q'
@@ -39,8 +57,8 @@ run_ssh_pane() {
   printf '\e[6 q'
 
   if [[ -n "${TMUX_PANE:-}" ]]; then
-    tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
-    tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
+    tmux_command set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
+    tmux_command set-option -p -u -t "$TMUX_PANE" @ssh_session_name 2>/dev/null || true
   fi
 
   exec "$shell" -l
@@ -115,8 +133,9 @@ preview_selection() {
   fi
 
   # A leading @ is parsed as a tmux session ID unless exact-name matching is used.
-  if [[ "$session_name" == @* ]] && tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux capture-pane -e -p -t "=$session_name:"
+  if [[ "$session_name" == @* ]] &&
+    tmux_command has-session -t "=$session_name" 2>/dev/null; then
+    tmux_command capture-pane -e -p -t "=$session_name:"
     return
   fi
 
@@ -148,18 +167,35 @@ case "${1:-}" in
 esac
 
 if ! command -v sesh >/dev/null 2>&1; then
-  tmux display-message "sesh is not installed"
+  if $inside_tmux; then
+    tmux_command display-message "sesh is not installed"
+  else
+    printf 'tmux launcher: sesh is not installed\n' >&2
+  fi
   exit 1
 fi
 
-if ! command -v fzf-tmux >/dev/null 2>&1; then
-  tmux display-message "fzf-tmux is not installed"
+picker=(fzf)
+if $inside_tmux; then
+  picker=(fzf-tmux -p 80%,70%)
+fi
+
+if ! command -v "${picker[0]}" >/dev/null 2>&1; then
+  if $inside_tmux; then
+    tmux_command display-message "${picker[0]} is not installed"
+  else
+    printf 'tmux launcher: %s is not installed\n' "${picker[0]}" >&2
+  fi
   exit 1
 fi
 
-origin_pane="${TMUX_PANE:-}"
-origin_session="$(tmux display-message -p -t "$origin_pane" '#{session_name}')"
-origin_path="$(tmux display-message -p -t "$origin_pane" '#{pane_current_path}')"
+origin_session=""
+origin_path="$PWD"
+if $inside_tmux; then
+  origin_pane="${TMUX_PANE:-}"
+  origin_session="$(tmux_command display-message -p -t "$origin_pane" '#{session_name}')"
+  origin_path="$(tmux_command display-message -p -t "$origin_pane" '#{pane_current_path}')"
+fi
 
 ssh_pane_command() {
   local host="$1"
@@ -176,8 +212,13 @@ connect_session() {
   local session_name="${selection#* }"
 
   # A leading @ is parsed as a tmux session ID unless exact-name matching is used.
-  if [[ "$session_name" == @* ]] && tmux has-session -t "=$session_name" 2>/dev/null; then
-    tmux switch-client -t "=$session_name"
+  if [[ "$session_name" == @* ]] &&
+    tmux_command has-session -t "=$session_name" 2>/dev/null; then
+    if $inside_tmux; then
+      tmux_command switch-client -t "=$session_name"
+    else
+      tmux_command attach-session -t "=$session_name"
+    fi
     return
   fi
 
@@ -192,15 +233,23 @@ open_ssh_session() {
   session="$(ssh_session_name "$host")"
   pane_command="$(ssh_pane_command "$host")"
 
-  if tmux has-session -t "=$session" 2>/dev/null; then
-    tmux set-option -t "=$session:" default-command "$pane_command"
-    tmux switch-client -t "=$session"
+  if tmux_command has-session -t "=$session" 2>/dev/null; then
+    tmux_command set-option -t "=$session:" default-command "$pane_command"
+    if $inside_tmux; then
+      tmux_command switch-client -t "=$session"
+    else
+      tmux_command attach-session -t "=$session"
+    fi
     return 0
   fi
 
-  tmux new-session -d -s "$session" -c "$origin_path" "$pane_command"
-  tmux set-option -t "=$session:" default-command "$pane_command"
-  tmux switch-client -t "=$session"
+  tmux_command new-session -d -s "$session" -c "$origin_path" "$pane_command"
+  tmux_command set-option -t "=$session:" default-command "$pane_command"
+  if $inside_tmux; then
+    tmux_command switch-client -t "=$session"
+  else
+    tmux_command attach-session -t "=$session"
+  fi
 }
 
 open_ssh_window() {
@@ -208,19 +257,24 @@ open_ssh_window() {
   local pane_command
 
   pane_command="$(ssh_pane_command "$host")"
-  tmux new-window -t "${origin_session}:" -c "$origin_path" -n "$host" \
+  tmux_command new-window -t "${origin_session}:" -c "$origin_path" -n "$host" \
     "$pane_command"
 }
 
+list_label=' ↵ : connect · ^a: all · ^f: dirs · ^s: ssh '
+if $inside_tmux; then
+  list_label=' ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh '
+fi
+
 result="$({
   list_all |
-    fzf-tmux -p 80%,70% \
+    "${picker[@]}" \
       --ansi \
       --expect=ctrl-n \
       --height=100% \
       --border=none \
       --input-label ' Tmux launcher ' \
-      --list-label ' ↵ : new window · ^n: new session · ^a: all · ^f: dirs · ^s: ssh ' \
+      --list-label "$list_label" \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
       --bind 'ctrl-f:change-prompt(🔎 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
@@ -249,12 +303,20 @@ if [[ "$key" == ctrl-n ]]; then
 fi
 
 if [[ "$selection" == "$ssh_icon "* ]]; then
-  open_ssh_window "${selection#"$ssh_icon "}"
+  if $inside_tmux; then
+    open_ssh_window "${selection#"$ssh_icon "}"
+  else
+    open_ssh_session "${selection#"$ssh_icon "}"
+  fi
   exit 0
 fi
 
 if [[ "$selection" == "$directory_icon "* ]]; then
-  sesh window "${selection#"$directory_icon "}"
+  if $inside_tmux; then
+    sesh window "${selection#"$directory_icon "}"
+  else
+    connect_session "$selection"
+  fi
   exit 0
 fi
 
