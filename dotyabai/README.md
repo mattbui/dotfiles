@@ -196,6 +196,7 @@ lazily the next time it becomes active.
 | `option-shift-h/l` | Move the focused tiled window to the left/right stack |
 | `command-option-h/l` | Move the focused window to the previous/next space and follow it |
 | `command-option-1..4` | Move the focused window to `display-1..4` and follow it |
+| `command-control-1..9` | Move the focused window to `space-1..9` and follow it |
 
 ### Focusing displays and spaces
 
@@ -205,7 +206,7 @@ across displays, then by Mission Control index.
 | Shortcut | Action |
 | --- | --- |
 | `option-1..4` | Focus `display-1..4` |
-| `control-1..9` | Focus `space-1..9` using the alternate binding |
+| `control-1..9` | Focus `space-1..9` |
 
 ### Layout, resize, and float
 
