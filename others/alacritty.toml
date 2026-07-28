@@ -104,7 +104,7 @@ regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|codex://|gopher://|https://|http
 action = "ToggleViMode"
 key = "Space"
 mode = "~Search"
-mods = "Alt|Command"
+mods = "Alt|Shift"
 
 [[keyboard.bindings]]
 action = "ScrollToBottom"
