@@ -16,13 +16,6 @@
 
 - Do not run install, bootstrap, or link scripts unless explicitly asked, because they may change the local machine state.
 
-## Reference Source
-
-- `.src/` contains cached dependency and package repositories for source-code reference.
-- When planning or implementing against third-party behavior, prefer reading `.src/` source code over guessing from memory.
-- Treat `.src/` as read-only reference material unless explicitly asked to update it.
-- If needed source is missing, ask before cloning/downloading it into `.src/` unless the user has already requested dependency/source inspection.
-
 ## dotpi Sync
 
 When committing or pushing changes for `dotpi`, also commit and push the corresponding dotfiles repo changes.
