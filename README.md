@@ -1,16 +1,15 @@
 # dotfiles
 
-A macOS-focused setup for my personal machines. The Linux configuration is
-mainly there to keep remote servers familiar.
+A macOS-focused setup for my personal machines with some Linux configs for remote machines.
 
 ## Main setup
 
 - **Terminal:** Alacritty as the primary terminal, Ghostty as a backup, and tmux
   for a consistent local and remote workflow.
-- **Editor and file manager:** Neovim and Yazi, connected through shared
-  shortcuts and tmux popups.
-- **Shell:** zsh with starship prompt, zoxide, fzf and other utilities.
-- **Window management:** yabai and skhd, with JankyBorders for visual feedback.
+- **Editor:** Neovim
+- **File manager:** Yazi
+- **Shell:** zsh with starship prompt and fzf.
+- **Window management:** yabai with skhd and JankyBorders
 
 ## Repository layout
 
@@ -26,7 +25,7 @@ mainly there to keep remote servers familiar.
 - `init/` — package installation and symlink scripts.
 
 More detail is available in the component READMEs under `dotnvim/`, `dotyazi/`,
-and `dotpi/`.
+`dotyabai/`, and `dotpi/`.
 
 ## Setup
 

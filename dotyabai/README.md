@@ -1,248 +1,229 @@
 # Yabai layout setup
 
-This configuration uses display-aware layouts. Displays with an aspect ratio
-below `2.0` use yabai's native stack layout. Wide displays use a BSP layout that
-can switch between two side-by-side stacks and one centered stack.
+This configuration provides two display-aware layouts:
 
-## Notation
+- `single-stack` puts every eligible tiled window in one native yabai stack.
+- `two-stack` uses left/right stacks on landscape displays and top/bottom
+  stacks on portrait displays.
 
-Windows inside the same brackets share one stack leaf:
+The display shape chooses the two-stack orientation. The display's logical
+workspace area chooses the initial layout and spacing profile.
 
-```text
-[A, B] | [C]
-```
+## Display policy
 
-`A` and `B` are stacked on the left; `C` occupies the right. In these examples,
-the rightmost window in a bracket is visible on top. `*` marks the focused
-window:
+Classification uses the scaled macOS logical workspace before padding:
+`width × height`.
 
-```text
-[A, *B] | [C]
-```
+| Area class | Logical area | Top | Other edges | Gap | New-space default |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Compact | `< 3,500,000` | `6` | `8` | `8` | `single-stack` |
+| Roomy | `>= 3,500,000` | `6` | `12` | `10` | `two-stack` |
 
-Floating, minimized, hidden, and ignored windows are not layout candidates.
+Landscape means `W >= H`; portrait means `H > W`. Rotating a display preserves
+its area class while changing the orientation of a selected two-stack layout.
 
 ## Layouts
 
-### Normal display
+Windows in the same brackets share one stack leaf. The rightmost entry is the
+visible member in these examples.
 
-All tiled windows use yabai's native stack layout:
+Native single stack:
 
 ```text
 [A, B, C]
 ```
 
-### Wide solo
-
-A single tiled window is centered with symmetric side padding:
-
-```text
-[PAD][A][PAD]
-```
-
-`[PAD]` represents the symmetric empty space on either side of the centered
-leaf.
-
-### Wide two-stack
-
-With two or more windows, the default wide layout is a BSP root with a stack on
-each side, starting with an even `0.5` split:
+Landscape two-stack:
 
 ```text
 [A, B] | [C, D]
+  left     right
 ```
 
-There is no persistent main window. The visible right-side member is only an
-inferred main, and side membership is reconstructed from the current BSP tree.
-
-### Wide centered-stack
-
-All tiled windows share one centered BSP leaf:
+Portrait two-stack:
 
 ```text
-[PAD][A, B, C, D][PAD]
+top:    [A, B]
+        ------
+bottom: [C, D]
 ```
 
-This remains a BSP space rather than switching to yabai's native stack layout.
-The selected wide mode is stored per space. A wide space with only one tiled
-window always appears as wide-solo; its stored mode takes effect when a second
-window arrives.
-
-## Focus
-
-- `option-h/l` focuses the left/right leaf. At an edge it continues to the
-  previous/next space.
-- `option-j/k` cycles through members of the current stack.
-- Focusing a window does not permanently assign it as a main window.
-
-Switching from two-stack to centered-stack keeps the focused tiled window on
-top:
+A selected `two-stack` needs at least two eligible windows. With one, the
+selection remains stored but the BSP space temporarily presents the window
+using the current single-stack sizing:
 
 ```text
-[A, C, D] | [*B]
-          ↓
-[PAD][A, C, D, *B][PAD]
+[padding] [A] [padding]
 ```
 
-Switching back puts the focused/visible tiled member on the right and all other
-members on the left:
+Floating, minimized, hidden, and ignored windows are not candidates. The
+ignore list is authoritative: an ignored application remains excluded even if
+yabai currently reports one of its windows as tiled.
+
+## Single-stack sizing
+
+Single-stack sizing follows this order:
+
+1. Portrait displays target `80%` of logical height.
+2. Ultrawide landscape displays with `W / H >= 2.0` target `65%` of logical
+   width.
+3. Other landscape displays use ordinary compact or roomy padding.
+
+Centered padding cannot shrink below the active base profile. Horizontal
+centering keeps both sides at least `8` compact or `12` roomy. Portrait
+centering keeps at least `6` above and `8` compact or `12` roomy below.
+
+## Selection and persisted state
+
+`Alt-S` and `Alt-T` directly select single-stack and two-stack. They are not a
+toggle, and selecting the current layout is a silent no-op.
+
+Preferences belong to positional labels such as `space-2`, not yabai space IDs
+or UUIDs. A compact/roomy crossing applies the new area-class default.
+Geometry changes within the same class preserve a manual selection, while a
+selected two-stack always follows the current landscape or portrait shape.
+
+Four ratios persist independently:
+
+| Ratio | Default | Range |
+| --- | ---: | --- |
+| Ultrawide single-stack width | `0.65` | `0.30` to the base-padding maximum |
+| Portrait single-stack height | `0.90` | `0.30` to the base-padding maximum |
+| Landscape left/right split | `0.50` | `0.10–0.90` |
+| Portrait top/bottom split | `0.50` | `0.10–0.90` |
+
+Changing orientation does not overwrite the other orientation's ratio.
+
+## Arrivals and removals
+
+Arrivals include newly created, moved-in, deminimized, un-floated, newly
+unignored, and application-visible windows.
+
+Native single-stack handles arrivals directly. In two-stack, the global
+`first` insertion point and `first_child` placement produce the desired
+two-window bootstrap:
 
 ```text
-[PAD][A, C, D, *B][PAD]
-          ↓
-[A, C, D] | [*B]
+landscape: [B] | [A]
+
+portrait:  [B]
+           ---
+           [A]
 ```
 
-If focus belongs to a floating window during a mode switch, the layout prefers
-the visible right member, then the visible left member. Floating focus is not
-stolen.
+The existing solo window `A` becomes the stable second stack (right or bottom);
+the arrival `B` becomes the first stack (left or top). Later arrivals join the
+first stack and become visible without disturbing the second stack.
 
-## Window arrivals
+Closing, hiding, minimizing, floating, ignoring, or moving away a window
+removes it from the candidate set. If a stack empties while at least two
+candidates remain, reconciliation reseeds it from the surviving stack. With
+one candidate, the selected two-stack returns to its temporary single-window
+presentation.
 
-New, moved-in, shown, deminimized, and un-floated windows follow these rules:
+Moving a window to another space follows and reconciles the destination
+immediately. The inactive source is repaired lazily when it next becomes
+active.
 
-- In two-stack mode, they join the left stack and become visible.
-- In centered-stack mode, they join the only stack and become visible.
-- With no other tiled window, they use wide-solo.
+## Focus and movement
 
-Wide spaces configure `window_placement first_child` and
-`window_insertion_point first`. This places an arrival at the first root child
-before reconciliation, reducing visible movement before it joins the left
-stack.
+- `Alt-H/L` focuses west/east. At an edge it focuses the previous/next space
+  and wraps.
+- `Alt-J/K` first focuses south/north, then cycles forward/backward through the
+  current stack and wraps.
+- In a horizontal two-stack, `Alt-Shift-H/L` moves to the left/right stack.
+- In a vertical two-stack, `Alt-Shift-J/K` moves to the bottom/top stack.
 
-## Moving between side stacks
+Moving toward the current stack, or using a direction that does not apply to
+the current arrangement, is a no-op. Moving the final source member preserves
+two populated stacks: one member on each side swaps, while a multi-member
+destination supplies a replacement to reseed the vacated stack. The explicitly
+moved window remains focused.
 
-Use `option-shift-h/l` to move the focused tiled window to the left/right
-stack. This command is active only in wide two-stack mode. Moving to the side it
-already occupies does nothing.
+## Resize, repair, and reset
 
-When the source side has multiple members, the focused window simply joins the
-destination and becomes visible:
+Tiled resizing changes the applicable saved ratio by `0.025`, or `0.10` with
+Shift. Resizing a focused two-stack region changes that region's share.
+Temporary single-window presentation changes the applicable single-stack ratio
+rather than the saved split. Ordinary landscape single-stack has no ratio, so
+tiled resize is a no-op.
 
-```text
-[A, *B] | [C]
-          ↓ move right
-[A]     | [C, *B]
-```
-
-Moving the final member of a side does not collapse the two-stack layout. A
-hidden destination member reseeds the vacated side while the visible
-destination member stays in place:
-
-```text
-[A] | [B, C]
-       C visible
-       ↓ move A right
-[B] | [C, *A]
-```
-
-With exactly one window on each side, moving the final member performs a side
-swap:
-
-```text
-[*A] | [B]
-      ↓ move A right
-[B]  | [*A]
-```
-
-## Windows leaving a layout
-
-Closing, minimizing, hiding, floating, or moving a tiled window away removes it
-from the candidate set. If that removes the final member of one side, the
-remaining windows reseed both sides when possible:
-
-```text
-[A, B] | [C]
-          ↓ C leaves
-[A]    | [B]
-```
-
-If only one tiled candidate remains, the space becomes wide-solo. Returning or
-un-floating a window treats it as a new arrival, so it joins the left stack in
-two-stack mode.
-
-## Moving between spaces
-
-Use `command-option-h/l` for the previous/next space or
-`command-option-1..4` for a labeled display.
-
-The move wrapper prepares the destination's insertion policy before moving the
-window:
-
-```text
-inspect destination → set insertion policy → move → follow → reconcile
-```
-
-This matters when crossing between normal and wide displays. The insertion
-settings are global, so applying the destination layout only after the move
-would be too late to control its initial placement. The source space is repaired
-lazily the next time it becomes active.
+Floating windows resize by `80px`, or `320px` with Shift. Raw mouse or yabai
+tree resizing is not persisted; `Alt-R` reapplies the saved ratio. `Alt-0`
+resets all four ratios to their defaults and repairs without otherwise changing
+the selected layout.
 
 ## Keybindings
 
-### Window focus and closing
+### Focus and close
 
 | Shortcut | Action |
 | --- | --- |
-| `option-h/l` | Focus the left/right leaf; continue to the previous/next space at an edge |
-| `option-j/k` | Focus south/north, or cycle forward/backward through the current stack |
-| `command-w` | Close normally; repair stale focus in Notes, Messages, Finder, and Calendar |
-| `escape` in Antinote | Return focus to the recent yabai window |
-
-### Moving windows
-
-| Shortcut | Action |
-| --- | --- |
-| `option-shift-h/l` | Move the focused tiled window to the left/right stack |
-| `command-option-h/l` | Move the focused window to the previous/next space and follow it |
-| `command-option-1..4` | Move the focused window to `display-1..4` and follow it |
-| `command-control-1..9` | Move the focused window to `space-1..9` and follow it |
-
-### Focusing displays and spaces
-
-Displays are labeled from left to right. Spaces are labeled from left to right
-across displays, then by Mission Control index.
-
-| Shortcut | Action |
-| --- | --- |
-| `option-1..4` | Focus `display-1..4` |
-| `control-1..9` | Focus `space-1..9` |
+| `Alt-H/L` | Focus west/east; otherwise previous/next space with wrap |
+| `Alt-J/K` | Focus south/north; otherwise next/previous stack member with wrap |
+| `Cmd-W` | Close normally; repair stale focus in Notes, Messages, Finder, and Calendar |
+| `Escape` in Antinote | Focus the recent yabai window |
 
 ### Layout, resize, and float
 
 | Shortcut | Action |
 | --- | --- |
-| `command-option-return` | Toggle two-stack/centered-stack |
-| `option-i` | Show current layout, window distribution, and active ratio |
-| `option-r` | Repair the current layout while preserving mode and ratios |
-| `option-0` | Reset ratios to defaults and repair the current layout |
-| `option-minus` | Shrink the focused float, centered layout, or focused two-stack side |
-| `option-equal` | Grow the focused float, centered layout, or focused two-stack side |
-| `option-shift-minus/equal` | Shrink/grow by four steps |
-| `option-return` | Toggle fullscreen float |
-| `option-shift-return` | Toggle centered float |
+| `Alt-S` | Select single-stack |
+| `Alt-T` | Select two-stack using the current display shape |
+| `Alt-R` | Repair/reapply while preserving saved ratios |
+| `Alt-0` | Reset all four ratios and repair |
+| `Alt-I` | Inspect layout, distribution, ratio, padding, and compliance |
+| `Alt--` / `Alt-=` | Shrink/grow the focused float or tiled arrangement |
+| `Alt-Shift--` / `Alt-Shift-=` | Shrink/grow with the accelerated step |
+| `Alt-C` | Toggle a centered float |
+| `Alt-Return` | Toggle a fullscreen float within the ordinary tiling area |
 
-### Application focus
+### Move windows
 
-These bindings focus an existing window or open the application when needed.
+| Shortcut | Action |
+| --- | --- |
+| `Alt-Shift-H/J/K/L` | Move to left/bottom/top/right stack when applicable |
+| `Cmd-Alt-H/L` | Move to previous/next space and follow |
+| `Cmd-Alt-1..4` | Move to `display-1..4` and follow |
+| `Ctrl-Cmd-1..9` | Move to `space-1..9` and follow |
+
+### Focus displays and spaces
+
+Displays are labeled by physical left-to-right order. Spaces are labeled
+across displays from left to right, then by Mission Control order.
+
+| Shortcut | Action |
+| --- | --- |
+| `Alt-1..4` | Focus `display-1..4` |
+| `Ctrl-1..9` | Focus `space-1..9` |
+
+### Focus or open applications
 
 | Shortcut | Application |
 | --- | --- |
-| `command-option-control-s` | Slack |
-| `command-option-control-t` | Alacritty |
-| `command-option-control-shift-t` | Ghostty |
-| `command-option-control-c` | ChatGPT |
-| `command-option-control-b` | Arc |
-| `command-option-control-d` | Discord |
-| `command-option-control-f` | Find My |
-| `command-option-control-m` | Messages |
+| `Cmd-Alt-Ctrl-S` | Slack |
+| `Cmd-Alt-Ctrl-T` | Alacritty |
+| `Cmd-Alt-Ctrl-Shift-T` | Ghostty |
+| `Cmd-Alt-Ctrl-C` | ChatGPT |
+| `Cmd-Alt-Ctrl-B` | Arc |
+| `Cmd-Alt-Ctrl-D` | Discord |
+| `Cmd-Alt-Ctrl-F` | Find My |
+| `Cmd-Alt-Ctrl-M` | Messages |
 
 ### Maintenance and ignore rules
 
 | Shortcut | Action |
 | --- | --- |
-| `command-option-shift-r` | Restart yabai and report readiness |
-| `command-option-r` | Refresh display/space labels |
-| `command-option-period` | Toggle the focused application's ignore rule |
+| `Alt-Shift-R` | Restart yabai and report readiness |
+| `Alt-D` | Refresh display and space labels |
+| `Alt-.` | Toggle the focused application's ignore rule |
 
-The canonical reconciliation entry point is `scripts/apply-layout.sh`.
+## Operational notes
+
+- `scripts/apply-layout.sh` is the canonical reconciliation entry point.
+- `yabairc` owns the global arrival defaults:
+  `window_insertion_point first` and `window_placement first_child`.
+- Signals reconcile the active space on window, application visibility, space,
+  and display changes. Overlapping runs share a lock and pending rerun.
+- Per-label layout state defaults to
+  `~/.local/state/yabai/layout-space-N.json`.

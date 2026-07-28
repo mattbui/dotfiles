@@ -2,25 +2,22 @@
 
 # Toggle float modes.
 # Usage:
-#   toggle-float.sh center [window-id] [toggle|ensure]      -> centered floating window, 80% tiling-area height, 120% tiling-area-height width
+#   toggle-float.sh center [window-id] [toggle|ensure]      -> centered floating window, 80% tiling-area height and up to 95% tiling-area width
 #   toggle-float.sh fullscreen [window-id] [toggle|ensure]  -> centered floating window, 100% tiling-area width, 100% tiling-area height
 
 mode="${1:-center}"
 target_window="${2:-}"
 float_action="${3:-toggle}"
 height_ratio="0.80"
-width_height_ratio="1.20"
+width_height_ratio="1.50"
+width_ratio="0.95"
 fullscreen_ratio="1.00"
 
 command -v yabai >/dev/null 2>&1 || exit 0
 command -v jq >/dev/null 2>&1 || exit 0
 command -v awk >/dev/null 2>&1 || exit 0
 
-state_dir="${YABAI_LAYOUT_STATE_DIR:-${YABAI_STATE_DIR:-$HOME/.local/state/yabai}}"
 apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-$HOME/.config/yabai/scripts/apply-layout.sh}"
-
-# shellcheck source=/dev/null
-. "$(dirname "$0")/layout-state.sh"
 
 case "$mode" in
   center|fullscreen) ;;
@@ -57,6 +54,8 @@ fi
 display_id=$(printf '%s' "$window_json" | jq -r '.display')
 display_json=$(yabai -m query --displays --display "$display_id" 2>/dev/null) || exit 0
 [ -n "$display_json" ] || exit 0
+display_w=$(printf '%s' "$display_json" | jq -r '.frame.w')
+display_h=$(printf '%s' "$display_json" | jq -r '.frame.h')
 
 # Start from the display's visible frame. This excludes menu bar / dock areas
 # when available and is closest to yabai's constrained display bounds.
@@ -87,33 +86,19 @@ fi
 # Match yabai's tiling area by applying the current space's padding on top of
 # the constrained display bounds. See .src/yabai/src/view.c:view_update().
 space_index=$(printf '%s' "$window_json" | jq -r '.space')
-layout_state_file=""
-if [ -n "$space_index" ] && [ "$space_index" != "null" ]; then
-  space_json=$(yabai -m query --spaces --space "$space_index" 2>/dev/null) || space_json=""
-  space_label=$(printf '%s' "$space_json" | jq -r '.label // empty' 2>/dev/null)
-  [ -n "$space_label" ] && layout_state_file=$(layout_state_file_for_space_label "$space_label")
-fi
+sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
+sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
+sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
+sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
 
-sp_top=$(layout_state_get "$layout_state_file" padding_top "")
-sp_bottom=$(layout_state_get "$layout_state_file" padding_bottom "")
-sp_left=$(layout_state_get "$layout_state_file" padding_left "")
-sp_right=$(layout_state_get "$layout_state_file" padding_right "")
-[ -n "$sp_top" ] || sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
-[ -n "$sp_bottom" ] || sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
-[ -n "$sp_left" ] || sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
-[ -n "$sp_right" ] || sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
-
-# In centered wide modes, left/right padding is intentionally large. For a
-# floating fullscreen window, use regular edge padding instead so it can occupy
-# the full usable display width.
-layout_mode=$(layout_state_get "$layout_state_file" mode "")
+# Centered single-stack padding should not constrain a floating fullscreen
+# window. Use the display's ordinary compact/roomy edge spacing instead.
 if [ "$mode" = "fullscreen" ]; then
-  case "$layout_mode" in
-    wide-solo|wide-center-stack)
-      sp_left="$sp_bottom"
-      sp_right="$sp_bottom"
-      ;;
-  esac
+  base_padding=$(awk "BEGIN { print (($display_w * $display_h) >= 3500000) ? 12 : 8 }")
+  sp_top="6"
+  sp_bottom="$base_padding"
+  sp_left="$base_padding"
+  sp_right="$base_padding"
 fi
 
 read -r dx dy dw dh <<EOF
@@ -142,7 +127,9 @@ else
   read -r x y w h <<EOF
 $(awk "BEGIN {
   h = $dh * $height_ratio;
-  w = $dh * $width_height_ratio;
+  w = h * $width_height_ratio;
+  max_w = $dw * $width_ratio;
+  if (w > max_w) w = max_w;
   x = $dx + (($dw - w) / 2);
   y = $dy + (($dh - h) / 2);
   printf \"%d %d %d %d\", x, y, w, h;
@@ -150,9 +137,9 @@ $(awk "BEGIN {
 EOF
 fi
 
-# For fullscreen, move first. If the window starts centered with large
-# wide-solo padding, resizing to display width before moving can be clamped by
-# macOS/yabai at the current x position, leaving a right-side gap.
+# For fullscreen, move first. If the window starts with large centered padding,
+# resizing to display width before moving can be clamped by macOS/yabai at the
+# current x position, leaving a right-side gap.
 if [ "$mode" = "fullscreen" ]; then
   if [ -n "$target_window" ]; then
     yabai -m window "$target_window" --move abs:"$x":"$y"

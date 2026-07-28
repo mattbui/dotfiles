@@ -36,8 +36,8 @@ yabai -m config \
   split_type                   auto \
   split_ratio                  0.50 \
   auto_balance                 off \
-  window_placement             second_child \
-  window_insertion_point       focused \
+  window_placement             first_child \
+  window_insertion_point       first \
   window_zoom_persist          on \
   mouse_follows_focus          off \
   focus_follows_mouse          off \
@@ -49,7 +49,7 @@ yabai -m config \
   bottom_padding               8 \
   left_padding                 8 \
   right_padding                8 \
-  window_gap                   10 \
+  window_gap                   8 \
   mouse_modifier               alt \
   mouse_action1                move \
   mouse_action2                resize \
@@ -65,7 +65,7 @@ add_and_apply_rule "space-Slack" app="^Slack$" space=space-1
 add_and_apply_rule "space-Discord" app="^Discord$" space=space-1
 add_and_apply_rule "space-Spark" app="^Spark$" space=space-1
 
-# Re-apply layout when window/application visibility changes.
+# Re-apply the flexible layout when window/application visibility changes.
 yabai_apply_layout="$HOME/.config/yabai/scripts/apply-layout.sh"
 add_signal "layout-window-created" event=window_created action="$yabai_apply_layout"
 add_signal "layout-window-destroyed" event=window_destroyed action="$yabai_apply_layout"

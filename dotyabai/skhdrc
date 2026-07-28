@@ -26,12 +26,14 @@ escape [
 ]
 
 # Yabai controls.
-cmd + alt + shift - r : $HOME/.config/yabai/scripts/restart-yabai.sh
-cmd + alt - r : $HOME/.config/yabai/scripts/label-spaces-displays.sh --notify
-cmd + alt - 0x2F : app=$(yabai -m query --windows --window | jq -r '.app // empty'); [ -n "$app" ] && $HOME/.config/yabai/scripts/ignore-list.sh toggle "$app"
+alt + shift - r : $HOME/.config/yabai/scripts/restart-yabai.sh
+alt - d : $HOME/.config/yabai/scripts/label-spaces-displays.sh --notify
+alt - 0x2F : app=$(yabai -m query --windows --window | jq -r '.app // empty'); [ -n "$app" ] && $HOME/.config/yabai/scripts/ignore-list.sh toggle "$app"
 
-# Move the focused window between side stacks or spaces.
+# Move the focused window between stacks or spaces.
 alt + shift - h : $HOME/.config/yabai/scripts/move-to-stack.sh left
+alt + shift - j : $HOME/.config/yabai/scripts/move-to-stack.sh bottom
+alt + shift - k : $HOME/.config/yabai/scripts/move-to-stack.sh top
 alt + shift - l : $HOME/.config/yabai/scripts/move-to-stack.sh right
 cmd + alt - h : $HOME/.config/yabai/scripts/move-to-space.sh prev
 cmd + alt - l : $HOME/.config/yabai/scripts/move-to-space.sh next
@@ -53,11 +55,12 @@ cmd + alt + ctrl - f : $HOME/.config/yabai/scripts/focus-app.sh FindMy
 cmd + alt + ctrl - m : $HOME/.config/yabai/scripts/focus-app.sh Messages
 
 # Toggle float modes.
-alt + shift - return : $HOME/.config/yabai/scripts/toggle-float.sh center
+alt - c : $HOME/.config/yabai/scripts/toggle-float.sh center
 alt - return : $HOME/.config/yabai/scripts/toggle-float.sh fullscreen
 
-# Toggle, inspect, repair, or reset the display-aware layout.
-cmd + alt - return : $HOME/.config/yabai/scripts/set-wide-layout.sh toggle
+# Select, inspect, repair, or reset the flexible layout.
+alt - s : $HOME/.config/yabai/scripts/select-layout.sh single-stack
+alt - t : $HOME/.config/yabai/scripts/select-layout.sh two-stack
 alt - r : $HOME/.config/yabai/scripts/apply-layout.sh
 alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh reset
 alt - i : $HOME/.config/yabai/scripts/apply-layout.sh check
