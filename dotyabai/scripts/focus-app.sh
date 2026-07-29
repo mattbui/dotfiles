@@ -70,7 +70,8 @@ main() {
     exit 127
   }
 
-  # Pick the first non-minimized match from yabai's default query order.
+  # Cycle through non-minimized matches in stable window-id order. If this app
+  # is not already focused, start with its lowest window id.
   window_json="$(
     yabai -m query --windows |
       jq -cer --arg app "${focus_app_name}" '
@@ -78,7 +79,16 @@ main() {
           .[]
           | select(.app == $app)
           | select(."is-minimized" == false)
-        ][0] // empty
+        ]
+        | sort_by(.id) as $windows
+        | ($windows | map(."has-focus") | index(true)) as $focused_index
+        | if ($windows | length) == 0 then
+            empty
+          elif $focused_index == null then
+            $windows[0]
+          else
+            $windows[(($focused_index + 1) % ($windows | length))]
+          end
       ' 2>/dev/null || true
   )"
 
