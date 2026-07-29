@@ -70,13 +70,6 @@ main() {
   # Label displays and spaces by physical left-to-right order.
   "${refresh_labels}"
 
-  # Default space rules.
-  replace_and_apply_rule "space-Alacritty" app="^Alacritty$" space=space-2
-  replace_and_apply_rule "space-Codex" app="^Codex$" space=space-2
-  replace_and_apply_rule "space-Slack" app="^Slack$" space=space-1
-  replace_and_apply_rule "space-Discord" app="^Discord$" space=space-1
-  replace_and_apply_rule "space-Spark" app="^Spark$" space=space-1
-
   # Re-apply layout when window/application visibility changes.
   replace_signal "layout-window-created" \
     event=window_created action="${apply_layout}"
