@@ -30,6 +30,7 @@ Temporary Items/
 .history/
 Session.vim
 .undodir/
+.codex/
 
 # Python bytecode and native extensions
 __pycache__/
@@ -101,3 +102,8 @@ draft*
 .src/
 .plans/
 .handoff/
+
+# worktree links
+.src
+.plans
+.handoff

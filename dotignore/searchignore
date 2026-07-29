@@ -51,6 +51,7 @@ Temporary Items/
 .history/
 Session.vim
 .undodir/
+.codex/
 
 # Python caches, environments, and generated output
 __pycache__/
