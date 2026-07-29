@@ -322,6 +322,13 @@
       "description": "Hold Command + H to Hide otherwise trigger F13",
       "manipulators": [
         {
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_unless",
+              "value": 1
+            }
+          ],
           "from": {
             "key_code": "h",
             "modifiers": {
