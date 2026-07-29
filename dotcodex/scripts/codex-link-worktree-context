@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if (( $# == 0 )); then
+  echo "usage: codex-link-worktree-context RELATIVE_PATH..." >&2
+  exit 2
+fi
+
+source_root="${CODEX_SOURCE_TREE_PATH:?CODEX_SOURCE_TREE_PATH is not set}"
+worktree_root="${CODEX_WORKTREE_PATH:?CODEX_WORKTREE_PATH is not set}"
+
+for path in "$@"; do
+  while [[ "$path" == ./* ]]; do
+    path="${path#./}"
+  done
+
+  case "$path" in
+    ""|"."|/*|".."|../*|*/..|*/../*)
+      echo "codex-link-worktree-context: invalid relative path: $path" >&2
+      exit 2
+      ;;
+  esac
+
+  source_path="$source_root/$path"
+  target_path="$worktree_root/$path"
+
+  if [[ ! -e "$source_path" && ! -L "$source_path" ]]; then
+    continue
+  fi
+
+  if [[ -e "$target_path" || -L "$target_path" ]]; then
+    continue
+  fi
+
+  mkdir -p "$(dirname "$target_path")"
+  ln -s "$source_path" "$target_path"
+done

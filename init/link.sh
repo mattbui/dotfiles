@@ -2,8 +2,10 @@
 
 DOTFILES=$HOME/dotfiles
 CONFIGS=$HOME/.config
+LOCAL_BIN=$HOME/.local/bin
 
 mkdir -p "$CONFIGS"
+mkdir -p "$LOCAL_BIN"
 
 link_path() {
   src=$1
@@ -32,6 +34,10 @@ link_path "$DOTFILES/others/sesh.toml" "$CONFIGS/sesh/sesh.toml"
 
 # Git configs
 link_path "$DOTFILES/dotignore/globalgitignore" "$HOME/.globalgitignore"
+
+# Codex scripts
+link_path "$DOTFILES/dotcodex/scripts/codex-link-worktree-context" \
+  "$LOCAL_BIN/codex-link-worktree-context"
 
 # Neovim configs
 link_path "$DOTFILES/dotnvim" "$CONFIGS/nvim"
