@@ -1,170 +1,297 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Toggle float modes.
 # Usage:
-#   toggle-float.sh center [window-id] [toggle|ensure]      -> centered floating window, 80% tiling-area height and up to 95% tiling-area width
-#   toggle-float.sh fullscreen [window-id] [toggle|ensure]  -> centered floating window, 100% tiling-area width, 100% tiling-area height
+#   toggle-float.sh center [window-id] [toggle|ensure]
+#   toggle-float.sh fullscreen [window-id] [toggle|ensure]
 
-mode="${1:-center}"
-target_window="${2:-}"
-float_action="${3:-toggle}"
-height_ratio="0.80"
-width_height_ratio="1.50"
-width_ratio="0.95"
-fullscreen_ratio="1.00"
+set -o pipefail
 
-command -v yabai >/dev/null 2>&1 || exit 0
-command -v jq >/dev/null 2>&1 || exit 0
-command -v awk >/dev/null 2>&1 || exit 0
+readonly TOGGLE_FLOAT_CENTER_HEIGHT_RATIO="0.80"
+readonly TOGGLE_FLOAT_CENTER_ASPECT_RATIO="1.50"
+readonly TOGGLE_FLOAT_CENTER_MAX_WIDTH_RATIO="0.95"
+readonly TOGGLE_FLOAT_FULLSCREEN_RATIO="1.00"
+readonly TOGGLE_FLOAT_ROOMY_AREA_THRESHOLD="3500000"
+readonly TOGGLE_FLOAT_COMPACT_PADDING="8"
+readonly TOGGLE_FLOAT_ROOMY_PADDING="12"
+readonly TOGGLE_FLOAT_TOP_PADDING="6"
 
-apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-$HOME/.config/yabai/scripts/apply-layout.sh}"
+query_window() {
+  local target_window="$1"
 
-case "$mode" in
-  center|fullscreen) ;;
-  *) exit 1 ;;
-esac
-case "$float_action" in
-  toggle|ensure) ;;
-  *) exit 1 ;;
-esac
-
-if [ -n "$target_window" ]; then
-  window_json=$(yabai -m query --windows --window "$target_window" 2>/dev/null) || exit 0
-  is_floating_before=$(printf '%s' "$window_json" | jq -r '."is-floating"')
-  if [ "$float_action" = "toggle" ] || [ "$is_floating_before" != "true" ]; then
-    yabai -m window "$target_window" --toggle float || exit 0
-    window_json=$(yabai -m query --windows --window "$target_window" 2>/dev/null) || exit 0
+  if [[ -n "${target_window}" ]]; then
+    yabai -m query --windows --window "${target_window}" 2>/dev/null
+  else
+    yabai -m query --windows --window 2>/dev/null
   fi
-else
-  window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
-  is_floating_before=$(printf '%s' "$window_json" | jq -r '."is-floating"')
-  if [ "$float_action" = "toggle" ] || [ "$is_floating_before" != "true" ]; then
-    yabai -m window --toggle float || exit 0
-    window_json=$(yabai -m query --windows --window 2>/dev/null) || exit 0
+}
+
+toggle_window_float() {
+  local target_window="$1"
+
+  if [[ -n "${target_window}" ]]; then
+    yabai -m window "${target_window}" --toggle float
+  else
+    yabai -m window --toggle float
   fi
-fi
-[ -n "$window_json" ] || exit 0
+}
 
-is_floating=$(printf '%s' "$window_json" | jq -r '."is-floating"')
-if [ "$is_floating" != "true" ]; then
-  "$apply_layout_script"
-  exit 0
-fi
+macos_menu_bar_height() {
+  command -v osascript >/dev/null 2>&1 || return 1
 
-display_id=$(printf '%s' "$window_json" | jq -r '.display')
-display_json=$(yabai -m query --displays --display "$display_id" 2>/dev/null) || exit 0
-[ -n "$display_json" ] || exit 0
-display_w=$(printf '%s' "$display_json" | jq -r '.frame.w')
-display_h=$(printf '%s' "$display_json" | jq -r '.frame.h')
-
-# Start from the display's visible frame. This excludes menu bar / dock areas
-# when available and is closest to yabai's constrained display bounds.
-dx=$(printf '%s' "$display_json" | jq -r '."visible-frame".x // .frame.x')
-dy=$(printf '%s' "$display_json" | jq -r '."visible-frame".y // .frame.y')
-dw=$(printf '%s' "$display_json" | jq -r '."visible-frame".w // .frame.w')
-dh=$(printf '%s' "$display_json" | jq -r '."visible-frame".h // .frame.h')
-
-menu_bar_height="0"
-top_reserved_height="0"
-if [ "$mode" = "fullscreen" ]; then
-  command -v osascript >/dev/null 2>&1 || exit 0
-
-  # yabai does not expose its constrained display bounds in query --displays.
-  # Account for the macOS menu bar / top reserved area using NSScreen.visibleFrame.
-  menu_bar_height=$(osascript -l JavaScript <<'EOF' 2>/dev/null || printf '0'
+  osascript -l JavaScript <<'EOF' 2>/dev/null || printf '0'
 ObjC.import('AppKit')
 const s = $.NSScreen.mainScreen
 const f = s.frame
 const v = s.visibleFrame
 Math.max(0, f.size.height - v.size.height - v.origin.y)
 EOF
-)
-  [ -n "$menu_bar_height" ] || menu_bar_height="0"
-  top_reserved_height="$menu_bar_height"
-fi
+}
 
-# Match yabai's tiling area by applying the current space's padding on top of
-# the constrained display bounds. See .src/yabai/src/view.c:view_update().
-space_index=$(printf '%s' "$window_json" | jq -r '.space')
-sp_top=$(yabai -m config --space "$space_index" top_padding 2>/dev/null || printf '0')
-sp_bottom=$(yabai -m config --space "$space_index" bottom_padding 2>/dev/null || printf '0')
-sp_left=$(yabai -m config --space "$space_index" left_padding 2>/dev/null || printf '0')
-sp_right=$(yabai -m config --space "$space_index" right_padding 2>/dev/null || printf '0')
+usable_frame() {
+  local mode="$1"
+  local window_json="$2"
+  local display_id
+  local display_json
+  local display_width
+  local display_height
+  local x
+  local y
+  local width
+  local height
+  local menu_bar_height="0"
+  local reserved_top="0"
+  local space_index
+  local space_top
+  local space_bottom
+  local space_left
+  local space_right
+  local base_padding
 
-# Centered single-stack padding should not constrain a floating fullscreen
-# window. Use the display's ordinary compact/roomy edge spacing instead.
-if [ "$mode" = "fullscreen" ]; then
-  base_padding=$(awk "BEGIN { print (($display_w * $display_h) >= 3500000) ? 12 : 8 }")
-  sp_top="6"
-  sp_bottom="$base_padding"
-  sp_left="$base_padding"
-  sp_right="$base_padding"
-fi
+  display_id="$(jq -r '.display' <<<"${window_json}")"
+  display_json="$(
+    yabai -m query --displays --display "${display_id}" 2>/dev/null
+  )" || return 1
+  [[ -n "${display_json}" ]] || return 1
+  display_width="$(jq -r '.frame.w' <<<"${display_json}")"
+  display_height="$(jq -r '.frame.h' <<<"${display_json}")"
 
-read -r dx dy dw dh <<EOF
-$(awk "BEGIN {
-  dx = $dx + $sp_left;
-  dy = $dy + $top_reserved_height + $sp_top;
-  dw = $dw - ($sp_left + $sp_right);
-  dh = $dh - ($top_reserved_height + $sp_top + $sp_bottom);
-  if (dw < 1) dw = 1;
-  if (dh < 1) dh = 1;
-  printf \"%d %d %d %d\", dx, dy, dw, dh;
-}")
-EOF
+  # Prefer the constrained frame when yabai exposes one.
+  x="$(jq -r '."visible-frame".x // .frame.x' <<<"${display_json}")"
+  y="$(jq -r '."visible-frame".y // .frame.y' <<<"${display_json}")"
+  width="$(jq -r '."visible-frame".w // .frame.w' <<<"${display_json}")"
+  height="$(jq -r '."visible-frame".h // .frame.h' <<<"${display_json}")"
 
-if [ "$mode" = "fullscreen" ]; then
-  read -r x y w h <<EOF
-$(awk "BEGIN {
-  w = $dw * $fullscreen_ratio;
-  h = $dh * $fullscreen_ratio;
-  x = $dx + (($dw - w) / 2);
-  y = $dy + (($dh - h) / 2);
-  printf \"%d %d %d %d\", x, y, w, h;
-}")
-EOF
-else
-  read -r x y w h <<EOF
-$(awk "BEGIN {
-  h = $dh * $height_ratio;
-  w = h * $width_height_ratio;
-  max_w = $dw * $width_ratio;
-  if (w > max_w) w = max_w;
-  x = $dx + (($dw - w) / 2);
-  y = $dy + (($dh - h) / 2);
-  printf \"%d %d %d %d\", x, y, w, h;
-}")
-EOF
-fi
-
-# For fullscreen, move first. If the window starts with large centered padding,
-# resizing to display width before moving can be clamped by macOS/yabai at the
-# current x position, leaving a right-side gap.
-if [ "$mode" = "fullscreen" ]; then
-  if [ -n "$target_window" ]; then
-    yabai -m window "$target_window" --move abs:"$x":"$y"
-    sleep 0.01  # wait for JankyBorders to render correctly
-    yabai -m window "$target_window" --resize abs:"$w":"$h"
-    yabai -m window "$target_window" --move abs:"$x":"$y"
-  else
-    yabai -m window --move abs:"$x":"$y"
-    sleep 0.01  # wait for JankyBorders to render correctly
-    yabai -m window --resize abs:"$w":"$h"
-    yabai -m window --move abs:"$x":"$y"
+  if [[ "${mode}" == "fullscreen" ]]; then
+    menu_bar_height="$(macos_menu_bar_height)" || return 1
+    [[ -n "${menu_bar_height}" ]] || menu_bar_height="0"
+    reserved_top="${menu_bar_height}"
   fi
-else
-  # Resize before move so JankyBorders receives the expensive size update before
-  # the cheap move update. This avoids briefly showing an old-size border at the
-  # final floated position.
-  if [ -n "$target_window" ]; then
-    yabai -m window "$target_window" --resize abs:"$w":"$h"
-    yabai -m window "$target_window" --move abs:"$x":"$y"
-  else
-    yabai -m window --resize abs:"$w":"$h"
-    yabai -m window --move abs:"$x":"$y"
-  fi
-fi
 
-if [ "$mode" = "center" ]; then
-  "$apply_layout_script"
-fi
+  # Apply the current space padding to yabai's constrained display bounds.
+  space_index="$(jq -r '.space' <<<"${window_json}")"
+  space_top="$(
+    yabai -m config --space "${space_index}" top_padding 2>/dev/null ||
+      printf '0'
+  )"
+  space_bottom="$(
+    yabai -m config --space "${space_index}" bottom_padding 2>/dev/null ||
+      printf '0'
+  )"
+  space_left="$(
+    yabai -m config --space "${space_index}" left_padding 2>/dev/null ||
+      printf '0'
+  )"
+  space_right="$(
+    yabai -m config --space "${space_index}" right_padding 2>/dev/null ||
+      printf '0'
+  )"
+
+  # Centered single-stack padding should not constrain a fullscreen float.
+  if [[ "${mode}" == "fullscreen" ]]; then
+    base_padding="$(
+      awk \
+        -v width="${display_width}" \
+        -v height="${display_height}" \
+        -v threshold="${TOGGLE_FLOAT_ROOMY_AREA_THRESHOLD}" \
+        -v compact="${TOGGLE_FLOAT_COMPACT_PADDING}" \
+        -v roomy="${TOGGLE_FLOAT_ROOMY_PADDING}" '
+          BEGIN {
+            print ((width * height) >= threshold) ? roomy : compact
+          }
+        '
+    )"
+    space_top="${TOGGLE_FLOAT_TOP_PADDING}"
+    space_bottom="${base_padding}"
+    space_left="${base_padding}"
+    space_right="${base_padding}"
+  fi
+
+  awk \
+    -v x="${x}" \
+    -v y="${y}" \
+    -v width="${width}" \
+    -v height="${height}" \
+    -v reserved_top="${reserved_top}" \
+    -v top="${space_top}" \
+    -v bottom="${space_bottom}" \
+    -v left="${space_left}" \
+    -v right="${space_right}" '
+      BEGIN {
+        x += left
+        y += reserved_top + top
+        width -= left + right
+        height -= reserved_top + top + bottom
+        if (width < 1) {
+          width = 1
+        }
+        if (height < 1) {
+          height = 1
+        }
+        printf "%d %d %d %d", x, y, width, height
+      }
+    '
+}
+
+target_frame() {
+  local mode="$1"
+  local x="$2"
+  local y="$3"
+  local width="$4"
+  local height="$5"
+
+  if [[ "${mode}" == "fullscreen" ]]; then
+    awk \
+      -v x="${x}" \
+      -v y="${y}" \
+      -v width="${width}" \
+      -v height="${height}" \
+      -v ratio="${TOGGLE_FLOAT_FULLSCREEN_RATIO}" '
+        BEGIN {
+          target_width = width * ratio
+          target_height = height * ratio
+          target_x = x + ((width - target_width) / 2)
+          target_y = y + ((height - target_height) / 2)
+          printf "%d %d %d %d",
+            target_x,
+            target_y,
+            target_width,
+            target_height
+        }
+      '
+  else
+    awk \
+      -v x="${x}" \
+      -v y="${y}" \
+      -v width="${width}" \
+      -v height="${height}" \
+      -v height_ratio="${TOGGLE_FLOAT_CENTER_HEIGHT_RATIO}" \
+      -v aspect_ratio="${TOGGLE_FLOAT_CENTER_ASPECT_RATIO}" \
+      -v max_width_ratio="${TOGGLE_FLOAT_CENTER_MAX_WIDTH_RATIO}" '
+        BEGIN {
+          target_height = height * height_ratio
+          target_width = target_height * aspect_ratio
+          maximum_width = width * max_width_ratio
+          if (target_width > maximum_width) {
+            target_width = maximum_width
+          }
+          target_x = x + ((width - target_width) / 2)
+          target_y = y + ((height - target_height) / 2)
+          printf "%d %d %d %d",
+            target_x,
+            target_y,
+            target_width,
+            target_height
+        }
+      '
+  fi
+}
+
+apply_frame() {
+  local mode="$1"
+  local target_window="$2"
+  local x="$3"
+  local y="$4"
+  local width="$5"
+  local height="$6"
+  local -a window_command=(yabai -m window)
+
+  [[ -n "${target_window}" ]] && window_command+=("${target_window}")
+
+  # Fullscreen moves first because resizing at a padded x position can clamp.
+  if [[ "${mode}" == "fullscreen" ]]; then
+    "${window_command[@]}" --move abs:"${x}":"${y}"
+    sleep 0.01 # Wait for JankyBorders to render correctly.
+    "${window_command[@]}" --resize abs:"${width}":"${height}"
+    "${window_command[@]}" --move abs:"${x}":"${y}"
+  else
+    # Resize first so JankyBorders does not render an old-size border at the
+    # final floated position.
+    "${window_command[@]}" --resize abs:"${width}":"${height}"
+    "${window_command[@]}" --move abs:"${x}":"${y}"
+  fi
+}
+
+main() {
+  local mode="${1:-center}"
+  local target_window="${2:-}"
+  local float_action="${3:-toggle}"
+  local apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-}"
+  local window_json
+  local was_floating
+  local is_floating
+  local x
+  local y
+  local width
+  local height
+
+  if [[ -z "${apply_layout_script}" ]]; then
+    apply_layout_script="${HOME}/.config/yabai/scripts/apply-layout.sh"
+  fi
+
+  case "${mode}" in
+    center|fullscreen) ;;
+    *) return 1 ;;
+  esac
+  case "${float_action}" in
+    toggle|ensure) ;;
+    *) return 1 ;;
+  esac
+
+  command -v yabai >/dev/null 2>&1 || return 0
+  command -v jq >/dev/null 2>&1 || return 0
+  command -v awk >/dev/null 2>&1 || return 0
+
+  window_json="$(query_window "${target_window}")" || return 0
+  was_floating="$(jq -r '."is-floating"' <<<"${window_json}")"
+  if [[ "${float_action}" == "toggle" || "${was_floating}" != "true" ]]; then
+    toggle_window_float "${target_window}" || return 0
+    window_json="$(query_window "${target_window}")" || return 0
+  fi
+  [[ -n "${window_json}" ]] || return 0
+
+  is_floating="$(jq -r '."is-floating"' <<<"${window_json}")"
+  if [[ "${is_floating}" != "true" ]]; then
+    "${apply_layout_script}"
+    return 0
+  fi
+
+  read -r x y width height < <(usable_frame "${mode}" "${window_json}") ||
+    return 0
+  read -r x y width height < <(
+    target_frame "${mode}" "${x}" "${y}" "${width}" "${height}"
+  ) || return 0
+  apply_frame \
+    "${mode}" \
+    "${target_window}" \
+    "${x}" \
+    "${y}" \
+    "${width}" \
+    "${height}"
+
+  if [[ "${mode}" == "center" ]]; then
+    "${apply_layout_script}"
+  fi
+}
+
+main "$@"

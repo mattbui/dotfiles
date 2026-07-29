@@ -1,28 +1,37 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Shared, source-only helpers for the flexible-layout scripts.
+# Functions consume layout_* context that callers assign explicitly.
+# shellcheck disable=SC2034,SC2154
 
-layout_script_dir=$(CDPATH='' cd -- "$(dirname "$0")" 2>/dev/null && pwd)
-layout_state_root="${YABAI_LAYOUT_STATE_DIR:-${YABAI_STATE_DIR:-$HOME/.local/state/yabai}}"
-state_dir="$layout_state_root"
+LAYOUT_SCRIPT_DIR="$(
+  cd -- "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null &&
+    pwd
+)"
+readonly LAYOUT_SCRIPT_DIR
+LAYOUT_STATE_ROOT="${YABAI_LAYOUT_STATE_DIR:-}"
+if [[ -z "${LAYOUT_STATE_ROOT}" ]]; then
+  LAYOUT_STATE_ROOT="${YABAI_STATE_DIR:-${HOME}/.local/state/yabai}"
+fi
+readonly LAYOUT_STATE_ROOT
 
-# shellcheck source=/dev/null
-. "$layout_script_dir/layout-state.sh"
-# shellcheck source=/dev/null
-. "$layout_script_dir/ignore-list.sh"
+# shellcheck source=layout-state.sh
+. "${LAYOUT_SCRIPT_DIR}/layout-state.sh"
+# shellcheck source=ignore-list.sh
+. "${LAYOUT_SCRIPT_DIR}/ignore-list.sh"
 
-layout_area_threshold="3500000"
-layout_ultrawide_threshold="2.0"
-layout_default_single_width_ratio="0.65"
-layout_default_single_height_ratio="0.90"
-layout_default_horizontal_split_ratio="0.50"
-layout_default_vertical_split_ratio="0.50"
-layout_ratio_tolerance="0.01"
-layout_top_padding="6"
-layout_compact_padding="8"
-layout_roomy_padding="12"
-layout_compact_gap="8"
-layout_roomy_gap="10"
+readonly LAYOUT_AREA_THRESHOLD="3500000"
+readonly LAYOUT_ULTRAWIDE_THRESHOLD="2.0"
+readonly LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO="0.65"
+readonly LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO="0.90"
+readonly LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO="0.50"
+readonly LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO="0.50"
+readonly LAYOUT_RATIO_TOLERANCE="0.01"
+readonly LAYOUT_TOP_PADDING="6"
+readonly LAYOUT_COMPACT_PADDING="8"
+readonly LAYOUT_ROOMY_PADDING="12"
+readonly LAYOUT_COMPACT_GAP="8"
+readonly LAYOUT_ROOMY_GAP="10"
 
 layout_require() {
   command -v "$1" >/dev/null 2>&1 || return 1
@@ -34,323 +43,830 @@ layout_require_commands() {
     layout_require awk
 }
 
-layout_load_space() {
-  selector="${1:-}"
+# Queries one yabai space and writes its JSON to stdout.
+layout_query_space() {
+  local selector="${1:-}"
 
-  if [ -n "$selector" ]; then
-    layout_space_json=$(yabai -m query --spaces --space "$selector" 2>/dev/null) || return 1
+  if [[ -n "${selector}" ]]; then
+    yabai -m query --spaces --space "${selector}" 2>/dev/null
   else
-    layout_space_json=$(yabai -m query --spaces --space 2>/dev/null) || return 1
+    yabai -m query --spaces --space 2>/dev/null
   fi
-
-  layout_space_index=$(printf '%s' "$layout_space_json" | jq -r '.index // empty')
-  layout_space_label=$(printf '%s' "$layout_space_json" | jq -r '.label // empty')
-  layout_space_type=$(printf '%s' "$layout_space_json" | jq -r '.type // empty')
-  layout_space_display=$(printf '%s' "$layout_space_json" | jq -r '.display // empty')
-  [ -n "$layout_space_index" ] && [ -n "$layout_space_display" ] || return 1
-
-  layout_state_file=""
-  label_number=${layout_space_label#space-}
-  case "$layout_space_label:$label_number" in
-    space-*:[1-9]*)
-      case "$label_number" in
-        *[!0-9]*) return 0 ;;
-      esac
-      layout_state_file=$(layout_state_file_for_space_label "$layout_space_label")
-      ;;
-  esac
 }
 
-layout_load_display() {
-  display_selector="${1:-$layout_space_display}"
-  layout_display_json=$(yabai -m query --displays --display "$display_selector" 2>/dev/null) || return 1
-  layout_display_w=$(printf '%s' "$layout_display_json" | jq -r '.frame.w // empty')
-  layout_display_h=$(printf '%s' "$layout_display_json" | jq -r '.frame.h // empty')
-  [ -n "$layout_display_w" ] && [ -n "$layout_display_h" ] || return 1
+# Resolves the state-file path for a canonical space-N label.
+layout_state_file_for_label() {
+  local label="$1"
 
-  if awk "BEGIN { exit !(($layout_display_w * $layout_display_h) >= $layout_area_threshold) }"; then
-    layout_area_class="roomy"
-    layout_base_padding="$layout_roomy_padding"
-    layout_gap="$layout_roomy_gap"
-  else
-    layout_area_class="compact"
-    layout_base_padding="$layout_compact_padding"
-    layout_gap="$layout_compact_gap"
+  if [[ "${label}" =~ ^space-[1-9][0-9]*$ ]]; then
+    layout_state_file_for_space_label "${label}"
   fi
-
-  if awk "BEGIN { exit !($layout_display_h > $layout_display_w) }"; then
-    layout_orientation="portrait"
-    layout_axis="y"
-    layout_split_type="horizontal"
-    layout_extract_direction="south"
-    layout_first_name="Top"
-    layout_second_name="Bottom"
-  else
-    layout_orientation="landscape"
-    layout_axis="x"
-    layout_split_type="vertical"
-    layout_extract_direction="east"
-    layout_first_name="Left"
-    layout_second_name="Right"
-  fi
-
-  layout_is_ultrawide=$(awk "BEGIN { print (($layout_display_w / $layout_display_h) >= $layout_ultrawide_threshold) ? 1 : 0 }")
 }
 
-layout_default_selection() {
-  if [ "$layout_area_class" = roomy ]; then
+# Queries one yabai display and writes its JSON to stdout.
+layout_query_display() {
+  yabai -m query --displays --display "$1" 2>/dev/null
+}
+
+# Resolves the display profile and writes it as JSON.
+layout_resolve_display_profile() {
+  local width="$1"
+  local height="$2"
+  local area_class
+  local base_padding
+  local gap
+  local orientation
+  local axis
+  local split_type
+  local extract_direction
+  local first_region_name
+  local second_region_name
+  local is_ultrawide
+
+  if awk \
+    -v width="${width}" \
+    -v height="${height}" \
+    -v threshold="${LAYOUT_AREA_THRESHOLD}" \
+    'BEGIN { exit !((width * height) >= threshold) }'; then
+    area_class="roomy"
+    base_padding="${LAYOUT_ROOMY_PADDING}"
+    gap="${LAYOUT_ROOMY_GAP}"
+  else
+    area_class="compact"
+    base_padding="${LAYOUT_COMPACT_PADDING}"
+    gap="${LAYOUT_COMPACT_GAP}"
+  fi
+
+  if awk \
+    -v width="${width}" \
+    -v height="${height}" \
+    'BEGIN { exit !(height > width) }'; then
+    orientation="portrait"
+    axis="y"
+    split_type="horizontal"
+    extract_direction="south"
+    first_region_name="Top"
+    second_region_name="Bottom"
+  else
+    orientation="landscape"
+    axis="x"
+    split_type="vertical"
+    extract_direction="east"
+    first_region_name="Left"
+    second_region_name="Right"
+  fi
+
+  is_ultrawide="$(
+    awk \
+      -v width="${width}" \
+      -v height="${height}" \
+      -v threshold="${LAYOUT_ULTRAWIDE_THRESHOLD}" \
+      'BEGIN { print ((width / height) >= threshold) ? 1 : 0 }'
+  )"
+
+  jq -cn \
+    --arg area_class "${area_class}" \
+    --arg base_padding "${base_padding}" \
+    --arg gap "${gap}" \
+    --arg orientation "${orientation}" \
+    --arg axis "${axis}" \
+    --arg split_type "${split_type}" \
+    --arg extract_direction "${extract_direction}" \
+    --arg first_region_name "${first_region_name}" \
+    --arg second_region_name "${second_region_name}" \
+    --arg is_ultrawide "${is_ultrawide}" '
+      {
+        area_class: $area_class,
+        base_padding: $base_padding,
+        gap: $gap,
+        orientation: $orientation,
+        axis: $axis,
+        split_type: $split_type,
+        extract_direction: $extract_direction,
+        first_region_name: $first_region_name,
+        second_region_name: $second_region_name,
+        is_ultrawide: $is_ultrawide
+      }
+    '
+}
+
+layout_default_mode() {
+  if [[ "$1" == "roomy" ]]; then
     printf 'two-stack'
   else
     printf 'single-stack'
   fi
 }
 
-layout_valid_selection() {
-  [ "$1" = single-stack ] || [ "$1" = two-stack ]
-}
+# Reads and normalizes the saved preferences, writing them as JSON.
+layout_resolve_preferences() {
+  local state_file="$1"
+  local area_class="$2"
+  local state_json
+  local default_mode
 
-layout_valid_single_ratio() {
-  awk -v v="$1" 'BEGIN {
-    if (v !~ /^[0-9]+([.][0-9]+)?$/) exit 1
-    exit !(v >= 0.30 && v < 1.0)
-  }' 2>/dev/null
-}
+  state_json="$(layout_state_read "${state_file}")" || return 1
+  default_mode="$(layout_default_mode "${area_class}")"
 
-layout_valid_split_ratio() {
-  awk -v v="$1" 'BEGIN {
-    if (v !~ /^[0-9]+([.][0-9]+)?$/) exit 1
-    exit !(v >= 0.10 && v <= 0.90)
-  }' 2>/dev/null
-}
+  jq -cn \
+    --argjson state "${state_json}" \
+    --arg area_class "${area_class}" \
+    --arg default_mode "${default_mode}" \
+    --argjson default_single_width "${LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO}" \
+    --argjson default_single_height "${LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO}" \
+    --argjson default_landscape "${LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO}" \
+    --argjson default_portrait "${LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO}" '
+      def valid_ratio($value; $minimum; $maximum; $inclusive):
+        ($value | tostring) as $text
+        | (
+            if ($text | test("^[0-9]+([.][0-9]+)?$"))
+            then ($text | tonumber)
+            else null
+            end
+          ) as $number
+        | if (
+            $number != null
+            and $number >= $minimum
+            and (
+              if $inclusive
+              then $number <= $maximum
+              else $number < $maximum
+              end
+            )
+          )
+          then $number
+          else null
+          end;
 
-layout_state_value() {
-  key="$1"
-  default="$2"
-  if [ -n "$layout_state_file" ]; then
-    layout_state_get "$layout_state_file" "$key" "$default"
-  else
-    printf '%s' "$default"
-  fi
-}
-
-layout_load_preferences() {
-  default_selection=$(layout_default_selection)
-  selected_layout=$(layout_state_value selected_layout "$default_selection")
-  layout_valid_selection "$selected_layout" || selected_layout="$default_selection"
-
-  last_area_class=$(layout_state_value last_area_class "")
-  case "$last_area_class" in
-    compact|roomy) ;;
-    *) last_area_class="" ;;
-  esac
-  if [ -n "$last_area_class" ] && [ "$last_area_class" != "$layout_area_class" ]; then
-    selected_layout="$default_selection"
-  fi
-
-  single_width_ratio=$(layout_state_value single_width_ratio "$layout_default_single_width_ratio")
-  layout_valid_single_ratio "$single_width_ratio" || single_width_ratio="$layout_default_single_width_ratio"
-  single_height_ratio=$(layout_state_value single_height_ratio "$layout_default_single_height_ratio")
-  layout_valid_single_ratio "$single_height_ratio" || single_height_ratio="$layout_default_single_height_ratio"
-  horizontal_split_ratio=$(layout_state_value horizontal_split_ratio "$layout_default_horizontal_split_ratio")
-  layout_valid_split_ratio "$horizontal_split_ratio" || horizontal_split_ratio="$layout_default_horizontal_split_ratio"
-  vertical_split_ratio=$(layout_state_value vertical_split_ratio "$layout_default_vertical_split_ratio")
-  layout_valid_split_ratio "$vertical_split_ratio" || vertical_split_ratio="$layout_default_vertical_split_ratio"
+      ($state.last_area_class // "" | tostring) as $stored_area
+      | (
+          if $stored_area == "compact" or $stored_area == "roomy"
+          then $stored_area
+          else ""
+          end
+        ) as $last_area_class
+      | ($state.selected_layout // "" | tostring) as $stored_mode
+      | (
+          if $stored_mode == "single-stack"
+            or $stored_mode == "two-stack"
+          then $stored_mode
+          else $default_mode
+          end
+        ) as $valid_mode
+      | {
+          mode: (
+            if (
+              $last_area_class != ""
+              and $last_area_class != $area_class
+            )
+            then $default_mode
+            else $valid_mode
+            end
+          ),
+          last_area_class: $last_area_class,
+          single_width_ratio: (
+            valid_ratio($state.single_width_ratio; 0.30; 1.0; false)
+            // $default_single_width
+          ),
+          single_height_ratio: (
+            valid_ratio($state.single_height_ratio; 0.30; 1.0; false)
+            // $default_single_height
+          ),
+          landscape_split_ratio: (
+            valid_ratio($state.horizontal_split_ratio; 0.10; 0.90; true)
+            // $default_landscape
+          ),
+          portrait_split_ratio: (
+            valid_ratio($state.vertical_split_ratio; 0.10; 0.90; true)
+            // $default_portrait
+          )
+        }
+    '
 }
 
 layout_save_preferences() {
-  [ -n "$layout_state_file" ] || return 0
-  layout_state_update "$layout_state_file" \
-    selected_layout "$selected_layout" \
-    last_area_class "$layout_area_class" \
-    single_width_ratio "$(awk "BEGIN { printf \"%.3f\", $single_width_ratio }")" \
-    single_height_ratio "$(awk "BEGIN { printf \"%.3f\", $single_height_ratio }")" \
-    horizontal_split_ratio "$(awk "BEGIN { printf \"%.3f\", $horizontal_split_ratio }")" \
-    vertical_split_ratio "$(awk "BEGIN { printf \"%.3f\", $vertical_split_ratio }")"
+  local single_width_ratio
+  local single_height_ratio
+  local landscape_split_ratio
+  local portrait_split_ratio
+
+  [[ -n "${layout_state_file}" ]] || return 0
+  single_width_ratio="$(
+    awk -v ratio="${layout_single_width_ratio}" \
+      'BEGIN { printf "%.3f", ratio }'
+  )"
+  single_height_ratio="$(
+    awk -v ratio="${layout_single_height_ratio}" \
+      'BEGIN { printf "%.3f", ratio }'
+  )"
+  landscape_split_ratio="$(
+    awk -v ratio="${layout_landscape_split_ratio}" \
+      'BEGIN { printf "%.3f", ratio }'
+  )"
+  portrait_split_ratio="$(
+    awk -v ratio="${layout_portrait_split_ratio}" \
+      'BEGIN { printf "%.3f", ratio }'
+  )"
+
+  layout_state_update "${layout_state_file}" \
+    selected_layout "${layout_mode}" \
+    last_area_class "${layout_area_class}" \
+    single_width_ratio "${single_width_ratio}" \
+    single_height_ratio "${single_height_ratio}" \
+    horizontal_split_ratio "${landscape_split_ratio}" \
+    vertical_split_ratio "${portrait_split_ratio}"
 }
 
-layout_query_candidates() {
-  if [ -f "$ignore_file" ]; then
-    ignored_apps_json=$(sed '/^[[:space:]]*$/d' "$ignore_file" | jq -R . | jq -s .) || return 1
+layout_query_candidate_windows() {
+  local ignored_apps_json
+
+  if [[ -f "${IGNORE_FILE}" ]]; then
+    ignored_apps_json="$(
+      sed '/^[[:space:]]*$/d' "${IGNORE_FILE}" |
+        jq -R . |
+        jq -s .
+    )" || return 1
   else
-    ignored_apps_json=$(printf '%s\n' "$ignore_defaults" | sed '/^[[:space:]]*$/d' | jq -R . | jq -s .) || return 1
+    ignored_apps_json="$(
+      printf '%s\n' "${IGNORE_DEFAULTS}" |
+        sed '/^[[:space:]]*$/d' |
+        jq -R . |
+        jq -s .
+    )" || return 1
   fi
-  yabai -m query --windows --space "$layout_space_index" 2>/dev/null |
-    jq --argjson ignored_apps "$ignored_apps_json" '[.[] | .app as $app | select(."is-floating" == false and ."is-minimized" == false and ."is-hidden" == false and (($ignored_apps | index($app)) | not))]'
+  yabai -m query --windows --space "${layout_space_index}" 2>/dev/null |
+    jq --argjson ignored_apps "${ignored_apps_json}" '
+      [
+        .[]
+        | .app as $app
+        | select(."is-floating" == false)
+        | select(."is-minimized" == false)
+        | select(."is-hidden" == false)
+        | select(($ignored_apps | index($app)) == null)
+      ]
+    '
 }
 
 layout_candidate_count() {
-  printf '%s' "$1" | jq 'length'
+  jq 'length' <<<"$1"
 }
 
 layout_region_count() {
-  printf '%s' "$1" | jq '[.[] | [.frame.x, .frame.y, .frame.w, .frame.h]] | unique | length'
+  jq '
+    [
+      .[]
+      | [.frame.x, .frame.y, .frame.w, .frame.h]
+    ]
+    | unique
+    | length
+  ' <<<"$1"
 }
 
 layout_axis_region_count() {
-  printf '%s' "$1" | jq --arg axis "$layout_axis" '[.[] | .frame[$axis]] | unique | length'
+  jq \
+    --arg axis "${layout_axis}" \
+    '[.[] | .frame[$axis]] | unique | length' \
+    <<<"$1"
 }
 
-layout_other_axis_region_count() {
-  other_axis="y"
-  [ "$layout_axis" = y ] && other_axis="x"
-  printf '%s' "$1" | jq --arg axis "$other_axis" '[.[] | .frame[$axis]] | unique | length'
+layout_cross_axis_region_count() {
+  local cross_axis="y"
+
+  [[ "${layout_axis}" == "y" ]] && cross_axis="x"
+  jq \
+    --arg axis "${cross_axis}" \
+    '[.[] | .frame[$axis]] | unique | length' \
+    <<<"$1"
 }
 
-layout_frame_key_for_id() {
-  printf '%s' "$1" |
-    jq -r --argjson id "$2" '.[] | select(.id == $id) | [.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")'
+layout_region_bounds_for_id() {
+  jq -r --argjson id "$2" '
+    .[]
+    | select(.id == $id)
+    | [.frame.x, .frame.y, .frame.w, .frame.h]
+    | map(tostring)
+    | join(":")
+  ' <<<"$1"
 }
 
-layout_first_region_key() {
-  printf '%s' "$1" |
-    jq -r --arg axis "$layout_axis" 'sort_by(.frame[$axis], .id) | first | [.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")'
+layout_first_region_bounds() {
+  jq -r --arg axis "${layout_axis}" '
+    sort_by(.frame[$axis], .id)
+    | first
+    | [.frame.x, .frame.y, .frame.w, .frame.h]
+    | map(tostring)
+    | join(":")
+  ' <<<"$1"
 }
 
-layout_second_region_key() {
-  printf '%s' "$1" |
-    jq -r --arg axis "$layout_axis" 'sort_by(.frame[$axis], .id) | last | [.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")'
+layout_second_region_bounds() {
+  jq -r --arg axis "${layout_axis}" '
+    sort_by(.frame[$axis], .id)
+    | last
+    | [.frame.x, .frame.y, .frame.w, .frame.h]
+    | map(tostring)
+    | join(":")
+  ' <<<"$1"
 }
 
-layout_preferred_visible_id() {
-  printf '%s' "$1" |
-    jq -r --arg axis "$layout_axis" '([.[] | select(."has-focus" == true)] | first.id) //
-      ([.[] | select(."is-visible" == true)] | sort_by(.frame[$axis], .id) | last.id) //
-      (sort_by(.frame[$axis], .id) | last.id) // empty'
+layout_preferred_window_id() {
+  jq -r --arg axis "${layout_axis}" '
+    ([.[] | select(."has-focus" == true)] | first.id)
+    // (
+      [.[] | select(."is-visible" == true)]
+      | sort_by(.frame[$axis], .id)
+      | last.id
+    )
+    // (sort_by(.frame[$axis], .id) | last.id)
+    // empty
+  ' <<<"$1"
 }
 
-layout_visible_id_in_frame() {
-  printf '%s' "$1" |
-    jq -r --arg key "$2" '
-      [.[] | select(([.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")) == $key)] |
-      (([.[] | select(."has-focus" == true)] | first.id) //
-       ([.[] | select(."is-visible" == true)] | first.id) //
-       (sort_by(.id) | last.id) // empty)'
+layout_window_id_in_region() {
+  jq -r --arg bounds "$2" '
+    [
+      .[]
+      | select(
+          (
+            [.frame.x, .frame.y, .frame.w, .frame.h]
+            | map(tostring)
+            | join(":")
+          ) == $bounds
+        )
+    ]
+    | (
+        ([.[] | select(."has-focus" == true)] | first.id)
+        // ([.[] | select(."is-visible" == true)] | first.id)
+        // (sort_by(.id) | last.id)
+        // empty
+      )
+  ' <<<"$1"
 }
 
-layout_windows_in_frame() {
-  printf '%s' "$1" |
-    jq --arg key "$2" '[.[] | select(([.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")) == $key)]'
+layout_windows_in_region() {
+  jq --arg bounds "$2" '
+    [
+      .[]
+      | select(
+          (
+            [.frame.x, .frame.y, .frame.w, .frame.h]
+            | map(tostring)
+            | join(":")
+          ) == $bounds
+        )
+    ]
+  ' <<<"$1"
 }
 
 layout_replacement_id() {
-  printf '%s' "$1" |
-    jq -r --argjson anchor "$2" '[.[] | select(.id != $anchor)] |
-      sort_by([(if ."has-focus" == true or ."is-visible" == true then 1 else 0 end), .id]) |
-      first.id // empty'
+  jq -r --argjson anchor "$2" '
+    [.[] | select(.id != $anchor)]
+    | sort_by([
+        (
+          if ."has-focus" == true or ."is-visible" == true
+          then 1
+          else 0
+          end
+        ),
+        .id
+      ])
+    | first.id // empty
+  ' <<<"$1"
 }
 
-layout_anchor_id_excluding_frame() {
-  printf '%s' "$1" |
-    jq -r --arg excluded "$2" --arg axis "$layout_axis" '
-      [.[] | select(([.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":")) != $excluded)] |
-      sort_by([(if ."stack-index" > 0 then 0 else 1 end), .frame[$axis], .id]) |
-      first.id // empty'
+layout_anchor_id_outside_region() {
+  jq \
+    -r \
+    --arg excluded_bounds "$2" \
+    --arg axis "${layout_axis}" '
+      [
+        .[]
+        | select(
+            (
+              [.frame.x, .frame.y, .frame.w, .frame.h]
+              | map(tostring)
+              | join(":")
+            ) != $excluded_bounds
+          )
+      ]
+      | sort_by([
+          (if ."stack-index" > 0 then 0 else 1 end),
+          .frame[$axis],
+          .id
+        ])
+      | first.id // empty
+    ' <<<"$1"
 }
 
-layout_ids_outside_frames() {
-  printf '%s' "$1" |
-    jq -r --arg keep_a "$2" --arg keep_b "$3" '
-      [.[] | . + {frame_key: ([.frame.x, .frame.y, .frame.w, .frame.h] | map(tostring) | join(":"))} |
-       select(.frame_key != $keep_a and .frame_key != $keep_b)] |
-      sort_by([(if ."has-focus" == true then 2 elif ."is-visible" == true then 1 else 0 end), .id]) |
-      .[].id'
+layout_window_ids_outside_regions() {
+  jq \
+    -r \
+    --arg first_region_bounds "$2" \
+    --arg second_region_bounds "$3" '
+    [
+      .[]
+      | . + {
+          region_bounds: (
+            [.frame.x, .frame.y, .frame.w, .frame.h]
+            | map(tostring)
+            | join(":")
+          )
+      }
+      | select(
+          .region_bounds != $first_region_bounds
+          and .region_bounds != $second_region_bounds
+        )
+    ]
+    | sort_by([
+        (
+          if ."has-focus" == true then 2
+          elif ."is-visible" == true then 1
+          else 0
+          end
+        ),
+        .id
+      ])
+    | .[].id
+  ' <<<"$1"
 }
 
 layout_stable_id_except() {
-  printf '%s' "$1" |
-    jq -r --argjson excluded "$2" '[.[] | select(.id != $excluded)] | sort_by(.id) | first.id // empty'
+  jq -r --argjson excluded "$2" '
+    [.[] | select(.id != $excluded)]
+    | sort_by(.id)
+    | first.id // empty
+  ' <<<"$1"
 }
 
 layout_region_for_id() {
-  windows="$1"
-  window_id="$2"
-  first_key=$(layout_first_region_key "$windows")
-  second_key=$(layout_second_region_key "$windows")
-  window_key=$(layout_frame_key_for_id "$windows" "$window_id")
-  if [ "$window_key" = "$first_key" ]; then
+  local windows="$1"
+  local window_id="$2"
+  local first_region_bounds
+  local second_region_bounds
+  local window_region_bounds
+
+  first_region_bounds="$(layout_first_region_bounds "${windows}")"
+  second_region_bounds="$(layout_second_region_bounds "${windows}")"
+  window_region_bounds="$(layout_region_bounds_for_id "${windows}" "${window_id}")"
+  if [[ "${window_region_bounds}" == "${first_region_bounds}" ]]; then
     printf 'first'
-  elif [ "$window_key" = "$second_key" ]; then
+  elif [[ "${window_region_bounds}" == "${second_region_bounds}" ]]; then
     printf 'second'
   fi
 }
 
 layout_apply_config_if_needed() {
-  key="$1"
-  desired="$2"
-  current=$(yabai -m config --space "$layout_space_index" "$key" 2>/dev/null || printf '')
-  [ "$current" = "$desired" ] || yabai -m config --space "$layout_space_index" "$key" "$desired"
+  local config_key="$1"
+  local desired_value="$2"
+  local current_value
+
+  current_value="$(
+    yabai -m config --space "${layout_space_index}" "${config_key}" 2>/dev/null ||
+      printf ''
+  )"
+  [[ "${current_value}" == "${desired_value}" ]] ||
+    yabai -m config \
+      --space "${layout_space_index}" \
+      "${config_key}" \
+      "${desired_value}"
 }
 
 layout_set_space_layout() {
-  desired="$1"
-  if [ "$layout_space_type" != "$desired" ]; then
-    yabai -m space "$layout_space_index" --layout "$desired" || return 1
-    layout_space_type="$desired"
+  local desired_layout="$1"
+
+  if [[ "${layout_space_type}" != "${desired_layout}" ]]; then
+    yabai -m space \
+      "${layout_space_index}" \
+      --layout "${desired_layout}" || return 1
+    layout_space_type="${desired_layout}"
   fi
 }
 
 layout_apply_space_settings() {
-  space_layout="$1"
-  gap="$2"
-  top="$3"
-  bottom="$4"
-  left="$5"
-  right="$6"
-  layout_set_space_layout "$space_layout" || return 1
-  layout_apply_config_if_needed window_gap "$gap" || return 1
-  layout_apply_config_if_needed top_padding "$top" || return 1
-  layout_apply_config_if_needed bottom_padding "$bottom" || return 1
-  layout_apply_config_if_needed left_padding "$left" || return 1
-  layout_apply_config_if_needed right_padding "$right" || return 1
+  local space_layout="$1"
+  local gap="$2"
+  local top_padding="$3"
+  local bottom_padding="$4"
+  local left_padding="$5"
+  local right_padding="$6"
+
+  layout_set_space_layout "${space_layout}" || return 1
+  layout_apply_config_if_needed window_gap "${gap}" || return 1
+  layout_apply_config_if_needed top_padding "${top_padding}" || return 1
+  layout_apply_config_if_needed bottom_padding "${bottom_padding}" || return 1
+  layout_apply_config_if_needed left_padding "${left_padding}" || return 1
+  layout_apply_config_if_needed right_padding "${right_padding}" || return 1
 }
 
-layout_valid_two_stack() {
-  windows="$1"
-  [ "$(layout_candidate_count "$windows")" -ge 2 ] &&
-    [ "$(layout_region_count "$windows")" -eq 2 ] &&
-    [ "$(layout_axis_region_count "$windows")" -eq 2 ]
+layout_is_valid_two_stack() {
+  local windows="$1"
+
+  (( $(layout_candidate_count "${windows}") >= 2 )) &&
+    (( $(layout_region_count "${windows}") == 2 )) &&
+    (( $(layout_axis_region_count "${windows}") == 2 ))
 }
 
-layout_single_sizing() {
-  layout_effective_single_ratio=""
-  layout_padding_top="$layout_top_padding"
-  layout_padding_bottom="$layout_base_padding"
-  layout_padding_left="$layout_base_padding"
-  layout_padding_right="$layout_base_padding"
+# Resolves single-stack sizing and writes it as JSON.
+layout_resolve_single_stack_sizing() {
+  local orientation="$1"
+  local display_width="$2"
+  local display_height="$3"
+  local base_padding="$4"
+  local is_ultrawide="$5"
+  local single_width_ratio="$6"
+  local single_height_ratio="$7"
+  local max_ratio
+  local effective_ratio=""
+  local effective_ratio_raw
+  local side_padding
+  local padding_top="${LAYOUT_TOP_PADDING}"
+  local padding_bottom="${base_padding}"
+  local padding_left="${base_padding}"
+  local padding_right="${base_padding}"
 
-  if [ "$layout_orientation" = portrait ]; then
-    max_ratio=$(awk "BEGIN { printf \"%.9f\", ($layout_display_h - $layout_top_padding - $layout_base_padding) / $layout_display_h }")
-    effective_ratio=$(awk "BEGIN { v=$single_height_ratio; m=$max_ratio; if (v > m) v=m; printf \"%.9f\", v }")
-    layout_effective_single_ratio=$(awk "BEGIN { printf \"%.3f\", $effective_ratio }")
-    read -r layout_padding_top layout_padding_bottom <<EOF
-$(awk "BEGIN {
-  budget=$layout_display_h * (1 - $effective_ratio);
-  top=int((budget / 2) + 0.5); bottom=int((budget - top) + 0.5);
-  if (top < $layout_top_padding) { top=$layout_top_padding; bottom=int((budget-top)+0.5) }
-  if (bottom < $layout_base_padding) { bottom=$layout_base_padding; top=int((budget-bottom)+0.5) }
-  printf \"%d %d\", top, bottom
-}")
-EOF
-  elif [ "$layout_is_ultrawide" -eq 1 ]; then
-    max_ratio=$(awk "BEGIN { printf \"%.9f\", ($layout_display_w - 2 * $layout_base_padding) / $layout_display_w }")
-    effective_ratio=$(awk "BEGIN { v=$single_width_ratio; m=$max_ratio; if (v > m) v=m; printf \"%.9f\", v }")
-    layout_effective_single_ratio=$(awk "BEGIN { printf \"%.3f\", $effective_ratio }")
-    side_padding=$(awk "BEGIN { p=int(($layout_display_w * (1 - $effective_ratio) / 2)+0.5); if (p < $layout_base_padding) p=$layout_base_padding; printf \"%d\", p }")
-    layout_padding_left="$side_padding"
-    layout_padding_right="$side_padding"
+  if [[ "${orientation}" == "portrait" ]]; then
+    max_ratio="$(
+      awk \
+        -v height="${display_height}" \
+        -v top="${LAYOUT_TOP_PADDING}" \
+        -v bottom="${base_padding}" \
+        'BEGIN { printf "%.9f", (height - top - bottom) / height }'
+    )"
+    effective_ratio_raw="$(
+      awk \
+        -v ratio="${single_height_ratio}" \
+        -v maximum="${max_ratio}" '
+          BEGIN {
+            if (ratio > maximum) {
+              ratio = maximum
+            }
+            printf "%.9f", ratio
+          }
+        '
+    )"
+    effective_ratio="$(
+      awk -v ratio="${effective_ratio_raw}" 'BEGIN { printf "%.3f", ratio }'
+    )"
+    read -r padding_top padding_bottom < <(
+      awk \
+        -v height="${display_height}" \
+        -v ratio="${effective_ratio_raw}" \
+        -v minimum_top="${LAYOUT_TOP_PADDING}" \
+        -v minimum_bottom="${base_padding}" '
+          BEGIN {
+            budget = height * (1 - ratio)
+            top = int((budget / 2) + 0.5)
+            bottom = int((budget - top) + 0.5)
+            if (top < minimum_top) {
+              top = minimum_top
+              bottom = int((budget - top) + 0.5)
+            }
+            if (bottom < minimum_bottom) {
+              bottom = minimum_bottom
+              top = int((budget - bottom) + 0.5)
+            }
+            printf "%d %d", top, bottom
+          }
+        '
+    )
+  elif (( is_ultrawide == 1 )); then
+    max_ratio="$(
+      awk \
+        -v width="${display_width}" \
+        -v padding="${base_padding}" \
+        'BEGIN { printf "%.9f", (width - (2 * padding)) / width }'
+    )"
+    effective_ratio_raw="$(
+      awk \
+        -v ratio="${single_width_ratio}" \
+        -v maximum="${max_ratio}" '
+          BEGIN {
+            if (ratio > maximum) {
+              ratio = maximum
+            }
+            printf "%.9f", ratio
+          }
+        '
+    )"
+    effective_ratio="$(
+      awk -v ratio="${effective_ratio_raw}" 'BEGIN { printf "%.3f", ratio }'
+    )"
+    side_padding="$(
+      awk \
+        -v width="${display_width}" \
+        -v ratio="${effective_ratio_raw}" \
+        -v minimum="${base_padding}" '
+          BEGIN {
+            padding = int(((width * (1 - ratio)) / 2) + 0.5)
+            if (padding < minimum) {
+              padding = minimum
+            }
+            printf "%d", padding
+          }
+        '
+    )"
+    padding_left="${side_padding}"
+    padding_right="${side_padding}"
   fi
+
+  jq -cn \
+    --arg effective_ratio "${effective_ratio}" \
+    --arg padding_top "${padding_top}" \
+    --arg padding_bottom "${padding_bottom}" \
+    --arg padding_left "${padding_left}" \
+    --arg padding_right "${padding_right}" '
+      {
+        effective_ratio: $effective_ratio,
+        padding_top: $padding_top,
+        padding_bottom: $padding_bottom,
+        padding_left: $padding_left,
+        padding_right: $padding_right
+      }
+    '
 }
 
-layout_active_split_ratio() {
-  if [ "$layout_orientation" = portrait ]; then
-    printf '%s' "$vertical_split_ratio"
+layout_split_ratio_for_orientation() {
+  if [[ "${layout_orientation}" == "portrait" ]]; then
+    printf '%s' "${layout_portrait_split_ratio}"
   else
-    printf '%s' "$horizontal_split_ratio"
+    printf '%s' "${layout_landscape_split_ratio}"
   fi
 }
 
-layout_frame_size_for_id() {
-  size_key="w"
-  [ "$layout_axis" = y ] && size_key="h"
-  printf '%s' "$1" | jq -r --argjson id "$2" --arg size "$size_key" '.[] | select(.id == $id) | .frame[$size]'
+layout_axis_size_for_id() {
+  local size_key="w"
+
+  [[ "${layout_axis}" == "y" ]] && size_key="h"
+  jq \
+    -r \
+    --argjson id "$2" \
+    --arg size "${size_key}" \
+    '.[] | select(.id == $id) | .frame[$size]' \
+    <<<"$1"
+}
+
+# Resolves the effective arrangement and writes its settings as JSON.
+layout_resolve_arrangement() {
+  local mode="$1"
+  local candidate_count="$2"
+  local base_padding="$3"
+  local padding_top="$4"
+  local padding_bottom="$5"
+  local padding_left="$6"
+  local padding_right="$7"
+  local arrangement
+  local desired_space_type
+
+  if [[ "${mode}" == "single-stack" ]]; then
+    arrangement="single-stack"
+    desired_space_type="stack"
+  elif (( candidate_count <= 1 )); then
+    arrangement="temporary-single-stack"
+    desired_space_type="bsp"
+  else
+    arrangement="two-stack"
+    desired_space_type="bsp"
+    padding_top="${LAYOUT_TOP_PADDING}"
+    padding_bottom="${base_padding}"
+    padding_left="${base_padding}"
+    padding_right="${base_padding}"
+  fi
+
+  jq -cn \
+    --arg arrangement "${arrangement}" \
+    --arg desired_space_type "${desired_space_type}" \
+    --arg padding_top "${padding_top}" \
+    --arg padding_bottom "${padding_bottom}" \
+    --arg padding_left "${padding_left}" \
+    --arg padding_right "${padding_right}" '
+      {
+        arrangement: $arrangement,
+        desired_space_type: $desired_space_type,
+        padding_top: $padding_top,
+        padding_bottom: $padding_bottom,
+        padding_left: $padding_left,
+        padding_right: $padding_right
+      }
+    '
+}
+
+layout_current_space_config() {
+  yabai -m config --space "${layout_space_index}" "$1" 2>/dev/null ||
+    printf ''
+}
+
+layout_spacing_is_compliant() {
+  [[ "$(layout_current_space_config window_gap)" == "${layout_gap}" ]] &&
+    [[ "$(layout_current_space_config top_padding)" == "${layout_padding_top}" ]] &&
+    [[ "$(layout_current_space_config bottom_padding)" == "${layout_padding_bottom}" ]] &&
+    [[ "$(layout_current_space_config left_padding)" == "${layout_padding_left}" ]] &&
+    [[ "$(layout_current_space_config right_padding)" == "${layout_padding_right}" ]]
+}
+
+layout_ratio_is_compliant() {
+  local first_region_size="$1"
+  local second_region_size="$2"
+  local desired_ratio="$3"
+
+  awk \
+    -v first_region_size="${first_region_size}" \
+    -v second_region_size="${second_region_size}" \
+    -v desired="${desired_ratio}" \
+    -v tolerance="${LAYOUT_RATIO_TOLERANCE}" '
+      BEGIN {
+        total_region_size = first_region_size + second_region_size
+        if (total_region_size <= 0) {
+          exit 1
+        }
+        difference = (first_region_size / total_region_size) - desired
+        if (difference < 0) {
+          difference = -difference
+        }
+        exit !(difference <= tolerance)
+      }
+    '
+}
+
+layout_ratio_values_match() {
+  local current_ratio="$1"
+  local desired_ratio="$2"
+
+  awk \
+    -v current="${current_ratio}" \
+    -v desired="${desired_ratio}" \
+    'BEGIN { exit !(current == desired) }'
+}
+
+layout_two_stack_ratio_is_compliant() {
+  local windows="$1"
+  local first_region_bounds
+  local second_region_bounds
+  local first_region_window_id
+  local second_region_window_id
+  local first_region_size
+  local second_region_size
+  local desired_ratio
+
+  first_region_bounds="$(layout_first_region_bounds "${windows}")"
+  second_region_bounds="$(layout_second_region_bounds "${windows}")"
+  first_region_window_id="$(
+    layout_window_id_in_region "${windows}" "${first_region_bounds}"
+  )"
+  second_region_window_id="$(
+    layout_window_id_in_region "${windows}" "${second_region_bounds}"
+  )"
+  [[ -n "${first_region_window_id}" ]] || return 1
+  [[ -n "${second_region_window_id}" ]] || return 1
+
+  first_region_size="$(
+    layout_axis_size_for_id "${windows}" "${first_region_window_id}"
+  )"
+  second_region_size="$(
+    layout_axis_size_for_id "${windows}" "${second_region_window_id}"
+  )"
+  desired_ratio="$(layout_split_ratio_for_orientation)"
+  layout_ratio_is_compliant \
+    "${first_region_size}" \
+    "${second_region_size}" \
+    "${desired_ratio}"
+}
+
+layout_is_compliant() {
+  local arrangement="$1"
+  local desired_space_type="$2"
+  local windows="$3"
+  local region_count="$4"
+
+  [[ "${layout_space_type}" == "${desired_space_type}" ]] || return 1
+
+  case "${arrangement}" in
+    single-stack)
+      (( region_count <= 1 )) && layout_spacing_is_compliant
+      ;;
+    temporary-single-stack)
+      (( region_count <= 1 )) &&
+        [[ "$(layout_current_space_config split_type)" == "${layout_split_type}" ]] &&
+        layout_spacing_is_compliant
+      ;;
+    two-stack)
+      layout_is_valid_two_stack "${windows}" &&
+        [[ "$(layout_current_space_config split_type)" == "${layout_split_type}" ]] &&
+        layout_spacing_is_compliant &&
+        layout_two_stack_ratio_is_compliant "${windows}"
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+layout_ratio_for_arrangement() {
+  case "$1" in
+    two-stack)
+      layout_split_ratio_for_orientation
+      ;;
+    single-stack|temporary-single-stack)
+      printf '%s' "${layout_effective_single_ratio}"
+      ;;
+  esac
 }

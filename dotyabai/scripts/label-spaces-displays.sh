@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Label displays and spaces by physical left-to-right display position.
 # Labels:
@@ -7,49 +7,80 @@
 #   space-1   = first space on leftmost display, sorted by mission-control index
 #   space-2   = next space in left-to-right display order, then space index order
 
-notify=0
-case "${1:-}" in
-  --notify|-n)
-    notify=1
-    ;;
-esac
+set -o pipefail
 
-command -v yabai >/dev/null 2>&1 || exit 0
-command -v jq >/dev/null 2>&1 || exit 0
+main() {
+  local should_notify=false
+  local displays_json
+  local spaces_json
+  local label_number=1
+  local display_index
+  local space_index
+  local display_count
+  local space_count
+  local message
 
-# Query once so display and space labels are computed from a consistent snapshot.
-displays_json="$(yabai -m query --displays 2>/dev/null)" || exit 0
-spaces_json="$(yabai -m query --spaces 2>/dev/null)" || exit 0
+  case "${1:-}" in
+    --notify|-n)
+      should_notify=true
+      ;;
+  esac
 
-[ -n "$displays_json" ] || exit 0
-[ -n "$spaces_json" ] || exit 0
+  command -v yabai >/dev/null 2>&1 || return 0
+  command -v jq >/dev/null 2>&1 || return 0
 
-# Label displays by physical left-to-right order.
-i=1
-printf '%s\n' "$displays_json" |
-  jq -r 'sort_by(.frame.x) | .[] | .index' |
+  # Query once so labels are computed from a consistent snapshot.
+  displays_json="$(yabai -m query --displays 2>/dev/null)" || return 0
+  spaces_json="$(yabai -m query --spaces 2>/dev/null)" || return 0
+  [[ -n "${displays_json}" && -n "${spaces_json}" ]] || return 0
+
   while IFS= read -r display_index; do
-    [ -n "$display_index" ] || continue
-    yabai -m display "$display_index" --label "display-$i" 2>/dev/null
-    i=$((i + 1))
-  done
+    [[ -n "${display_index}" ]] || continue
+    yabai -m display \
+      "${display_index}" \
+      --label "display-${label_number}" 2>/dev/null
+    ((label_number += 1))
+  done < <(
+    jq -r 'sort_by(.frame.x) | .[] | .index' <<<"${displays_json}"
+  )
 
-# Label spaces by left-to-right display order, then by mission-control space index.
-i=1
-jq -nr --argjson displays "$displays_json" --argjson spaces "$spaces_json" '
-  $displays
-  | sort_by(.frame.x)
-  | .[] as $display
-  | ($spaces | map(select(.display == $display.index)) | sort_by(.index) | .[] | .index)
-' |
+  label_number=1
   while IFS= read -r space_index; do
-    [ -n "$space_index" ] || continue
-    yabai -m space "$space_index" --label "space-$i" 2>/dev/null
-    i=$((i + 1))
-  done
+    [[ -n "${space_index}" ]] || continue
+    yabai -m space \
+      "${space_index}" \
+      --label "space-${label_number}" 2>/dev/null
+    ((label_number += 1))
+  done < <(
+    jq \
+      -nr \
+      --argjson displays "${displays_json}" \
+      --argjson spaces "${spaces_json}" '
+        $displays
+        | sort_by(.frame.x)
+        | .[] as $display
+        | (
+            $spaces
+            | map(select(.display == $display.index))
+            | sort_by(.index)
+            | .[]
+            | .index
+          )
+      '
+  )
 
-if [ "$notify" -eq 1 ] && command -v osascript >/dev/null 2>&1; then
-  display_count=$(printf '%s' "$displays_json" | jq 'length')
-  space_count=$(printf '%s' "$spaces_json" | jq 'length')
-  osascript -e "display notification \"Labelled $display_count displays and $space_count spaces.\" with title \"yabai\" subtitle \"Labels refreshed\"" >/dev/null 2>&1
-fi
+  if [[ "${should_notify}" == "true" ]] &&
+    command -v osascript >/dev/null 2>&1; then
+    display_count="$(jq 'length' <<<"${displays_json}")"
+    space_count="$(jq 'length' <<<"${spaces_json}")"
+    message="Labelled ${display_count} displays and ${space_count} spaces."
+    osascript \
+      -e 'on run argv' \
+      -e 'display notification (item 1 of argv) with title "yabai" subtitle "Labels refreshed"' \
+      -e 'end run' \
+      "${message}" \
+      >/dev/null 2>&1
+  fi
+}
+
+main "$@"

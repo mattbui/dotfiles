@@ -63,7 +63,7 @@ alt - s : $HOME/.config/yabai/scripts/select-layout.sh single-stack
 alt - t : $HOME/.config/yabai/scripts/select-layout.sh two-stack
 alt - r : $HOME/.config/yabai/scripts/apply-layout.sh
 alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh reset
-alt - i : $HOME/.config/yabai/scripts/apply-layout.sh check
+alt - i : $HOME/.config/yabai/scripts/inspect-layout.sh
 
 # Focus displays by physical left-to-right order.
 # Mark before explicit display focus so the yabai hook can skip floating overlays.

@@ -1,12 +1,12 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Manage dotyabai's yabai ignore list.
 # Sourceable functions:
-#   add_ignore "AppName"
-#   remove_ignore "AppName"
-#   toggle_ignore "AppName"
-#   list_ignore
-#   has_ignore "AppName"
+#   ignore_add "AppName"
+#   ignore_remove "AppName"
+#   ignore_toggle "AppName"
+#   ignore_list
+#   ignore_has "AppName"
 #   ignore_rule_label "AppName"
 #   ignore_app_regex "AppName"
 # CLI:
@@ -15,10 +15,10 @@
 #   ignore-list.sh toggle "AppName"
 #   ignore-list.sh list
 
-ignore_state_dir="${YABAI_STATE_DIR:-$HOME/.local/state/yabai}"
-ignore_file="$ignore_state_dir/yabaiignore"
+readonly IGNORE_STATE_DIR="${YABAI_STATE_DIR:-${HOME}/.local/state/yabai}"
+readonly IGNORE_FILE="${IGNORE_STATE_DIR}/yabaiignore"
 
-ignore_defaults='System Settings
+readonly IGNORE_DEFAULTS='System Settings
 Finder
 Ghostty
 Spark Desktop
@@ -47,64 +47,70 @@ qlmanage
 DockDoor
 Antinote'
 
-ensure_ignore_file() {
-  mkdir -p "$ignore_state_dir" 2>/dev/null || return 1
+ignore_ensure_file() {
+  mkdir -p "${IGNORE_STATE_DIR}" 2>/dev/null || return 1
 
-  if [ ! -f "$ignore_file" ]; then
-    printf '%s\n' "$ignore_defaults" | sed '/^[[:space:]]*$/d' >"$ignore_file"
+  if [[ ! -f "${IGNORE_FILE}" ]]; then
+    printf '%s\n' "${IGNORE_DEFAULTS}" |
+      sed '/^[[:space:]]*$/d' >"${IGNORE_FILE}"
   fi
 }
 
-normalize_ignore_file() {
-  ensure_ignore_file || return 1
-  tmp="$ignore_file.$$"
-  awk 'NF && !seen[$0]++ { print }' "$ignore_file" >"$tmp" && mv "$tmp" "$ignore_file"
+ignore_normalize_file() {
+  local tmp="${IGNORE_FILE}.$$"
+
+  ignore_ensure_file || return 1
+  awk 'NF && !seen[$0]++ { print }' "${IGNORE_FILE}" >"${tmp}" &&
+    mv "${tmp}" "${IGNORE_FILE}"
 }
 
-list_ignore() {
-  ensure_ignore_file || return 1
-  sed '/^[[:space:]]*$/d' "$ignore_file"
+ignore_list() {
+  ignore_ensure_file || return 1
+  sed '/^[[:space:]]*$/d' "${IGNORE_FILE}"
 }
 
-has_ignore() {
-  app="$1"
-  ensure_ignore_file || return 1
-  grep -Fx -- "$app" "$ignore_file" >/dev/null 2>&1
+ignore_has() {
+  local app="$1"
+
+  ignore_ensure_file || return 1
+  grep -Fx -- "${app}" "${IGNORE_FILE}" >/dev/null 2>&1
 }
 
-add_ignore() {
-  app="$1"
-  [ -n "$app" ] || return 1
-  ensure_ignore_file || return 1
+ignore_add() {
+  local app="$1"
 
-  if has_ignore "$app"; then
+  [[ -n "${app}" ]] || return 1
+  ignore_ensure_file || return 1
+
+  if ignore_has "${app}"; then
     return 0
   fi
 
-  printf '%s\n' "$app" >>"$ignore_file"
-  normalize_ignore_file
+  printf '%s\n' "${app}" >>"${IGNORE_FILE}"
+  ignore_normalize_file
 }
 
-remove_ignore() {
-  app="$1"
-  [ -n "$app" ] || return 1
-  ensure_ignore_file || return 1
+ignore_remove() {
+  local app="$1"
+  local tmp="${IGNORE_FILE}.$$"
 
-  tmp="$ignore_file.$$"
-  grep -Fvx -- "$app" "$ignore_file" >"$tmp" || :
-  mv "$tmp" "$ignore_file"
+  [[ -n "${app}" ]] || return 1
+  ignore_ensure_file || return 1
+  grep -Fvx -- "${app}" "${IGNORE_FILE}" >"${tmp}" || :
+  mv "${tmp}" "${IGNORE_FILE}"
 }
 
-toggle_ignore() {
-  app="$1"
-  [ -n "$app" ] || return 1
+ignore_toggle() {
+  local app="$1"
 
-  if has_ignore "$app"; then
-    remove_ignore "$app"
+  [[ -n "${app}" ]] || return 1
+
+  if ignore_has "${app}"; then
+    ignore_remove "${app}"
     return 2
   fi
 
-  add_ignore "$app"
+  ignore_add "${app}"
   return 0
 }
 
@@ -115,101 +121,127 @@ ignore_rule_label() {
 
 ignore_app_regex() {
   # Escape extended-regex metacharacters, then anchor exact app name.
+  # shellcheck disable=SC2016
   printf '^%s$' "$(printf '%s' "$1" | sed 's/[.[\*^$()+?{}|\\]/\\&/g')"
 }
 
-apply_ignore_rule_live() {
-  app="$1"
+ignore_apply_rule_live() {
+  local app="$1"
+  local label
+  local regex
+  local window_ids
+  local script_dir
+  local toggle_float_script="${YABAI_TOGGLE_FLOAT_SCRIPT:-}"
+  local id
+
   command -v yabai >/dev/null 2>&1 || return 0
 
-  label=$(ignore_rule_label "$app")
-  regex=$(ignore_app_regex "$app")
+  label="$(ignore_rule_label "${app}")"
+  regex="$(ignore_app_regex "${app}")"
 
   # Capture tiled windows before applying manage=off. After rule apply, yabai may
   # already report these unmanaged windows as floating, which would make us skip
   # centering them.
   command -v jq >/dev/null 2>&1 || return 0
-  window_ids=$(yabai -m query --windows 2>/dev/null |
-    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == false) | .id')
+  window_ids="$(
+    yabai -m query --windows 2>/dev/null |
+      jq -r --arg app "${app}" '
+        .[]
+        | select(.app == $app and ."is-floating" == false)
+        | .id
+      '
+  )"
 
-  yabai -m rule --remove "$label" >/dev/null 2>&1 || :
-  yabai -m rule --add label="$label" app="$regex" manage=off >/dev/null 2>&1 || return 0
-  yabai -m rule --apply "$label" >/dev/null 2>&1 || :
+  yabai -m rule --remove "${label}" >/dev/null 2>&1 || :
+  yabai -m rule --add \
+    label="${label}" \
+    app="${regex}" \
+    manage=off >/dev/null 2>&1 || return 0
+  yabai -m rule --apply "${label}" >/dev/null 2>&1 || :
 
   # If this app is now ignored, make windows that were tiled before manage=off
   # float before the next layout apply so they are visually removed from the
   # managed layout. Center them using the regular float helper instead of
   # leaving them at their tiled size/position.
-  script_dir=$(dirname "$0")
-  toggle_float_script="${YABAI_TOGGLE_FLOAT_SCRIPT:-}"
-  if [ -n "$toggle_float_script" ] && [ -x "$toggle_float_script" ]; then
+  script_dir="$(dirname "${BASH_SOURCE[0]}")"
+  if [[ -n "${toggle_float_script}" && -x "${toggle_float_script}" ]]; then
     :
-  elif [ -x "$script_dir/toggle-float.sh" ]; then
-    toggle_float_script="$script_dir/toggle-float.sh"
-  elif [ -x "$HOME/.config/yabai/scripts/toggle-float.sh" ]; then
-    toggle_float_script="$HOME/.config/yabai/scripts/toggle-float.sh"
+  elif [[ -x "${script_dir}/toggle-float.sh" ]]; then
+    toggle_float_script="${script_dir}/toggle-float.sh"
+  elif [[ -x "${HOME}/.config/yabai/scripts/toggle-float.sh" ]]; then
+    toggle_float_script="${HOME}/.config/yabai/scripts/toggle-float.sh"
   fi
 
-  printf '%s\n' "$window_ids" |
-    while IFS= read -r id; do
-      [ -n "$id" ] || continue
-      if [ -n "$toggle_float_script" ]; then
-        "$toggle_float_script" center "$id" ensure >/dev/null 2>&1 || :
-      else
-        yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
-      fi
-    done
+  while IFS= read -r id; do
+    [[ -n "${id}" ]] || continue
+    if [[ -n "${toggle_float_script}" ]]; then
+      "${toggle_float_script}" center "${id}" ensure >/dev/null 2>&1 || :
+    else
+      yabai -m window "${id}" --toggle float >/dev/null 2>&1 || :
+    fi
+  done <<<"${window_ids}"
 }
 
-remove_ignore_rule_live() {
-  app="$1"
+ignore_remove_rule_live() {
+  local app="$1"
+  local label
+  local window_ids
+  local id
+
   command -v yabai >/dev/null 2>&1 || return 0
 
-  label=$(ignore_rule_label "$app")
-  yabai -m rule --remove "$label" >/dev/null 2>&1 || :
+  label="$(ignore_rule_label "${app}")"
+  yabai -m rule --remove "${label}" >/dev/null 2>&1 || :
 
   # If this app was unmanaged through manage=off, its existing windows may
   # still be floating after the rule is removed. Turn float off before the next
   # layout apply so yabai can include them again.
   command -v jq >/dev/null 2>&1 || return 0
-  window_ids=$(yabai -m query --windows 2>/dev/null |
-    jq -r --arg app "$app" '.[] | select(.app == $app and ."is-floating" == true) | .id')
+  window_ids="$(
+    yabai -m query --windows 2>/dev/null |
+      jq -r --arg app "${app}" '
+        .[]
+        | select(.app == $app and ."is-floating" == true)
+        | .id
+      '
+  )"
 
-  printf '%s\n' "$window_ids" |
-    while IFS= read -r id; do
-      [ -n "$id" ] || continue
-      yabai -m window "$id" --toggle float >/dev/null 2>&1 || :
-    done
+  while IFS= read -r id; do
+    [[ -n "${id}" ]] || continue
+    yabai -m window "${id}" --toggle float >/dev/null 2>&1 || :
+  done <<<"${window_ids}"
 }
 
-notify_ignore() {
-  subtitle="$1"
-  message="$2"
+ignore_notify() {
+  local subtitle="$1"
+  local message="$2"
+  local escaped_subtitle
+  local escaped_message
+
   command -v osascript >/dev/null 2>&1 || return 0
 
+  escaped_message="$(printf '%s' "${message}" | sed 's/\\/\\\\/g; s/"/\\"/g')"
+  escaped_subtitle="$(printf '%s' "${subtitle}" | sed 's/\\/\\\\/g; s/"/\\"/g')"
   osascript <<EOF >/dev/null 2>&1
-display notification "$(printf '%s' "$message" | sed 's/\\/\\\\/g; s/"/\\"/g')" with title "yabai" subtitle "$(printf '%s' "$subtitle" | sed 's/\\/\\\\/g; s/"/\\"/g')"
+display notification "${escaped_message}" with title "yabai" subtitle "${escaped_subtitle}"
 EOF
 }
 
-run_apply_layout() {
-  script_dir=$(dirname "$0")
-  apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-}"
-  if [ -n "$apply_layout_script" ] && [ -x "$apply_layout_script" ]; then
-    "$apply_layout_script" >/dev/null 2>&1 &
-  elif [ -x "$script_dir/apply-layout.sh" ]; then
-    "$script_dir/apply-layout.sh" >/dev/null 2>&1 &
-  elif [ -x "$HOME/.config/yabai/scripts/apply-layout.sh" ]; then
-    "$HOME/.config/yabai/scripts/apply-layout.sh" >/dev/null 2>&1 &
+ignore_run_apply_layout() {
+  local script_dir
+  local apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-}"
+
+  script_dir="$(dirname "${BASH_SOURCE[0]}")"
+  if [[ -n "${apply_layout_script}" && -x "${apply_layout_script}" ]]; then
+    "${apply_layout_script}" >/dev/null 2>&1 &
+  elif [[ -x "${script_dir}/apply-layout.sh" ]]; then
+    "${script_dir}/apply-layout.sh" >/dev/null 2>&1 &
+  elif [[ -x "${HOME}/.config/yabai/scripts/apply-layout.sh" ]]; then
+    "${HOME}/.config/yabai/scripts/apply-layout.sh" >/dev/null 2>&1 &
   fi
 }
 
-# If sourced, only define functions.
-if [ "${0##*/}" != "ignore-list.sh" ]; then
-  return 0 2>/dev/null || exit 0
-fi
-
-usage() {
+ignore_usage() {
   printf '%s\n' \
     'usage: ignore-list.sh add "AppName"' \
     '       ignore-list.sh remove "AppName"' \
@@ -217,49 +249,63 @@ usage() {
     '       ignore-list.sh list'
 }
 
-cmd="${1:-}"
-case "$cmd" in
-  add)
-    app="$2"
-    [ -n "$app" ] || { usage >&2; exit 1; }
-    if has_ignore "$app"; then
-      notify_ignore "Ignore unchanged" "$app already ignored"
-    else
-      add_ignore "$app"
-      apply_ignore_rule_live "$app"
-      notify_ignore "Ignore added" "$app"
-    fi
-    ;;
-  remove)
-    app="$2"
-    [ -n "$app" ] || { usage >&2; exit 1; }
-    if has_ignore "$app"; then
-      remove_ignore "$app"
-      remove_ignore_rule_live "$app"
-      notify_ignore "Ignore removed" "$app"
-    else
-      notify_ignore "Ignore unchanged" "$app was not ignored"
-    fi
-    ;;
-  toggle)
-    app="$2"
-    [ -n "$app" ] || { usage >&2; exit 1; }
-    if has_ignore "$app"; then
-      remove_ignore "$app"
-      remove_ignore_rule_live "$app"
-      notify_ignore "Ignore removed" "$app"
-    else
-      add_ignore "$app"
-      apply_ignore_rule_live "$app"
-      notify_ignore "Ignore added" "$app"
-    fi
-    run_apply_layout
-    ;;
-  list)
-    list_ignore
-    ;;
-  *)
-    usage >&2
-    exit 1
-    ;;
-esac
+ignore_main() {
+  local command="${1:-}"
+  local app="${2:-}"
+
+  case "${command}" in
+    add)
+      [[ -n "${app}" ]] || {
+        ignore_usage >&2
+        return 1
+      }
+      if ignore_has "${app}"; then
+        ignore_notify "Ignore unchanged" "${app} already ignored"
+      else
+        ignore_add "${app}"
+        ignore_apply_rule_live "${app}"
+        ignore_notify "Ignore added" "${app}"
+      fi
+      ;;
+    remove)
+      [[ -n "${app}" ]] || {
+        ignore_usage >&2
+        return 1
+      }
+      if ignore_has "${app}"; then
+        ignore_remove "${app}"
+        ignore_remove_rule_live "${app}"
+        ignore_notify "Ignore removed" "${app}"
+      else
+        ignore_notify "Ignore unchanged" "${app} was not ignored"
+      fi
+      ;;
+    toggle)
+      [[ -n "${app}" ]] || {
+        ignore_usage >&2
+        return 1
+      }
+      if ignore_has "${app}"; then
+        ignore_remove "${app}"
+        ignore_remove_rule_live "${app}"
+        ignore_notify "Ignore removed" "${app}"
+      else
+        ignore_add "${app}"
+        ignore_apply_rule_live "${app}"
+        ignore_notify "Ignore added" "${app}"
+      fi
+      ignore_run_apply_layout
+      ;;
+    list)
+      ignore_list
+      ;;
+    *)
+      ignore_usage >&2
+      return 1
+      ;;
+  esac
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  ignore_main "$@"
+fi

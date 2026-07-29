@@ -1,36 +1,52 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 notify() {
+  local message="$1"
+
   command -v osascript >/dev/null 2>&1 || return 0
-  osascript -e "display notification \"$1\" with title \"yabai\"" >/dev/null 2>&1
+  osascript \
+    -e "display notification \"${message}\" with title \"yabai\"" \
+    >/dev/null 2>&1
 }
 
-is_ready() {
+yabai_is_ready() {
   yabai -m query --spaces >/dev/null 2>&1
 }
 
-old_pids="$(pgrep -x yabai 2>/dev/null | tr '\n' ' ')"
+main() {
+  local old_pids
+  local status
+  local attempts_remaining=40
+  local current_pids
 
-notify "Restarting yabai..."
+  old_pids="$(pgrep -x yabai 2>/dev/null | tr '\n' ' ')"
+  notify "Restarting yabai..."
 
-if ! yabai --restart-service; then
-  status=$?
-  notify "Restart failed"
-  exit "$status"
-fi
-
-attempts=40
-while [ "$attempts" -gt 0 ]; do
-  current_pids="$(pgrep -x yabai 2>/dev/null | tr '\n' ' ')"
-
-  if [ -n "$current_pids" ] && [ "$current_pids" != "$old_pids" ] && is_ready; then
-    notify "Restart complete"
-    exit 0
+  if yabai --restart-service; then
+    :
+  else
+    status=$?
+    notify "Restart failed"
+    return "${status}"
   fi
 
-  attempts=$((attempts - 1))
-  sleep 0.25
-done
+  while (( attempts_remaining > 0 )); do
+    current_pids="$(pgrep -x yabai 2>/dev/null | tr '\n' ' ')"
 
-notify "Restart timed out"
-exit 1
+    if [[
+      -n "${current_pids}" &&
+        "${current_pids}" != "${old_pids}"
+    ]] && yabai_is_ready; then
+      notify "Restart complete"
+      return 0
+    fi
+
+    ((attempts_remaining -= 1))
+    sleep 0.25
+  done
+
+  notify "Restart timed out"
+  return 1
+}
+
+main "$@"

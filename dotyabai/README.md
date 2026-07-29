@@ -172,7 +172,7 @@ the selected layout.
 | `Alt-T` | Select two-stack using the current display shape |
 | `Alt-R` | Repair/reapply while preserving saved ratios |
 | `Alt-0` | Reset all four ratios and repair |
-| `Alt-I` | Inspect layout, distribution, ratio, padding, and compliance |
+| `Alt-I` | Show layout distribution, ratio, and repair status |
 | `Alt--` / `Alt-=` | Shrink/grow the focused float or tiled arrangement |
 | `Alt-Shift--` / `Alt-Shift-=` | Shrink/grow with the accelerated step |
 | `Alt-C` | Toggle a centered float |
@@ -221,6 +221,7 @@ across displays from left to right, then by Mission Control order.
 ## Operational notes
 
 - `scripts/apply-layout.sh` is the canonical reconciliation entry point.
+- `scripts/inspect-layout.sh` reports layout status through a notification.
 - `yabairc` owns the global arrival defaults:
   `window_insertion_point first` and `window_placement first_child`.
 - Signals reconcile the active space on window, application visibility, space,
