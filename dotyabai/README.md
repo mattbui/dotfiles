@@ -175,8 +175,8 @@ the selected layout.
 | `Alt-I` | Show layout distribution, ratio, and repair status |
 | `Alt--` / `Alt-=` | Shrink/grow the focused float or tiled arrangement |
 | `Alt-Shift--` / `Alt-Shift-=` | Shrink/grow with the accelerated step |
-| `Alt-C` | Toggle a centered float |
-| `Alt-Return` | Toggle a fullscreen float within the ordinary tiling area |
+| `Alt-C` | Center an unmatched float; toggle a centered float back to tiled |
+| `Alt-Return` | Fill an unmatched float; toggle a filled float back to tiled |
 
 ### Move windows
 

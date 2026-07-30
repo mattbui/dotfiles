@@ -15,6 +15,7 @@ readonly TOGGLE_FLOAT_ROOMY_AREA_THRESHOLD="3500000"
 readonly TOGGLE_FLOAT_COMPACT_PADDING="8"
 readonly TOGGLE_FLOAT_ROOMY_PADDING="12"
 readonly TOGGLE_FLOAT_TOP_PADDING="6"
+readonly TOGGLE_FLOAT_BOUNDS_TOLERANCE="2"
 
 query_window() {
   local target_window="$1"
@@ -48,7 +49,7 @@ Math.max(0, f.size.height - v.size.height - v.origin.y)
 EOF
 }
 
-usable_frame() {
+usable_bounds() {
   local mode="$1"
   local window_json="$2"
   local display_id
@@ -153,7 +154,7 @@ usable_frame() {
     '
 }
 
-target_frame() {
+target_bounds() {
   local mode="$1"
   local x="$2"
   local y="$3"
@@ -207,7 +208,31 @@ target_frame() {
   fi
 }
 
-apply_frame() {
+window_matches_bounds() {
+  local window_json="$1"
+  local x="$2"
+  local y="$3"
+  local width="$4"
+  local height="$5"
+
+  jq -e \
+    --argjson x "${x}" \
+    --argjson y "${y}" \
+    --argjson width "${width}" \
+    --argjson height "${height}" \
+    --argjson tolerance "${TOGGLE_FLOAT_BOUNDS_TOLERANCE}" '
+      def difference($actual; $desired):
+        ($actual - $desired) as $difference
+        | if $difference < 0 then -$difference else $difference end;
+
+      difference(.frame.x; $x) <= $tolerance
+      and difference(.frame.y; $y) <= $tolerance
+      and difference(.frame.w; $width) <= $tolerance
+      and difference(.frame.h; $height) <= $tolerance
+    ' <<<"${window_json}" >/dev/null
+}
+
+apply_bounds() {
   local mode="$1"
   local target_window="$2"
   local x="$3"
@@ -238,8 +263,7 @@ main() {
   local float_action="${3:-toggle}"
   local apply_layout_script="${YABAI_APPLY_LAYOUT_SCRIPT:-}"
   local window_json
-  local was_floating
-  local is_floating
+  local initially_floating
   local x
   local y
   local width
@@ -263,25 +287,44 @@ main() {
   command -v awk >/dev/null 2>&1 || return 0
 
   window_json="$(query_window "${target_window}")" || return 0
-  was_floating="$(jq -r '."is-floating"' <<<"${window_json}")"
-  if [[ "${float_action}" == "toggle" || "${was_floating}" != "true" ]]; then
-    toggle_window_float "${target_window}" || return 0
-    window_json="$(query_window "${target_window}")" || return 0
-  fi
   [[ -n "${window_json}" ]] || return 0
+  initially_floating="$(jq -r '."is-floating"' <<<"${window_json}")"
 
-  is_floating="$(jq -r '."is-floating"' <<<"${window_json}")"
-  if [[ "${is_floating}" != "true" ]]; then
+  read -r x y width height < <(usable_bounds "${mode}" "${window_json}") ||
+    return 0
+  read -r x y width height < <(
+    target_bounds "${mode}" "${x}" "${y}" "${width}" "${height}"
+  ) || return 0
+
+  # currently window is already floating and in the desired bounds
+  # toggle -> unfloat it and apply layout
+  if [[ "${initially_floating}" == "true" && "${float_action}" == "toggle" ]] &&
+    window_matches_bounds \
+      "${window_json}" \
+      "${x}" \
+      "${y}" \
+      "${width}" \
+      "${height}"; then
+    toggle_window_float "${target_window}" || return 0
     "${apply_layout_script}"
     return 0
   fi
 
-  read -r x y width height < <(usable_frame "${mode}" "${window_json}") ||
-    return 0
-  read -r x y width height < <(
-    target_frame "${mode}" "${x}" "${y}" "${width}" "${height}"
-  ) || return 0
-  apply_frame \
+  # not already floating -> float it and update current window_json
+  if [[ "${initially_floating}" != "true" ]]; then
+    toggle_window_float "${target_window}" || return 0
+    window_json="$(query_window "${target_window}")" || return 0
+    [[ -n "${window_json}" ]] || return 0
+
+    # still tiled -> apply layout
+    if ! jq -e '."is-floating" == true' <<<"${window_json}" >/dev/null; then
+      "${apply_layout_script}"
+      return 0
+    fi
+  fi
+
+  # floated -> resize and move to the desired bounds
+  apply_bounds \
     "${mode}" \
     "${target_window}" \
     "${x}" \
