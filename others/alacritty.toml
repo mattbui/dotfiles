@@ -170,36 +170,26 @@ key = "Right"
 mods = "Alt"
 
 # Keyboard: tmux panes/windows/sessions
-# Karabiner maps tapped Command-H to F13 so held Command-H can still hide apps.
-# Command/F13/J/K/L send tmux user-key sequences for directional splits.
+# Command-J/L send tmux user-key sequences for directional splits.
 [[keyboard.bindings]]
-chars = "\u001B[9001u"
-key = "F13"
-
-[[keyboard.bindings]]
-chars = "\u001B[9002u"
+chars = "\u001B[9010u"
 key = "J"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9003u"
-key = "K"
-mods = "Command"
-
-[[keyboard.bindings]]
-chars = "\u001B[9004u"
+chars = "\u001B[9011u"
 key = "L"
 mods = "Command"
 
 # Command-D sends a tmux user key for revdiff popup.
 [[keyboard.bindings]]
-chars = "\u001B[9005u"
+chars = "\u001B[9012u"
 key = "D"
 mods = "Command"
 
 # Command-N sends a tmux user key for tmux session creation.
 [[keyboard.bindings]]
-chars = "\u001B[9026u"
+chars = "\u001B[9018u"
 key = "N"
 mods = "Command"
 
@@ -211,94 +201,100 @@ mods = "Command|Shift"
 
 # Command-W sends a tmux user key for tmux pane/window close.
 [[keyboard.bindings]]
-chars = "\u001B[9027u"
+chars = "\u001B[9019u"
 key = "W"
 mods = "Command"
 
 # Command-T sends a tmux user key for tmux window creation.
 [[keyboard.bindings]]
-chars = "\u001B[9028u"
+chars = "\u001B[9020u"
 key = "T"
 mods = "Command"
 
 # Command-O sends a tmux user key for a Yazi popup.
 [[keyboard.bindings]]
-chars = "\u001B[9029u"
+chars = "\u001B[9021u"
 key = "O"
 mods = "Command"
 
-# Command-P sends a tmux user key for the Sesh project/session picker.
+# Command-P sends a tmux user key for the tmux window tree.
 [[keyboard.bindings]]
 chars = "\u001B[9022u"
 key = "P"
 mods = "Command"
 
+# Command-K sends a tmux user key for the Sesh project/session picker.
+[[keyboard.bindings]]
+chars = "\u001B[9016u"
+key = "K"
+mods = "Command"
+
 # Ctrl-Tab / Ctrl-Shift-Tab cycle tmux sessions.
 [[keyboard.bindings]]
-chars = "\u001B[9020u"
+chars = "\u001B[9013u"
 key = "Tab"
 mods = "Control"
 
 [[keyboard.bindings]]
-chars = "\u001B[9021u"
+chars = "\u001B[9014u"
 key = "Tab"
 mods = "Control|Shift"
 
 # Karabiner sends F18 on Ctrl release after Ctrl-Tab session cycling.
 [[keyboard.bindings]]
-chars = "\u001B[9024u"
+chars = "\u001B[9015u"
 key = "F18"
 
 # Ctrl-Enter sends a tmux user key for pane zoom.
 [[keyboard.bindings]]
-chars = "\u001B[9025u"
+chars = "\u001B[9017u"
 key = "Enter"
 mods = "Control"
 
 # Keyboard: tmux direct window selection
 # Command-number sends tmux user-key sequences for direct window selection.
 [[keyboard.bindings]]
-chars = "\u001B[9011u"
+chars = "\u001B[9001u"
 key = "Key1"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9012u"
+chars = "\u001B[9002u"
 key = "Key2"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9013u"
+chars = "\u001B[9003u"
 key = "Key3"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9014u"
+chars = "\u001B[9004u"
 key = "Key4"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9015u"
+chars = "\u001B[9005u"
 key = "Key5"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9016u"
+chars = "\u001B[9006u"
 key = "Key6"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9017u"
+chars = "\u001B[9007u"
 key = "Key7"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9018u"
+chars = "\u001B[9008u"
 key = "Key8"
 mods = "Command"
 
 [[keyboard.bindings]]
-chars = "\u001B[9019u"
+chars = "\u001B[9009u"
 key = "Key9"
 mods = "Command"
 

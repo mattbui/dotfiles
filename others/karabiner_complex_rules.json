@@ -319,7 +319,7 @@
       ]
     },
     {
-      "description": "Hold Command + H to Hide otherwise trigger F13",
+      "description": "Hold Command + H to Hide",
       "manipulators": [
         {
           "conditions": [
@@ -336,11 +336,6 @@
               "optional": ["caps_lock"]
             }
           },
-          "to_if_alone": [
-            {
-              "key_code": "f13"
-            }
-          ],
           "to_if_held_down": [
             {
               "key_code": "h",
