@@ -277,7 +277,7 @@ result="$({
       --list-label "$list_label" \
       --prompt '📺 ' \
       --bind 'ctrl-a:change-prompt(📺 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-all)' \
-      --bind 'ctrl-f:change-prompt(🔎 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
+      --bind 'ctrl-f:change-prompt(📁 )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-directories)' \
       --bind 'ctrl-s:change-prompt(🖥️  )+reload("$HOME/.config/tmux/scripts/tmux-launcher.sh" --list-ssh-hosts)' \
       --preview '"$HOME/.config/tmux/scripts/tmux-launcher.sh" --preview {}'
 })" || exit 0
