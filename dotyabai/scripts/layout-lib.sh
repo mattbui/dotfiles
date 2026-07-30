@@ -625,7 +625,7 @@ layout_resolve_single_stack_sizing() {
               bottom = minimum_bottom
               top = int((budget - bottom) + 0.5)
             }
-            printf "%d %d", top, bottom
+            printf "%d %d\n", top, bottom
           }
         '
     )

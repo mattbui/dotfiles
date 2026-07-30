@@ -148,7 +148,7 @@ usable_frame() {
         if (height < 1) {
           height = 1
         }
-        printf "%d %d %d %d", x, y, width, height
+        printf "%d %d %d %d\n", x, y, width, height
       }
     '
 }
@@ -172,7 +172,7 @@ target_frame() {
           target_height = height * ratio
           target_x = x + ((width - target_width) / 2)
           target_y = y + ((height - target_height) / 2)
-          printf "%d %d %d %d",
+          printf "%d %d %d %d\n",
             target_x,
             target_y,
             target_width,
@@ -197,7 +197,7 @@ target_frame() {
           }
           target_x = x + ((width - target_width) / 2)
           target_y = y + ((height - target_height) / 2)
-          printf "%d %d %d %d",
+          printf "%d %d %d %d\n",
             target_x,
             target_y,
             target_width,

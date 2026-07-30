@@ -48,7 +48,7 @@ resize_floating_window() {
           }
           next_x = x - ((next_width - width) / 2)
           next_y = y - ((next_height - height) / 2)
-          printf "%d %d %d %d", next_x, next_y, next_width, next_height
+          printf "%d %d %d %d\n", next_x, next_y, next_width, next_height
         }
       '
   )
