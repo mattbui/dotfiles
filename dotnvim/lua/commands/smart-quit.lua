@@ -14,8 +14,16 @@ local dismissible_filetypes = {
 
 local normal_state_var = "smart_quit_normal_state"
 
+local function is_fugitive_object_buffer(bufnr)
+  return api.nvim_buf_is_valid(bufnr) and vim.b[bufnr].fugitive_type == "blob"
+end
+
 local function is_dismissible_buffer(bufnr)
-  return api.nvim_buf_is_valid(bufnr) and dismissible_filetypes[vim.bo[bufnr].filetype] == true
+  return api.nvim_buf_is_valid(bufnr)
+      and (
+        dismissible_filetypes[vim.bo[bufnr].filetype] == true
+        or is_fugitive_object_buffer(bufnr)
+      )
 end
 
 local function is_dismissible_window(winid)
@@ -165,14 +173,17 @@ local function smart_quit()
     end
   end
 
-  if #dismissible_windows == 0 then
+  local dismissible_count = #dismissible_windows
+  local current_is_dismissible = is_dismissible_window(api.nvim_get_current_win())
+
+  if dismissible_count == 0 or (current_is_dismissible and dismissible_count > 1) then
     quit_or_confirm()
     return
   end
 
   local anchor = find_anchor(tabpage, dismissible_windows, normal_windows)
   if not anchor then
-    vim.cmd.quit()
+    quit_or_confirm()
     return
   end
 
