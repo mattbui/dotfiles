@@ -15,6 +15,7 @@ require("plugins")
 require("colorscheme")
 
 require("plugins.yazi")
+require("plugins.git-conflict")
 require("plugins.gitsigns")
 require("plugins.lsp")
 require("plugins.autoformat")

@@ -40,6 +40,7 @@ wk.add({
   { "<Leader>8", hidden = true },
   { "<Leader>9", hidden = true },
   { "<Leader>b", group = "buffers" },
+  { "<Leader>c", group = "conflicts" },
   { "<Leader>f", group = "find" },
   { "<Leader>g", group = "git" },
   { "<Leader>i", group = "ipython" },

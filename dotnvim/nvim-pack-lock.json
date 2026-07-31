@@ -20,6 +20,10 @@
       "rev": "44a5b259570730a4236ecbf06673d43ef7b2263e",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
+    "git-conflict.nvim": {
+      "rev": "4bbfdd92d547d2862a75b4e80afaf30e73f7bbb4",
+      "src": "https://github.com/akinsho/git-conflict.nvim"
+    },
     "gitsigns.nvim": {
       "rev": "eb60cc7b94c46005237fd34170d76f3a089a90aa",
       "src": "https://github.com/lewis6991/gitsigns.nvim"

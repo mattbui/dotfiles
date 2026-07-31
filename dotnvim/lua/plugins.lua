@@ -34,6 +34,7 @@ vim.pack.add({
   gh('karb94/neoscroll.nvim'),
 
   -- Git integration.
+  gh('akinsho/git-conflict.nvim'),
   gh('lewis6991/gitsigns.nvim'),
   gh('tpope/vim-fugitive'),
 
