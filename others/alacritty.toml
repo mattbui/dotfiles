@@ -18,10 +18,8 @@ x = 8
 y = 8
 
 [font]
-# 34 inch 2k monitor
-# size = 14.5
-# Built-in display
-size = 13
+# size = 13 # built-in
+size = 14.5 # 34 inch 2k
 
 # use `defaults write -g AppleFontSmoothing -int 0/1/2/3` (all apps)
 # or `defaults write org.alacritty AppleFontSmoothing -int 0/1/2/3`
@@ -30,16 +28,20 @@ size = 13
 # current font style are adjusted for `0`
 [font.normal]
 family = "JetBrainsMonoNL Nerd Font Propo"
-style = "Regular"
+# style = "Regular" # built-in
+style = "Medium" # 34 inch 2k
 
 [font.bold]
-style = "SemiBold"
+# style = "SemiBold" # built-in
+style = "Bold" # 34 inch 2k
 
 [font.italic]
-style = "Italic"
+# style = "Italic" # built-in
+style = "Medium Italic" # 34 inch 2k
 
 [font.bold_italic]
-style = "SemiBold Italic"
+# style = "SemiBold Italic" # built-in
+style = "Bold Italic" # 34 inch 2k
 
 [font.offset]
 x = 0
