@@ -10,6 +10,12 @@ cmd - w -> [
   "messages" : $HOME/.config/yabai/scripts/refocus.sh
   "finder"   : $HOME/.config/yabai/scripts/refocus.sh
   "calendar" : $HOME/.config/yabai/scripts/refocus.sh
+  "spark desktop" : $HOME/.config/yabai/scripts/refocus.sh
+  *          ~
+]
+
+cmd + shift - w -> [
+  "chatgpt" : yabai -m window --focus recent
   *          ~
 ]
 

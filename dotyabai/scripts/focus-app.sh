@@ -129,7 +129,7 @@ main() {
           jq -r '.index'
       )"
       [[ "${current_space_index}" == "${window_space_index}" ]] && break
-      sleep 0.05
+      sleep 0.02
     done
   fi
 
@@ -142,11 +142,16 @@ main() {
       jq -e '."has-focus" == true' >/dev/null; then
       return 0
     fi
-    sleep 0.05
+    sleep 0.02
   done
 
-  notify_error "Timed out focusing ${focus_app_name}"
-  exit 1
+  is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
+    return 0
+  if ! open_error="$(open -a "${focus_app_name}" 2>&1)"; then
+    printf '%s\n' "${open_error}" >&2
+    notify_error "${open_error}"
+    exit 1
+  fi
 }
 
 trap on_error ERR
