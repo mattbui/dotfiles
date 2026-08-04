@@ -460,7 +460,7 @@
             {
               "set_notification_message": {
                 "id": "double_shift_hyper",
-                "text": "✦ Hyper Key\n\nB · Arc\nC · ChatGPT\nD · Discord\nF · Finder\n⇧F · Find My\nM · Messages\nS · Slack\n⇧S · Spark Desktop\nT · Alacritty\n⇧T · Ghostty\nV · Vietnamese on/off"
+                "text": "✦ Hyper Key\n\nB · Arc\nC · ChatGPT\nD · Discord\nF · Finder · ⇧F · Find My\nM · Messages\nS · Slack · ⇧S · Spark Desktop\nT · Alacritty · ⇧T · Ghostty\nV · Vietnamese on/off"
               }
             }
           ],
