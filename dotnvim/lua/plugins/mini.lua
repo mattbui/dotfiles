@@ -67,7 +67,7 @@ MiniSessions.setup({
 })
 
 vim.api.nvim_create_user_command("MiniSessionEnable", function()
-  MiniSessions.write()
+  MiniSessions.write(MiniSessions.config.file)
 end, { desc = "Enable a local Mini session" })
 
 local MiniIndentScope = require("mini.indentscope")
