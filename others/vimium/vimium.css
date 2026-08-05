@@ -149,7 +149,7 @@ iframe.vimium-hud-frame {
 #vomnibar li em,
 #vomnibar li .title {
   color: var(--vomnibar-foreground);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 #vomnibar li .url {
