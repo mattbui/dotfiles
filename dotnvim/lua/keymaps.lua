@@ -35,10 +35,6 @@ end, { expr = true, desc = "Comment" })
 map("i", "<C-j>", "<C-n>")
 map("i", "<C-k>", "<C-p>")
 
--- Command-line history
-map("c", "<C-Up>", "<C-p>")
-map("c", "<C-Down>", "<C-n>")
-
 for _, key in ipairs({ ",", ".", "!", "?", ":" }) do
   map("i", key, key .. "<C-g>u")
 end
@@ -46,6 +42,11 @@ end
 map("i", "<Space>", "<Space><C-g>u")
 map("i", "<C-w>", "<C-g>u<C-w>")
 map("i", "<C-u>", "<C-g>u<C-u>")
+
+-- Command-line history
+map("c", "<C-Up>", "<C-p>")
+map("c", "<C-Down>", "<C-n>")
+
 
 -- Editing
 map({ "i", "c" }, "jj", "<Esc>")
@@ -98,7 +99,5 @@ map("n", "<Leader>Q", "<Cmd>q!<CR>", { silent = true, desc = "Quit without save"
 map("n", "<Leader>,", "<Cmd>e $MYVIMRC<CR>", { silent = true, desc = "Vim settings" })
 
 -- Quickfix
-map("n", "<PageDown>", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
-map("n", "<PageUp>", "<Cmd>cprevious<CR>", { silent = true, desc = "Quickfix previous" })
-map("n", "<S-PageDown>", "<Cmd>5cnext<CR>", { silent = true, desc = "Quickfix next x5" })
-map("n", "<S-PageUp>", "<Cmd>5cprevious<CR>", { silent = true, desc = "Quickfix previous x5" })
+map("n", "<A-Down>", "<Cmd>cnext<CR>", { silent = true, desc = "Quickfix next" })
+map("n", "<A-Up>", "<Cmd>cprevious<CR>", { silent = true, desc = "Quickfix previous" })
