@@ -9,6 +9,12 @@ unmap O
 unmap T
 unmap W
 
+map <down> scrollDown
+map <up> scrollUp
+
+map <PageUp> scrollPageUp
+map <PageDown> scrollPageDown
+
 unmap d
 map <c-d> scrollPageDown
 
@@ -33,13 +39,10 @@ map gb visitPreviousTab
 map <c-6> visitPreviousTab
 map <c-p> Vomnibar.activate
 map <c-b> Vomnibar.activateBookmarks
+map <c-t> Vomnibar.activateTabSelection
 map <c-W> closeOtherTabs
 map g0 lastTab
 
-# Search engines
-w: https://www.wikipedia.org/w/index.php?title=Special:Search&search=%s Wikipedia
-g: https://www.google.com/search?q=%s Google
-m: https://www.google.com/maps?q=%s Google Maps
-d: https://duckduckgo.com/?q=%s Duck
-f: https://www.facebook.com/search/top?q=%s Facebook
-y: https://www.youtube.com/results?search_query=%s Youtube
+unmap yy
+map yl copyCurrentUrl
+map yyp duplicateTab
