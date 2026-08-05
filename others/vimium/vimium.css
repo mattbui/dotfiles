@@ -13,8 +13,9 @@ iframe.vimium-hud-frame {
   --vimium-ui-muted: #969a9f;
   --vimium-ui-selected: #929ca8;
   --vimium-ui-selected-foreground: white;
-  --vimium-ui-hint-background: #3038f2;
-  --vimium-ui-hint-matched: #aeb4ff;
+  --vimium-ui-hint-background: #272727;
+  --vimium-ui-hint-highlight: #303030;
+  --vimium-ui-hint-matched: #a8aaad;
   --vimium-ui-focus: #7aa2f7;
 }
 
@@ -23,16 +24,22 @@ iframe.vimium-hud-frame {
 #vimium-hint-marker-container div.internal-vimium-hint-marker,
 #vimium-hint-marker-container div.vimiumHintMarker {
   padding: 4px 8px;
-  background: var(--vimium-ui-hint-background);
-  border: none;
-  border-radius: 5px;
-  box-shadow: 0 1px 3px rgba(36, 40, 59, 0.32);
+  background: linear-gradient(
+    to bottom,
+    var(--vimium-ui-hint-highlight),
+    var(--vimium-ui-hint-background)
+  );
+  border: 1px solid #1c1c1c;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 1px 2px rgba(0, 0, 0, 0.22), 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 
 #vimium-hint-marker-container div.internal-vimium-hint-marker span,
 #vimium-hint-marker-container div.vimiumHintMarker span {
   color: var(--vimium-ui-selected-foreground);
   font-weight: bold;
+  text-shadow: none;
 }
 
 #vimium-hint-marker-container
@@ -166,7 +173,7 @@ iframe.vimium-hud-frame {
 #vomnibar li .match,
 #vomnibar li .title .match {
   color: var(--vomnibar-foreground);
-  font-weight: 700;
+  font-weight: inherit;
 }
 
 #vomnibar li.selected {
