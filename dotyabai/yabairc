@@ -51,7 +51,7 @@ main() {
     window_placement             first_child \
     window_insertion_point       first \
     window_zoom_persist          on \
-    mouse_follows_focus          off \
+    mouse_follows_focus          on \
     focus_follows_mouse          off \
     window_shadow                on \
     window_opacity               off \
