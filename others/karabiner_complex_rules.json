@@ -612,6 +612,118 @@
       ]
     },
     {
+      "description": "F19/F20 → Fast vertical scroll",
+      "manipulators": [
+        {
+          "description": "F19 → Scroll down (512)",
+          "from": {
+            "key_code": "f19",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": 512
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F20 → Scroll up (-512)",
+          "from": {
+            "key_code": "f20",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": -512
+              }
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "F21–F24 → Mouse movement",
+      "manipulators": [
+        {
+          "description": "F21 → Mouse left",
+          "from": {
+            "key_code": "f21",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": -1536
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F22 → Mouse down",
+          "from": {
+            "key_code": "f22",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": 1536
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F23 → Mouse up",
+          "from": {
+            "key_code": "f23",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": -1536
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F24 → Mouse right",
+          "from": {
+            "key_code": "f24",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": 1536
+              }
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "SpaceFN Layer",
       "manipulators": [
         {
