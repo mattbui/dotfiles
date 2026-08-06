@@ -23,7 +23,7 @@ iframe.vimium-hud-frame {
 
 #vimium-hint-marker-container div.internal-vimium-hint-marker,
 #vimium-hint-marker-container div.vimiumHintMarker {
-  padding: 4px 8px;
+  padding: 3px 6px;
   background: linear-gradient(
     to bottom,
     var(--vimium-ui-hint-highlight),
