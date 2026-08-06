@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Directly select the current labeled space's flexible layout.
-# Usage: select-layout.sh single-stack|two-stack
+# Select or toggle the current labeled space's flexible layout.
+# Usage: select-layout.sh single-stack|two-stack|toggle
 
 # shellcheck source=layout-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/layout-lib.sh"
@@ -22,13 +22,14 @@ notify_layout_mode() {
 }
 
 main() {
-  local requested_mode="${1:-}"
+  local action="${1:-}"
   local area_change_pending=false
   local display_profile
   local preferences
+  local requested_mode
 
-  case "${requested_mode}" in
-    single-stack|two-stack) ;;
+  case "${action}" in
+    single-stack|two-stack|toggle) ;;
     *) return 1 ;;
   esac
 
@@ -58,6 +59,16 @@ main() {
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
   layout_last_area_class="$(jq -r '.last_area_class' <<<"${preferences}")"
+
+  if [[ "${action}" == "toggle" ]]; then
+    if [[ "${layout_mode}" == "single-stack" ]]; then
+      requested_mode="two-stack"
+    else
+      requested_mode="single-stack"
+    fi
+  else
+    requested_mode="${action}"
+  fi
 
   [[ -n "${layout_state_file}" ]] || return 0
 

@@ -75,8 +75,7 @@ centering keeps at least `6` above and `8` compact or `12` roomy below.
 
 ## Selection and persisted state
 
-`Alt-S` and `Alt-T` directly select single-stack and two-stack. They are not a
-toggle, and selecting the current layout is a silent no-op.
+`Alt-T` toggles the current space between single-stack and two-stack.
 
 Preferences belong to positional labels such as `space-2`, not yabai space IDs
 or UUIDs. A compact/roomy crossing applies the new area-class default.
@@ -168,8 +167,7 @@ the selected layout.
 
 | Shortcut | Action |
 | --- | --- |
-| `Alt-S` | Select single-stack |
-| `Alt-T` | Select two-stack using the current display shape |
+| `Alt-T` | Toggle single-stack/two-stack using the current display shape |
 | `Alt-R` | Repair/reapply while preserving saved ratios |
 | `Alt-0` | Reset all four ratios and repair |
 | `Alt-I` | Show layout distribution, ratio, and repair status |

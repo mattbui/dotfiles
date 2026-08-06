@@ -66,9 +66,8 @@ cmd + alt + ctrl - m : $HOME/.config/yabai/scripts/focus-app.sh Messages
 alt - c : $HOME/.config/yabai/scripts/toggle-float.sh center
 alt - return : $HOME/.config/yabai/scripts/toggle-float.sh fullscreen
 
-# Select, inspect, repair, or reset the flexible layout.
-alt - s : $HOME/.config/yabai/scripts/select-layout.sh single-stack
-alt - t : $HOME/.config/yabai/scripts/select-layout.sh two-stack
+# Toggle, inspect, repair, or reset the flexible layout.
+alt - t : $HOME/.config/yabai/scripts/select-layout.sh toggle
 alt - r : $HOME/.config/yabai/scripts/apply-layout.sh
 alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh reset
 alt - i : $HOME/.config/yabai/scripts/inspect-layout.sh
