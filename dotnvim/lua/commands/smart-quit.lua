@@ -6,6 +6,7 @@ local dismissible_filetypes = {
   fugitive = true,
   fugitiveblame = true,
   git = true,
+  gitcommit = true,
   help = true,
   man = true,
   qf = true,
