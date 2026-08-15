@@ -22,6 +22,9 @@ alias tl='tmux list-sessions'
 tp() {
     "$HOME/.config/tmux/scripts/tmux-launcher.sh" "$@"
 }
+tc() {
+    "$HOME/.config/tmux/scripts/tmux-launcher.sh" --change-directory
+}
 
 searchignore() {
     if [[ -e .ignore || -L .ignore ]]; then

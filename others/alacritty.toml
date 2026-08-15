@@ -195,6 +195,18 @@ chars = "\u001B[9018u"
 key = "N"
 mods = "Command"
 
+# Command-R sends a tmux user key for renaming the current session.
+[[keyboard.bindings]]
+chars = "\u001B[9023u"
+key = "R"
+mods = "Command"
+
+# Command-G sends a tmux user key for changing the current session directory.
+[[keyboard.bindings]]
+chars = "\u001B[9024u"
+key = "G"
+mods = "Command"
+
 # Command-Shift-N creates a new Alacritty window.
 [[keyboard.bindings]]
 action = "CreateNewWindow"
