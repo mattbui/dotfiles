@@ -43,6 +43,8 @@ alt + shift - k : $HOME/.config/yabai/scripts/move-to-stack.sh top
 alt + shift - l : $HOME/.config/yabai/scripts/move-to-stack.sh right
 cmd + alt - h : $HOME/.config/yabai/scripts/move-to-space.sh prev
 cmd + alt - l : $HOME/.config/yabai/scripts/move-to-space.sh next
+cmd + alt - left : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus prev || yabai -m space --focus last
+cmd + alt - right : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus next || yabai -m space --focus first
 
 # Resize focused window/pane.
 alt - 0x1B : $HOME/.config/yabai/scripts/resize.sh shrink
