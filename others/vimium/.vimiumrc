@@ -1,47 +1,35 @@
 # Key mappings
-unmap t
-unmap x
-unmap r
-unmap b
-unmap B
-unmap o
-unmap O
-unmap T
-unmap W
-
 map <down> scrollDown
 map <up> scrollUp
 
 map <PageUp> scrollPageUp
 map <PageDown> scrollPageDown
-
-unmap d
 map <c-d> scrollPageDown
-
-unmap u
 map <c-u> scrollPageUp
-
-unmap J
-map J nextTab
-
-unmap K
-map K previousTab
 
 map < goBack
 map > goForward
+
+unmap J
+map J nextTab
+unmap K
+map K previousTab
 
 unmap H
 unmap L
 map H moveTabLeft
 map L moveTabRight
 
+unmap W
+map W closeOtherTabs
 map gb visitPreviousTab
-map <c-6> visitPreviousTab
+map g0 lastTab
+
 map <c-p> Vomnibar.activate
 map <c-b> Vomnibar.activateBookmarks
 map <c-t> Vomnibar.activateTabSelection
-map <c-W> closeOtherTabs
-map g0 lastTab
+map <m-p> Vomnibar.activateTabSelection
+map <m-k> Vomnibar.activateInNewTab
 
 unmap yy
 map yl copyCurrentUrl
