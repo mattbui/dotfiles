@@ -1,6 +1,36 @@
 {
   "rules": [
     {
+      "description": "Right mouse hold → Vorssaint radical menu",
+      "manipulators": [
+        {
+          "description": "Right mouse button: click → right click, hold → Cmd+Ctrl+Option+Shift+Space",
+          "from": {
+            "pointing_button": "button2",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "parameters": {
+            "basic.to_if_alone_timeout_milliseconds": 120,
+            "basic.to_if_held_down_threshold_milliseconds": 120
+          },
+          "to_if_alone": [
+            {
+              "pointing_button": "button2"
+            }
+          ],
+          "to_if_held_down": [
+            {
+              "key_code": "spacebar",
+              "modifiers": ["left_command", "left_control", "left_option", "left_shift"]
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "Alacritty/Ghostty: tmux session switch Ctrl hold behavior",
       "manipulators": [
         {
