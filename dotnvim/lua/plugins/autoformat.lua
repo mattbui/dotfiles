@@ -27,6 +27,7 @@ end
 conform.setup({
   formatters_by_ft = {
     python = { "isort", "black" },
+    json = { "prettier" },
     javascript = { "prettier" },
     javascriptreact = { "prettier" },
     typescript = { "prettier" },
