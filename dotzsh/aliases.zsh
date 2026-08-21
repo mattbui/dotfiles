@@ -116,10 +116,11 @@ rstatus() {
 [ -z $(command -v brew) ] || alias ctags="`brew --prefix`/bin/ctags"
 
 # Show the resolved SSH host in the tmux pane title, use a block cursor during
-# SSH, then clear the pane metadata and restore to beam cursor when the connection ends.
+# SSH, then clear the pane metadata and restore the invoking shell's cursor.
 ssh() {
     local title
     local exit_code
+    local saved_cursor_style="${ZSH_CURSOR_STYLE:-6}"
 
     if [[ -n "$TMUX_PANE" ]]; then
         title=$(command ssh -G "$@" 2>/dev/null | awk '
@@ -152,10 +153,10 @@ ssh() {
         fi
     fi
 
-    printf '\e[2 q'
+    zsh_set_cursor_style 2
     command ssh "$@"
     exit_code=$?
-    printf '\e[6 q'
+    zsh_set_cursor_style "$saved_cursor_style"
 
     if [[ -n "$TMUX_PANE" ]]; then
         tmux set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true

@@ -34,6 +34,20 @@ for keymap in emacs viins; do
     bindkey -M "$keymap" -s '^o' 'ycd\n'
 done
 
+# Keep the prompt cursor consistent with the session that owns it. Local shells
+# use a steady beam; shells started by ssh use a steady block.
+if [[ -n ${SSH_CONNECTION:-}${SSH_CLIENT:-}${SSH_TTY:-} ]]; then
+    export ZSH_CURSOR_STYLE=2
+else
+    export ZSH_CURSOR_STYLE=6
+fi
+
+zsh_set_cursor_style() {
+    local style="$1"
+
+    printf '\e[%d q' "$style"
+}
+
 [[ ! -f $HOME/.config/zsh/aliases.zsh ]] || source $HOME/.config/zsh/aliases.zsh  # my custom aliases
 
 if [[ $(uname -s) == Linux* && -f "${HOME}/.config/zsh/start_ssh_agent.zsh" ]]; then
@@ -65,18 +79,16 @@ fi
 
 [[ ! -f $HOME/.config/zsh/plugins.zsh ]] || source $HOME/.config/zsh/plugins.zsh  # load plugins
 
-# Force a steady beam cursor in interactive zsh prompts, except in SSH sessions.
-if [[ -z ${SSH_CONNECTION}${SSH_CLIENT}${SSH_TTY} ]]; then
-    _force_beam_cursor() {
-        printf '\e[6 q'
-    }
-    precmd_functions+=(_force_beam_cursor)
-    preexec_functions+=(_force_beam_cursor)
-    zle-line-init() { _force_beam_cursor }
-    zle-keymap-select() { _force_beam_cursor }
-    zle -N zle-line-init
-    zle -N zle-keymap-select
-fi
+# Reassert the owning session's cursor after terminal applications change it.
+_set_zsh_cursor() {
+    zsh_set_cursor_style "$ZSH_CURSOR_STYLE"
+}
+precmd_functions+=(_set_zsh_cursor)
+preexec_functions+=(_set_zsh_cursor)
+zle-line-init() { _set_zsh_cursor }
+zle-keymap-select() { _set_zsh_cursor }
+zle -N zle-line-init
+zle -N zle-keymap-select
 
 # Redo in the zsh command-line editor (Ctrl-X Ctrl-R, or Ctrl-X then r).
 # compinit/.zcompdump can rebind Ctrl-X Ctrl-R to _read_comp, so re-apply this

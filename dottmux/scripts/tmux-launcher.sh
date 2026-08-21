@@ -42,10 +42,16 @@ report_error() {
 trap report_error ERR
 
 # Mirror aliases.zsh's ssh() behavior for launcher panes by setting the tmux
-# pane title metadata, using a block cursor during SSH, then restoring to beam cursor.
+# pane title metadata, using a block cursor during SSH, then restoring the
+# invoking session's cursor.
 run_ssh_pane() {
   local host="$1"
+  local restore_cursor_style="${ZSH_CURSOR_STYLE:-6}"
   local shell="${SHELL:-/bin/zsh}"
+
+  if [[ "$restore_cursor_style" != 2 && "$restore_cursor_style" != 6 ]]; then
+    restore_cursor_style=6
+  fi
 
   if [[ -n "${TMUX_PANE:-}" ]]; then
     tmux_command set-option -p -t "$TMUX_PANE" @ssh_session_active 1
@@ -57,7 +63,7 @@ run_ssh_pane() {
   if command ssh "$host"; then
     :
   fi
-  printf '\e[6 q'
+  printf '\e[%d q' "$restore_cursor_style"
 
   if [[ -n "${TMUX_PANE:-}" ]]; then
     tmux_command set-option -p -u -t "$TMUX_PANE" @ssh_session_active 2>/dev/null || true
