@@ -31,7 +31,7 @@
       ]
     },
     {
-      "description": "Alacritty/Ghostty: tmux session switch Ctrl hold behavior",
+      "description": "Alacritty/Ghostty: Ctrl release → F18 (tmux session switch)",
       "manipulators": [
         {
           "description": "Ctrl+Shift+Tab → Ctrl+Shift+Tab and arm tmux session switch finalize",
@@ -642,10 +642,73 @@
       ]
     },
     {
-      "description": "F19/F20 → Fast vertical scroll",
+      "description": "F17 → Center mouse in focused window",
       "manipulators": [
         {
-          "description": "F19 → Scroll down (512)",
+          "description": "F17 → Center mouse in focused window; fall back to current screen",
+          "from": {
+            "key_code": "f17",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "software_function": {
+                "set_mouse_cursor_position": {
+                  "x": "50%",
+                  "y": "50%",
+                  "relative_to": "focused_window",
+                  "fallback_to": "screen"
+                }
+              }
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
+      "description": "F19/F20 → Scroll, with shift horizontal scroll",
+      "manipulators": [
+        {
+          "description": "Shift + F19 → Scroll right (64)",
+          "from": {
+            "key_code": "f19",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": 64
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Shift + F20 → Scroll left (-64)",
+          "from": {
+            "key_code": "f20",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": -64
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F19 → Scroll down (128)",
           "from": {
             "key_code": "f19",
             "modifiers": {
@@ -655,14 +718,14 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": 512
+                "vertical_wheel": 128
               }
             }
           ],
           "type": "basic"
         },
         {
-          "description": "F20 → Scroll up (-512)",
+          "description": "F20 → Scroll up (-128)",
           "from": {
             "key_code": "f20",
             "modifiers": {
@@ -672,7 +735,7 @@
           "to": [
             {
               "mouse_key": {
-                "vertical_wheel": -512
+                "vertical_wheel": -128
               }
             }
           ],
@@ -684,7 +747,79 @@
       "description": "F21–F24 → Mouse movement",
       "manipulators": [
         {
-          "description": "F21 → Mouse left",
+          "description": "Shift + F21 → Mouse left fast (-3072)",
+          "from": {
+            "key_code": "f21",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": -3072
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Shift + F22 → Mouse down fast (2304)",
+          "from": {
+            "key_code": "f22",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": 2304
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Shift + F23 → Mouse up fast (-2304)",
+          "from": {
+            "key_code": "f23",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": -2304
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "Shift + F24 → Mouse right fast (3072)",
+          "from": {
+            "key_code": "f24",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": 3072
+              }
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "F21 → Mouse left (-1536)",
           "from": {
             "key_code": "f21",
             "modifiers": {
@@ -701,7 +836,7 @@
           "type": "basic"
         },
         {
-          "description": "F22 → Mouse down",
+          "description": "F22 → Mouse down (1152)",
           "from": {
             "key_code": "f22",
             "modifiers": {
@@ -711,14 +846,14 @@
           "to": [
             {
               "mouse_key": {
-                "y": 1536
+                "y": 1152
               }
             }
           ],
           "type": "basic"
         },
         {
-          "description": "F23 → Mouse up",
+          "description": "F23 → Mouse up (-1152)",
           "from": {
             "key_code": "f23",
             "modifiers": {
@@ -728,14 +863,14 @@
           "to": [
             {
               "mouse_key": {
-                "y": -1536
+                "y": -1152
               }
             }
           ],
           "type": "basic"
         },
         {
-          "description": "F24 → Mouse right",
+          "description": "F24 → Mouse right (1536)",
           "from": {
             "key_code": "f24",
             "modifiers": {
