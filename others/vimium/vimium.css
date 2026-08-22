@@ -163,6 +163,12 @@ iframe.vimium-hud-frame {
   color: var(--vomnibar-muted);
 }
 
+#vomnibar li .top-half {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #vomnibar li .bottom-half {
   overflow: hidden;
   font-size: 13px;

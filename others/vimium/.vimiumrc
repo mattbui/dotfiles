@@ -1,4 +1,13 @@
 # Key mappings
+
+# disable single character vomnibar shortcuts
+# too easy to acidental trigger
+unmap t
+unmap o
+unmap O
+unmap b
+unmap B
+
 map <down> scrollDown
 map <up> scrollUp
 
@@ -25,12 +34,18 @@ map W closeOtherTabs
 map gb visitPreviousTab
 map g0 lastTab
 
-map <c-p> Vomnibar.activate
-map <c-b> Vomnibar.activateBookmarks
-map <c-t> Vomnibar.activateTabSelection
+map <m-b> Vomnibar.activateBookmarks
 map <m-p> Vomnibar.activateTabSelection
 map <m-k> Vomnibar.activateInNewTab
+# map <m-t> Vomnibar.activateInNewTab
+# map <m-l> Vomnibar.activateEditUrl
 
 unmap yy
 map yl copyCurrentUrl
 map yyp duplicateTab
+
+map ' Marks.activateGotoMode
+
+# disable aggressive space to scroll
+map <space><space> scrollDown
+map <s-space> scrollUp
