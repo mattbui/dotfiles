@@ -94,6 +94,10 @@ _fzf_comprun() {
   esac
 }
 
+for keymap in emacs viins vicmd; do
+  bindkey -M "$keymap" -r '^T'
+done
+
 for keymap in emacs viins; do
   bindkey -M "$keymap" '^g' fzf-cd-widget
   bindkey -M "$keymap" '^f' fzf-file-widget
