@@ -18,10 +18,92 @@ tmux() {
 alias ta='tmux attach -t'
 alias tad='tmux attach -d -t'
 alias ts='tmux new-session -s'
+alias to='tmux new-session -A -s'
 alias tl='tmux list-sessions'
+
+# Tmux smart session aliases
+_tss_normalize_name() {
+    local name="$1"
+
+    name="${name//./_}"
+    name="${name//:/_}"
+    name="${name//[[:space:]]/_}"
+    print -r -- "$name"
+}
+
+_tss_session_name() {
+    local git_root
+    local project_name
+    local revision_name
+
+    git_root=$(command git -C "$PWD" rev-parse --show-toplevel 2>/dev/null) || {
+        print -u2 'tss: current directory is not in a Git repository'
+        return 1
+    }
+
+    project_name=$(_tss_normalize_name "${git_root##*/}")
+    revision_name=$(command git -C "$PWD" symbolic-ref --quiet --short HEAD 2>/dev/null)
+    if [[ -z "$revision_name" ]]; then
+        revision_name=$(command git -C "$PWD" describe --tags --exact-match HEAD 2>/dev/null)
+    fi
+    if [[ -z "$revision_name" ]]; then
+        revision_name=$(command git -C "$PWD" rev-parse --short HEAD 2>/dev/null) || {
+            print -u2 'tss: could not resolve HEAD'
+            return 1
+        }
+    fi
+
+    revision_name=$(_tss_normalize_name "$revision_name")
+    print -r -- "$project_name/$revision_name"
+}
+
+# New tmux session with smart session name based on git
+tss() {
+    local session_name
+
+    session_name=$(_tss_session_name) || return
+
+    if tmux has-session -t "=$session_name" 2>/dev/null; then
+        if [[ -n ${TMUX:-} ]]; then
+            tmux switch-client -t "=$session_name"
+        else
+            tmux attach-session -t "=$session_name"
+        fi
+        return
+    fi
+
+    if [[ -n ${TMUX:-} ]]; then
+        tmux new-session -d -s "$session_name" -c "$PWD" "$@" || return
+        tmux switch-client -t "=$session_name"
+    else
+        tmux new-session -s "$session_name" -c "$PWD" "$@"
+    fi
+}
+
+# New tmux session and detach with smart session name based on git
+tssd() {
+    local session_name
+    local target
+
+    session_name=$(_tss_session_name) || return
+    if ! tmux has-session -t "=$session_name" 2>/dev/null; then
+        tmux new-session -d -s "$session_name" -c "$PWD" "$@" || return
+    fi
+
+    target="$session_name"
+    if [[ -n ${TMUX:-} ]]; then
+        print -r -- "Created new session: ${(qq)target}"
+    else
+        print -r -- "Created new session: ${(qq)target}"
+    fi
+}
+
+# Tmux session launcher from command line
 tp() {
     "$HOME/.config/tmux/scripts/tmux-launcher.sh" "$@"
 }
+
+# Change directory for current tmux session via the launcher
 tc() {
     "$HOME/.config/tmux/scripts/tmux-launcher.sh" --change-directory
 }

@@ -2,7 +2,8 @@
 [env]
 TERM = "alacritty"
 TERM_APP_NAME = "Alacritty"
-TMUX_SOCKET = "alacritty"
+# TMUX_SOCKET = "alacritty"
+TMUX_SOCKET = "default"
 
 [window]
 decorations = "buttonless"
