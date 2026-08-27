@@ -9,6 +9,8 @@ ACTION="${1:-}"
 LOCK_NAME="session-switcher"
 TIMEOUT_SECONDS=5
 VIEWPORT_SIZE=5
+DEFAULT_SESSION_NAME_LIMIT=24
+SESSION_NAME_TRIM_MARKER='…'
 SCRIPT_PATH="${BASH_SOURCE[0]}"
 LOCK_HELD=0
 
@@ -79,6 +81,26 @@ lookup_session_name() {
     fi
   done
   return 1
+}
+
+resolve_session_name_limit() {
+  local limit
+
+  limit="$(read_option @session_name_limit)"
+  if ! [[ "$limit" =~ ^[1-9][0-9]*$ ]]; then
+    limit="$DEFAULT_SESSION_NAME_LIMIT"
+  fi
+  printf '%s' "$limit"
+}
+
+trim_session_name() {
+  local name="$1" limit="$2"
+
+  if [ "${#name}" -gt "$limit" ]; then
+    printf '%s%s' "$SESSION_NAME_TRIM_MARKER" "${name: -limit}"
+  else
+    printf '%s' "$name"
+  fi
 }
 
 array_contains() {
@@ -173,16 +195,18 @@ read_preview_state() {
 render_preview() {
   local count="${#preview_session_ids[@]}"
   local visible_count="$count"
-  local end i
+  local end i session_name_limit
 
   if [ "$visible_count" -gt "$VIEWPORT_SIZE" ]; then
     visible_count="$VIEWPORT_SIZE"
   fi
   end=$((view_start + visible_count))
+  session_name_limit="$(resolve_session_name_limit)"
   preview_text=''
 
   for ((i = view_start; i < end; i += 1)); do
     lookup_session_name "${preview_session_ids[$i]}" || return 1
+    resolved_session_name="$(trim_session_name "$resolved_session_name" "$session_name_limit")"
     if [ -n "$preview_text" ]; then
       preview_text="$preview_text | "
     fi
