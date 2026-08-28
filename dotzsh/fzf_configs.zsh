@@ -19,12 +19,15 @@ export FZF_DEFAULT_OPTS="
     --height 50% --reverse --info=inline-right --preview-window 'right:55%,border-sharp'
 "
 
-# TokyoNight Storm colors
-export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'
-    --color=fg:#c0caf5,bg:#24283b,hl:#565f89:regular
-    --color=fg+:#7aa2f7:regular,bg+:#3b4261,hl+:#bb9af7:regular
-    --color=query:#c0caf5:regular,info:#7dcfff,border:#636a8d,label:#7dcfff:regular
-    --color=pointer:#bb9af7,marker:#bb9af7,spinner:#e0af68,header:#565f89,prompt:#bb9af7'
+# Follow the terminal theme when supported, with Rosé Pine Dawn as the fallback.
+_term_theme=${TERM_THEME:-rose-pine-dawn}
+case "$_term_theme" in
+  tokyonight-storm|rose-pine|rose-pine-moon|rose-pine-dawn) ;;
+  *) _term_theme=rose-pine-dawn ;;
+esac
+export REVDIFF_THEME="$_term_theme"
+source "$HOME/.config/zsh/themes/${_term_theme}.zsh"
+unset _term_theme
 
 # custom keybindings
 export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS'

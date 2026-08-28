@@ -1,0 +1,28 @@
+# name: rose-pine
+# description: Original Rosé Pine palette with restrained semantic diff backgrounds
+# author: Rosé Pine / mattbui
+
+chroma-style = rose-pine
+color-accent = #ebbcba
+color-border = #6e6a86
+color-normal = #e0def4
+color-muted = #908caa
+color-selected-fg = #191724
+color-selected-bg = #ebbcba
+color-annotation = #f6c177
+color-cursor-fg = #9ccfd8
+color-cursor-bg = #21202e
+color-add-fg = #9ccfd8
+color-add-bg = #2b313d
+color-remove-fg = #eb6f92
+color-remove-bg = #362333
+color-word-add-bg = #404e5a
+color-word-remove-bg = #583145
+color-modify-fg = #f6c177
+color-modify-bg = #382f30
+color-tree-bg = #191724
+color-diff-bg = #191724
+color-status-fg = #191724
+color-status-bg = #ebbcba
+color-search-fg = #191724
+color-search-bg = #f6c177

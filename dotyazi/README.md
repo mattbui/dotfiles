@@ -9,3 +9,7 @@ native archive preview and extraction.
 
 Launch with `yazi`. Both `<Esc>` and `<C-[>` retain Yazi's native behavior for
 clearing selections, leaving visual mode, or cancelling a search.
+
+`theme.toml` selects the repository-owned Rosé Pine Dawn flavor for both `dark`
+and `light`. Original, Moon, and Tokyo Night Storm remain available as commented
+manual alternatives.

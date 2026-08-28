@@ -1,0 +1,28 @@
+# name: rose-pine-moon
+# description: Rosé Pine Moon palette with restrained semantic diff backgrounds
+# author: Rosé Pine / mattbui
+
+chroma-style = rose-pine-moon
+color-accent = #ea9a97
+color-border = #6e6a86
+color-normal = #e0def4
+color-muted = #908caa
+color-selected-fg = #232136
+color-selected-bg = #ea9a97
+color-annotation = #f6c177
+color-cursor-fg = #9ccfd8
+color-cursor-bg = #2a283e
+color-add-fg = #9ccfd8
+color-add-bg = #34394d
+color-remove-fg = #eb6f92
+color-remove-bg = #3f2c43
+color-word-add-bg = #475567
+color-word-remove-bg = #5f3852
+color-modify-fg = #f6c177
+color-modify-bg = #41373f
+color-tree-bg = #232136
+color-diff-bg = #232136
+color-status-fg = #232136
+color-status-bg = #ea9a97
+color-search-fg = #232136
+color-search-bg = #f6c177

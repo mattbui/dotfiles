@@ -1,0 +1,3 @@
+# Rosé Pine Moon Slack theme
+# System navigation, Selected items, Presence indication, Notifications
+#232136,#312F44,#9CCFD8,#EA9A97

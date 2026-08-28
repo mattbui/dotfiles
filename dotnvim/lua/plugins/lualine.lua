@@ -159,7 +159,9 @@ local function conform_formatters()
   return "󰷈 lsp" .. format_on_save
 end
 
-local lualine_theme = require("lualine.themes.tokyonight-storm")
+local colorscheme = vim.g.colors_name or "tokyonight-storm"
+local lualine_theme_name = colorscheme == "rose-pine" and "rose-pine" or colorscheme
+local lualine_theme = require("lualine.themes." .. lualine_theme_name)
 local diagnostics = require("plugins.lsp.diagnostics")
 local symbols = require("plugins.lsp.symbols")
 
@@ -177,7 +179,10 @@ lualine.setup({
     section_separators = "",
   },
   sections = {
-    lualine_a = { "mode", paste },
+    lualine_a = {
+      { "mode", color = { gui = "" } },
+      paste,
+    },
     lualine_b = {
       {
         "branch",
@@ -211,7 +216,7 @@ lualine.setup({
       { "progress", fmt = vim.trim, },
     },
     lualine_z = {
-      { "location", fmt = vim.trim, },
+      { "location", fmt = vim.trim, color = { gui = "" }, },
     },
   },
 })

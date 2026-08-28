@@ -2,6 +2,7 @@
 
 # cmd-footer already handle dynamically adding newline before the prompt, check init.zsh
 add_newline = false
+palette = "rose_pine_dawn"
 
 format = """
 $directory\
@@ -23,94 +24,94 @@ $character"""
 cmd-footer = "${env_var.STARSHIP_CMD_OK}${env_var.STARSHIP_CMD_ERR}$cmd_duration"
 
 [env_var.STARSHIP_CMD_OK]
-format = "[✓](green) at [$env_value]($style)"
-style = "white dimmed"
+format = "[✓](success) at [$env_value]($style)"
+style = "muted dimmed"
 
 [env_var.STARSHIP_CMD_ERR]
-format = "[✗](red) at [$env_value]($style)"
-style = "white dimmed"
+format = "[✗](error) at [$env_value]($style)"
+style = "muted dimmed"
 
 [cmd_duration]
 min_time = 2000
 format = " · took [$duration]($style)"
-style = "white dimmed"
+style = "muted dimmed"
 
 [character]
-success_symbol = "[→](purple)"
-error_symbol = "[→](purple)"
-vimcmd_symbol = "[←](yellow)"
+success_symbol = "[→](accent)"
+error_symbol = "[→](accent)"
+vimcmd_symbol = "[←](warning)"
 
 [username]
 format = "[$user]($style)"
-style_user = "white dimmed"
-style_root = "red"
+style_user = "muted dimmed"
+style_root = "error"
 
 [hostname]
 format = "[@$hostname]($style)"
-style = "white dimmed"
+style = "muted dimmed"
 
 [directory]
-style = "blue"
+style = "primary"
 read_only = " 󰌾"
 
 [git_branch]
 symbol = " "
-style = "purple"
+style = "accent"
 only_attached = true
 
 [git_commit]
 format = "on [ $hash$tag]($style) "
-style = "purple"
+style = "accent"
 only_detached = true
 tag_disabled = false
 tag_symbol = "  "
 
 [git_state]
-style = "yellow"
+style = "warning"
 
 [git_status]
-style = "red"
+style = "error"
 format = "([$all_status$ahead_behind]($style))"
-conflicted = "[=${count}](red) "
-ahead = "[⇡${count}](green) "
-behind = "[⇣${count}](yellow) "
-diverged = "[⇡${ahead_count}](green)[⇣${behind_count}](yellow) "
-untracked = "[?${count}](cyan) "
-stashed = '[*${count}](purple) '
-modified = "[!${count}](yellow) "
-staged = "[+${count}](green) "
-renamed = "[~${count}](yellow) "
-deleted = "[-${count}](red) "
+conflicted = "[=${count}](error) "
+ahead = "[⇡${count}](success) "
+behind = "[⇣${count}](warning) "
+diverged = "[⇡${ahead_count}](success)[⇣${behind_count}](warning) "
+untracked = "[?${count}](info) "
+stashed = '[*${count}](secondary) '
+modified = "[!${count}](warning) "
+staged = "[+${count}](success) "
+renamed = "[~${count}](warning) "
+deleted = "[-${count}](error) "
 
 [aws]
 format = "on [($profile )($region )($duration )]($style)"
 symbol = ""
-style = "yellow"
+style = "warning"
 
 [bun]
 symbol = " "
-style = "red"
+style = "error"
 
 [deno]
 symbol = " "
-style = "green"
+style = "success"
 
 [nodejs]
 symbol = " "
-style = "green"
-not_capable_style = "red"
+style = "success"
+not_capable_style = "error"
 
 [package]
 symbol = "󰏗 "
-style = "yellow"
+style = "warning"
 
 [python]
 symbol = " "
-style = "blue"
+style = "primary"
 generic_venv_names = [".venv", "venv"]
 
 [jobs]
-style = "blue"
+style = "primary"
 
 [fill]
 symbol = " "
@@ -161,5 +162,45 @@ when = true
 require_repo = true
 format = '([$symbol$output]($style) )'
 symbol = "󰃻 "
-style = "cyan dimmed"
+style = "info dimmed"
 shell = ["sh"]
+
+[palettes.tokyonight_storm]
+accent = "#bb9af7"
+primary = "#7aa2f7"
+info = "#7dcfff"
+success = "#9ece6a"
+warning = "#e0af68"
+error = "#f7768e"
+secondary = "#9d7cd8"
+muted = "#a9b1d6"
+
+[palettes.rose_pine]
+accent = "#ebbcba"
+primary = "#9ccfd8"
+info = "#31748f"
+success = "#31748f"
+warning = "#f6c177"
+error = "#eb6f92"
+secondary = "#c4a7e7"
+muted = "#908caa"
+
+[palettes.rose_pine_moon]
+accent = "#ea9a97"
+primary = "#9ccfd8"
+info = "#3e8fb0"
+success = "#3e8fb0"
+warning = "#f6c177"
+error = "#eb6f92"
+secondary = "#c4a7e7"
+muted = "#908caa"
+
+[palettes.rose_pine_dawn]
+accent = "#d7827e"
+primary = "#56949f"
+info = "#286983"
+success = "#286983"
+warning = "#ea9d34"
+error = "#b4637a"
+secondary = "#907aa9"
+muted = "#797593"

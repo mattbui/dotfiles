@@ -69,6 +69,7 @@ barbar.setup({
       deleted = { enabled = false },
     },
     pinned = { button = false, filename = true },
+    separator_at_end = false,
     current = {
       buffer_index = false,
       gitsigns = {

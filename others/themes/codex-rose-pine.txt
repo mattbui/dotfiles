@@ -1,0 +1,1 @@
+codex-theme-v1:{"codeThemeId":"rose-pine","theme":{"accent":"#ebbcba","contrast":50,"fonts":{"code":"\"JetBrainsMonoNL Nerd Font Mono\"","ui":null},"ink":"#e0def4","opaqueWindows":true,"semanticColors":{"diffAdded":"#9ccfd8","diffRemoved":"#eb6f92","skill":"#ebbcba"},"surface":"#191724"},"variant":"dark"}

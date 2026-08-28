@@ -1,0 +1,158 @@
+# Rosé Pine Dawn for Yazi.
+# Palette: https://github.com/rose-pine/palette
+# Updated for Yazi 26.5: indicator/body/url replace deprecated theme fields.
+
+[mgr]
+cwd = { fg = "#797593", italic = true }
+
+# Find
+find_keyword  = { fg = "#fffaf3", bg = "#ea9d34", bold = true }
+find_position = { fg = "#286983", bg = "#f4ede8", bold = true }
+
+# Marker
+marker_copied   = { fg = "#286983" }
+marker_cut      = { fg = "#b4637a" }
+marker_marked   = { fg = "#d7827e" }
+marker_selected = { fg = "#56949f" }
+
+# Count
+count_copied   = { fg = "#fffaf3", bg = "#286983" }
+count_cut      = { fg = "#fffaf3", bg = "#b4637a" }
+count_selected = { fg = "#fffaf3", bg = "#56949f" }
+
+# Manager border
+border_style = { fg = "#9893a5" }
+
+# Outer border
+[outer-border]
+border = { fg = "#9893a5" }
+title  = { fg = "#56949f" }
+
+# Hovered
+[indicator]
+parent  = { bg = "#f2e9e1" }
+current = { bg = "#f2e9e1" }
+preview = { bg = "#f2e9e1" }
+
+# Tab
+[tabs]
+active   = { fg = "#faf4ed", bg = "#56949f" }
+inactive = { fg = "#56949f", bg = "#f2e9e1" }
+
+[mode]
+normal_main = { fg = "#faf4ed", bg = "#d7827e" }
+normal_alt  = { fg = "#d7827e", bg = "#f2e9e1" }
+
+select_main = { fg = "#faf4ed", bg = "#907aa9" }
+select_alt  = { fg = "#907aa9", bg = "#f2e9e1" }
+
+unset_main  = { fg = "#faf4ed", bg = "#b4637a" }
+unset_alt   = { fg = "#b4637a", bg = "#f2e9e1" }
+
+[status]
+overall = { fg = "#575279", bg = "#fffaf3" }
+
+# Progress
+progress_label  = { fg = "#575279", bold = true }
+progress_normal = { fg = "#286983", bg = "#f4ede8" }
+progress_error  = { fg = "#b4637a", bg = "#f4ede8" }
+
+# Permissions
+perm_type  = { fg = "#575279" }
+perm_read  = { fg = "#575279" }
+perm_write = { fg = "#575279" }
+perm_exec  = { fg = "#575279" }
+perm_sep   = { fg = "#575279" }
+
+[pick]
+border   = { fg = "#9893a5" }
+active   = { fg = "#575279",  bg = "#dfdad9" }
+inactive = { fg = "#575279" }
+
+# Input
+[input]
+border   = { fg = "#9893a5" }
+title    = { fg = "#286983" }
+value    = { fg = "#907aa9" }
+selected = { bg = "#dfdad9" }
+
+# Completion
+[cmp]
+border   = { fg = "#9893a5" }
+active   = { fg = "#575279", bg = "#dfdad9" }
+inactive = { fg = "#575279" }
+
+# Tasks
+[tasks]
+border  = { fg = "#9893a5" }
+title   = { fg = "#286983" }
+hovered = { fg = "#575279", bg = "#dfdad9" }
+
+# Which
+[which]
+mask            = { bg = "#fffaf3" }
+cand            = { fg = "#56949f" }
+rest            = { fg = "#56949f" }
+desc            = { fg = "#d7827e" }
+separator_style = { fg = "#9893a5" }
+
+# Confirm
+[confirm]
+border  = { fg = "#9893a5" }
+title   = { fg = "#286983" }
+btn_yes = { bg = "#dfdad9" }
+
+# Spot
+[spot]
+border  = { fg = "#9893a5" }
+title   = { fg = "#286983" }
+
+# Notify
+[notify]
+title_info  = { fg = "#286983" }
+title_warn  = { fg = "#ea9d34" }
+title_error = { fg = "#b4637a" }
+
+# Git
+[git]
+modified  = { fg = "#ea9d34" }
+added     = { fg = "#56949f" }
+untracked = { fg = "#56949f" }
+ignored   = { fg = "#9893a5" }
+deleted   = { fg = "#b4637a" }
+updated   = { fg = "#b4637a" }
+
+# Help
+[help]
+border  = { fg = "#9893a5" }
+chord   = { fg = "#286983" }
+action  = { fg = "#56949f" }
+hovered = { bg = "#f4ede8" }
+
+[filetype]
+
+rules = [
+	# Images
+	{ mime = "image/*", fg = "#ea9d34" },
+
+	# Media
+	{ mime = "{audio,video}/*", fg = "#d7827e" },
+
+	# Archives
+	{ mime = "application/*zip", fg = "#b4637a" },
+	{ mime = "application/x-{tar,bzip*,7z-compressed,xz,rar}", fg = "#b4637a" },
+
+	# Documents
+	{ mime = "application/{pdf,doc,rtf,vnd.*}", fg = "#56949f" },
+
+	# Empty files
+	# { mime = "inode/x-empty", fg = "#b4637a" },
+
+	# Special files
+	{ url = "*", is = "orphan", bg = "#b4637a" },
+	{ url = "*", is = "exec"  , fg = "#286983" },
+
+	# Fallback
+	{ url = "*/", fg = "#56949f" },
+	{ url = "*", fg = "#575279" }
+]

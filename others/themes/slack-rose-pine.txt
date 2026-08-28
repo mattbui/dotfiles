@@ -1,0 +1,3 @@
+# Rosé Pine Slack theme
+# System navigation, Selected items, Presence indication, Notifications
+#191724,#2A2837,#9CCFD8,#EBBCBA

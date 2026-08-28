@@ -1,0 +1,28 @@
+# name: rose-pine-dawn
+# description: Rosé Pine Dawn palette with restrained semantic diff backgrounds
+# author: Rosé Pine / mattbui
+
+chroma-style = rose-pine-dawn
+color-accent = #d7827e
+color-border = #9893a5
+color-normal = #575279
+color-muted = #797593
+color-selected-fg = #faf4ed
+color-selected-bg = #d7827e
+color-annotation = #ea9d34
+color-cursor-fg = #56949f
+color-cursor-bg = #f4ede8
+color-add-fg = #56949f
+color-add-bg = #e3e7e2
+color-remove-fg = #b4637a
+color-remove-bg = #f0e0dd
+color-word-add-bg = #c9d7d6
+color-word-remove-bg = #e5c8ca
+color-modify-fg = #ea9d34
+color-modify-bg = #f8e8d3
+color-tree-bg = #faf4ed
+color-diff-bg = #faf4ed
+color-status-fg = #faf4ed
+color-status-bg = #d7827e
+color-search-fg = #faf4ed
+color-search-bg = #ea9d34

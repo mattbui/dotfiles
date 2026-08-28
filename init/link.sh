@@ -64,6 +64,7 @@ link_path "$DOTFILES/others/bordersrc" "$CONFIGS/borders/bordersrc"
 # Alacritty configs
 mkdir -p "$CONFIGS/alacritty"
 link_path "$DOTFILES/others/alacritty.toml" "$CONFIGS/alacritty/alacritty.toml"
+link_path "$DOTFILES/others/themes/alacritty" "$CONFIGS/alacritty/themes"
 
 # Ghostty configs
 mkdir -p "$CONFIGS/ghostty"

@@ -1,6 +1,5 @@
 [Application Options]
-# Use the local Tokyo Night Storm palette from dotrevdiff/themes/tokyonight-storm.
-theme = tokyonight-storm
+# The built-in Tokyo default is the fallback; the shell exports REVDIFF_THEME.
 untracked = true
 vim-motion = true
 no-status-bar = true

@@ -1,6 +1,10 @@
 [flavor]
-dark = "tokyonight-storm"
-light = "tokyonight-storm"
+dark = "rose-pine-dawn"
+light = "rose-pine-dawn"
+# dark = "rose-pine"
+# dark = "rose-pine-moon"
+# dark = "tokyonight-storm"
+# light = "tokyonight-storm"
 
 [mgr]
 marker_symbol = "🮉"

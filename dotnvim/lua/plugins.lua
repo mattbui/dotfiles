@@ -65,6 +65,7 @@ vim.pack.add({
   gh('christoomey/vim-tmux-navigator'),
 
   -- Theme.
+  { src = gh('rose-pine/neovim'), name = 'rose-pine' },
   gh('folke/tokyonight.nvim'),
 
 })
