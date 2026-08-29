@@ -50,7 +50,7 @@ unset_main  = { fg = "#faf4ed", bg = "#b4637a" }
 unset_alt   = { fg = "#797593", bg = "#f2e9e1" }
 
 [status]
-overall = { fg = "#575279", bg = "#fffaf3" }
+overall = { fg = "#797593", bg = "#fffaf3" }
 
 # Progress
 progress_label  = { fg = "#575279", bold = true }
@@ -58,11 +58,11 @@ progress_normal = { fg = "#286983", bg = "#f4ede8" }
 progress_error  = { fg = "#b4637a", bg = "#f4ede8" }
 
 # Permissions
-perm_type  = { fg = "#575279" }
-perm_read  = { fg = "#575279" }
-perm_write = { fg = "#575279" }
-perm_exec  = { fg = "#575279" }
-perm_sep   = { fg = "#575279" }
+perm_type  = { fg = "#797593" }
+perm_read  = { fg = "#797593" }
+perm_write = { fg = "#797593" }
+perm_exec  = { fg = "#797593" }
+perm_sep   = { fg = "#797593" }
 
 [pick]
 border   = { fg = "#9893a5" }
