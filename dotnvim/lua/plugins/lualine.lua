@@ -166,12 +166,15 @@ local diagnostics = require("plugins.lsp.diagnostics")
 local symbols = require("plugins.lsp.symbols")
 
 if colorscheme:match("^rose%-pine") then
-  lualine_theme.normal.b.fg = require("rose-pine.palette").subtle
+  local subtle = require("rose-pine.palette").subtle
+  lualine_theme.normal.b.fg = subtle
+  lualine_theme.normal.c.fg = subtle
 end
 
 for _, mode in ipairs({ "insert", "visual", "replace", "command", "terminal", "inactive" }) do
   if lualine_theme[mode] ~= nil then
     lualine_theme[mode].b = lualine_theme.normal.b
+    lualine_theme[mode].c = lualine_theme.normal.c
   end
 end
 
