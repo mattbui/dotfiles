@@ -41,13 +41,13 @@ inactive = { fg = "#9ccfd8", bg = "#393552" }
 
 [mode]
 normal_main = { fg = "#232136", bg = "#ea9a97" }
-normal_alt  = { fg = "#ea9a97", bg = "#393552" }
+normal_alt  = { fg = "#908caa", bg = "#393552" }
 
 select_main = { fg = "#232136", bg = "#c4a7e7" }
-select_alt  = { fg = "#c4a7e7", bg = "#393552" }
+select_alt  = { fg = "#908caa", bg = "#393552" }
 
 unset_main  = { fg = "#232136", bg = "#eb6f92" }
-unset_alt   = { fg = "#eb6f92", bg = "#393552" }
+unset_alt   = { fg = "#908caa", bg = "#393552" }
 
 [status]
 overall = { fg = "#e0def4", bg = "#2a273f" }
