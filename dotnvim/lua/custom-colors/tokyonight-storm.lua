@@ -43,6 +43,9 @@ function M.setup()
   -- * current buffer use the same bg colors as editor
   -- * other buffers use highlighted bg, and muted text to make current buffer pop
   -- * use itatic to indicate preview (default) vs permanent buffers (pinned)
+  hl("BufferTabpageFill", { bg = "#292e42" })
+  hl("BufferOffset", { bg = "#292e42" })
+
   hl("BufferAlternate", { fg = "#c0caf5", bg = "#3b4261", italic = true })
   hl("BufferAlternatePin", { fg = "#c0caf5", bg = "#3b4261" })
   hl("BufferAlternateSignRight", { fg = "#3b4261", bg = "#3b4261" })

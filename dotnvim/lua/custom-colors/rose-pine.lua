@@ -46,6 +46,9 @@ function M.setup()
   hl("GitSignsUntracked", { fg = sign_add, bg = palette.base })
 
   -- Barbar mirrors the existing Tokyo structure and its magenta accent slots.
+  hl("BufferTabpageFill", { bg = palette.overlay })
+  hl("BufferOffset", { bg = palette.overlay })
+
   hl("BufferAlternate", { fg = palette.text, bg = palette.overlay, italic = true })
   hl("BufferAlternatePin", { fg = palette.text, bg = palette.overlay })
   hl("BufferAlternateSignRight", { fg = palette.overlay, bg = palette.overlay })
