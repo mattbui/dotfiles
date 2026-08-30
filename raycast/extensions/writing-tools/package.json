@@ -1,0 +1,102 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "writing-tools",
+  "title": "Writing Tools",
+  "description": "Fix, improve, and explain selected text with an OpenAI-compatible API.",
+  "icon": "icon.png",
+  "author": "minhbui",
+  "platforms": [
+    "macOS"
+  ],
+  "categories": [
+    "Productivity",
+    "Communication"
+  ],
+  "license": "MIT",
+  "private": true,
+  "commands": [
+    {
+      "name": "fix-spelling-and-grammar",
+      "title": "Fix Spelling and Grammar",
+      "subtitle": "Writing Tools",
+      "description": "Correct spelling, grammar, and punctuation in selected text.",
+      "mode": "no-view",
+      "keywords": [
+        "grammar",
+        "spelling",
+        "proofread"
+      ]
+    },
+    {
+      "name": "improve-writing",
+      "title": "Improve Writing",
+      "subtitle": "Writing Tools",
+      "description": "Improve the clarity and concision of selected text.",
+      "mode": "no-view",
+      "keywords": [
+        "rewrite",
+        "edit",
+        "clarity"
+      ]
+    },
+    {
+      "name": "explain-this-in-simple-terms",
+      "title": "Explain This in Simple Terms",
+      "subtitle": "Writing Tools",
+      "description": "Explain selected text in clear and concise language.",
+      "mode": "view",
+      "keywords": [
+        "explain",
+        "define",
+        "simplify"
+      ]
+    },
+    {
+      "name": "select-model",
+      "title": "Select Model",
+      "subtitle": "Writing Tools",
+      "description": "Choose a model from the configured OpenAI-compatible provider.",
+      "mode": "view",
+      "keywords": [
+        "configure",
+        "provider",
+        "model"
+      ]
+    }
+  ],
+  "preferences": [
+    {
+      "name": "apiKey",
+      "title": "API Key",
+      "description": "Bearer token for the configured provider. May be left blank for keyless local servers.",
+      "type": "password",
+      "required": false,
+      "placeholder": "sk-..."
+    },
+    {
+      "name": "apiBaseUrl",
+      "title": "API Base URL",
+      "description": "OpenAI-compatible base URL. Leave blank to use https://api.openai.com/v1.",
+      "type": "textfield",
+      "required": false,
+      "placeholder": "https://api.openai.com/v1"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.9"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist",
+    "dev": "ray develop",
+    "fix-lint": "ray lint --fix",
+    "lint": "ray lint"
+  }
+}
