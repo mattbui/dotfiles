@@ -25,6 +25,46 @@
         "grammar",
         "spelling",
         "proofread"
+      ],
+      "preferences": [
+        {
+          "name": "reasoningEffort",
+          "title": "Reasoning Effort",
+          "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
+          "type": "dropdown",
+          "required": true,
+          "default": "minimal",
+          "data": [
+            {
+              "title": "Provider Default",
+              "value": "provider-default"
+            },
+            {
+              "title": "None",
+              "value": "none"
+            },
+            {
+              "title": "Minimal",
+              "value": "minimal"
+            },
+            {
+              "title": "Low",
+              "value": "low"
+            },
+            {
+              "title": "Medium",
+              "value": "medium"
+            },
+            {
+              "title": "High",
+              "value": "high"
+            },
+            {
+              "title": "XHigh",
+              "value": "xhigh"
+            }
+          ]
+        }
       ]
     },
     {
@@ -37,6 +77,46 @@
         "rewrite",
         "edit",
         "clarity"
+      ],
+      "preferences": [
+        {
+          "name": "reasoningEffort",
+          "title": "Reasoning Effort",
+          "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
+          "type": "dropdown",
+          "required": true,
+          "default": "minimal",
+          "data": [
+            {
+              "title": "Provider Default",
+              "value": "provider-default"
+            },
+            {
+              "title": "None",
+              "value": "none"
+            },
+            {
+              "title": "Minimal",
+              "value": "minimal"
+            },
+            {
+              "title": "Low",
+              "value": "low"
+            },
+            {
+              "title": "Medium",
+              "value": "medium"
+            },
+            {
+              "title": "High",
+              "value": "high"
+            },
+            {
+              "title": "XHigh",
+              "value": "xhigh"
+            }
+          ]
+        }
       ]
     },
     {
@@ -49,6 +129,46 @@
         "explain",
         "define",
         "simplify"
+      ],
+      "preferences": [
+        {
+          "name": "reasoningEffort",
+          "title": "Reasoning Effort",
+          "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
+          "type": "dropdown",
+          "required": true,
+          "default": "minimal",
+          "data": [
+            {
+              "title": "Provider Default",
+              "value": "provider-default"
+            },
+            {
+              "title": "None",
+              "value": "none"
+            },
+            {
+              "title": "Minimal",
+              "value": "minimal"
+            },
+            {
+              "title": "Low",
+              "value": "low"
+            },
+            {
+              "title": "Medium",
+              "value": "medium"
+            },
+            {
+              "title": "High",
+              "value": "high"
+            },
+            {
+              "title": "XHigh",
+              "value": "xhigh"
+            }
+          ]
+        }
       ]
     },
     {

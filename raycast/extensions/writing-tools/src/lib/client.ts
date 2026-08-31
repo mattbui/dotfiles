@@ -1,4 +1,9 @@
-import { ProviderConfig, getProviderConfig, validateProviderCredentials } from "./config";
+import {
+  ProviderConfig,
+  ReasoningEffort,
+  getProviderConfig,
+  validateProviderCredentials,
+} from "./config";
 
 const COMPLETION_TIMEOUT_MS = 60_000;
 const MODEL_LIST_TIMEOUT_MS = 15_000;
@@ -37,18 +42,22 @@ export async function createCompletion(
   systemPrompt: string,
   sourceText: string,
   modelId: string,
+  reasoningEffort?: ReasoningEffort,
 ): Promise<string> {
+  const requestBody = {
+    model: modelId,
+    ...(reasoningEffort ? { reasoning_effort: reasoningEffort } : {}),
+    messages: [
+      { role: "system", content: systemPrompt },
+      { role: "user", content: sourceText },
+    ],
+  };
+
   const response = await providerRequest<ChatCompletionResponse>(
     "chat/completions",
     {
       method: "POST",
-      body: JSON.stringify({
-        model: modelId,
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: sourceText },
-        ],
-      }),
+      body: JSON.stringify(requestBody),
     },
     COMPLETION_TIMEOUT_MS,
   );

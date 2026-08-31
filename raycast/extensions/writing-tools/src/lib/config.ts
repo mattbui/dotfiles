@@ -7,6 +7,12 @@ interface ExtensionPreferences {
   apiBaseUrl?: string;
 }
 
+export type ReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh";
+
+interface WritingCommandPreferences extends ExtensionPreferences {
+  reasoningEffort?: ReasoningEffort | "provider-default";
+}
+
 export interface ProviderConfig {
   apiKey?: string;
   baseUrl: string;
@@ -26,6 +32,14 @@ export function getProviderConfig(): ProviderConfig {
     apiKey: preferences.apiKey?.trim() || undefined,
     baseUrl: normalizeApiBaseUrl(preferences.apiBaseUrl),
   };
+}
+
+export function getReasoningEffort(): ReasoningEffort | undefined {
+  const preferences = getPreferenceValues<WritingCommandPreferences>();
+
+  return preferences.reasoningEffort && preferences.reasoningEffort !== "provider-default"
+    ? preferences.reasoningEffort
+    : undefined;
 }
 
 export function normalizeApiBaseUrl(value?: string): string {

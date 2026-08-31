@@ -8,7 +8,7 @@ import {
   showToast,
 } from "@raycast/api";
 import { createCompletion } from "./client";
-import { getProviderConfig } from "./config";
+import { getProviderConfig, getReasoningEffort } from "./config";
 import { ModelNotSelectedError, requireSelectedModel } from "./model-store";
 
 interface RewriteOptions {
@@ -31,12 +31,18 @@ export async function runRewrite(options: RewriteOptions): Promise<void> {
 
   try {
     const config = getProviderConfig();
+    const reasoningEffort = getReasoningEffort();
     const modelId = await requireSelectedModel(config);
     const sourceApplication = await getFrontmostApplication();
     const input = await readRewriteInput();
     const { leadingWhitespace, content, trailingWhitespace } = splitOuterWhitespace(input.text);
 
-    const rewrittenText = await createCompletion(options.systemPrompt, content, modelId);
+    const rewrittenText = await createCompletion(
+      options.systemPrompt,
+      content,
+      modelId,
+      reasoningEffort,
+    );
     const replacement = `${leadingWhitespace}${rewrittenText.trim()}${trailingWhitespace}`;
 
     if (input.source === "clipboard") {

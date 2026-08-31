@@ -55,9 +55,12 @@ npm run build
    - **API Key**: the provider's bearer token; optional for keyless local servers.
    - **API Base URL**: an OpenAI-compatible base URL; blank uses
      `https://api.openai.com/v1`.
-4. Open Raycast and run **Select Model**. Choose a model returned by the provider. If the provider
+4. Select each writing command in the **Writing Tools** extension page and configure its
+   **Reasoning Effort** separately. It defaults to **Minimal**; choose **Provider Default** to omit
+   the `reasoning_effort` parameter.
+5. Open Raycast and run **Select Model**. Choose a model returned by the provider. If the provider
    does not implement `GET /models`, use **Enter Custom Model ID** from the action panel.
-5. Optionally assign hotkeys to the writing commands from the **Writing Tools** extension page in
+6. Optionally assign hotkeys to the writing commands from the **Writing Tools** extension page in
    Raycast Settings.
 
 ## Run
@@ -82,6 +85,9 @@ The extension uses these OpenAI-compatible endpoints:
 
 - `GET {baseURL}/models`
 - `POST {baseURL}/chat/completions`
+
+Writing requests include the command's configured `reasoning_effort` unless **Provider Default**
+is selected. Supported effort values vary by model and provider.
 
 The base URL should include any required prefix such as `/v1`, but should not include
 `/chat/completions`. Native Anthropic and Gemini endpoints are not supported without an

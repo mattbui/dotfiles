@@ -12,7 +12,7 @@ import {
 } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { createCompletion } from "./lib/client";
-import { getProviderConfig } from "./lib/config";
+import { getProviderConfig, getReasoningEffort } from "./lib/config";
 import { EXPLAIN_IN_SIMPLE_TERMS_PROMPT } from "./lib/prompts";
 import { requireSelectedModel } from "./lib/model-store";
 
@@ -33,10 +33,16 @@ export default function Command() {
       setState({ isLoading: true });
       try {
         const config = getProviderConfig();
+        const reasoningEffort = getReasoningEffort();
         const modelId = await requireSelectedModel(config);
         const sourceText = await readSourceText();
 
-        const text = await createCompletion(EXPLAIN_IN_SIMPLE_TERMS_PROMPT, sourceText, modelId);
+        const text = await createCompletion(
+          EXPLAIN_IN_SIMPLE_TERMS_PROMPT,
+          sourceText,
+          modelId,
+          reasoningEffort,
+        );
         if (!cancelled) {
           setState({ isLoading: false, text: text.trim() });
         }
