@@ -24,7 +24,7 @@ y = 8
 
 [font]
 # size = 13 # built-in
-size = 14.5 # 34 inch 2k
+size = 14 # 34 inch 2k
 
 # use `defaults write -g AppleFontSmoothing -int 0/1/2/3` (all apps)
 # or `defaults write org.alacritty AppleFontSmoothing -int 0/1/2/3`
