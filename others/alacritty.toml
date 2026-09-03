@@ -226,6 +226,11 @@ chars = "\u001B[9014u"
 key = "Tab"
 mods = "Control|Shift"
 
+# Convert Karabiner's F16 workaround back to Ctrl-Space (NUL) for terminal apps.
+[[keyboard.bindings]]
+chars = "\u0000"
+key = "F16"
+
 # Karabiner sends F18 on Ctrl release after Ctrl-Tab session cycling.
 [[keyboard.bindings]]
 chars = "\u001B[9015u"

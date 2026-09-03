@@ -1,6 +1,21 @@
 {
   "rules": [
     {
+      "description": "Ctrl + Space → F16 (application shortcut workaround)",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "spacebar",
+            "modifiers": {
+              "mandatory": ["control"]
+            }
+          },
+          "to": [{ "key_code": "f16" }]
+        }
+      ]
+    },
+    {
       "description": "Right mouse hold → Vorssaint radical menu",
       "manipulators": [
         {
