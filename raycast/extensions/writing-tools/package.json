@@ -2,7 +2,7 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "writing-tools",
   "title": "Writing Tools",
-  "description": "Fix, improve, and explain selected text with an OpenAI-compatible API.",
+  "description": "Fix, improve, edit, and explain selected or clipboard text with an OpenAI-compatible API.",
   "icon": "icon.png",
   "author": "minhbui",
   "platforms": [
@@ -33,7 +33,7 @@
           "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
           "type": "dropdown",
           "required": true,
-          "default": "minimal",
+          "default": "low",
           "data": [
             {
               "title": "Provider Default",
@@ -42,10 +42,6 @@
             {
               "title": "None",
               "value": "none"
-            },
-            {
-              "title": "Minimal",
-              "value": "minimal"
             },
             {
               "title": "Low",
@@ -85,7 +81,7 @@
           "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
           "type": "dropdown",
           "required": true,
-          "default": "minimal",
+          "default": "low",
           "data": [
             {
               "title": "Provider Default",
@@ -96,8 +92,61 @@
               "value": "none"
             },
             {
-              "title": "Minimal",
-              "value": "minimal"
+              "title": "Low",
+              "value": "low"
+            },
+            {
+              "title": "Medium",
+              "value": "medium"
+            },
+            {
+              "title": "High",
+              "value": "high"
+            },
+            {
+              "title": "XHigh",
+              "value": "xhigh"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "edit-text-with-prompt",
+      "title": "Edit Text with Prompt",
+      "subtitle": "Writing Tools",
+      "description": "Edit selected or clipboard text using your instructions and replace the source.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "prompt",
+          "type": "text",
+          "placeholder": "What should change?",
+          "required": true
+        }
+      ],
+      "keywords": [
+        "rewrite",
+        "custom",
+        "translate",
+        "transform"
+      ],
+      "preferences": [
+        {
+          "name": "reasoningEffort",
+          "title": "Reasoning Effort",
+          "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
+          "type": "dropdown",
+          "required": true,
+          "default": "low",
+          "data": [
+            {
+              "title": "Provider Default",
+              "value": "provider-default"
+            },
+            {
+              "title": "None",
+              "value": "none"
             },
             {
               "title": "Low",
@@ -137,7 +186,7 @@
           "description": "Reasoning effort sent to compatible providers. Provider Default omits the parameter.",
           "type": "dropdown",
           "required": true,
-          "default": "minimal",
+          "default": "low",
           "data": [
             {
               "title": "Provider Default",
@@ -146,10 +195,6 @@
             {
               "title": "None",
               "value": "none"
-            },
-            {
-              "title": "Minimal",
-              "value": "minimal"
             },
             {
               "title": "Low",

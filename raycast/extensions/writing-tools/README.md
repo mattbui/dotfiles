@@ -9,6 +9,8 @@ OpenAI-compatible API.
   it reads from the clipboard and copies the corrected result back to the clipboard.
 - **Improve Writing** improves selected text and replaces it in place. With no selection, it reads
   from the clipboard and copies the improved result back to the clipboard.
+- **Edit Text with Prompt** applies your editing instructions to selected text and replaces it in
+  place. With no selection, it reads from the clipboard and copies the result back to the clipboard.
 - **Explain This in Simple Terms** displays a concise explanation in Raycast, using clipboard text
   when no text is selected.
 - **Select Model** loads a searchable model picker from the configured provider.
@@ -56,8 +58,8 @@ npm run build
    - **API Base URL**: an OpenAI-compatible base URL; blank uses
      `https://api.openai.com/v1`.
 4. Select each writing command in the **Writing Tools** extension page and configure its
-   **Reasoning Effort** separately. It defaults to **Minimal**; choose **Provider Default** to omit
-   the `reasoning_effort` parameter.
+   **Reasoning Effort** separately. It defaults to **Low**; choose **Provider Default** to omit
+   the `reasoning_effort` parameter. Previously saved Minimal values use Low.
 5. Open Raycast and run **Select Model**. Choose a model returned by the provider. If the provider
    does not implement `GET /models`, use **Enter Custom Model ID** from the action panel.
 6. Optionally assign hotkeys to the writing commands from the **Writing Tools** extension page in
@@ -69,11 +71,18 @@ Select text in any application, open Raycast, and run one of these commands:
 
 - **Fix Spelling and Grammar**
 - **Improve Writing**
+- **Edit Text with Prompt**
 - **Explain This in Simple Terms**
 
-Fix and Improve replace the selection after the provider responds and show a HUD confirming the
-result. If there is no selected text, all three commands use text from the clipboard; Fix and
-Improve copy their result back to the clipboard, while Explain displays its result in Raycast.
+For **Edit Text with Prompt**, enter your instructions in the **What should change?** argument
+field before pressing Enter. For example, use "Make this shorter and friendlier", "Translate to
+Vietnamese", or "Turn this into a bullet list". The command uses the selected model and its own
+Reasoning Effort preference. Instructions and source text are sent separately to the provider.
+
+Fix, Improve, and Edit replace the selection after the provider responds and show a toast confirming
+the result. If there is no selected text, all four writing commands use text from the clipboard.
+Fix, Improve, and Edit copy their result back to the clipboard, while Explain displays its result
+in Raycast.
 
 On first use, macOS or Raycast may ask for permission to read or replace selected text. Grant the
 requested permission for selection-based commands to work. Clipboard fallback remains available
@@ -95,11 +104,12 @@ OpenAI-compatible gateway.
 
 ## Behavior and Limitations
 
-- Fix and Improve prefer selected text. With no selection, they read text from the clipboard and
+- Fix, Improve, and Edit prefer selected text. With no selection, they read text from the clipboard and
   copy the result back instead of pasting it into the frontmost application.
 - Outer whitespace, line breaks, URLs, emojis, and text formatting are preserved as far as the
-  selected plain text and model allow.
+  selected plain text and model allow. Edit can change the content's language, tone, or formatting
+  when your instructions request it. Like Fix and Improve, it always preserves outer whitespace.
 - If the frontmost application changes while a request is running, the result is copied instead of
   pasted to avoid replacing text in the wrong application.
 - Rich-text formatting cannot be preserved as reliably as Raycast's built-in Quick Fix.
-- Selected text is sent to the configured API provider.
+- Source text and any custom editing instructions are sent to the configured API provider.

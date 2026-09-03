@@ -7,10 +7,10 @@ interface ExtensionPreferences {
   apiBaseUrl?: string;
 }
 
-export type ReasoningEffort = "none" | "minimal" | "low" | "medium" | "high" | "xhigh";
+export type ReasoningEffort = "none" | "low" | "medium" | "high" | "xhigh";
 
 interface WritingCommandPreferences extends ExtensionPreferences {
-  reasoningEffort?: ReasoningEffort | "provider-default";
+  reasoningEffort?: ReasoningEffort | "provider-default" | "minimal";
 }
 
 export interface ProviderConfig {
@@ -36,6 +36,11 @@ export function getProviderConfig(): ProviderConfig {
 
 export function getReasoningEffort(): ReasoningEffort | undefined {
   const preferences = getPreferenceValues<WritingCommandPreferences>();
+
+  // Raycast may retain a saved value after its dropdown option is removed.
+  if (preferences.reasoningEffort === "minimal") {
+    return "low";
+  }
 
   return preferences.reasoningEffort && preferences.reasoningEffort !== "provider-default"
     ? preferences.reasoningEffort
