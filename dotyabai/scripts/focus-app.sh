@@ -30,23 +30,10 @@ usage() {
   printf 'Example: %s Safari\n' "$(basename "$0")" >&2
 }
 
-is_latest_focus_token() {
-  local token_file="$1"
-  local token="$2"
-
-  [[ -f "${token_file}" ]] && [[ "$(<"${token_file}")" == "${token}" ]]
-}
-
 main() {
-  local state_dir
-  local latest_focus_token_file
-  local focus_token
   local window_json
   local open_error
   local window_id
-  local window_space_index
-  local current_space_index
-  local attempt
 
   (( $# >= 1 )) || {
     usage
@@ -54,12 +41,6 @@ main() {
   }
 
   focus_app_name="$*"
-  state_dir="${HOME}/.local/state/yabai"
-  latest_focus_token_file="${state_dir}/focus-app.latest"
-  focus_token="$$-$(date +%s%N)-${focus_app_name}"
-
-  mkdir -p "${state_dir}" 2>/dev/null
-  printf '%s\n' "${focus_token}" >"${latest_focus_token_file}"
 
   command -v yabai >/dev/null 2>&1 || {
     printf '%s\n' "Error: yabai is not available in PATH" >&2
@@ -70,15 +51,24 @@ main() {
     exit 127
   }
 
-  # Cycle through non-minimized matches in stable window-id order. If this app
-  # is not already focused, start with its lowest window id.
+  # Cycle through ordinary application windows in stable window-id order. Do
+  # not require is-visible: yabai reports windows on inactive spaces as not
+  # visible on the current display even when they are otherwise focusable.
   window_json="$(
     yabai -m query --windows |
       jq -cer --arg app "${focus_app_name}" '
         [
           .[]
           | select(.app == $app)
+          | select(.id > 0 and .space > 0)
+          | select(.scratchpad == "")
+          | select(.role == "AXWindow")
+          | select(.subrole == "AXStandardWindow")
+          | select(."has-ax-reference" == true)
           | select(."is-minimized" == false)
+          | select(."is-hidden" == false)
+          | select(."is-sticky" == false)
+          | select(."is-grabbed" == false)
         ]
         | sort_by(.id) as $windows
         | ($windows | map(."has-focus") | index(true)) as $focused_index
@@ -93,8 +83,6 @@ main() {
   )"
 
   if [[ -z "${window_json}" ]]; then
-    is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
-      return 0
     if ! open_error="$(open -a "${focus_app_name}" 2>&1)"; then
       printf '%s\n' "${open_error}" >&2
       notify_error "${open_error}"
@@ -104,54 +92,7 @@ main() {
   fi
 
   window_id="$(jq -r '.id' <<<"${window_json}")"
-  window_space_index="$(jq -r '.space' <<<"${window_json}")"
-  # Window `.space` is the Mission Control index, not the stable space id.
-  current_space_index="$(
-    yabai -m query --spaces --space |
-      jq -r '.index'
-  )"
-
-  # Focus the space first to avoid the cross-space window-focus animation.
-  if [[
-    -n "${window_space_index}" &&
-      "${window_space_index}" != "null" &&
-      "${window_space_index}" != "${current_space_index}"
-  ]]; then
-    is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
-      return 0
-    yabai -m space --focus "${window_space_index}"
-
-    for ((attempt = 0; attempt < 10; attempt += 1)); do
-      is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
-        return 0
-      current_space_index="$(
-        yabai -m query --spaces --space |
-          jq -r '.index'
-      )"
-      [[ "${current_space_index}" == "${window_space_index}" ]] && break
-      sleep 0.02
-    done
-  fi
-
-  # macOS may initially focus that space's previously focused window.
-  for ((attempt = 0; attempt < 10; attempt += 1)); do
-    is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
-      return 0
-    yabai -m window --focus "${window_id}" || true
-    if yabai -m query --windows --window "${window_id}" |
-      jq -e '."has-focus" == true' >/dev/null; then
-      return 0
-    fi
-    sleep 0.02
-  done
-
-  is_latest_focus_token "${latest_focus_token_file}" "${focus_token}" ||
-    return 0
-  if ! open_error="$(open -a "${focus_app_name}" 2>&1)"; then
-    printf '%s\n' "${open_error}" >&2
-    notify_error "${open_error}"
-    exit 1
-  fi
+  yabai -m window --focus "${window_id}"
 }
 
 trap on_error ERR
