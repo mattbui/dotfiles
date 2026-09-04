@@ -4,6 +4,7 @@ package.path = CONFIG_DIR .. "/?.lua;" .. CONFIG_DIR .. "/?/init.lua;" .. packag
 
 local subscriptions = {}
 local items = {}
+local focus_commands = {}
 local remove_count = 0
 local set_count = 0
 
@@ -43,12 +44,18 @@ local payload = {
 }
 
 local function new_item(name, properties)
-  local item = { name = name, properties = properties or {}, sets = {} }
+  local item = {
+    name = name,
+    properties = properties or {},
+    sets = {},
+    subscriptions = {},
+  }
   function item:set(properties)
     set_count = set_count + 1
     table.insert(self.sets, properties)
   end
   function item:subscribe(event, callback)
+    self.subscriptions[event] = callback
     subscriptions[event] = callback
   end
   items[name] = item
@@ -73,8 +80,15 @@ function sbar.exec(command, callback)
     callback(payload, 0)
   elseif command:match("query%-current%-window%.sh$") then
     callback(payload.windows[1], 0)
+  elseif command:match("^yabai %-m window [1-9][0-9]* %-%-focus$") then
+    table.insert(focus_commands, command)
+    if callback then
+      callback({}, 0)
+    end
   else
-    callback({}, 1)
+    if callback then
+      callback({}, 1)
+    end
   end
 end
 
@@ -88,6 +102,38 @@ assert(items["space.84.content.1"].properties.background.drawing,
 assert(items["space.84.content.2"].properties.background.color == 0x00000000,
   "unselected window gets an explicit transparent background")
 assert(set_count == 0, "startup selection is part of the structural render")
+
+local selected_slot = items["space.84.content.1"]
+local unselected_slot = items["space.84.content.2"]
+selected_slot.subscriptions["mouse.entered"]()
+assert(selected_slot.sets[#selected_slot.sets].background.color == 0xe6ffffff,
+  "hover leaves the selected window unchanged")
+selected_slot.subscriptions["mouse.exited"]()
+
+unselected_slot.subscriptions["mouse.entered"]()
+local hover_properties = unselected_slot.sets[#unselected_slot.sets]
+assert(hover_properties.background.color == 0x33ffffff,
+  "hover gives an unselected window the specified translucent capsule")
+assert(hover_properties.background.height == 20,
+  "hover capsule keeps the specified height")
+assert(hover_properties.background.corner_radius == 10,
+  "hover capsule keeps the specified corner radius")
+assert(hover_properties.icon.color == 0xfff6f7fb,
+  "hover keeps the unselected window icon color")
+assert(hover_properties.blur_radius == 0, "hover adds no blur")
+unselected_slot.subscriptions["mouse.exited"]()
+assert(unselected_slot.sets[#unselected_slot.sets].background.color == 0x00000000,
+  "mouse exit restores the unselected window appearance")
+
+selected_slot.subscriptions["mouse.clicked"]({ BUTTON = "left" })
+unselected_slot.subscriptions["mouse.clicked"]({ BUTTON = "right" })
+assert(focus_commands[1] == "yabai -m window 100 --focus",
+  "left click focuses a selected slot in case cached focus is stale")
+assert(#focus_commands == 1, "non-left clicks do not run yabai")
+unselected_slot.subscriptions["mouse.clicked"]({ BUTTON = "left" })
+assert(focus_commands[2] == "yabai -m window 101 --focus",
+  "left click focuses the slot's current window ID")
+set_count = 0
 
 subscriptions.yabai_event({ EVENT = "window_focused", WINDOW_ID = "100" })
 assert(set_count == 0, "known focus keeps the existing selection")
@@ -115,6 +161,11 @@ assert(moved_window_properties.icon.drawing == true,
   "window moved into a hidden slot turns its icon drawing back on")
 assert(moved_window_properties.icon.align == "center",
   "window moved into a hidden slot restores icon alignment")
+
+local focus_count_before_stale_click = #focus_commands
+items["space.84.content.2"].subscriptions["mouse.clicked"]({ BUTTON = "left" })
+assert(#focus_commands == focus_count_before_stale_click,
+  "a slot changed into a separator cannot focus its previous window ID")
 
 table.remove(payload.windows, 1)
 local removals_before_change = remove_count

@@ -13,7 +13,7 @@ local dynamic_item_names = {}
 local dynamic_bracket_names = {}
 local space_views = {}
 local applied_space_ids = {}
-local window_items = {}
+local window_slots = {}
 local window_cache = {}
 local window_visibility = {}
 local applied_scene_key = nil
@@ -36,14 +36,24 @@ local function icon_for_app(app)
   return icon_map[app] or icon_map.Default or ":default:"
 end
 
-local function selected_properties(selected)
+local function window_fill_color(selected, hovered)
+  if selected then
+    return colors.selected_fill
+  end
+  if hovered then
+    return colors.hover_fill
+  end
+  return colors.transparent
+end
+
+local function window_interaction_properties(selected, hovered)
   return {
     icon = {
       color = selected and colors.selected_icon or colors.text,
     },
     background = {
       drawing = true,
-      color = selected and colors.selected_fill or colors.transparent,
+      color = window_fill_color(selected, hovered),
       height = 20,
       corner_radius = 10,
       border_width = 0,
@@ -59,12 +69,13 @@ local function set_focus(next_id)
   end
 
   desired_focus_id = next_id
-  if applied_focus_id and window_items[applied_focus_id] then
-    window_items[applied_focus_id]:set(selected_properties(false))
+  if applied_focus_id and window_slots[applied_focus_id] then
+    local previous_slot = window_slots[applied_focus_id]
+    previous_slot.item:set(window_interaction_properties(false, previous_slot.hovered))
   end
 
-  if desired_focus_id and window_items[desired_focus_id] then
-    window_items[desired_focus_id]:set(selected_properties(true))
+  if desired_focus_id and window_slots[desired_focus_id] then
+    window_slots[desired_focus_id].item:set(window_interaction_properties(true, false))
     applied_focus_id = desired_focus_id
   else
     applied_focus_id = nil
@@ -83,7 +94,7 @@ local function remove_dynamic_items()
   dynamic_bracket_names = {}
   space_views = {}
   applied_space_ids = {}
-  window_items = {}
+  window_slots = {}
   applied_focus_id = nil
 end
 
@@ -163,7 +174,7 @@ local function hidden_slot_properties()
   }
 end
 
-local function window_properties(window, selected, is_last)
+local function window_properties(window, selected, is_last, hovered)
   return {
     position = "center",
     drawing = true,
@@ -187,7 +198,7 @@ local function window_properties(window, selected, is_last)
     label = { drawing = false },
     background = {
       drawing = true,
-      color = selected and colors.selected_fill or colors.transparent,
+      color = window_fill_color(selected, hovered),
       height = 20,
       corner_radius = 10,
       border_width = 0,
@@ -224,7 +235,7 @@ local function cell_key(cell, is_last)
   }, ":")
 end
 
-local function properties_for_cell(cell, is_last)
+local function properties_for_cell(cell, is_last, hovered)
   if not cell then
     return hidden_slot_properties()
   end
@@ -232,7 +243,32 @@ local function properties_for_cell(cell, is_last)
     return text_properties("·", { icon_padding_right = 3 })
   end
   local id = window_id(cell.window.id)
-  return window_properties(cell.window, id == desired_focus_id, is_last)
+  return window_properties(cell.window, id == desired_focus_id, is_last, hovered)
+end
+
+local function set_slot_hover(slot, hovered)
+  slot.hovered = hovered
+  if not slot.window_id then
+    return
+  end
+
+  local selected = slot.window_id == desired_focus_id
+  slot.item:set(window_interaction_properties(selected, hovered))
+end
+
+local function subscribe_content_slot(slot)
+  slot.item:subscribe("mouse.entered", function()
+    set_slot_hover(slot, true)
+  end)
+  slot.item:subscribe("mouse.exited", function()
+    set_slot_hover(slot, false)
+  end)
+  slot.item:subscribe("mouse.clicked", function(env)
+    local id = slot.window_id
+    if env.BUTTON == "left" and id then
+      sbar.exec("yabai -m window " .. id .. " --focus")
+    end
+  end)
 end
 
 local function create_space_view(space, is_last)
@@ -261,18 +297,22 @@ local function create_space_view(space, is_last)
   for index = 1, capacity do
     local cell = cells[index]
     local is_last_cell = index == #cells
-    local slot = add_item(
+    local item = add_item(
       prefix .. ".content." .. tostring(index),
-      properties_for_cell(cell, is_last_cell)
+      properties_for_cell(cell, is_last_cell, false)
     )
-    view.slots[index] = {
-      item = slot,
+    local slot = {
+      item = item,
       key = cell_key(cell, is_last_cell),
+      window_id = cell and cell.kind == "window" and window_id(cell.window.id) or nil,
+      hovered = false,
     }
-    table.insert(members, slot.name)
-    if cell and cell.kind == "window" then
-      local id = window_id(cell.window.id)
-      window_items[id] = slot
+    view.slots[index] = slot
+    subscribe_content_slot(slot)
+    table.insert(members, item.name)
+    if slot.window_id then
+      local id = slot.window_id
+      window_slots[id] = slot
       if id == desired_focus_id then
         applied_focus_id = id
       end
@@ -335,12 +375,16 @@ local function update_space_view(view, space, is_last)
     local cell = cells[index]
     local is_last_cell = index == #cells
     local next_key = cell_key(cell, is_last_cell)
+    if not cell then
+      slot.hovered = false
+    end
+    slot.window_id = cell and cell.kind == "window" and window_id(cell.window.id) or nil
     if slot.key ~= next_key then
-      slot.item:set(properties_for_cell(cell, is_last_cell))
+      slot.item:set(properties_for_cell(cell, is_last_cell, slot.hovered))
       slot.key = next_key
     end
-    if cell and cell.kind == "window" then
-      window_items[window_id(cell.window.id)] = slot.item
+    if slot.window_id then
+      window_slots[slot.window_id] = slot
     end
   end
 end
@@ -361,11 +405,11 @@ local function render_scene(scene)
   if not can_update_scene_in_place(scene) then
     rebuild_scene(scene)
   else
-    window_items = {}
+    window_slots = {}
     for index, space in ipairs(scene.spaces) do
       update_space_view(space_views[tostring(space.id)], space, index == #scene.spaces)
     end
-    if applied_focus_id and not window_items[applied_focus_id] then
+    if applied_focus_id and not window_slots[applied_focus_id] then
       applied_focus_id = nil
     end
   end

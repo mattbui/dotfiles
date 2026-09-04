@@ -7,6 +7,9 @@ CLI snapshot, and the controller writes the bar only when its normalized drawing
 changes. Normal structural changes update reusable per-space slots in place, so the bar
 does not disappear between states.
 
+Hovering an unselected window icon draws the 20% white capsule from the design study.
+Left-clicking an icon focuses that exact window through its cached yabai window ID.
+
 Requirements:
 
 - SketchyBar
