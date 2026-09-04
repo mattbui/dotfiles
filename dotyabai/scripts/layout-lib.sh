@@ -27,7 +27,8 @@ readonly LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO="0.90"
 readonly LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO="0.50"
 readonly LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO="0.50"
 readonly LAYOUT_RATIO_TOLERANCE="0.01"
-readonly LAYOUT_TOP_PADDING="6"
+readonly LAYOUT_TOP_PADDING="4"
+readonly LAYOUT_BOTTOM_PADDING="4"
 readonly LAYOUT_COMPACT_PADDING="8"
 readonly LAYOUT_ROOMY_PADDING="12"
 readonly LAYOUT_COMPACT_GAP="8"
@@ -580,7 +581,7 @@ layout_resolve_single_stack_sizing() {
   local effective_ratio_raw
   local side_padding
   local padding_top="${LAYOUT_TOP_PADDING}"
-  local padding_bottom="${base_padding}"
+  local padding_bottom="${LAYOUT_BOTTOM_PADDING}"
   local padding_left="${base_padding}"
   local padding_right="${base_padding}"
 
@@ -589,7 +590,7 @@ layout_resolve_single_stack_sizing() {
       awk \
         -v height="${display_height}" \
         -v top="${LAYOUT_TOP_PADDING}" \
-        -v bottom="${base_padding}" \
+        -v bottom="${LAYOUT_BOTTOM_PADDING}" \
         'BEGIN { printf "%.9f", (height - top - bottom) / height }'
     )"
     effective_ratio_raw="$(
@@ -612,7 +613,7 @@ layout_resolve_single_stack_sizing() {
         -v height="${display_height}" \
         -v ratio="${effective_ratio_raw}" \
         -v minimum_top="${LAYOUT_TOP_PADDING}" \
-        -v minimum_bottom="${base_padding}" '
+        -v minimum_bottom="${LAYOUT_BOTTOM_PADDING}" '
           BEGIN {
             budget = height * (1 - ratio)
             top = int((budget / 2) + 0.5)
@@ -727,7 +728,7 @@ layout_resolve_arrangement() {
     arrangement="two-stack"
     desired_space_type="bsp"
     padding_top="${LAYOUT_TOP_PADDING}"
-    padding_bottom="${base_padding}"
+    padding_bottom="${LAYOUT_BOTTOM_PADDING}"
     padding_left="${base_padding}"
     padding_right="${base_padding}"
   fi

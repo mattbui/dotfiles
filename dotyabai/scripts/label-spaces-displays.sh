@@ -9,8 +9,17 @@
 
 set -o pipefail
 
+notify_sketchy_bar_labels_completed() {
+  local status="$1"
+  local notifier="${HOME}/.config/sketchybar/scripts/forward-yabai-event.sh"
+
+  [[ -x "${notifier}" ]] || return 0
+  "${notifier}" labels_completed label_script "${status}" all
+}
+
 main() {
   local should_notify=false
+  local status=success
   local displays_json
   local spaces_json
   local label_number=1
@@ -38,7 +47,7 @@ main() {
     [[ -n "${display_index}" ]] || continue
     yabai -m display \
       "${display_index}" \
-      --label "display-${label_number}" 2>/dev/null
+      --label "display-${label_number}" 2>/dev/null || status=failed
     ((label_number += 1))
   done < <(
     jq -r 'sort_by(.frame.x) | .[] | .index' <<<"${displays_json}"
@@ -49,7 +58,7 @@ main() {
     [[ -n "${space_index}" ]] || continue
     yabai -m space \
       "${space_index}" \
-      --label "space-${label_number}" 2>/dev/null
+      --label "space-${label_number}" 2>/dev/null || status=failed
     ((label_number += 1))
   done < <(
     jq \
@@ -68,6 +77,8 @@ main() {
           )
       '
   )
+
+  notify_sketchy_bar_labels_completed "${status}"
 
   if [[ "${should_notify}" == "true" ]] &&
     command -v osascript >/dev/null 2>&1; then

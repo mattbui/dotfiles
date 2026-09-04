@@ -9,7 +9,7 @@ A macOS-focused setup for my personal machines with some Linux configs for remot
 - **Editor:** Neovim
 - **File manager:** Yazi
 - **Shell:** zsh with starship prompt and fzf.
-- **Window management:** yabai with skhd and JankyBorders
+- **Window management:** yabai with skhd, SketchyBar, and JankyBorders
 
 ## Repository layout
 
@@ -18,6 +18,7 @@ A macOS-focused setup for my personal machines with some Linux configs for remot
 - `dotnvim/` — Neovim configuration and plugin setup.
 - `dotyazi/` — Yazi keymaps, theme, plugins, and tmux helpers.
 - `dotyabai/` — yabai and skhd configuration.
+- `sketchybar/` — SbarLua space and window bar configuration.
 - `dotpi/` — Pi configuration, extensions, and themes.
 - `dotcodex/` — Codex skills and hooks.
 - `dotignore/` and `dotrevdiff/` — supporting development-tool configuration.

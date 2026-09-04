@@ -24,14 +24,75 @@ register_signal() {
   yabai -m signal --add label="${label}" "$@"
 }
 
+sketchy_bar_signal_action() {
+  local event="$1"
+  local sketchybar_bin="$2"
+
+  printf '%s --trigger yabai_event SOURCE=yabai EVENT=%s' "${sketchybar_bin}" "${event}"
+  # These expansions belong to the shell yabai starts for the signal action.
+  # shellcheck disable=SC2016
+  printf '%s' ' WINDOW_ID=${YABAI_WINDOW_ID:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' SPACE_ID=${YABAI_SPACE_ID:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' SPACE_INDEX=${YABAI_SPACE_INDEX:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' RECENT_SPACE_ID=${YABAI_RECENT_SPACE_ID:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' RECENT_SPACE_INDEX=${YABAI_RECENT_SPACE_INDEX:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' DISPLAY_ID=${YABAI_DISPLAY_ID:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' DISPLAY_INDEX=${YABAI_DISPLAY_INDEX:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' RECENT_DISPLAY_ID=${YABAI_RECENT_DISPLAY_ID:-}'
+  # shellcheck disable=SC2016
+  printf '%s' ' RECENT_DISPLAY_INDEX=${YABAI_RECENT_DISPLAY_INDEX:-}'
+}
+
+register_sketchy_bar_signal() {
+  local event="$1"
+  local sketchybar_bin="$2"
+  local label="bar-${event//_/-}"
+  local action
+
+  action="$(sketchy_bar_signal_action "${event}" "${sketchybar_bin}")"
+  register_signal "${label}" event="${event}" action="${action}"
+}
+
 main() {
   local app
+  local event
   local label
   local regex
   local apply_layout="${HOME}/.config/yabai/scripts/apply-layout.sh"
   local refocus="${HOME}/.config/yabai/scripts/refocus.sh"
   local skip_focus="${HOME}/.config/yabai/scripts/skip-focus.sh"
   local refresh_labels="${HOME}/.config/yabai/scripts/label-spaces-displays.sh"
+  local sketchybar_bin
+  local -a sketchy_bar_events=(
+    application_terminated
+    application_hidden
+    application_visible
+    window_created
+    window_destroyed
+    window_focused
+    window_moved
+    window_resized
+    window_minimized
+    window_deminimized
+    space_created
+    space_destroyed
+    space_changed
+    display_added
+    display_removed
+    display_moved
+    display_resized
+    display_changed
+    mission_control_exit
+  )
+
+  sketchybar_bin="$(command -v sketchybar 2>/dev/null || printf '/opt/homebrew/bin/sketchybar')"
 
   # Apply manage=off rules before layout defaults so ignored windows are
   # excluded before yabai starts reconfiguring spaces on reload.
@@ -57,8 +118,8 @@ main() {
     window_opacity               off \
     window_animation_duration    0.0 \
     skip_window_focus_animation  off \
-    top_padding                  6 \
-    bottom_padding               8 \
+    top_padding                  4 \
+    bottom_padding               4 \
     left_padding                 8 \
     right_padding                8 \
     window_gap                   8 \
@@ -66,6 +127,8 @@ main() {
     mouse_action1                move \
     mouse_action2                resize \
     mouse_drop_action            stack
+
+  yabai -m config external_bar all:0:28
 
   # Label displays and spaces by physical left-to-right order.
   "${refresh_labels}"
@@ -113,6 +176,12 @@ main() {
     event=display_moved action="${refresh_labels}"
   register_signal "label-display-resized" \
     event=display_resized action="${refresh_labels}; ${apply_layout}"
+
+  # Forward typed events to the persistent bar controller. window_focused takes
+  # this direct CLI path so selection does not wait for any yabai query.
+  for event in "${sketchy_bar_events[@]}"; do
+    register_sketchy_bar_signal "${event}" "${sketchybar_bin}"
+  done
 
   "${apply_layout}"
   printf '%s\n' "yabai config loaded"

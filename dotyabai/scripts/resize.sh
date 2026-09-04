@@ -219,7 +219,7 @@ main() {
         awk \
           -v height="${layout_display_h}" \
           -v top="${LAYOUT_TOP_PADDING}" \
-          -v bottom="${layout_base_padding}" \
+          -v bottom="${LAYOUT_BOTTOM_PADDING}" \
           'BEGIN { printf "%.3f", (height - top - bottom) / height }'
       )"
       adjust_saved_ratio \

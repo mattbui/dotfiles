@@ -14,3 +14,4 @@ fi
 [ -z $(command -v sesh) ] && brew install sesh
 [ -z $(command -v ripgrep) ] && brew install ripgrep
 [ -z $(command -v starship) ] && brew install starship
+[ -z $(command -v lua) ] && brew install lua

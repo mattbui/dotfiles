@@ -57,6 +57,9 @@ link_path "$DOTFILES/dotyabai/scripts" "$CONFIGS/yabai/scripts"
 mkdir -p "$CONFIGS/skhd"
 link_path "$DOTFILES/dotyabai/skhdrc" "$CONFIGS/skhd/skhdrc"
 
+# SketchyBar config
+link_path "$DOTFILES/sketchybar" "$CONFIGS/sketchybar"
+
 # JankyBorders configs
 mkdir -p "$CONFIGS/borders"
 link_path "$DOTFILES/others/bordersrc" "$CONFIGS/borders/bordersrc"

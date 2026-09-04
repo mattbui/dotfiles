@@ -14,7 +14,8 @@ readonly TOGGLE_FLOAT_FULLSCREEN_RATIO="1.00"
 readonly TOGGLE_FLOAT_ROOMY_AREA_THRESHOLD="3500000"
 readonly TOGGLE_FLOAT_COMPACT_PADDING="8"
 readonly TOGGLE_FLOAT_ROOMY_PADDING="12"
-readonly TOGGLE_FLOAT_TOP_PADDING="6"
+readonly TOGGLE_FLOAT_TOP_PADDING="4"
+readonly TOGGLE_FLOAT_BOTTOM_PADDING="4"
 readonly TOGGLE_FLOAT_BOUNDS_TOLERANCE="2"
 
 query_window() {
@@ -123,7 +124,7 @@ usable_bounds() {
         '
     )"
     space_top="${TOGGLE_FLOAT_TOP_PADDING}"
-    space_bottom="${base_padding}"
+    space_bottom="${TOGGLE_FLOAT_BOTTOM_PADDING}"
     space_left="${base_padding}"
     space_right="${base_padding}"
   fi

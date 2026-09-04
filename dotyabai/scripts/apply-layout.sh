@@ -10,28 +10,38 @@ set -o pipefail
 
 layout_lock_dir=""
 layout_pending_file=""
+layout_pending_reset_file=""
 
 acquire_lock() {
+  local request="${1:-}"
+
   layout_lock_dir="${LAYOUT_STATE_ROOT}/layout.lock"
   layout_pending_file="${LAYOUT_STATE_ROOT}/layout.pending"
+  layout_pending_reset_file="${LAYOUT_STATE_ROOT}/layout.pending.reset"
 
   mkdir -p "${LAYOUT_STATE_ROOT}" 2>/dev/null || return 1
   if ! mkdir "${layout_lock_dir}" 2>/dev/null; then
     : >"${layout_pending_file}" 2>/dev/null
-    return 1
+    if [[ "${request}" == "reset" ]]; then
+      : >"${layout_pending_reset_file}" 2>/dev/null
+    fi
+
+    # The previous owner may have released the lock between our failed mkdir
+    # and the pending marker. Retry once so a queued request never lacks an owner.
+    mkdir "${layout_lock_dir}" 2>/dev/null || return 1
   fi
 }
 
 release_lock() {
-  local status=$?
-
-  trap - EXIT INT TERM
   rmdir "${layout_lock_dir}" 2>/dev/null
-  if [[ -f "${layout_pending_file}" ]]; then
-    rm -f "${layout_pending_file}" 2>/dev/null
-    "$0" >/dev/null 2>&1 &
-  fi
-  exit "${status}"
+}
+
+notify_sketchy_bar_layout_completed() {
+  local status="$1"
+  local notifier="${HOME}/.config/sketchybar/scripts/forward-yabai-event.sh"
+
+  [[ -x "${notifier}" ]] || return 0
+  "${notifier}" layout_completed layout_script "${status}" all
 }
 
 window_is_floating() {
@@ -203,7 +213,7 @@ apply_split_ratio() {
   fi
 }
 
-main() {
+reconcile_once() {
   local candidate_windows
   local candidate_count
   local region_count
@@ -215,9 +225,6 @@ main() {
   local single_stack_sizing
   local arrangement_settings
   local current_split_ratio
-
-  (( $# <= 1 )) || return 1
-  [[ -z "${1:-}" || "$1" == "reset" ]] || return 1
 
   layout_require_commands || return 0
   layout_space_json="$(layout_query_space)" || return 0
@@ -331,9 +338,6 @@ main() {
     fi
   fi
 
-  acquire_lock || return 0
-  trap release_lock EXIT INT TERM
-
   if [[ "${arrangement}" == "single-stack" ]]; then
     layout_apply_space_settings \
       stack \
@@ -367,7 +371,7 @@ main() {
     bsp \
     "${layout_gap}" \
     "${LAYOUT_TOP_PADDING}" \
-    "${layout_base_padding}" \
+    "${LAYOUT_BOTTOM_PADDING}" \
     "${layout_base_padding}" \
     "${layout_base_padding}" || return 0
 
@@ -377,6 +381,37 @@ main() {
   layout_is_valid_two_stack "${candidate_windows}" || return 0
   apply_split_ratio "${candidate_windows}" "${desired_split_ratio}" || return 0
   layout_save_preferences 2>/dev/null
+}
+
+main() {
+  local mode="${1:-}"
+  local status="success"
+
+  (( $# <= 1 )) || return 1
+  [[ -z "${mode}" || "${mode}" == "reset" ]] || return 1
+
+  acquire_lock "${mode}" || return 0
+  trap release_lock EXIT
+  trap 'exit 130' INT TERM
+
+  while :; do
+    reconcile_once "${mode}" || status="failed"
+    mode=""
+
+    if [[ -f "${layout_pending_reset_file}" ]]; then
+      mode="reset"
+    fi
+    if [[ ! -f "${layout_pending_file}" && -z "${mode}" ]]; then
+      break
+    fi
+
+    rm -f \
+      "${layout_pending_file}" \
+      "${layout_pending_reset_file}" \
+      2>/dev/null
+  done
+
+  notify_sketchy_bar_layout_completed "${status}"
 }
 
 main "$@"

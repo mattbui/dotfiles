@@ -1,0 +1,23 @@
+#!/usr/bin/env lua
+
+local source = debug.getinfo(1, "S").source:sub(2)
+CONFIG_DIR = source:match("(.*/)") or "./"
+CONFIG_DIR = CONFIG_DIR:gsub("/$", "")
+
+package.path = table.concat({
+  CONFIG_DIR .. "/?.lua",
+  CONFIG_DIR .. "/?/init.lua",
+  package.path,
+}, ";")
+package.cpath = package.cpath
+  .. ";"
+  .. os.getenv("HOME")
+  .. "/.local/share/sketchybar_lua/?.so"
+
+sbar = require("sketchybar")
+
+sbar.begin_config()
+require("init")
+sbar.hotload(true)
+sbar.end_config()
+sbar.event_loop()
