@@ -275,7 +275,7 @@ local function subscribe_content_slot(slot)
         arguments = arguments .. " " .. tostring(space) .. " "
           .. (visible == nil and "unknown" or tostring(visible))
       end
-      sbar.exec('"$HOME/.config/yabai/scripts/focus-target.sh" window ' .. arguments)
+      sbar.exec('"$HOME/.config/yabai/scripts/focus-target.sh" --keep-mouse window ' .. arguments)
     end
   end)
 end

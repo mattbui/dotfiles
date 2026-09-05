@@ -16,11 +16,13 @@ visible-space observation can exclude invisible helpers such as Homerow.
 An already observed window that an app later orders offscreen without hiding,
 minimizing, or destroying it stays listed under this policy.
 
-Hovering an unselected window icon draws the 20% white capsule from the design study.
+Hovering an unselected window icon draws the subtle 10% white capsule.
 Left-clicking an icon focuses that exact window through its cached yabai window ID.
 Clicks use `~/.config/yabai/scripts/focus-target.sh`, shared with app shortcuts.
 It temporarily skips animation for windows on invisible spaces and coordinates with
 space/display shortcuts before restoring the default off setting in the background.
+Bar clicks temporarily disable `mouse_follows_focus` until focus settles, then restore
+its previous value. Keyboard navigation restores any pending click override first.
 Clicks reuse the latest window space and space visibility. During space/display
 transitions, unknown visibility falls back to a query.
 
