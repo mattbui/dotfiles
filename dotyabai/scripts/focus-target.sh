@@ -94,18 +94,27 @@ wait_for_focus_and_cleanup() {
   done
 }
 
-resolve_target_space_visibility() {
+resolve_window_animation_skip() {
   local target_window_id="$1" space_index="${2:-}" target_space_visible="${3:-unknown}"
-  if [[ "${target_space_visible}" == true || "${target_space_visible}" == false ]]; then
-    printf '%s\n' "${target_space_visible}"
+  # Keep the normal animation when focusing a window on a hidden space on another
+  # display. Skipping it can bounce focus back to the previously visible space.
+  if [[ "${target_space_visible}" == true ]]; then
+    printf 'false\n'
     return
   fi
   if [[ -z "${space_index}" ]]; then
     space_index="$(yabai -m query --windows space --window "${target_window_id}" |
       jq -er '.space')" || return 1
   fi
-  yabai -m query --spaces is-visible --space "${space_index}" |
-    jq -er '."is-visible" | tostring'
+  yabai -m query --spaces index,display,has-focus,is-visible |
+    jq -r --argjson target "${space_index}" '
+      if type != "array" then false
+      else
+        ([.[] | select(."has-focus" == true) | .display] | first) as $current_display
+        | $current_display != null and any(.[];
+            .index == $target and ."is-visible" == false and .display == $current_display)
+      end
+    '
 }
 
 main() {
@@ -114,7 +123,7 @@ main() {
     keep_mouse=true
     shift
   fi
-  local mode="${1:-}" selector="${2:-}" target_space_visible=false request_token
+  local mode="${1:-}" selector="${2:-}" skip_window_animation=false request_token
   local status=0
   case "${mode}" in
     window)
@@ -136,9 +145,9 @@ main() {
   exec 8>&-
 
   if [[ "${mode}" == window ]]; then
-    target_space_visible="$(
-      resolve_target_space_visibility "${selector}" "${3:-}" "${4:-unknown}"
-    )" || return 1
+    skip_window_animation="$(
+      resolve_window_animation_skip "${selector}" "${3:-}" "${4:-unknown}"
+    )" || skip_window_animation=false
   fi
 
   # Discard stale requests
@@ -158,8 +167,9 @@ main() {
     yabai -m config mouse_follows_focus off || return 1
   fi
 
-  # Only need to enable skip_window_focus_animation if the target window is in a non visible space
-  if [[ "${mode}" == window && "${target_space_visible}" == false ]]; then
+  # Limit the workaround to hidden spaces on the focused display. Unknown state
+  # keeps the native animation rather than risking a cross-display focus jump.
+  if [[ "${mode}" == window && "${skip_window_animation}" == true ]]; then
     printf '%s\n' "${request_token}" >"${ANIMATION_SKIP_OVERRIDE_TOKEN}" || return 1
     yabai -m config skip_window_focus_animation on || return 1
   fi
@@ -176,7 +186,7 @@ main() {
   esac
 
   if [[ "${mode}" == window && "${status}" == 0
-    && ( "${target_space_visible}" == false || "${keep_mouse}" == true ) ]]; then
+    && ( "${skip_window_animation}" == true || "${keep_mouse}" == true ) ]]; then
     wait_for_focus_and_cleanup "${request_token}" "${selector}" \
       </dev/null >/dev/null 2>&1 &
     # Restoring on this process's exit would turn skipping off before focus settles.

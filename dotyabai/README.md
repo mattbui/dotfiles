@@ -140,8 +140,9 @@ destination supplies a replacement to reseed the vacated stack. The explicitly
 moved window remains focused.
 
 Animation skipping defaults to off to avoid cross-display focus jumps. App shortcuts
-and SketchyBar clicks enable it temporarily for windows on invisible spaces; native
-Cmd-Tab, Dock activation, and `focus recent` keep the default behavior.
+and SketchyBar clicks enable it temporarily for windows on invisible spaces on the
+currently focused display. Cross-display window switches use the normal macOS animation.
+Native Cmd-Tab, Dock activation, and `focus recent` keep the default behavior.
 
 `focus-target.sh` coordinates toggles with space/display navigation. Newer requests
 supersede older ones, and background cleanup restores off without blocking navigation
