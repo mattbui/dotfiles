@@ -40,12 +40,12 @@ main() {
   destination_display_index="$(jq -r '.display // empty' <<<"${space_json}")"
   [[ -n "${destination_space_index}" && -n "${destination_display_index}" ]] || return 0
 
-  if [[ "${source_space_index}" != "${destination_space_index}" ]]; then
-    yabai -m window \
-      "${window_id}" \
-      --space "${destination_space_index}" || return 0
+  if [[ "${source_space_index}" == "${destination_space_index}" ]]; then
+    "${LAYOUT_SCRIPT_DIR}/focus-target.sh" space "${destination_space_index}" || return 0
+  else
+    "${LAYOUT_SCRIPT_DIR}/focus-target.sh" move-space \
+      "${window_id}" "${destination_space_index}" || return 0
   fi
-  yabai -m space --focus "${destination_space_index}" || return 0
 
   # The destination signal may invoke the same command concurrently; the
   # shared layout lock coalesces that into one pending rerun.

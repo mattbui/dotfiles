@@ -15,6 +15,7 @@ local space_views = {}
 local applied_space_ids = {}
 local window_slots = {}
 local window_cache = {}
+local space_visibility = {}
 local window_visibility = {}
 local applied_scene_key = nil
 local desired_focus_id = nil
@@ -266,7 +267,15 @@ local function subscribe_content_slot(slot)
   slot.item:subscribe("mouse.clicked", function(env)
     local id = slot.window_id
     if env.BUTTON == "left" and id then
-      sbar.exec("yabai -m window " .. id .. " --focus")
+      local cached = window_cache[id]
+      local space = cached and tonumber(cached.raw.space)
+      local arguments = id
+      if space and space > 0 then
+        local visible = space_visibility[space]
+        arguments = arguments .. " " .. tostring(space) .. " "
+          .. (visible == nil and "unknown" or tostring(visible))
+      end
+      sbar.exec('"$HOME/.config/yabai/scripts/focus-target.sh" window ' .. arguments)
     end
   end)
 end
@@ -438,6 +447,10 @@ local function query_scene(expected_revision, attempt)
     local scene = window_state.normalize(payload, window_visibility)
     window_visibility = scene.window_visibility
     window_cache = scene.windows_by_id
+    space_visibility = {}
+    for _, space in ipairs(scene.spaces) do
+      space_visibility[space.index] = space.is_visible
+    end
 
     if captured_focus_revision == focus_revision then
       if not desired_focus_id then
@@ -566,6 +579,11 @@ local direct_events = {
 
 local function handle_yabai_event(env)
   local event = env.EVENT
+  -- Old visibility could choose the wrong animation behavior for a click during a transition.
+  if event == "space_changed" or event == "display_changed"
+    or label_events[event] or event == "mission_control_exit" then
+    space_visibility = {}
+  end
   if event == "window_focused" then
     handle_window_focus(env)
   elseif event == "layout_completed" then

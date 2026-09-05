@@ -67,7 +67,6 @@ main() {
   local regex
   local apply_layout="${HOME}/.config/yabai/scripts/apply-layout.sh"
   local refocus="${HOME}/.config/yabai/scripts/refocus.sh"
-  local skip_focus="${HOME}/.config/yabai/scripts/skip-focus.sh"
   local refresh_labels="${HOME}/.config/yabai/scripts/label-spaces-displays.sh"
   local sketchybar_bin
   local -a sketchy_bar_events=(
@@ -117,7 +116,7 @@ main() {
     window_shadow                on \
     window_opacity               off \
     window_animation_duration    0.0 \
-    skip_window_focus_animation  on \
+    skip_window_focus_animation  off \
     top_padding                  4 \
     bottom_padding               4 \
     left_padding                 8 \
@@ -157,9 +156,9 @@ main() {
 
   # Re-apply layout when focus moves to another space/display.
   register_signal "layout-space-changed" \
-    event=space_changed action="${skip_focus}; ${apply_layout}"
+    event=space_changed action="${apply_layout}"
   register_signal "layout-display-changed" \
-    event=display_changed action="${skip_focus}; ${apply_layout}"
+    event=display_changed action="${apply_layout}"
 
   # Re-label spaces when the space set changes.
   register_signal "label-space-created" \

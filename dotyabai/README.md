@@ -139,6 +139,15 @@ two populated stacks: one member on each side swaps, while a multi-member
 destination supplies a replacement to reseed the vacated stack. The explicitly
 moved window remains focused.
 
+Animation skipping defaults to off to avoid cross-display focus jumps. App shortcuts
+and SketchyBar clicks enable it temporarily for windows on invisible spaces; native
+Cmd-Tab, Dock activation, and `focus recent` keep the default behavior.
+
+`focus-target.sh` coordinates toggles with space/display navigation. Newer requests
+supersede older ones, and background cleanup restores off without blocking navigation
+or changing a newer request's setting. Known window and space details are reused to
+avoid duplicate queries. This requires Bash 5 and macOS `lockf`.
+
 ## Resize, repair, and reset
 
 Tiled resizing changes the applicable saved ratio by `0.025`, or `0.10` with

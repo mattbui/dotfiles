@@ -80,7 +80,7 @@ function sbar.exec(command, callback)
     callback(payload, 0)
   elseif command:match("query%-current%-window%.sh$") then
     callback(payload.windows[1], 0)
-  elseif command:match("^yabai %-m window [1-9][0-9]* %-%-focus$") then
+  elseif command:match('focus%-target%.sh" window [1-9][0-9]*') then
     table.insert(focus_commands, command)
     if callback then
       callback({}, 0)
@@ -127,12 +127,20 @@ assert(unselected_slot.sets[#unselected_slot.sets].background.color == 0x0000000
 
 selected_slot.subscriptions["mouse.clicked"]({ BUTTON = "left" })
 unselected_slot.subscriptions["mouse.clicked"]({ BUTTON = "right" })
-assert(focus_commands[1] == "yabai -m window 100 --focus",
+assert(focus_commands[1] == '"$HOME/.config/yabai/scripts/focus-target.sh" window 100 3 true',
   "left click focuses a selected slot in case cached focus is stale")
 assert(#focus_commands == 1, "non-left clicks do not run yabai")
 unselected_slot.subscriptions["mouse.clicked"]({ BUTTON = "left" })
-assert(focus_commands[2] == "yabai -m window 101 --focus",
+assert(focus_commands[2] == '"$HOME/.config/yabai/scripts/focus-target.sh" window 101 3 true',
   "left click focuses the slot's current window ID")
+-- Space visibility can change without an icon diff; clicks must still use the new value.
+payload.spaces[1]["is-visible"] = false
+subscriptions.yabai_event({ EVENT = "window_moved" })
+selected_slot.subscriptions["mouse.clicked"]({ BUTTON = "left" })
+assert(focus_commands[3] == '"$HOME/.config/yabai/scripts/focus-target.sh" window 100 3 false',
+  "click passes updated space visibility without rebuilding the scene")
+payload.spaces[1]["is-visible"] = true
+subscriptions.yabai_event({ EVENT = "window_moved" })
 set_count = 0
 
 subscriptions.yabai_event({ EVENT = "window_focused", WINDOW_ID = "100" })

@@ -34,6 +34,7 @@ main() {
   local window_json
   local open_error
   local window_id
+  local space_index
 
   (( $# >= 1 )) || {
     usage
@@ -91,8 +92,8 @@ main() {
     return 0
   fi
 
-  window_id="$(jq -r '.id' <<<"${window_json}")"
-  yabai -m window --focus "${window_id}"
+  read -r window_id space_index < <(jq -r '[.id, .space] | @tsv' <<<"${window_json}")
+  "$(dirname -- "${BASH_SOURCE[0]}")/focus-target.sh" window "${window_id}" "${space_index}"
 }
 
 trap on_error ERR

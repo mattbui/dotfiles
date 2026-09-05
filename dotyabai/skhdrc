@@ -16,16 +16,14 @@ cmd - w -> [
 ]
 
 cmd + shift - w -> [
-  "chatgpt" : yabai -m window --focus recent
-  "ghostty" : yabai -m window --focus recent
+  "chatgpt" : $HOME/.config/yabai/scripts/refocus.sh
+  "ghostty" : $HOME/.config/yabai/scripts/refocus.sh
   *          ~
 ]
 
 # Focus windows.
-# skip-focus mark enables the next yabai space/display-change hook to redirect
-# focus away from skip apps like Antinote; it is short-lived and consumed once.
-alt - h : yabai -m window --focus west || ($HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus prev) || ($HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus last)
-alt - l : yabai -m window --focus east || ($HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus next) || ($HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus first)
+alt - h : yabai -m window --focus west || ($HOME/.config/yabai/scripts/focus-target.sh space prev) || ($HOME/.config/yabai/scripts/focus-target.sh space last)
+alt - l : yabai -m window --focus east || ($HOME/.config/yabai/scripts/focus-target.sh space next) || ($HOME/.config/yabai/scripts/focus-target.sh space first)
 alt - j : yabai -m window --focus south || yabai -m window --focus stack.next || yabai -m window --focus stack.first
 alt - k : yabai -m window --focus north || yabai -m window --focus stack.prev || yabai -m window --focus stack.last
 escape [
@@ -45,8 +43,8 @@ alt + shift - k : $HOME/.config/yabai/scripts/move-to-stack.sh top
 alt + shift - l : $HOME/.config/yabai/scripts/move-to-stack.sh right
 cmd + alt - h : $HOME/.config/yabai/scripts/move-to-space.sh prev
 cmd + alt - l : $HOME/.config/yabai/scripts/move-to-space.sh next
-cmd + alt - left : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus prev || yabai -m space --focus last
-cmd + alt - right : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus next || yabai -m space --focus first
+cmd + alt - left : $HOME/.config/yabai/scripts/focus-target.sh space prev || $HOME/.config/yabai/scripts/focus-target.sh space last
+cmd + alt - right : $HOME/.config/yabai/scripts/focus-target.sh space next || $HOME/.config/yabai/scripts/focus-target.sh space first
 
 # Resize focused window/pane.
 alt - 0x1B : $HOME/.config/yabai/scripts/resize.sh shrink
@@ -77,29 +75,29 @@ alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh reset
 alt - i : $HOME/.config/yabai/scripts/inspect-layout.sh
 
 # Focus displays by physical left-to-right order.
-# Mark before explicit display focus so the yabai hook can skip floating overlays.
-alt - 1 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m display --focus display-1
-alt - 2 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m display --focus display-2
-alt - 3 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m display --focus display-3
-alt - 4 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m display --focus display-4
+# Route through the helper so a preceding bar/app focus cannot disrupt this space switch.
+alt - 1 : $HOME/.config/yabai/scripts/focus-target.sh display display-1
+alt - 2 : $HOME/.config/yabai/scripts/focus-target.sh display display-2
+alt - 3 : $HOME/.config/yabai/scripts/focus-target.sh display display-3
+alt - 4 : $HOME/.config/yabai/scripts/focus-target.sh display display-4
 
 # Move focused window to displays and follow it.
-alt + cmd - 1 : yabai -m window --display display-1; yabai -m display --focus display-1
-alt + cmd - 2 : yabai -m window --display display-2; yabai -m display --focus display-2
-alt + cmd - 3 : yabai -m window --display display-3; yabai -m display --focus display-3
-alt + cmd - 4 : yabai -m window --display display-4; yabai -m display --focus display-4
+alt + cmd - 1 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-1
+alt + cmd - 2 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-2
+alt + cmd - 3 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-3
+alt + cmd - 4 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-4
 
 # Focus specific space bindings.
-# Mark before explicit display focus so the yabai hook can skip floating overlays.
-ctrl - 1 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-1
-ctrl - 2 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-2
-ctrl - 3 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-3
-ctrl - 4 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-4
-ctrl - 5 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-5
-ctrl - 6 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-6
-ctrl - 7 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-7
-ctrl - 8 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-8
-ctrl - 9 : $HOME/.config/yabai/scripts/skip-focus.sh mark; yabai -m space --focus space-9
+# Route through the helper so a preceding bar/app focus cannot disrupt this space switch.
+ctrl - 1 : $HOME/.config/yabai/scripts/focus-target.sh space space-1
+ctrl - 2 : $HOME/.config/yabai/scripts/focus-target.sh space space-2
+ctrl - 3 : $HOME/.config/yabai/scripts/focus-target.sh space space-3
+ctrl - 4 : $HOME/.config/yabai/scripts/focus-target.sh space space-4
+ctrl - 5 : $HOME/.config/yabai/scripts/focus-target.sh space space-5
+ctrl - 6 : $HOME/.config/yabai/scripts/focus-target.sh space space-6
+ctrl - 7 : $HOME/.config/yabai/scripts/focus-target.sh space space-7
+ctrl - 8 : $HOME/.config/yabai/scripts/focus-target.sh space space-8
+ctrl - 9 : $HOME/.config/yabai/scripts/focus-target.sh space space-9
 
 # Move focused window to spaces and follow it.
 ctrl + cmd - 1 : $HOME/.config/yabai/scripts/move-to-space.sh space-1

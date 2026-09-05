@@ -18,6 +18,11 @@ minimizing, or destroying it stays listed under this policy.
 
 Hovering an unselected window icon draws the 20% white capsule from the design study.
 Left-clicking an icon focuses that exact window through its cached yabai window ID.
+Clicks use `~/.config/yabai/scripts/focus-target.sh`, shared with app shortcuts.
+It temporarily skips animation for windows on invisible spaces and coordinates with
+space/display shortcuts before restoring the default off setting in the background.
+Clicks reuse the latest window space and space visibility. During space/display
+transitions, unknown visibility falls back to a query.
 
 Requirements:
 
