@@ -669,14 +669,7 @@
           },
           "to": [
             {
-              "software_function": {
-                "set_mouse_cursor_position": {
-                  "x": "50%",
-                  "y": "50%",
-                  "relative_to": "focused_window",
-                  "fallback_to": "screen"
-                }
-              }
+              "shell_command": "\"$HOME/.local/bin/center-mouse\""
             }
           ],
           "type": "basic"
