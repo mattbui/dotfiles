@@ -165,4 +165,45 @@ assert_equal(inactive_scene.windows_by_id["202"].eligible, false,
 assert_equal(inactive_scene.key, visible_scene.key,
   "space visibility changes do not alter the structural key")
 
+-- Reproduce a switch between the spaces query and the windows query.
+switching_payload.spaces[1]["is-visible"] = true
+local mixed_scene = state.normalize(switching_payload, visible_scene.window_visibility)
+assert_equal(mixed_scene.key, visible_scene.key,
+  "mixed transition snapshot cannot erase a previously visible window")
+switching_payload.spaces[1]["is-visible"] = false
+local after_mixed_scene = state.normalize(switching_payload, mixed_scene.window_visibility)
+assert_equal(after_mixed_scene.key, visible_scene.key,
+  "mixed snapshot cannot poison the inactive-space cache")
+assert_equal(after_mixed_scene.windows_by_id["202"].eligible, false,
+  "helper exclusion survives mixed snapshots")
+
+switching_payload.windows[1]["is-hidden"] = true
+local hidden_scene = state.normalize(switching_payload, mixed_scene.window_visibility)
+assert_equal(hidden_scene.windows_by_id["201"].eligible, false,
+  "explicit hiding still removes a previously visible window")
+switching_payload.windows[1]["is-hidden"] = false
+switching_payload.windows[1]["is-minimized"] = true
+local minimized_scene = state.normalize(switching_payload, hidden_scene.window_visibility)
+assert_equal(minimized_scene.windows_by_id["201"].eligible, false,
+  "explicit minimization still removes a previously visible window")
+switching_payload.windows[1]["is-minimized"] = false
+local restored_scene = state.normalize(switching_payload, minimized_scene.window_visibility)
+assert_equal(restored_scene.key, visible_scene.key,
+  "restoring a real window on an inactive space restores its icon")
+
+local unknown_scene = state.normalize(switching_payload)
+assert_equal(unknown_scene.windows_by_id["202"].eligible, true,
+  "unknown inactive windows remain provisionally included")
+assert_equal(unknown_scene.window_visibility["202"], nil,
+  "provisional inclusion is not a visible observation")
+switching_payload.spaces[1]["is-visible"] = true
+local observed_scene = state.normalize(switching_payload, unknown_scene.window_visibility)
+assert_equal(observed_scene.windows_by_id["202"].eligible, false,
+  "first visible-space observation can still exclude an unknown helper")
+
+switching_payload.windows = {}
+local destroyed_scene = state.normalize(switching_payload, visible_scene.window_visibility)
+assert_equal(destroyed_scene.window_visibility["201"], nil,
+  "destroyed windows do not leave visibility records behind")
+
 print("window_state_spec: ok")

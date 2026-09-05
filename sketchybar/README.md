@@ -7,6 +7,15 @@ CLI snapshot, and the controller writes the bar only when its normalized drawing
 changes. Normal structural changes update reusable per-space slots in place, so the bar
 does not disappear between states.
 
+Window visibility is learned per window ID. Once observed visible, a window stays
+eligible across space transitions even if a later `is-visible` value is false.
+The separate spaces and windows queries can straddle a switch, so that value alone
+cannot remove a known window. Hidden, minimized, sticky, dialog, and destroyed windows
+are still excluded. Unknown inactive windows are included provisionally; their first
+visible-space observation can exclude invisible helpers such as Homerow.
+An already observed window that an app later orders offscreen without hiding,
+minimizing, or destroying it stays listed under this policy.
+
 Hovering an unselected window icon draws the 20% white capsule from the design study.
 Left-clicking an icon focuses that exact window through its cached yabai window ID.
 

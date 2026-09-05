@@ -148,6 +148,23 @@ local removals_before_noop = remove_count
 subscriptions.yabai_event({ EVENT = "window_moved", WINDOW_ID = "101" })
 assert(remove_count == removals_before_noop, "unchanged drawing key skips structural writes")
 
+local writes_before_switch = set_count
+for _, window in ipairs(payload.windows) do
+  window["is-visible"] = false
+end
+-- Space metadata is from before the switch, window visibility from after it.
+subscriptions.yabai_event({ EVENT = "layout_completed" })
+payload.spaces[1]["is-visible"] = false
+subscriptions.yabai_event({ EVENT = "layout_completed" })
+assert(set_count == writes_before_switch,
+  "mixed space-switch snapshots keep icons and selection without bar writes")
+assert(remove_count == removals_before_noop,
+  "mixed space-switch snapshots do not rebuild the bar")
+payload.spaces[1]["is-visible"] = true
+for _, window in ipairs(payload.windows) do
+  window["is-visible"] = true
+end
+
 payload.windows[2].frame = { x = 900, y = 0, w = 800, h = 900 }
 payload.windows[2]["stack-index"] = 0
 local removals_before_layout_change = remove_count

@@ -163,14 +163,18 @@ function state.normalize(payload, previous_visibility)
       local space = scene.spaces_by_index[number(window.space)]
       local base_eligible = state.window_is_eligible(window)
       local last_visible = previous_visibility[id_key]
-      if space and space.is_visible and base_eligible then
+      -- Spaces and windows are queried separately. A switch between those reads
+      -- can report a visible space with invisible windows. Once a window has
+      -- been seen visible, visibility alone must not remove it from the bar.
+      -- Hidden/minimized/sticky flags and missing windows still remove it.
+      if space and space.is_visible and base_eligible and last_visible ~= true then
         last_visible = bool(window["is-visible"])
-      elseif last_visible == nil then
-        last_visible = true
       end
       scene.window_visibility[id_key] = last_visible
 
-      local eligible = base_eligible and space ~= nil and last_visible
+      -- Unknown windows on inactive spaces are provisionally included without
+      -- recording that assumption as an actual visible observation.
+      local eligible = base_eligible and space ~= nil and last_visible ~= false
       scene.windows_by_id[id_key] = {
         eligible = eligible,
         raw = window,
