@@ -1,0 +1,170 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "caffeinate",
+  "title": "Caffeinate",
+  "description": "Independent display, system, and disk sleep prevention with power policies.",
+  "icon": "icon.png",
+  "author": "minhbui",
+  "platforms": [
+    "macOS"
+  ],
+  "categories": [
+    "System"
+  ],
+  "license": "MIT",
+  "private": true,
+  "commands": [
+    {
+      "name": "display-toggle",
+      "title": "Caffeinate Display Toggle",
+      "description": "Toggle display idle sleep prevention",
+      "mode": "no-view"
+    },
+    {
+      "name": "system-toggle",
+      "title": "Caffeinate System Toggle",
+      "description": "Toggle system idle sleep prevention",
+      "mode": "no-view"
+    },
+    {
+      "name": "disk-toggle",
+      "title": "Caffeinate Disk Toggle",
+      "description": "Toggle disk idle sleep prevention",
+      "mode": "no-view"
+    },
+    {
+      "name": "display-status",
+      "title": "Caffeinate Display Status",
+      "description": "Display sleep prevention menu and automation",
+      "mode": "menu-bar",
+      "interval": "30s"
+    },
+    {
+      "name": "system-status",
+      "title": "Caffeinate System Status",
+      "description": "System sleep prevention menu and automation",
+      "mode": "menu-bar",
+      "interval": "30s"
+    },
+    {
+      "name": "disk-status",
+      "title": "Caffeinate Disk Status",
+      "description": "Disk sleep prevention menu and automation",
+      "mode": "menu-bar",
+      "interval": "30s"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.9",
+    "proper-lockfile": "^4.1.2"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/proper-lockfile": "^4.1.4",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist -o dist",
+    "dev": "ray develop",
+    "lint": "eslint src && prettier --check src package.json"
+  },
+  "preferences": [
+    {
+      "name": "displayStartup",
+      "title": "Display sleep prevention",
+      "type": "checkbox",
+      "label": "Start with Raycast",
+      "description": "",
+      "default": false,
+      "required": false
+    },
+    {
+      "name": "displayPolicy",
+      "title": "Keep display awake",
+      "type": "dropdown",
+      "description": "",
+      "required": true,
+      "default": "always",
+      "data": [
+        {
+          "title": "Allow on battery",
+          "value": "always"
+        },
+        {
+          "title": "Only while plugged in",
+          "value": "plugged"
+        },
+        {
+          "title": "Only when battery above 20%",
+          "value": "battery"
+        }
+      ]
+    },
+    {
+      "name": "systemStartup",
+      "title": "System sleep prevention",
+      "type": "checkbox",
+      "label": "Start with Raycast",
+      "description": "",
+      "default": false,
+      "required": false
+    },
+    {
+      "name": "systemPolicy",
+      "title": "Keep system awake",
+      "type": "dropdown",
+      "description": "",
+      "required": true,
+      "default": "always",
+      "data": [
+        {
+          "title": "Allow on battery",
+          "value": "always"
+        },
+        {
+          "title": "Only while plugged in",
+          "value": "plugged"
+        },
+        {
+          "title": "Only when battery above 20%",
+          "value": "battery"
+        }
+      ]
+    },
+    {
+      "name": "diskStartup",
+      "title": "Disk sleep prevention",
+      "type": "checkbox",
+      "label": "Start with Raycast",
+      "description": "",
+      "default": false,
+      "required": false
+    },
+    {
+      "name": "diskPolicy",
+      "title": "Keep disk awake",
+      "type": "dropdown",
+      "description": "",
+      "required": true,
+      "default": "always",
+      "data": [
+        {
+          "title": "Allow on battery",
+          "value": "always"
+        },
+        {
+          "title": "Only while plugged in",
+          "value": "plugged"
+        },
+        {
+          "title": "Only when battery above 20%",
+          "value": "battery"
+        }
+      ]
+    }
+  ]
+}
