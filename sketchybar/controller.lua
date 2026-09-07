@@ -4,8 +4,11 @@ local window_state = require("window_state")
 
 local controller = {}
 
-local QUERY_WINDOWS_STATE = CONFIG_DIR .. "/scripts/query-windows-state.sh"
 local QUERY_CURRENT_WINDOW = CONFIG_DIR .. "/scripts/query-current-window.sh"
+local QUERY_SPACES = "yabai -m query --spaces id,index,label,display,has-focus,is-visible"
+local QUERY_WINDOWS = "yabai -m query --windows "
+  .. "id,app,role,subrole,space,frame,stack-index,has-focus,is-visible"
+  .. ",is-minimized,is-hidden,is-floating,is-sticky"
 local INITIAL_SPACE_SLOT_CAPACITY = 16
 
 local listener
@@ -427,13 +430,39 @@ local function render_scene(scene)
   return true
 end
 
+local function query_records_valid(records)
+  if type(records) ~= "table" then
+    return false
+  end
+  for key, record in pairs(records) do
+    if type(key) ~= "number" or key < 1 or key > #records or key % 1 ~= 0
+      or type(record) ~= "table" or not window_id(record.id) then
+      return false
+    end
+  end
+  return true
+end
+
 local function query_scene(expected_revision, attempt)
   local captured_focus_revision = focus_revision
-  sbar.exec(QUERY_WINDOWS_STATE, function(payload, exit_code)
+  local payload = {}
+  local remaining = 2
+  local failed = false
+
+  local function receive(kind, records, exit_code)
     if expected_revision ~= structure_revision then
       return
     end
-    if exit_code ~= 0 then
+    if exit_code ~= 0 or not query_records_valid(records) then
+      failed = true
+    else
+      payload[kind] = records
+    end
+    remaining = remaining - 1
+    if remaining > 0 then
+      return
+    end
+    if failed then
       if (attempt or 1) < 3 then
         sbar.delay(0.08, function()
           if expected_revision == structure_revision then
@@ -444,6 +473,7 @@ local function query_scene(expected_revision, attempt)
       return
     end
 
+    -- Both callbacks belong to this attempt. Never combine results across revisions.
     local scene = window_state.normalize(payload, window_visibility)
     window_visibility = scene.window_visibility
     window_cache = scene.windows_by_id
@@ -473,6 +503,42 @@ local function query_scene(expected_revision, attempt)
 
     render_scene(scene)
     set_focus(desired_focus_id)
+  end
+
+  -- Preserve the existing fallback for yabai responses that are not space arrays.
+  local function query_space_labels(index, spaces)
+    if expected_revision ~= structure_revision then
+      return
+    end
+    if index > 32 then
+      receive("spaces", spaces, 0)
+      return
+    end
+    sbar.exec(QUERY_SPACES .. " --space space-" .. tostring(index), function(space, status)
+      if expected_revision ~= structure_revision then
+        return
+      end
+      if status ~= 0 or type(space) ~= "table" or not window_id(space.id) then
+        receive("spaces", spaces, #spaces > 0 and 0 or 1)
+        return
+      end
+      table.insert(spaces, space)
+      query_space_labels(index + 1, spaces)
+    end)
+  end
+
+  sbar.exec(QUERY_SPACES, function(spaces, status)
+    if expected_revision ~= structure_revision then
+      return
+    end
+    if status == 0 and not query_records_valid(spaces) then
+      query_space_labels(1, {})
+    else
+      receive("spaces", spaces, status)
+    end
+  end)
+  sbar.exec(QUERY_WINDOWS, function(windows, status)
+    receive("windows", windows, status)
   end)
 end
 

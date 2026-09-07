@@ -163,11 +163,9 @@ function state.normalize(payload, previous_visibility)
       local space = scene.spaces_by_index[number(window.space)]
       local base_eligible = state.window_is_eligible(window)
       local last_visible = previous_visibility[id_key]
-      -- Spaces and windows are queried separately. A switch between those reads
-      -- can report a visible space with invisible windows. Once a window has
-      -- been seen visible, visibility alone must not remove it from the bar.
-      -- Hidden/minimized/sticky flags and missing windows still remove it.
-      if space and space.is_visible and base_eligible and last_visible ~= true then
+      -- The controller rejects superseded query pairs before normalization.
+      -- Refresh observations on visible spaces; preserve them on inactive spaces.
+      if space and space.is_visible and base_eligible then
         last_visible = bool(window["is-visible"])
       end
       scene.window_visibility[id_key] = last_visible

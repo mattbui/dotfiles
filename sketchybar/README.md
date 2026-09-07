@@ -7,14 +7,21 @@ CLI snapshot, and the controller writes the bar only when its normalized drawing
 changes. Normal structural changes update reusable per-space slots in place, so the bar
 does not disappear between states.
 
-Window visibility is learned per window ID. Once observed visible, a window stays
-eligible across space transitions even if a later `is-visible` value is false.
-The separate spaces and windows queries can straddle a switch, so that value alone
-cannot remove a known window. Hidden, minimized, sticky, dialog, and destroyed windows
-are still excluded. Unknown inactive windows are included provisionally; their first
-visible-space observation can exclude invisible helpers such as Homerow.
-An already observed window that an app later orders offscreen without hiding,
-minimizing, or destroying it stays listed under this policy.
+The controller launches spaces and windows queries concurrently with `sbar.exec`.
+SbarLua parses each JSON result directly into a Lua table. Once both callbacks from
+one attempt finish, the controller checks the structural revision and normalizes the
+combined results. Failed pairs preserve the old scene and retry both queries, up to
+three attempts. Non-array space responses retain the labelled-space query fallback.
+
+Normalization refreshes window visibility when the window's space is visible on any
+display. An invisible window can replace a previous true observation with false.
+Inactive spaces preserve the last observation, so excluded windows do not reappear
+when switching away. A later visible observation restores the icon. Hidden, minimized,
+sticky, dialog, and destroyed windows remain excluded. Unknown inactive windows are
+included provisionally until a visible-space observation classifies them.
+There is no extra confirmation query or visibility delay. Concurrent requests are not
+an atomic snapshot: revision checks reject superseded pairs, but a space switch whose
+event arrives after the callbacks can still produce a mixed snapshot.
 
 Hovering an unselected window icon draws the subtle 10% white capsule.
 Left-clicking an icon focuses that exact window through its cached yabai window ID.
