@@ -113,7 +113,7 @@
     },
     {
       "name": "edit-text-with-prompt",
-      "title": "Edit Text with Prompt",
+      "title": "Change Text with Prompt",
       "subtitle": "Writing Tools",
       "description": "Edit selected or clipboard text using your instructions and replace the source.",
       "mode": "no-view",

@@ -9,7 +9,7 @@ OpenAI-compatible API.
   it reads from the clipboard and copies the corrected result back to the clipboard.
 - **Improve Writing** improves selected text and replaces it in place. With no selection, it reads
   from the clipboard and copies the improved result back to the clipboard.
-- **Edit Text with Prompt** applies your editing instructions to selected text and replaces it in
+- **Change Text with Prompt** applies your editing instructions to selected text and replaces it in
   place. With no selection, it reads from the clipboard and copies the result back to the clipboard.
 - **Explain This in Simple Terms** displays a concise explanation in Raycast, using clipboard text
   when no text is selected.
@@ -71,10 +71,10 @@ Select text in any application, open Raycast, and run one of these commands:
 
 - **Fix Spelling and Grammar**
 - **Improve Writing**
-- **Edit Text with Prompt**
+- **Change Text with Prompt**
 - **Explain This in Simple Terms**
 
-For **Edit Text with Prompt**, enter your instructions in the **What should change?** argument
+For **Change Text with Prompt**, enter your instructions in the **What should change?** argument
 field before pressing Enter. For example, use "Make this shorter and friendlier", "Translate to
 Vietnamese", or "Turn this into a bullet list". The command uses the selected model and its own
 Reasoning Effort preference. Instructions and source text are sent separately to the provider.
