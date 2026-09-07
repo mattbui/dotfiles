@@ -110,6 +110,9 @@ symbol = " "
 style = "primary"
 generic_venv_names = [".venv", "venv"]
 
+[swift]
+symbol = " "
+
 [jobs]
 style = "primary"
 
