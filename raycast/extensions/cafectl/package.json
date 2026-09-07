@@ -1,0 +1,61 @@
+{
+  "$schema": "https://www.raycast.com/schemas/extension.json",
+  "name": "cafectl",
+  "title": "cafectl",
+  "description": "Raycast toggle commands for the cafectl menu bar service.",
+  "icon": "icon.png",
+  "author": "minhbui",
+  "platforms": [
+    "macOS"
+  ],
+  "categories": [
+    "System"
+  ],
+  "license": "MIT",
+  "private": true,
+  "commands": [
+    {
+      "name": "display-toggle",
+      "title": "Toggle Display Caffeine",
+      "description": "Toggle display idle sleep prevention",
+      "mode": "no-view"
+    },
+    {
+      "name": "system-toggle",
+      "title": "Toggle System Caffeine",
+      "description": "Toggle system idle sleep prevention",
+      "mode": "no-view"
+    },
+    {
+      "name": "disk-toggle",
+      "title": "Toggle Disk Caffeine",
+      "description": "Toggle disk idle sleep prevention",
+      "mode": "no-view"
+    }
+  ],
+  "dependencies": {
+    "@raycast/api": "^1.104.9"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^2.0.4",
+    "@types/node": "22.13.10",
+    "@types/react": "19.0.10",
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  },
+  "scripts": {
+    "build": "ray build -e dist -o dist",
+    "dev": "ray develop",
+    "lint": "eslint src && prettier --check src package.json"
+  },
+  "preferences": [
+    {
+      "name": "cafectlPath",
+      "title": "cafectl executable",
+      "type": "textfield",
+      "required": false,
+      "description": "Optional absolute path. Otherwise checks /opt/homebrew/bin and /usr/local/bin."
+    }
+  ]
+}
