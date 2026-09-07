@@ -14,6 +14,8 @@
 !.plans/**
 !.handoff/
 !.handoff/**
+!.notes/
+!.notes/**
 !draft*
 !draft*/**
 !.envrc
