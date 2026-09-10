@@ -16,19 +16,19 @@
   "commands": [
     {
       "name": "display-toggle",
-      "title": "Toggle Display Caffeine",
+      "title": "Keep Display Awake (Toggle)",
       "description": "Toggle display idle sleep prevention",
       "mode": "no-view"
     },
     {
       "name": "system-toggle",
-      "title": "Toggle System Caffeine",
+      "title": "Keep System Awake (Toggle)",
       "description": "Toggle system idle sleep prevention",
       "mode": "no-view"
     },
     {
       "name": "disk-toggle",
-      "title": "Toggle Disk Caffeine",
+      "title": "Keep Disk Awake (Toggle)",
       "description": "Toggle disk idle sleep prevention",
       "mode": "no-view"
     }
