@@ -75,7 +75,7 @@ adjust_saved_ratio() {
           if (value > maximum) {
             value = maximum
           }
-          printf "%.3f", value
+          printf "%.9f", value
         }
       '
   )"
@@ -90,7 +90,7 @@ adjust_saved_ratio() {
             if (value > maximum) {
               value = maximum
             }
-            printf "%.3f", value
+            printf "%.9f", value
           }
         '
     )"
@@ -105,7 +105,7 @@ adjust_saved_ratio() {
             if (value < minimum) {
               value = minimum
             }
-            printf "%.3f", value
+            printf "%.9f", value
           }
         '
     )"
@@ -145,9 +145,9 @@ main() {
   layout_require_commands || return 0
   ratio_step="$(
     awk \
-      -v step="0.025" \
+      -v step="0.05" \
       -v multiplier="${multiplier}" \
-      'BEGIN { printf "%.3f", step * multiplier }'
+      'BEGIN { printf "%.9f", step * multiplier }'
   )"
   floating_step_pixels=$((80 * 10#${multiplier}))
 
@@ -186,7 +186,6 @@ main() {
   layout_base_padding="$(jq -r '.base_padding' <<<"${display_profile}")"
   layout_orientation="$(jq -r '.orientation' <<<"${display_profile}")"
   layout_axis="$(jq -r '.axis' <<<"${display_profile}")"
-  layout_is_ultrawide="$(jq -r '.is_ultrawide' <<<"${display_profile}")"
 
   [[ -n "${layout_state_file}" ]] || return 0
 
@@ -194,7 +193,8 @@ main() {
     "${LAYOUT_SCRIPT_DIR}/apply-layout.sh" >/dev/null 2>&1 || return 0
   fi
   preferences="$(
-    layout_resolve_preferences "${layout_state_file}" "${layout_area_class}"
+    layout_resolve_preferences \
+      "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
   layout_single_width_ratio="$(
@@ -220,7 +220,7 @@ main() {
           -v height="${layout_display_h}" \
           -v top="${LAYOUT_TOP_PADDING}" \
           -v bottom="${LAYOUT_BOTTOM_PADDING}" \
-          'BEGIN { printf "%.3f", (height - top - bottom) / height }'
+          'BEGIN { printf "%.9f", (height - top - bottom) / height }'
       )"
       adjust_saved_ratio \
         single_height_ratio \
@@ -229,12 +229,12 @@ main() {
         "${max_ratio}" \
         "${action}" \
         "${ratio_step}"
-    elif (( layout_is_ultrawide == 1 )); then
+    else
       max_ratio="$(
         awk \
           -v width="${layout_display_w}" \
           -v padding="${layout_base_padding}" \
-          'BEGIN { printf "%.3f", (width - (2 * padding)) / width }'
+          'BEGIN { printf "%.9f", (width - (2 * padding)) / width }'
       )"
       adjust_saved_ratio \
         single_width_ratio \

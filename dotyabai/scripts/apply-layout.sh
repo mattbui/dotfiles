@@ -256,7 +256,8 @@ reconcile_once() {
   layout_is_ultrawide="$(jq -r '.is_ultrawide' <<<"${display_profile}")"
 
   preferences="$(
-    layout_resolve_preferences "${layout_state_file}" "${layout_area_class}"
+    layout_resolve_preferences \
+      "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
   layout_single_width_ratio="$(
@@ -274,7 +275,7 @@ reconcile_once() {
 
   if [[ "${1:-}" == "reset" ]]; then
     [[ -n "${layout_state_file}" ]] || return 0
-    layout_single_width_ratio="${LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO}"
+    layout_single_width_ratio="$(layout_default_single_width_ratio "${display_profile}")"
     layout_single_height_ratio="${LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO}"
     layout_landscape_split_ratio="${LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO}"
     layout_portrait_split_ratio="${LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO}"

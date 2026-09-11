@@ -65,9 +65,10 @@ yabai currently reports one of its windows as tiled.
 Single-stack sizing follows this order:
 
 1. Portrait displays target `80%` of logical height.
-2. Ultrawide landscape displays with `W / H >= 2.0` target `65%` of logical
-   width.
-3. Other landscape displays use ordinary compact or roomy padding.
+2. Landscape displays target the saved single-stack width, defaulting to `85%`
+   of logical width on roomy non-ultrawide displays, `65%` on roomy ultrawide
+   displays, and the full padded width on compact displays.
+   Saved width preferences take precedence. Reset uses the current display default.
 
 Centered padding cannot shrink below the active base profile. Horizontal
 centering keeps both sides at least `8` compact or `12` roomy. Portrait
@@ -86,7 +87,7 @@ Four ratios persist independently:
 
 | Ratio | Default | Range |
 | --- | ---: | --- |
-| Ultrawide single-stack width | `0.65` | `0.30` to the base-padding maximum |
+| Landscape single-stack width | Full padded width on compact, `0.85` roomy non-ultrawide, `0.65` roomy ultrawide | `0.30` to the base-padding maximum |
 | Portrait single-stack height | `0.90` | `0.30` to the base-padding maximum |
 | Landscape left/right split | `0.50` | `0.10–0.90` |
 | Portrait top/bottom split | `0.50` | `0.10–0.90` |
@@ -151,11 +152,12 @@ avoid duplicate queries. This requires Bash 5 and macOS `lockf`.
 
 ## Resize, repair, and reset
 
-Tiled resizing changes the applicable saved ratio by `0.025`, or `0.10` with
+Tiled resizing changes the applicable saved ratio by `0.05`, or `0.20` with
 Shift. Resizing a focused two-stack region changes that region's share.
 Temporary single-window presentation changes the applicable single-stack ratio
-rather than the saved split. Ordinary landscape single-stack has no ratio, so
-tiled resize is a no-op.
+rather than the saved split. Landscape single-stack resizes its centered width. Growing past the maximum
+snaps to the base padded area, with `8px` per side on compact displays and
+`12px` per side on roomy displays.
 
 Floating windows resize by `80px`, or `320px` with Shift. Raw mouse or yabai
 tree resizing is not persisted; `Alt-R` reapplies the saved ratio. `Alt-0`

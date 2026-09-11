@@ -57,7 +57,8 @@ main() {
   layout_axis="$(jq -r '.axis' <<<"${display_profile}")"
 
   preferences="$(
-    layout_resolve_preferences "${layout_state_file}" "${layout_area_class}"
+    layout_resolve_preferences \
+      "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
 

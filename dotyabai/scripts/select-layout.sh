@@ -55,7 +55,8 @@ main() {
   layout_area_class="$(jq -r '.area_class' <<<"${display_profile}")"
 
   preferences="$(
-    layout_resolve_preferences "${layout_state_file}" "${layout_area_class}"
+    layout_resolve_preferences \
+      "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
   layout_last_area_class="$(jq -r '.last_area_class' <<<"${preferences}")"

@@ -23,6 +23,7 @@ readonly LAYOUT_STATE_ROOT
 readonly LAYOUT_AREA_THRESHOLD="3500000"
 readonly LAYOUT_ULTRAWIDE_THRESHOLD="2.0"
 readonly LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO="0.65"
+readonly LAYOUT_DEFAULT_ROOMY_SINGLE_WIDTH_RATIO="0.85"
 readonly LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO="0.90"
 readonly LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO="0.50"
 readonly LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO="0.50"
@@ -159,21 +160,40 @@ layout_default_mode() {
   fi
 }
 
+# Selects the initial width without replacing an existing saved preference.
+layout_default_single_width_ratio() {
+  local profile="$1"
+
+  if jq -e '.area_class == "compact"' <<<"${profile}" >/dev/null; then
+    # The sizing resolver clamps full width to the display's base padding.
+    printf '1.0'
+  elif jq -e '
+    .area_class == "roomy" and .orientation == "landscape" and .is_ultrawide == "0"
+  ' <<<"${profile}" >/dev/null; then
+    printf '%s' "${LAYOUT_DEFAULT_ROOMY_SINGLE_WIDTH_RATIO}"
+  else
+    printf '%s' "${LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO}"
+  fi
+}
+
 # Reads and normalizes the saved preferences, writing them as JSON.
 layout_resolve_preferences() {
   local state_file="$1"
   local area_class="$2"
+  local profile="${3:-\{\}}"
+  local default_single_width
   local state_json
   local default_mode
 
   state_json="$(layout_state_read "${state_file}")" || return 1
   default_mode="$(layout_default_mode "${area_class}")"
+  default_single_width="$(layout_default_single_width_ratio "${profile}")"
 
   jq -cn \
     --argjson state "${state_json}" \
     --arg area_class "${area_class}" \
     --arg default_mode "${default_mode}" \
-    --argjson default_single_width "${LAYOUT_DEFAULT_SINGLE_WIDTH_RATIO}" \
+    --argjson default_single_width "${default_single_width}" \
     --argjson default_single_height "${LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO}" \
     --argjson default_landscape "${LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO}" \
     --argjson default_portrait "${LAYOUT_DEFAULT_PORTRAIT_SPLIT_RATIO}" '
@@ -226,7 +246,7 @@ layout_resolve_preferences() {
           ),
           last_area_class: $last_area_class,
           single_width_ratio: (
-            valid_ratio($state.single_width_ratio; 0.30; 1.0; false)
+            valid_ratio($state.single_width_ratio; 0.30; 1.0; true)
             // $default_single_width
           ),
           single_height_ratio: (
@@ -254,11 +274,11 @@ layout_save_preferences() {
   [[ -n "${layout_state_file}" ]] || return 0
   single_width_ratio="$(
     awk -v ratio="${layout_single_width_ratio}" \
-      'BEGIN { printf "%.3f", ratio }'
+      'BEGIN { printf "%.9f", ratio }'
   )"
   single_height_ratio="$(
     awk -v ratio="${layout_single_height_ratio}" \
-      'BEGIN { printf "%.3f", ratio }'
+      'BEGIN { printf "%.9f", ratio }'
   )"
   landscape_split_ratio="$(
     awk -v ratio="${layout_landscape_split_ratio}" \
@@ -630,7 +650,7 @@ layout_resolve_single_stack_sizing() {
           }
         '
     )
-  elif (( is_ultrawide == 1 )); then
+  else
     max_ratio="$(
       awk \
         -v width="${display_width}" \

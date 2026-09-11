@@ -115,7 +115,8 @@ main() {
   layout_is_ultrawide="$(jq -r '.is_ultrawide' <<<"${display_profile}")"
 
   preferences="$(
-    layout_resolve_preferences "${layout_state_file}" "${layout_area_class}"
+    layout_resolve_preferences \
+      "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
   layout_single_width_ratio="$(
