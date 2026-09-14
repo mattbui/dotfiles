@@ -160,12 +160,14 @@ local function conform_formatters()
 end
 
 local colorscheme = vim.g.colors_name or "tokyonight-storm"
-local lualine_theme_name = colorscheme == "rose-pine" and "rose-pine" or colorscheme
+local lualine_theme_name = colorscheme:match("^rose%-pine") and "rose-pine" or colorscheme
 local lualine_theme = require("lualine.themes." .. lualine_theme_name)
 local diagnostics = require("plugins.lsp.diagnostics")
 local symbols = require("plugins.lsp.symbols")
 
-if colorscheme:match("^rose%-pine") then
+local rose_pine_variant = colorscheme:match("^rose%-pine")
+    and require("rose-pine.config").options.variant
+if rose_pine_variant == "dawn" then
   local subtle = require("rose-pine.palette").subtle
   lualine_theme.normal.b.fg = subtle
   lualine_theme.normal.c.fg = subtle
