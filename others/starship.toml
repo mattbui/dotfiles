@@ -2,7 +2,7 @@
 
 # cmd-footer already handle dynamically adding newline before the prompt, check init.zsh
 add_newline = false
-palette = "rose_pine_dawn"
+palette = "rose_pine_moon"
 
 format = """
 $directory\

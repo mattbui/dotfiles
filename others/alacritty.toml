@@ -1,11 +1,11 @@
 [general]
-import = ["themes/rose-pine-dawn.toml"]
+import = ["themes/rose-pine-moon.toml"]
 
 # Core terminal settings
 [env]
 TERM = "alacritty"
 TERM_APP_NAME = "Alacritty"
-TERM_THEME = "rose-pine-dawn"
+TERM_THEME = "rose-pine-moon"
 # TMUX_SOCKET = "alacritty"
 TMUX_SOCKET = "default"
 

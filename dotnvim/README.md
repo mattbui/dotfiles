@@ -55,4 +55,4 @@ The formatter config lives in `lua/plugins/autoformat.lua`; format-on-save is co
 - Floating terminal: `vim-floaterm`.
 - UI: `lualine.nvim`, `barbar.nvim`, `which-key.nvim`, `tokyonight.nvim`, and
   `rose-pine` (original, Moon, and Dawn variants). The supported `TERM_THEME`
-  value selects the colorscheme, with Rosé Pine Dawn as the fallback.
+  value selects the colorscheme, with Rosé Pine Moon as the fallback.

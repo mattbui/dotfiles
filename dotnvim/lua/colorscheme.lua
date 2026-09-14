@@ -11,7 +11,7 @@ local supported_colorschemes = {
 local requested_colorscheme = vim.env.TERM_THEME
 local colorscheme = supported_colorschemes[requested_colorscheme]
     and requested_colorscheme
-  or "rose-pine-dawn"
+  or "rose-pine-moon"
 
 require("rose-pine").setup({
   dark_variant = "main",

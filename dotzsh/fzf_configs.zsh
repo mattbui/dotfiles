@@ -19,11 +19,11 @@ export FZF_DEFAULT_OPTS="
     --height 50% --reverse --info=inline-right --preview-window 'right:55%,border-sharp'
 "
 
-# Follow the terminal theme when supported, with Rosé Pine Dawn as the fallback.
-_term_theme=${TERM_THEME:-rose-pine-dawn}
+# Follow the terminal theme when supported, with Rosé Pine Moon as the fallback.
+_term_theme=${TERM_THEME:-rose-pine-moon}
 case "$_term_theme" in
   tokyonight-storm|rose-pine|rose-pine-moon|rose-pine-dawn) ;;
-  *) _term_theme=rose-pine-dawn ;;
+  *) _term_theme=rose-pine-moon ;;
 esac
 export REVDIFF_THEME="$_term_theme"
 source "$HOME/.config/zsh/themes/${_term_theme}.zsh"

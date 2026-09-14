@@ -159,7 +159,7 @@ local function conform_formatters()
   return "󰷈 lsp" .. format_on_save
 end
 
-local colorscheme = vim.g.colors_name or "tokyonight-storm"
+local colorscheme = vim.g.colors_name or "rose-pine-moon"
 local lualine_theme_name = colorscheme:match("^rose%-pine") and "rose-pine" or colorscheme
 local lualine_theme = require("lualine.themes." .. lualine_theme_name)
 local diagnostics = require("plugins.lsp.diagnostics")
