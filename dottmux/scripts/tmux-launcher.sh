@@ -100,6 +100,7 @@ list_directories() {
 
   for root in \
     "${HOME}/glimpse" \
+    "${HOME}/personal" \
     "${HOME}/Documents" \
     "${HOME}/Pictures" \
     "${HOME}/Downloads" \
