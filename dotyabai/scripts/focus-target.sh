@@ -24,6 +24,20 @@ readonly ANIMATION_SKIP_OVERRIDE_TOKEN="${FOCUS_STATE_DIR}/animation-skip-overri
 readonly REQUEST_PUBLICATION_LOCK="${FOCUS_STATE_DIR}/request.lock"
 readonly FOCUS_DISPATCH_LOCK="${FOCUS_STATE_DIR}/lock"
 
+readonly SPACE_FOCUS_WINDOW_PROPERTIES='id,space,display,role,subrole,layer,frame,'\
+'is-visible,is-sticky,is-minimized,is-hidden,has-ax-reference'
+# Share the same eligibility check between selection and the final validation.
+# These variables are jq arguments, not shell expansions.
+# shellcheck disable=SC2016
+readonly SPACE_FOCUS_WINDOW_FILTER='
+  .space == $space and .display == $display
+  and .role == "AXWindow" and .subrole == "AXStandardWindow"
+  and .layer == "normal" and ."has-ax-reference" == true
+  and .frame.w > 0 and .frame.h > 0
+  and ."is-visible" == true and ."is-sticky" == false
+  and ."is-minimized" == false and ."is-hidden" == false
+'
+
 focus_request_is_latest() {
   [[ -f "${LATEST_FOCUS_REQUEST}" && "$(<"${LATEST_FOCUS_REQUEST}")" == "$1" ]]
 }
@@ -117,6 +131,54 @@ resolve_window_animation_skip() {
     '
 }
 
+# Called with the dispatch lock held. A visible, unfocused ordinary space is on
+# another display. Native display focus can select a sticky helper there and
+# activate its application's main window on a different space.
+focus_space() {
+  local selector="$1" request_token="$2"
+  local destination space_index display_index use_window windows candidate
+
+  destination="$(yabai -m query --spaces \
+    index,display,has-focus,is-visible,is-native-fullscreen --space "${selector}")" || return 1
+  read -r space_index display_index use_window < <(
+    jq -er '[.index, .display,
+      (."is-visible" == true and ."has-focus" == false and ."is-native-fullscreen" == false)]
+      | @tsv' <<<"${destination}"
+  )
+  [[ "${space_index}" =~ ^[1-9][0-9]*$ && "${display_index}" =~ ^[1-9][0-9]*$ ]] || return 1
+  focus_request_is_latest "${request_token}" || return 0
+
+  if [[ "${use_window}" != true ]]; then
+    yabai -m space --focus "${space_index}"
+    return
+  fi
+
+  windows="$(yabai -m query --windows "${SPACE_FOCUS_WINDOW_PROPERTIES}" \
+    --space "${space_index}")" || return 1
+  candidate="$(jq -er --argjson space "${space_index}" --argjson display "${display_index}" \
+    "[.[] | select(${SPACE_FOCUS_WINDOW_FILTER})][0].id // empty" <<<"${windows}")" || candidate=''
+  focus_request_is_latest "${request_token}" || return 0
+
+  if [[ -z "${candidate}" ]]; then
+    # Native focus handles genuinely empty spaces. If helpers are present, its
+    # window selection would reintroduce the bounce, so leave focus unchanged.
+    if jq -e 'type == "array" and length == 0' <<<"${windows}" >/dev/null; then
+      focus_request_is_latest "${request_token}" || return 0
+      yabai -m space --focus "${space_index}"
+      return
+    fi
+    printf 'No eligible window to focus on space %s.\n' "${space_index}" >&2
+    return 1
+  fi
+
+  # No polling or retries: a closed, moved, or hidden candidate cancels this attempt.
+  yabai -m query --windows "${SPACE_FOCUS_WINDOW_PROPERTIES}" --window "${candidate}" |
+    jq -e --argjson space "${space_index}" --argjson display "${display_index}" \
+      "${SPACE_FOCUS_WINDOW_FILTER}" >/dev/null || return 1
+  focus_request_is_latest "${request_token}" || return 0
+  yabai -m window --focus "${candidate}"
+}
+
 main() {
   local keep_mouse=false previous_mouse_follows_focus
   if [[ "${1:-}" == --keep-mouse ]]; then
@@ -177,12 +239,16 @@ main() {
   focus_request_is_latest "${request_token}" || return 0
   case "${mode}" in
     window) yabai -m window --focus "${selector}" || status=$? ;;
-    space|display)
-      yabai -m "${mode}" --focus "${selector}" || status=$? ;;
+    space) focus_space "${selector}" "${request_token}" || status=$? ;;
+    display) yabai -m display --focus "${selector}" || status=$? ;;
     move-space|move-display)
       yabai -m window "${selector}" "--${mode#move-}" "$3" || return 1
       focus_request_is_latest "${request_token}" || return 0
-      yabai -m "${mode#move-}" --focus "$3" || status=$? ;;
+      if [[ "${mode}" == move-space ]]; then
+        focus_space "$3" "${request_token}" || status=$?
+      else
+        yabai -m display --focus "$3" || status=$?
+      fi ;;
   esac
 
   if [[ "${mode}" == window && "${status}" == 0

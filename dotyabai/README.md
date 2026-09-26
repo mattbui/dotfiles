@@ -150,6 +150,14 @@ supersede older ones, and background cleanup restores off without blocking navig
 or changing a newer request's setting. Known window and space details are reused to
 avoid duplicate queries. This requires Bash 5 and macOS `lockf`.
 
+Space shortcuts returning to an already-visible space on another display focus the
+first eligible window in macOS window order. Sticky helpers and nonstandard or
+invisible windows are excluded. One final query checks that the window still belongs
+to the destination and remains eligible; there are no retries or polling. Hidden
+destinations retain native space switching. Empty destinations also use native focus;
+if windows exist but none qualify, the shortcut leaves focus unchanged and reports an
+error rather than activating a helper on another space.
+
 ## Resize, repair, and reset
 
 Tiled resizing changes the applicable saved ratio by `0.05`, or `0.20` with
