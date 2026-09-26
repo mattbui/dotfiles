@@ -202,17 +202,15 @@ the selected layout.
 | --- | --- |
 | `Alt-Shift-H/J/K/L` | Move to left/bottom/top/right stack when applicable |
 | `Cmd-Alt-H/L` | Move to previous/next space and follow |
-| `Cmd-Alt-1..4` | Move to `display-1..4` and follow |
 | `Ctrl-Cmd-1..9` | Move to `space-1..9` and follow |
 
-### Focus displays and spaces
+### Focus spaces
 
 Displays are labeled by physical left-to-right order. Spaces are labeled
 across displays from left to right, then by Mission Control order.
 
 | Shortcut | Action |
 | --- | --- |
-| `Alt-1..4` | Focus `display-1..4` |
 | `Ctrl-1..9` | Focus `space-1..9` |
 
 ### Focus or open applications

@@ -73,19 +73,6 @@ alt - r : $HOME/.config/yabai/scripts/apply-layout.sh
 alt - 0 : $HOME/.config/yabai/scripts/apply-layout.sh reset
 alt - i : $HOME/.config/yabai/scripts/inspect-layout.sh
 
-# Focus displays by physical left-to-right order.
-# Route through the helper so a preceding bar/app focus cannot disrupt this space switch.
-alt - 1 : $HOME/.config/yabai/scripts/focus-target.sh display display-1
-alt - 2 : $HOME/.config/yabai/scripts/focus-target.sh display display-2
-alt - 3 : $HOME/.config/yabai/scripts/focus-target.sh display display-3
-alt - 4 : $HOME/.config/yabai/scripts/focus-target.sh display display-4
-
-# Move focused window to displays and follow it.
-alt + cmd - 1 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-1
-alt + cmd - 2 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-2
-alt + cmd - 3 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-3
-alt + cmd - 4 : $HOME/.config/yabai/scripts/focus-target.sh move-display focused display-4
-
 # Focus specific space bindings.
 # Route through the helper so a preceding bar/app focus cannot disrupt this space switch.
 ctrl - 1 : $HOME/.config/yabai/scripts/focus-target.sh space space-1
