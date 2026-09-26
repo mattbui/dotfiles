@@ -505,7 +505,7 @@
             {
               "set_notification_message": {
                 "id": "double_shift_hyper",
-                "text": "✦ Hyper Key\n\nB · Arc\nC · ChatGPT\nD · Discord\nF · Finder · ⇧F · Find My\nM · Messages\nS · Slack · ⇧S · Spark Desktop\nT · Alacritty · ⇧T · Ghostty\nV · Vietnamese on/off"
+                "text": "✦ Hyper Key\n\nB · Arc\nC · ChatGPT\nD · Discord\nF · Finder · ⇧F · Find My\nM · Messages\nS · Slack\nT · Alacritty · ⇧T · Ghostty\nV · Vietnamese on/off"
               }
             }
           ],
@@ -1381,6 +1381,366 @@
           "to": [
             {
               "key_code": "page_up"
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "SpaceFN + Shift + m → Scroll right (64)",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": 64
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + Shift + i → Scroll left (-64)",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "horizontal_wheel": -64
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + m → Scroll down (128)",
+          "from": {
+            "key_code": "m",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": 128
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + i → Scroll up (-128)",
+          "from": {
+            "key_code": "i",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "vertical_wheel": -128
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + Shift + semicolon → Mouse left fast (-3072)",
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": -3072
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + Shift + slash → Mouse down fast (2304)",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": 2304
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + Shift + open_bracket → Mouse up fast (-2304)",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": -2304
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + Shift + quote → Mouse right fast (3072)",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "mandatory": ["shift"],
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": 3072
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + semicolon → Mouse left (-1536)",
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": -1536
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + slash → Mouse down (1152)",
+          "from": {
+            "key_code": "slash",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": 1152
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + open_bracket → Mouse up (-1152)",
+          "from": {
+            "key_code": "open_bracket",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "y": -1152
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + quote → Mouse right (1536)",
+          "from": {
+            "key_code": "quote",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "mouse_key": {
+                "x": 1536
+              }
+            }
+          ],
+          "type": "basic",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ]
+        },
+        {
+          "description": "SpaceFN + u → Left click",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button1"
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "SpaceFN + o → Right click",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "o",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "pointing_button": "button2"
+            }
+          ],
+          "type": "basic"
+        },
+        {
+          "description": "SpaceFN + Enter → Center mouse in focused window; fall back to current screen",
+          "conditions": [
+            {
+              "name": "spacefn",
+              "type": "variable_if",
+              "value": 1
+            }
+          ],
+          "from": {
+            "key_code": "return_or_enter",
+            "modifiers": {
+              "optional": ["any"]
+            }
+          },
+          "to": [
+            {
+              "shell_command": "\"$HOME/.local/bin/center-mouse\""
             }
           ],
           "type": "basic"

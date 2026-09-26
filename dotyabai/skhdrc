@@ -54,7 +54,6 @@ alt + shift - 0x18 : $HOME/.config/yabai/scripts/resize.sh grow 4
 
 # Focus/open applications.
 cmd + alt + ctrl - s : $HOME/.config/yabai/scripts/focus-app.sh Slack
-cmd + alt + ctrl + shift - s : $HOME/.config/yabai/scripts/focus-app.sh "Spark Desktop"
 cmd + alt + ctrl - t : $HOME/.config/yabai/scripts/focus-app.sh Alacritty
 cmd + alt + ctrl + shift - t : $HOME/.config/yabai/scripts/focus-app.sh Ghostty
 cmd + alt + ctrl - c : $HOME/.config/yabai/scripts/focus-app.sh ChatGPT
