@@ -1,7 +1,7 @@
 interface:
   display_name: "commit"
-  short_description: "Commit staged, split, or pushed Git changes"
-  default_prompt: "$commit"
+  short_description: "Guide Git commit messages and commit flow"
+  default_prompt: "Use $commit to guide commit messages and the requested commit flow."
 
 policy:
-  allow_implicit_invocation: false
+  allow_implicit_invocation: true
