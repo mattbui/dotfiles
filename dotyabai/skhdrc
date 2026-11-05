@@ -57,7 +57,7 @@ cmd + alt + ctrl - s : $HOME/.config/yabai/scripts/focus-app.sh Slack
 cmd + alt + ctrl - t : $HOME/.config/yabai/scripts/focus-app.sh Alacritty
 cmd + alt + ctrl + shift - t : $HOME/.config/yabai/scripts/focus-app.sh Ghostty
 cmd + alt + ctrl - c : $HOME/.config/yabai/scripts/focus-app.sh ChatGPT
-cmd + alt + ctrl - b : $HOME/.config/yabai/scripts/focus-app.sh Arc
+cmd + alt + ctrl - b : $HOME/.config/yabai/scripts/focus-app.sh Ardia
 cmd + alt + ctrl - d : $HOME/.config/yabai/scripts/focus-app.sh Discord
 cmd + alt + ctrl - f : $HOME/.config/yabai/scripts/focus-app.sh Finder
 cmd + alt + ctrl + shift - f : $HOME/.config/yabai/scripts/focus-app.sh FindMy
