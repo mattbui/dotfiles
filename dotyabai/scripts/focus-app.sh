@@ -66,6 +66,8 @@ main() {
           | select(.role == "AXWindow")
           | select(.subrole == "AXStandardWindow")
           | select(."has-ax-reference" == true)
+          # Spark can retain a standard AX window with no drawable area after close.
+          | select(.frame.w > 0 and .frame.h > 0)
           | select(."is-minimized" == false)
           | select(."is-hidden" == false)
           | select(."is-sticky" == false)
