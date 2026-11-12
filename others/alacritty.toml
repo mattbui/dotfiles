@@ -19,8 +19,8 @@ columns = 120
 lines = 30
 
 [window.padding]
-x = 8
-y = 8
+x = 9
+y = 9
 
 [font]
 # size = 13 # built-in
