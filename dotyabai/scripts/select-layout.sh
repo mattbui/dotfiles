@@ -23,7 +23,6 @@ notify_layout_mode() {
 
 main() {
   local action="${1:-}"
-  local area_change_pending=false
   local display_profile
   local preferences
   local requested_mode
@@ -59,7 +58,6 @@ main() {
       "${layout_state_file}" "${layout_area_class}" "${display_profile}"
   )" || return 0
   layout_mode="$(jq -r '.mode' <<<"${preferences}")"
-  layout_last_area_class="$(jq -r '.last_area_class' <<<"${preferences}")"
 
   if [[ "${action}" == "toggle" ]]; then
     if [[ "${layout_mode}" == "single-stack" ]]; then
@@ -73,28 +71,8 @@ main() {
 
   [[ -n "${layout_state_file}" ]] || return 0
 
-  if [[
-    -n "${layout_last_area_class}" &&
-      "${layout_last_area_class}" != "${layout_area_class}"
-  ]]; then
-    area_change_pending=true
-  fi
-
-  [[ "${area_change_pending}" == "true" ]] ||
-    [[ "${layout_mode}" != "${requested_mode}" ]] ||
-    return 0
-
-  mkdir -p "${LAYOUT_STATE_ROOT}" 2>/dev/null || return 0
-  if [[ "${area_change_pending}" == "true" ]]; then
-    layout_state_update "${layout_state_file}" \
-      selected_layout "${requested_mode}" \
-      last_area_class "${layout_area_class}" 2>/dev/null || return 0
-  else
-    layout_state_update \
-      "${layout_state_file}" \
-      selected_layout \
-      "${requested_mode}" 2>/dev/null || return 0
-  fi
+  layout_state_update "${layout_state_file}" \
+    selected_layout "${requested_mode}" 2>/dev/null || return 0
 
   "${LAYOUT_SCRIPT_DIR}/apply-layout.sh" || return 0
   notify_layout_mode "${requested_mode}"

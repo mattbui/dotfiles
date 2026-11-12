@@ -41,7 +41,7 @@ layout_state_json_set() {
     "${src}" >"${dst}"
 }
 
-layout_state_update() {
+layout_state_update() (
   local file="$1"
   local dir
   local tmp
@@ -51,6 +51,8 @@ layout_state_update() {
 
   dir="$(dirname "${file}")"
   mkdir -p "${dir}" 2>/dev/null || return 1
+  exec 9>>"${dir}/layout-state.lock" || return 1
+  /usr/bin/lockf -t 5 9 || return 1
   tmp="${file}.$$"
   next="${file}.$$.next"
 
@@ -76,4 +78,4 @@ layout_state_update() {
   fi
 
   mv "${tmp}" "${file}"
-}
+)

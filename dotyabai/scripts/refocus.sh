@@ -17,7 +17,7 @@ EOF
 }
 
 current_space_index() {
-  yabai -m query --spaces --space 2>/dev/null | jq -r '.index // empty' 2>/dev/null || true
+  yabai -m query --spaces index --space 2>/dev/null | jq -r '.index // empty' 2>/dev/null || true
 }
 
 focused_window_json() {

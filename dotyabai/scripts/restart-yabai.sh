@@ -10,7 +10,7 @@ notify() {
 }
 
 yabai_is_ready() {
-  yabai -m query --spaces >/dev/null 2>&1
+  yabai -m query --spaces index >/dev/null 2>&1
 }
 
 main() {

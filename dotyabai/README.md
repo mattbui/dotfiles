@@ -78,10 +78,10 @@ centering keeps at least `6` above and `8` compact or `12` roomy below.
 
 `Alt-T` toggles the current space between single-stack and two-stack.
 
-Preferences belong to positional labels such as `space-2`, not yabai space IDs
-or UUIDs. A compact/roomy crossing applies the new area-class default.
-Geometry changes within the same class preserve a manual selection, while a
-selected two-stack always follows the current landscape or portrait shape.
+Preferences follow positional labels such as `space-2`. A saved stack selection
+survives changes in display area. Spaces without a saved selection use the
+current display's area-class default. Two-stack orientation follows the current
+display shape.
 
 Four ratios persist independently:
 
@@ -242,5 +242,7 @@ across displays from left to right, then by Mission Control order.
   `window_insertion_point first` and `window_placement first_child`.
 - Signals reconcile the active space on window, application visibility, space,
   and display changes. Overlapping runs share a lock and pending rerun.
+- Startup, system wake, and changes to the display or space set wait for
+  matching topology queries, verify the labels, then reconcile visible spaces.
 - Per-label layout state defaults to
   `~/.local/state/yabai/layout-space-N.json`.

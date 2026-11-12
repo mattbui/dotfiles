@@ -67,7 +67,7 @@ main() {
   local regex
   local apply_layout="${HOME}/.config/yabai/scripts/apply-layout.sh"
   local refocus="${HOME}/.config/yabai/scripts/refocus.sh"
-  local refresh_labels="${HOME}/.config/yabai/scripts/label-spaces-displays.sh"
+  local refresh_topology="${apply_layout} refresh"
   local sketchybar_bin
   local -a sketchy_bar_events=(
     application_terminated
@@ -129,9 +129,6 @@ main() {
 
   yabai -m config external_bar all:0:28
 
-  # Label displays and spaces by physical left-to-right order.
-  "${refresh_labels}"
-
   # Re-apply layout when window/application visibility changes.
   register_signal "layout-window-created" \
     event=window_created action="${apply_layout}"
@@ -162,19 +159,21 @@ main() {
 
   # Re-label spaces when the space set changes.
   register_signal "label-space-created" \
-    event=space_created action="${refresh_labels}"
+    event=space_created action="${refresh_topology}"
   register_signal "label-space-destroyed" \
-    event=space_destroyed action="${refresh_labels}"
+    event=space_destroyed action="${refresh_topology}"
 
   # Re-label displays/spaces when display topology changes.
   register_signal "label-display-added" \
-    event=display_added action="${refresh_labels}"
+    event=display_added action="${refresh_topology}"
   register_signal "label-display-removed" \
-    event=display_removed action="${refresh_labels}"
+    event=display_removed action="${refresh_topology}"
   register_signal "label-display-moved" \
-    event=display_moved action="${refresh_labels}"
+    event=display_moved action="${refresh_topology}"
   register_signal "label-display-resized" \
-    event=display_resized action="${refresh_labels}; ${apply_layout}"
+    event=display_resized action="${refresh_topology}"
+  register_signal "label-system-woke" \
+    event=system_woke action="${refresh_topology}"
 
   # Forward typed events to the persistent bar controller. window_focused takes
   # this direct CLI path so selection does not wait for any yabai query.
@@ -182,7 +181,7 @@ main() {
     register_sketchy_bar_signal "${event}" "${sketchybar_bin}"
   done
 
-  "${apply_layout}"
+  "${apply_layout}" refresh
   printf '%s\n' "yabai config loaded"
 }
 

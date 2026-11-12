@@ -48,11 +48,12 @@ layout_require_commands() {
 # Queries one yabai space and writes its JSON to stdout.
 layout_query_space() {
   local selector="${1:-}"
+  local fields="index,label,type,display,is-native-fullscreen"
 
   if [[ -n "${selector}" ]]; then
-    yabai -m query --spaces --space "${selector}" 2>/dev/null
+    yabai -m query --spaces "${fields}" --space "${selector}" 2>/dev/null
   else
-    yabai -m query --spaces --space 2>/dev/null
+    yabai -m query --spaces "${fields}" --space 2>/dev/null
   fi
 }
 
@@ -67,7 +68,7 @@ layout_state_file_for_label() {
 
 # Queries one yabai display and writes its JSON to stdout.
 layout_query_display() {
-  yabai -m query --displays --display "$1" 2>/dev/null
+  yabai -m query --displays frame --display "$1" 2>/dev/null
 }
 
 # Resolves the display profile and writes it as JSON.
@@ -191,7 +192,6 @@ layout_resolve_preferences() {
 
   jq -cn \
     --argjson state "${state_json}" \
-    --arg area_class "${area_class}" \
     --arg default_mode "${default_mode}" \
     --argjson default_single_width "${default_single_width}" \
     --argjson default_single_height "${LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO}" \
@@ -219,32 +219,14 @@ layout_resolve_preferences() {
           else null
           end;
 
-      ($state.last_area_class // "" | tostring) as $stored_area
-      | (
-          if $stored_area == "compact" or $stored_area == "roomy"
-          then $stored_area
-          else ""
-          end
-        ) as $last_area_class
-      | ($state.selected_layout // "" | tostring) as $stored_mode
-      | (
-          if $stored_mode == "single-stack"
-            or $stored_mode == "two-stack"
-          then $stored_mode
-          else $default_mode
-          end
-        ) as $valid_mode
+      $state.selected_layout as $stored_mode
       | {
           mode: (
-            if (
-              $last_area_class != ""
-              and $last_area_class != $area_class
-            )
-            then $default_mode
-            else $valid_mode
+            if $stored_mode == "single-stack" or $stored_mode == "two-stack"
+            then $stored_mode
+            else $default_mode
             end
           ),
-          last_area_class: $last_area_class,
           single_width_ratio: (
             valid_ratio($state.single_width_ratio; 0.30; 1.0; true)
             // $default_single_width
@@ -290,7 +272,6 @@ layout_save_preferences() {
   )"
 
   layout_state_update "${layout_state_file}" \
-    selected_layout "${layout_mode}" \
     last_area_class "${layout_area_class}" \
     single_width_ratio "${single_width_ratio}" \
     single_height_ratio "${single_height_ratio}" \

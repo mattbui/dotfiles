@@ -1,40 +1,16 @@
 #!/usr/bin/env bash
 
 # Reconcile the current space with the flexible layout.
-# Usage: apply-layout.sh [reset]
+# Usage: apply-layout.sh [reset|refresh]
 
 set -o pipefail
 
 # shellcheck source=layout-lib.sh
 . "$(dirname "${BASH_SOURCE[0]}")/layout-lib.sh"
 
-layout_lock_dir=""
-layout_pending_file=""
-layout_pending_reset_file=""
-
-acquire_lock() {
-  local request="${1:-}"
-
-  layout_lock_dir="${LAYOUT_STATE_ROOT}/layout.lock"
-  layout_pending_file="${LAYOUT_STATE_ROOT}/layout.pending"
-  layout_pending_reset_file="${LAYOUT_STATE_ROOT}/layout.pending.reset"
-
-  mkdir -p "${LAYOUT_STATE_ROOT}" 2>/dev/null || return 1
-  if ! mkdir "${layout_lock_dir}" 2>/dev/null; then
-    : >"${layout_pending_file}" 2>/dev/null
-    if [[ "${request}" == "reset" ]]; then
-      : >"${layout_pending_reset_file}" 2>/dev/null
-    fi
-
-    # The previous owner may have released the lock between our failed mkdir
-    # and the pending marker. Retry once so a queued request never lacks an owner.
-    mkdir "${layout_lock_dir}" 2>/dev/null || return 1
-  fi
-}
-
-release_lock() {
-  rmdir "${layout_lock_dir}" 2>/dev/null
-}
+readonly PENDING_LAYOUT="${LAYOUT_STATE_ROOT}/layout.pending"
+readonly PENDING_RESET="${LAYOUT_STATE_ROOT}/layout.pending.reset"
+readonly PENDING_REFRESH="${LAYOUT_STATE_ROOT}/layout.pending.refresh"
 
 notify_sketchy_bar_layout_completed() {
   local status="$1"
@@ -227,7 +203,8 @@ reconcile_once() {
   local current_split_ratio
 
   layout_require_commands || return 0
-  layout_space_json="$(layout_query_space)" || return 0
+  layout_space_json="$(layout_query_space "${2:-}")" || return 0
+  [[ "$(jq -r '."is-native-fullscreen"' <<<"${layout_space_json}")" != "true" ]] || return 0
   layout_space_index="$(jq -r '.index // empty' <<<"${layout_space_json}")"
   layout_space_label="$(jq -r '.label // empty' <<<"${layout_space_json}")"
   layout_space_type="$(jq -r '.type // empty' <<<"${layout_space_json}")"
@@ -236,6 +213,7 @@ reconcile_once() {
   layout_state_file="$(
     layout_state_file_for_label "${layout_space_label}"
   )"
+  [[ -n "${layout_state_file}" ]] || return 0
 
   layout_display_json="$(
     layout_query_display "${layout_space_display_index}"
@@ -274,7 +252,6 @@ reconcile_once() {
   )"
 
   if [[ "${1:-}" == "reset" ]]; then
-    [[ -n "${layout_state_file}" ]] || return 0
     layout_single_width_ratio="$(layout_default_single_width_ratio "${display_profile}")"
     layout_single_height_ratio="${LAYOUT_DEFAULT_SINGLE_HEIGHT_RATIO}"
     layout_landscape_split_ratio="${LAYOUT_DEFAULT_LANDSCAPE_SPLIT_RATIO}"
@@ -384,35 +361,75 @@ reconcile_once() {
   layout_save_preferences 2>/dev/null
 }
 
+refresh_and_reconcile_visible() {
+  local spaces
+  local indices
+  local index
+
+  "${LAYOUT_SCRIPT_DIR}/label-spaces-displays.sh" || return 1
+  spaces="$(yabai -m query --spaces index,has-focus,is-visible,is-native-fullscreen)" || return 1
+  # Apply the focused space last so its global split ratio stays active.
+  indices="$(jq -r '
+    map(select(."is-visible" and (."is-native-fullscreen" | not)))
+    | sort_by(."has-focus") | .[].index
+  ' <<<"${spaces}")" || return 1
+  while IFS= read -r index; do
+    [[ -n "${index}" ]] || continue
+    reconcile_once "" "${index}" || return 1
+  done <<<"${indices}"
+}
+
+take_pending_mode() {
+  if [[ -f "${PENDING_REFRESH}" ]]; then
+    rm -f "${PENDING_REFRESH}" && printf 'refresh'
+  elif [[ -f "${PENDING_RESET}" ]]; then
+    rm -f "${PENDING_RESET}" && printf 'reset'
+  elif [[ -f "${PENDING_LAYOUT}" ]]; then
+    rm -f "${PENDING_LAYOUT}"
+  else
+    return 1
+  fi
+}
+
 main() {
-  local mode="${1:-}"
+  local mode
+  local request_file
+  local handled_request=false
   local status="success"
 
   (( $# <= 1 )) || return 1
-  [[ -z "${mode}" || "${mode}" == "reset" ]] || return 1
+  case "${1:-}" in
+    "") request_file="${PENDING_LAYOUT}" ;;
+    reset) request_file="${PENDING_RESET}" ;;
+    refresh) request_file="${PENDING_REFRESH}" ;;
+    *) return 1 ;;
+  esac
 
-  acquire_lock "${mode}" || return 0
-  trap release_lock EXIT
+  mkdir -p "${LAYOUT_STATE_ROOT}" 2>/dev/null || return 1
+  : >"${request_file}" || return 1
   trap 'exit 130' INT TERM
 
   while :; do
-    reconcile_once "${mode}" || status="failed"
-    mode=""
-
-    if [[ -f "${layout_pending_reset_file}" ]]; then
-      mode="reset"
-    fi
-    if [[ ! -f "${layout_pending_file}" && -z "${mode}" ]]; then
-      break
-    fi
-
-    rm -f \
-      "${layout_pending_file}" \
-      "${layout_pending_reset_file}" \
-      2>/dev/null
+    exec 8>>"${LAYOUT_STATE_ROOT}/layout-reconcile.lock" || return 1
+    /usr/bin/lockf -s -t 0 8 || break
+    while mode="$(take_pending_mode)"; do
+      handled_request=true
+      if [[ "${mode}" == "refresh" ]]; then
+        refresh_and_reconcile_visible || status="failed"
+      else
+        reconcile_once "${mode}" || status="failed"
+      fi
+    done
+    exec 8>&-
+    # A contender can queue work after our last check and before we unlock.
+    [[ -f "${PENDING_REFRESH}" || -f "${PENDING_RESET}" || -f "${PENDING_LAYOUT}" ]] || break
   done
+  exec 8>&-
 
-  notify_sketchy_bar_layout_completed "${status}"
+  if [[ "${handled_request}" == "true" ]]; then
+    notify_sketchy_bar_layout_completed "${status}"
+  fi
+  [[ "${status}" == "success" ]]
 }
 
 main "$@"
