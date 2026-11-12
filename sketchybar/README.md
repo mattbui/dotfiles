@@ -50,9 +50,9 @@ copies to the newest upstream version tag with:
 ./scripts/update-app-font.sh
 ```
 
-Pass `--install` to also update the copy in `~/Library/Fonts`. The script copies the
-upstream `dist/sketchybar-app-font.ttf`, `dist/icon_map.lua`, and `LICENSE` without
-modifying their contents.
+Pass `--install` to also update the copy in `~/Library/Fonts`. The script downloads
+`sketchybar-app-font.ttf` and `icon_map.lua` from the selected GitHub release and copies
+`LICENSE` from its source checkout without modifying their contents.
 
 Build SbarLua from the cached source with:
 

@@ -4,6 +4,12 @@ local window_state = require("window_state")
 
 local controller = {}
 
+-- Keep local app aliases outside the generated upstream icon map.
+local APP_ICON_ALIASES = {
+  ["Ardia"] = "Arc",
+  ["T3 Code (Beta)"] = "T3 Code",
+}
+
 local QUERY_CURRENT_WINDOW = CONFIG_DIR .. "/scripts/query-current-window.sh"
 local QUERY_SPACES = "yabai -m query --spaces id,index,label,display,has-focus,is-visible"
 local QUERY_WINDOWS = "yabai -m query --windows "
@@ -37,7 +43,7 @@ local function window_id(value)
 end
 
 local function icon_for_app(app)
-  return icon_map[app] or icon_map.Default or ":default:"
+  return icon_map[app] or icon_map[APP_ICON_ALIASES[app]] or icon_map.Default or ":default:"
 end
 
 local function window_fill_color(selected, hovered)

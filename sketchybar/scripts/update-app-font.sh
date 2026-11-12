@@ -41,20 +41,31 @@ prepare_source() {
   git -C "${source_dir}" fetch --quiet --tags --prune origin
 }
 
-copy_release_files() {
+copy_release_files() (
   local source_dir="$1"
   local config_dir="$2"
+  local tag="$3"
+  local release_dir
+  local release_url
 
-  [[ -f "${source_dir}/dist/icon_map.lua" ]] || return 1
-  [[ -f "${source_dir}/dist/sketchybar-app-font.ttf" ]] || return 1
   [[ -f "${source_dir}/LICENSE" ]] || return 1
+  release_dir="$(mktemp -d)" || return 1
+  trap 'rm -rf "${release_dir}"' EXIT
+  release_url="https://github.com/kvndrsslr/sketchybar-app-font/releases/download/${tag}"
 
-  cp "${source_dir}/dist/icon_map.lua" "${config_dir}/icon_map.lua" || return 1
+  # dist/ is ignored upstream and may contain builds from an older checkout.
+  curl --fail --location --silent --show-error \
+    "${release_url}/icon_map.lua" -o "${release_dir}/icon_map.lua" || return 1
+  curl --fail --location --silent --show-error \
+    "${release_url}/sketchybar-app-font.ttf" \
+    -o "${release_dir}/sketchybar-app-font.ttf" || return 1
+
+  cp "${release_dir}/icon_map.lua" "${config_dir}/icon_map.lua" || return 1
   cp \
-    "${source_dir}/dist/sketchybar-app-font.ttf" \
+    "${release_dir}/sketchybar-app-font.ttf" \
     "${config_dir}/assets/sketchybar-app-font.ttf" || return 1
   cp "${source_dir}/LICENSE" "${config_dir}/assets/LICENSE-sketchybar-app-font.txt"
-}
+)
 
 write_version() {
   local version_file="$1"
@@ -100,6 +111,7 @@ main() {
 
   command -v git >/dev/null 2>&1 || return 1
   command -v sed >/dev/null 2>&1 || return 1
+  command -v curl >/dev/null 2>&1 || return 1
 
   script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)" || return 1
   config_dir="$(cd "${script_dir}/.." && pwd -P)" || return 1
@@ -115,7 +127,7 @@ main() {
 
   git -C "${source_dir}" checkout --quiet --detach "${tag}" || return 1
   commit="$(git -C "${source_dir}" rev-parse HEAD)" || return 1
-  copy_release_files "${source_dir}" "${config_dir}" || return 1
+  copy_release_files "${source_dir}" "${config_dir}" "${tag}" || return 1
   write_version "${config_dir}/assets/sketchybar-app-font.version" "${tag}" "${commit}"
 
   if [[ "${install_font}" == true ]]; then
